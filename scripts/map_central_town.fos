@@ -1,0 +1,70 @@
+#include "_macros.fos"
+#include "_defines.fos"
+#include "utils_for_array.fos"
+#include "pids_groups.fos"
+import bool AddAttackPlane( Critter& npc, uint priory, Critter& target, int minHp ) from "npc_planes";
+void        _GuardInit( Critter& guard, bool firstTime )
+{
+    guard.SetEvent( CRITTER_EVENT_SMTH_ATTACK, "_Guard_smth_attack" );
+    guard.SetEvent( CRITTER_EVENT_SMTH_DEAD, "_GuardSmthDead" );
+    guard.SetEvent( CRITTER_EVENT_SHOW_CRITTER, "_GuardShow" );
+    guard.SetEvent( CRITTER_EVENT_ATTACKED, "_GuardAttcked" );
+    guard.ModeBase[ MODE_NO_ENEMY_STACK ] = 1;
+    guard.ModeBase[ MODE_NO_STEAL ] = 1;
+    guard.ModeBase[ MODE_UNLIMITED_AMMO ] = 1;
+    if( guard.GetTimeEvents( 199, null, null, null ) > 0 )
+        guard.EraseTimeEvents( 199 );
+}
+void _GuardSmthDead( Critter& guard, Critter& fromCr, Critter@ killer )
+{
+    if( fromCr.IsNpc() )
+        return;
+    if( killer.IsNpc() )
+        return;
+
+    if( valid( killer ) && ( killer.ParamBase[ ST_CITIZEN ] != guard.ParamBase[ ST_CITIZEN ]) && (fromCr.ParamBase[ ST_CITIZEN ] == guard.ParamBase[ ST_CITIZEN ]))
+    {
+        AddAttackPlane( guard, 0, killer, 0 );
+    }
+
+    if( killer.ParamBase[ ST_TEAM_ID ] == guard.ParamBase[ ST_TEAM_ID ] )
+    {
+        return;
+    }
+}
+
+void _GuardShow( Critter& cr, Critter& showCr )
+{
+    if( showCr.IsNpc() && showCr.ParamBase[ ST_CITIZEN ] <= 3 )
+        return;
+	if( ( showCr.ParamBase[ ST_CITIZEN ] == 0 && cr.ParamBase[ ST_CITIZEN ] == 1 ) || ( showCr.ParamBase[ ST_CITIZEN ] != 2  && cr.ParamBase[ ST_CITIZEN ] == 2 ) || ( showCr.ParamBase[ ST_CITIZEN ] != 2  && cr.ParamBase[ ST_CITIZEN ] == 2 ) || ( showCr.ParamBase[ ST_CITIZEN ] == 4 && cr.ParamBase[ ST_CITIZEN ] == 3 ) || ( showCr.ParamBase[ ST_CITIZEN ] < 4 && cr.ParamBase[ ST_CITIZEN ] == 4 ) )
+		AddAttackPlane( cr, 0, showCr, __DeadHitPoints );
+}
+
+void _Guard_smth_attack( Critter& guard, Critter& player, Critter& target )
+{
+    if( player.IsNpc() )
+        return;
+    if( guard.IsSee( player ) && player.IsPlayer() && guard.IsLife() && ( guard.ParamBase[ ST_CITIZEN ] == target.ParamBase[ ST_CITIZEN ] ) )
+		AddAttackPlane( guard, 0, player, 0 );
+}
+
+bool _GuardAttcked( Critter& cr, Critter& attacker )
+{
+    AddAttackPlane( cr, 0, attacker, 0 );
+    return true;
+}
+int MaxAlert = 2;
+int Dialog = 402;
+
+uint cte_bastard( Critter& cr, int identifier, uint& rate )
+{
+    if( cr.ParamBase[ ST_ASSHOLECOUNT ] != 0 )
+    {
+        --cr.ParamBase[ ST_ASSHOLECOUNT ];
+        return 360;
+    }
+    else
+        cr.EraseTimeEvent( 199 );
+    return 0;
+}

@@ -1,0 +1,123 @@
+// Misc rp scripts by PigBoss
+// FORP
+
+#include "_macros.fos"
+#include "_defines.fos"
+
+void _MineInit( Critter& mine, bool firstTime )
+{
+	mine.ModeBase[ MODE_NO_DROP ] = 1;
+	mine.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 1;
+	mine.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 1;
+	mine.ModeBase[ MODE_NO_HEAL ] = 1;
+	mine.ModeBase[ MODE_NO_KNOCK ] = 1;
+	mine.ModeBase[ MODE_NO_LOOT ] = 1;
+	mine.ModeBase[ MODE_NO_KARMA_ON_KILL ] = 1;
+	mine.ModeBase[ MODE_NO_PUSH ] = 1;
+	mine.ModeBase[ MODE_NO_UNARMED ] = 1;
+	mine.ModeBase[ MODE_NO_WALK ] = 1;
+	mine.ModeBase[ MODE_NO_RUN ] = 1;
+	mine.ModeBase[ MODE_NO_TALK ] = 1;
+	mine.ModeBase[ MODE_NO_STEAL ] = 1;
+	mine.ModeBase[ MODE_NO_HEAL ] = 1;
+	
+	mine.ParamBase[ ST_REPLICATION_TIME ] = 2;
+	mine.ParamBase[ ST_NORMAL_ABSORB ] = 100;
+	mine.ParamBase[ ST_LASER_ABSORB ] = 100;
+	mine.ParamBase[ ST_FIRE_ABSORB ] = 100;
+	mine.ParamBase[ ST_PLASMA_ABSORB ] = 100;
+	mine.ParamBase[ ST_ELECTRO_ABSORB ] = 100;
+	mine.ParamBase[ ST_EMP_ABSORB ] = 100;
+	mine.ParamBase[ ST_EXPLODE_ABSORB ] = 100;
+	mine.ParamBase[ ST_NORMAL_RESIST ] = 100;
+	mine.ParamBase[ ST_LASER_RESIST ] = 100;
+	mine.ParamBase[ ST_FIRE_RESIST ] = 100;
+	mine.ParamBase[ ST_PLASMA_RESIST ] = 100;
+	mine.ParamBase[ ST_ELECTRO_RESIST ] = 100;
+	mine.ParamBase[ ST_EMP_RESIST ] = 100;
+	
+	
+	mine.SetEvent( CRITTER_EVENT_ATTACKED, "_MineAttacked" );
+	mine.SetEvent( CRITTER_EVENT_DEAD, "_MineResp" );
+	
+}
+
+bool _MineAttacked(Critter& cr, Critter& attacker){
+	
+	if( !valid(attacker) || !valid(_CritGetItemHand(attacker)) )
+		return true;
+	
+	if( _CritGetItemHand(attacker).GetProtoId() != PID_KNIFE )
+		return true;
+		
+	if( attacker.ParamBase[ ST_STAMINA ] == 0){
+		attacker.Say(SAY_NETMSG, "Вы слишком устали");
+		return true;
+	}	
+	
+	switch( Random( 0, 5 ) ){
+		case 0:
+		attacker.AddItem(PID_ROCK, 1);
+		attacker.Say(SAY_NETMSG, "Вы добыли камень");
+		break;
+		
+		case 1:
+		attacker.AddItem(PID_MINERAL, 1);
+		attacker.Say(SAY_NETMSG, "Вы добыли минерал");
+		break;
+		
+		case 2:
+		attacker.AddItem(PID_STEEL, 1);
+		attacker.Say(SAY_NETMSG, "Вы добыли сталь");
+		break;
+		
+		case 3:
+		attacker.AddItem(PID_METAL_ORE, 1);
+		attacker.Say(SAY_NETMSG, "Вы добыли руду");
+		break;
+		
+		case 4:
+		attacker.AddItem(PID_FLINT, 1);
+		attacker.Say(SAY_NETMSG, "Вы добыли кремень");
+		break;
+		
+		case 5:
+		attacker.AddItem(PID_RAGS, 1);
+		attacker.Say(SAY_NETMSG, "Вы добыли какую то херню");
+		break;
+
+	}
+	attacker.ParamBase[ ST_STAMINA ] -= 10;
+	
+	return true;
+}
+
+void _MineResp(Critter& mine, Critter@ killer){
+	killer.Say(SAY_NETMSG, "Ресурсы истощены");
+	return;
+}
+
+#define STMREGEN ( 2 )
+
+void _Stamina(Critter& cr, uint index, int oldValue){
+
+	if( cr.ParamBase[ ST_STAMINA ] == 100 ){
+		cr.Say( SAY_NETMSG, "Выносливость востановлена.");
+		cr.EraseTimeEvents( CTE_STAMINA );
+	}
+
+	if( cr.ParamBase[ ST_STAMINA ] == 0 )
+		cr.Say( SAY_NETMSG, "Выносливость истощена.");
+		
+	if( cr.ParamBase[ ST_STAMINA ] != 100 && cr.GetTimeEvents( CTE_STAMINA, null, null, null ) == 0)
+		cr.AddTimeEvent( "cte_stamina", STMREGEN * __TimeMultiplier, CTE_STAMINA);
+	
+}
+
+uint cte_stamina(Critter& cr, int identifier, uint& rate){
+	cr.ParamBase[ ST_STAMINA ] += 10;
+	
+	cr.Say(SAY_NETMSG, "Реген 10 стамины");
+	
+	return STMREGEN * __TimeMultiplier;
+}

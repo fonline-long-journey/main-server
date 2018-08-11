@@ -1,0 +1,72 @@
+﻿#include "_macros.fos"
+
+#define ZERO_TIMEOUT ( 3 )
+#define DEFAULT_MIN_TIMEOUT ( REAL_SECOND( 30 ) )
+#define FAST_MIN_TIMEOUT 	( REAL_SECOND( 10 ) )
+#define MAX_CRAFT_AMOUNT ( 9999 ) //Верхний предел по количеству изделий
+#define PROCESSING_SPEED_UP_PERK           ( 300 ) //PE_BOOKWORM
+#define RESOURCE_PROCESSING_ADVANTAGE_PERK ( 401 ) //PE_PACK_RAT
+#define RESOURCE_PROCESSING_ADVANTAGE_MULTIPLICATOR ( 10 ) //default value, looks constant in formula
+#define MANUFACTURING_SKILL_ID   ( 213 ) //SK_REPAIR
+#define MANUFACTURING_TIMEOUT_ID ( 232 ) //TO_SK_REPAIR
+#define RECYCLING_SKILL_ID		 ( 212 ) //SK_SCIENCE
+#define RECYCLING_TIMEOUT_ID     ( 233 ) //TO_SK_SCIENCE
+#define HANDWORK_SKILL_ID		 ( 217 ) //SK_OUTDOORSMAN
+#define HANDWORK_TIMEOUT_ID		 ( 236 ) //TO_SK_OUTDOORSMAN 
+
+int process_time_out ( Critter& cr ) { return ( cr.Perk[ PROCESSING_SPEED_UP_PERK ] > 0 ? FAST_MIN_TIMEOUT : DEFAULT_MIN_TIMEOUT ); }
+void process_resource( Critter& cr, uint16 result_item_pid, uint16 amount_multiplicator, uint16 difficulty, uint16 SKILL_ID, uint16 TIMEOUT_ID ) {
+		int summary_difficulty = difficulty - cr.Perk[ RESOURCE_PROCESSING_ADVANTAGE_PERK ] * RESOURCE_PROCESSING_ADVANTAGE_MULTIPLICATOR;
+		int amount = CLAMP( cr.Skill[ SKILL_ID ] * amount_multiplicator / summary_difficulty , 0, MAX_CRAFT_AMOUNT );
+		if ( amount > 0 ) {
+				cr.AddItem( result_item_pid, amount );
+				cr.TimeoutBase[ TIMEOUT_ID ] = __FullSecond + process_time_out( cr ) * amount_multiplicator + cr.Timeout[ TIMEOUT_ID ]; //Увеличиваем усталость
+				cr.Say( SAY_NETMSG, "Произведено " + amount + " шт." );
+		} else {
+				cr.Say( SAY_NETMSG, "Не хватает ещё " + ( summary_difficulty - cr.Skill[ SKILL_ID ] ) + "% навыка." ); }
+}
+bool processing_result( Critter& cr, uint16 requested_item_pid, uint16 result_item_pid, uint16 difficulty, uint16 SKILL_ID, uint16 TIMEOUT_ID, int amount ) {
+	if ( cr.Timeout[ TIMEOUT_ID ] < ZERO_TIMEOUT ) {
+		process_resource( cr, result_item_pid, amount, difficulty, SKILL_ID, TIMEOUT_ID);
+		if ( requested_item_pid != 0) cr.DeleteItem( requested_item_pid, amount );
+	} else {
+		cr.Say( SAY_NETMSG, "Вы слишком устали, отдохните ещё " + cr.Timeout[ TIMEOUT_ID ] + " секунд." ); }
+	return true; }
+
+bool manufacturing( Critter& cr, uint16 requested_item_pid, uint16 result_item_pid, uint16 difficulty, int amount ) {//Manufacturing == "ремонт"   === штамповка из материала
+	return ( processing_result( cr, requested_item_pid, result_item_pid , difficulty, MANUFACTURING_SKILL_ID, MANUFACTURING_TIMEOUT_ID, amount ) ); }
+bool recycling    ( Critter& cr, uint16 requested_item_pid, uint16 result_item_pid, uint16 difficulty, int amount ) {//Recycling     == "наука"    === обработка материала
+	return ( processing_result( cr, requested_item_pid, result_item_pid , difficulty, RECYCLING_SKILL_ID    , RECYCLING_TIMEOUT_ID    , amount ) ); }
+bool handworking  ( Critter& cr, uint16 requested_item_pid, uint16 result_item_pid, uint16 difficulty, int amount ) {//Handworking   == "скиталец" === ручная обработка материала
+	return ( processing_result( cr, requested_item_pid, result_item_pid , difficulty, HANDWORK_SKILL_ID     , HANDWORK_TIMEOUT_ID     , amount ) ); }
+bool fabricate(Critter& cr, Item@ targetItem, int skill) { //использование фабрикатора
+	uint16 pid = targetItem.GetProtoId();
+	uint16 amount = targetItem.GetCount();
+	DeleteItem( targetItem );
+	switch (skill) {
+		case SK_REPAIR : 
+			switch (pid) {
+				case PID_CRAFT_IRON        : return manufacturing( cr, 0, PID_CRAFT_IRON_PART , 40, amount ); break;
+				case PID_CRAFT_STEEL       : return manufacturing( cr, 0, PID_CRAFT_STEEL_PART, 40, amount ); break;
+				case PID_CHEMICALS    	   : return manufacturing( cr, 0, PID_GUNPOWDER       , 40, amount ); break;
+				case PID_CRAFT_FIBER  	   : return handworking  ( cr, 0, PID_POCKET_LINT     , 40, amount ); break;
+				case PID_GECKO_PELT   	   : return handworking  ( cr, 0, PID_CRAFT_LEATHER   , 50, amount ); break;
+				case PID_BRAHMIN_SKIN 	   : return handworking  ( cr, 0, PID_CRAFT_LEATHER   , 25, amount ); break;
+				case PID_GOLDEN_GECKO_PELT : return handworking  ( cr, 0, PID_CRAFT_LEATHER   , 40, amount ); break;
+				default: break; }
+		case SK_SCIENCE : 
+			switch (pid) {
+				case PID_CRAFT_IRON        : return recycling  ( cr, 0, PID_METAL_TRASH   , 40, amount ); break;
+				case PID_CRAFT_STEEL       : return recycling  ( cr, 0, PID_STEEL         , 40, amount ); break;
+				case PID_CHEMICALS         : return recycling  ( cr, 0, PID_CRAFT_POLYMER , 40, amount ); break;
+				case PID_CRAFT_FIBER  	   : return handworking( cr, 0, PID_RAGS          , 40, amount ); break;
+				case PID_GECKO_PELT   	   : return handworking( cr, 0, PID_CRAFT_LEATHER , 50, amount ); break;
+				case PID_BRAHMIN_SKIN 	   : return handworking( cr, 0, PID_CRAFT_LEATHER , 25, amount ); break;
+				case PID_GOLDEN_GECKO_PELT : return handworking( cr, 0, PID_CRAFT_LEATHER , 40, amount ); break;
+				default: break; }
+		default: break;
+	}
+	return true;
+}
+bool workspace_avaible( Item@ target_Item, uint16 WORKSPACE_PID ) { 
+	return ( valid( target_Item ) ? ( target_Item.GetProtoId() == WORKSPACE_PID ) : false ); }

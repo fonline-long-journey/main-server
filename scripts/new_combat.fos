@@ -1,0 +1,213 @@
+//RP combat system by PigBoss
+
+#include "_macros.fos"
+#include "_colors.fos"
+
+// WeaponType
+#define WT_DEFAULT                 ( 0 )
+#define WT_PISTOL                  ( 1 )
+#define WT_SHOTGUN                 ( 2 )
+#define WT_SMG                     ( 3 )
+#define WT_SNIPER_RIFLE            ( 4 )
+#define WT_RIFLE                   ( 5 )
+#define WT_ASSAULT_RIFLE           ( 6 )
+#define WT_MACHINE_GUN             ( 7 )
+#define WT_MINIGUN                 ( 8 )
+#define WT_FLAMER                  ( 9 )
+#define WT_BLADE                   ( 10 )
+#define WT_PENETRATION             ( 11 )
+#define WT_BLUNT                   ( 12 )
+
+#define inCombat # (cr) ( cr.TimeoutBase[ TO_BATTLE ] != 0 )
+#define crSay # (cr, msg) ( cr.Say(SAY_NETMSG, msg) )
+
+void unsafe_combat( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4){
+	if( player.TimeoutBase[ TO_BATTLE ] == 0 ){
+		player.TimeoutBase[ TO_BATTLE ] += REAL_SECOND(1000000000);
+		player.Say(SAY_NETMSG, "Боевой режим активирован");
+		}
+	else{
+		player.Say(SAY_NETMSG, "Боевой режим выключен");
+		player.TimeoutBase[ TO_BATTLE ] = 0;
+		}
+}
+
+void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo ){
+
+	bool isCloseCombat = _WeaponSkill(weapon, weaponMode) == SK_UNARMED || _WeaponSkill(weapon, weaponMode) == SK_MELEE_WEAPONS;
+    uint8 use = _WeaponModeUse( weaponMode );
+	uint16 ammoRound = _WeaponRound( weapon, use );
+	
+	if(isCloseCombat)
+		CloseCombatAttack(cr, target, weapon, weaponMode);
+	else
+		RangedAttack(cr, target, weapon, weaponMode, ammo);
+	
+	
+}
+
+void CloseCombatAttack(Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode){
+
+}
+
+void RangedAttack(Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo){
+	crSay(cr, IsHitRangedSingle(cr,target,weapon, weaponMode, ammo ) + "");
+}
+
+bool IsHitMelee( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode ){ //Расчет попадания для ближнего боя
+
+	if( !inCombat(target) ){ //Цель не находится в бою
+		if( target.Param[ ST_PERCEPTION ] + target.Param[ ST_LUCK ] > Random(0, 100) ) return false;
+			return true;
+		}
+	
+	int toHit = 0;
+	int ArmorWeight = ( valid(_CritGetItemArmor(cr)) ?  _CritGetItemArmor(cr).Proto.Weight : 0);
+	int ArmorWeightTarget = ( valid(_CritGetItemArmor(target)) ?  _CritGetItemArmor(target).Proto.Weight : 0);
+	bool isFlexibleArmor = valid(_CritGetItemArmor(cr)) ? _CritGetItemArmor(cr).Proto.Armor_Flexible : true;
+	bool isFlexibleArmorTarget =  valid(_CritGetItemArmor(target)) ? _CritGetItemArmor(target).Proto.Armor_Flexible : true;
+	
+	toHit += (cr.ParamBase[ SK_UNARMED ] / 2) + (cr.ParamBase[ ST_AGILITY ] * 3);
+		if( !isFlexibleArmor ) toHit -= 30;
+	
+	
+	crSay(cr, "toHit - " + toHit);
+	if( CLAMP( toHit, 0, 100) <= Random( 0, 100 ) ){
+		return false; //Промах
+	}
+	//Проверка на уворот
+		int flexMod = isFlexibleArmor ? 10 : 0;
+	if( target.Param[ST_AGILITY] + target.Param[ ST_LUCK ] + target.Param[ ST_PERCEPTION ] + flexMod > Random( 24, 40) ){
+		target.MoveRandom();
+		
+		crSay(cr, "Dodged");
+		
+		return false; //Увернулся
+	}
+	
+	//Проверка на парирование
+	if( valid(_CritGetItemHand(target)) ){
+	if( _WeaponSkill( _CritGetItemHand(target).Proto, 0) == SK_UNARMED ){ //Парирование с оружием в руках
+		int Parry = ( isFlexibleArmorTarget ? target.Param[ ST_AGILITY ] * 10 : target.Param[ ST_AGILITY ] * 5);
+		int CrParry = ( isFlexibleArmorTarget ? cr.Param[ ST_AGILITY ] * 10 : cr.Param[ ST_AGILITY ] * 5);
+		
+			Parry += target.ParamBase[ SK_UNARMED ];
+			CrParry += cr.ParamBase[ SK_UNARMED ];
+			
+			Parry += target.ParamBase[ ST_STRENGTH ] * 10;
+			CrParry += cr.ParamBase[ ST_STRENGTH ] * 10;
+			
+			Parry += Random(0, 20);
+			CrParry += Random(20, 30);
+			
+			crSay(cr, " " + Parry + " - " + CrParry);
+			
+			return CrParry > Parry;
+		
+	}}else{ //Парирование голыми руками
+		int Parry = ( isFlexibleArmorTarget ? target.Param[ ST_AGILITY ] * 10 : target.Param[ ST_AGILITY ] * 5);
+		int CrParry = ( isFlexibleArmorTarget ? cr.Param[ ST_AGILITY ] * 10 : cr.Param[ ST_AGILITY ] * 5);
+		
+			Parry += target.ParamBase[ SK_UNARMED ];
+			CrParry += cr.ParamBase[ SK_UNARMED ];
+			
+			Parry += target.ParamBase[ ST_STRENGTH ] * 8;
+			CrParry += cr.ParamBase[ ST_STRENGTH ] * 10;
+			
+			Parry += Random(0, 50);
+			CrParry += Random(30, 80);
+			
+			crSay(cr, " unarmed parry  " + Parry + " - " + CrParry);
+			
+			return CrParry > Parry;
+	}
+	return false;
+}
+
+bool IsHitRangedSingle(Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo){ //Расчет попадания для дальнего боя
+	int dist = GetDistantion(cr.HexX, cr.HexY, target.HexX, target.HexY);
+	int toHit = 0;
+    uint8 use = _WeaponModeUse( weaponMode );
+	int skill = _WeaponSkill( weapon, use );
+    uint8 aim = _WeaponModeAim( weaponMode );
+	Map@ map = cr.GetMap();
+	
+	toHit += cr.SkillBase[skill];
+	
+	
+	if( weapon.Weapon_Type == WT_PISTOL && dist > 10 )
+		toHit /= 2;
+	else if( dist > 20)
+		toHit /= 2;
+	/*
+	if( target.IsRuning ){ //флаг бега наебывает
+		toHit /= Random(2,3);
+	}
+	crSay(cr, "Run -" + target.IsRuning);
+	*/
+	toHit -= dist * 2;
+	
+	if( !inCombat(target))
+		if( Random(0,100) > toHit )
+			return true;
+	crSay(cr, "ToHit -" + toHit );
+	uint16 hexX = target.HexX;
+	uint16 hexY = target.HexY;
+	bool isCover = false;
+	map.GetHexCoordWall(cr.HexX, cr.HexY, hexX, hexY, 0, 0);
+
+	if( hexX != target.HexX || hexY != target.HexY && inCombat( target ))
+		isCover = true;
+	
+	if( isCover && target.Stat[ ST_AGILITY ] * 2 > Random(0,15) ){
+		toHit /= 2; 
+		toHit -= dist * dist;
+	}
+	crSay(cr, "ToHitPast -" + toHit);
+	crSay(cr, "isCover -" + isCover );
+	if(toHit < Random(0, 100)){
+	
+	if( isCover )
+		map.SetText( hexX, hexY, COLOR_DDGREEN, "пуф" );
+	crSay(cr, "Just miss -" + toHit );
+	return false; //Промах
+	}
+	
+	if( target.ParamBase[ST_LUCK] + target.ParamBase[ST_AGILITY] + target.ParamBase[ST_PERCEPTION] >= 28 + Random(0,3) ){
+		crSay(cr, "dodge" );
+	return false; //Уворот от пули
+		}
+		
+	if( dist  == 1 ){
+		int parry = target.SkillBase[SK_UNARMED] + Random(0, 30);
+		parry -= cr.SkillBase[SK_UNARMED] + Random(0,30);
+		switch(weapon.Weapon_Type){
+		case WT_PISTOL:
+			parry += 10;
+			break;
+		case WT_SHOTGUN:
+		case WT_RIFLE:
+		case WT_ASSAULT_RIFLE:
+		case WT_SNIPER_RIFLE:
+			parry += 40;
+			break;
+		case WT_SMG:
+			parry += 30;
+			break;
+		default:
+			parry += 80;
+			break;
+		}
+					crSay(cr, "Parry -" + parry );
+		if( parry > Random(0, 100) )
+		{
+			crSay(cr, "ParrySuccess -" + parry );
+		//Парирование огнестрельной атаки в упор
+		return false;
+		}
+	}
+		
+	return true;
+
+	
+}

@@ -1,0 +1,74 @@
+#include "_client_defines.fos"
+#include "_macros.fos"
+
+void setName( CritterCl& cr, string@ name )
+{
+    cr.Name = name;
+}
+
+string getName( CritterCl& cr )
+{
+    file f;
+    if( f.open( "Names-" + GetChosen().Id + ".txt", "r" ) >= 0 )
+    {
+        string word = "";
+        uint   pos = 0;
+        int    intword = 0;
+		string name = "";
+        f.setPos( 0 );
+        while( !f.isEndOfFile() )
+        {
+            f.readLine(word);
+			if(word == "") break;
+			fix(word);
+            StrToInt( word, intword );
+            if( uint( intword ) == cr.Id )
+            {
+                f.readLine(word);
+                name = fix( word );
+            }else
+            f.readLine( word );
+        }
+		f.close();
+		if(name != "")
+			return name;
+		else
+			return "???";
+    }
+    return "";
+}
+
+bool writeName( CritterCl& cr, string@ name )
+{
+    cr.Name = name;
+    cr.NameOnHead = name;
+    file f;
+    if( f.open( "Names-" +  GetChosen().Id + ".txt", "a" ) >= 0 )
+    {
+        f.writeString( "" + cr.Id + "\n" );
+        f.writeString( name + "\n" );
+        f.close();
+        Message( "Вы запомнили " + cr.Name );
+        return true;
+    }
+    else
+        return false;
+}
+
+void _writeNameCl( int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    CritterCl@ target = GetCritter( param0 );
+    writeName( target, param3 );
+}
+
+uint toInt( string@ txt )
+{
+    int res = 0;
+    StrToInt( txt, res );
+    return res;
+}
+
+string fix( string@ str ){
+	str[str.length()-1] = "";
+	return str;
+}

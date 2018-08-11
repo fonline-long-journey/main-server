@@ -1,0 +1,244 @@
+﻿// Unsafe commands for FOrp by PigBoss
+
+#include "_macros.fos"
+#include "_defines.fos"
+#include "_colors.fos"
+
+import void refreshnames(Critter& player) from "gm";
+/*
+void unsafe_trygetnames(Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4){
+	
+	if( FLAG(player.Flags, CRITTER_DISCONNECT ) )
+		return;
+	
+	if(player.GetAccess() < ACCESS_MODER)
+		return;
+	
+	if(player.ParamBase[ ST_MODER ] == 0)
+		return;
+	
+	refreshnames(player);
+}
+*/
+void unsafe_gmhear( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@[] crs;
+    GetAllPlayers( crs );
+    for( uint i = 0; i < crs.length(); ++i )
+    {
+        if( crs[ i ].IsNpc() || FLAG( crs[ i ].Flags, CRITTER_DISCONNECT ) || FLAG( crs[ i ].Flags, CRITTER_CHOSEN ) )
+            continue;
+        if( crs[ i ].GetAccess() >= ACCESS_MODER && crs[ i ].ParamBase[ ST_MODER ] > 0 )
+            crs[ i ].Say( SAY_NETMSG, "|0xA9A9A9 " + GetPlayerName( player.Id ) + ": " + param3 );
+    }
+}
+
+void unsafe_adminanswer( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ admin = GetCritter( player.ParamBase[ LAST_ADMIN ] );
+    if( valid( admin ) )
+    {
+        admin.Say( SAY_NETMSG, "|0xFFFF0000 <|0xFFFFFF00 " + player.Name + " - " + player.Id + "|0xFFFF0000 > |0xFFCC33AA " + param3 );
+        player.Say( SAY_NETMSG, "|0xFFFF0000 <|0xFFFFFF00 " + player.Name + " - " + player.Id + "|0xFFFF0000 > |0xFFCC33AA " + param3 );
+        player.Say( SAY_NETMSG, "Сообщение отправлено." );
+    }
+}
+
+
+void unsafe_opendoor( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Map@ map = player.GetMap();
+    if( valid( map.GetDoor( player.HexX + 1, player.HexY ) ) )
+    {
+        Item@ door = map.GetDoor( player.HexX + 1, player.HexY );
+        _CritAnimateUse( player );
+		if( door.Val4 != 0 )
+			return;
+        player.Wait( 500 );
+        if( _LockerIsOpen( door ) &&  map.IsHexPassed( door.HexX, door.HexY ) )
+            door.LockerClose();
+        else if( !FLAG( door.LockerCondition, LOCKER_LOCKED ) )
+            door.LockerOpen();
+    }
+    if( valid( map.GetDoor( player.HexX - 1, player.HexY ) ) )
+    {
+        Item@ door = map.GetDoor( player.HexX - 1, player.HexY );
+        _CritAnimateUse( player );
+		if( door.Val4 != 0 )
+			return;
+        player.Wait( 500 );
+        if( _LockerIsOpen( door ) &&  map.IsHexPassed( door.HexX, door.HexY ) )
+            door.LockerClose();
+        else if( !FLAG( door.LockerCondition, LOCKER_LOCKED ) )
+            door.LockerOpen();
+    }
+    if( valid( map.GetDoor( player.HexX + 1, player.HexY + 1 ) ) )
+    {
+        Item@ door = map.GetDoor( player.HexX + 1, player.HexY + 1 );
+        _CritAnimateUse( player );
+		if( door.Val4 != 0 )
+			return;
+        player.Wait( 500 );
+        if( _LockerIsOpen( door ) &&  map.IsHexPassed( door.HexX, door.HexY ) )
+            door.LockerClose();
+        else if( !FLAG( door.LockerCondition, LOCKER_LOCKED ) )
+            door.LockerOpen();
+    }
+    if( valid( map.GetDoor( player.HexX, player.HexY + 1 ) ) )
+    {
+        Item@ door = map.GetDoor( player.HexX, player.HexY + 1 );
+        _CritAnimateUse( player );
+		if( door.Val4 != 0 )
+			return;
+        player.Wait( 500 );
+        if( _LockerIsOpen( door ) &&  map.IsHexPassed( door.HexX, door.HexY ) )
+            door.LockerClose();
+        else if( !FLAG( door.LockerCondition, LOCKER_LOCKED ) )
+            door.LockerOpen();
+    }
+    if( valid( map.GetDoor( player.HexX, player.HexY - 1 ) ) )
+    {
+        Item@ door = map.GetDoor( player.HexX, player.HexY - 1 );
+        _CritAnimateUse( player );
+		if( door.Val4 != 0 )
+			return;
+        player.Wait( 500 );
+        if( _LockerIsOpen( door ) &&  map.IsHexPassed( door.HexX, door.HexY ) )
+            door.LockerClose();
+        else if( !FLAG( door.LockerCondition, LOCKER_LOCKED ) )
+            door.LockerOpen();
+    }
+    if( valid( map.GetDoor( player.HexX - 1, player.HexY - 1 ) ) )
+    {
+        Item@ door = map.GetDoor( player.HexX - 1, player.HexY - 1 );
+        _CritAnimateUse( player );
+		if( door.Val4 != 0 )
+			return;
+        player.Wait( 500 );
+        if( _LockerIsOpen( door ) &&  map.IsHexPassed( door.HexX, door.HexY ) )
+            door.LockerClose();
+        else if( !FLAG( door.LockerCondition, LOCKER_LOCKED ) )
+            door.LockerOpen();
+    }
+}
+
+void unsafe_itemhit( Critter& player, int id, int itemId, int param2, string@ param3, int[] @ param4 )
+{
+    Map@  map = player.GetMap();
+    Item@ it = map.GetItem( id );
+    if( valid( it ) && player.IsFree() )
+    {
+        if( GetDistantion( player.HexX, player.HexY, it.HexX, it.HexY ) > 1 )
+            return;
+        player.Wait( 500 );
+        map.SetText( it.HexX, it.HexY, COLOR_GRAY, "*стук*" );
+        player.Say( SAY_NETMSG, "Вы постучали." );
+        return;
+    }
+    Critter @ target = GetCritter( id );
+    if( !( player.IsDead() || player.IsKnockout() ) && valid( target ) )
+    {
+        if( GetDistantion( player.HexX, player.HexY, target.HexX, target.HexY ) > 1 )
+            return;
+        DragAndDrop( player, target );
+        player.TimeoutBase[ TO_SK_STEAL ] = __FullSecond + REAL_SECOND( 3 );
+        return;
+    }
+}
+
+void DragAndDrop( Critter& cr, Critter@ target )
+{
+    if( valid( target ) && ( target.IsDead() || target.IsKnockout() ) )
+    {
+        if( target.GetTimeEvents( 101, null, null, null ) > 0 )
+        {
+            target.EraseTimeEvents( 101 );
+            cr.Say( SAY_NETMSG, "Вы отпустили тело" );
+            cr.ModeBase[ MODE_NO_RUN ] = 0;
+            return;
+        }
+
+        target.AddTimeEvent( "cte_DragAndDrop", 4 * __TimeMultiplier, 101, cr.Id );
+        cr.ModeBase[ MODE_NO_RUN ] = 1;
+        cr.Say( SAY_NETMSG, "Вы тащите тело" );
+    }
+}
+uint cte_DragAndDrop( Critter& cr, int identifier, uint& rate )
+{
+    Critter@ Hooker = GetCritter( rate );
+    if( valid( Hooker ) && ( cr.IsDead() || cr.IsKnockout() ) )
+    {
+        if( !( cr.IsKnockout() || cr.IsDead() ) || Hooker.IsRuning )
+        {
+            Hooker.Say( SAY_NETMSG, "Вы отпустили тело" );
+            Hooker.ModeBase[ MODE_NO_RUN ] = 0;
+            return 0;
+        }
+        Map@   map = cr.GetMap();
+        Map@   Hmap = Hooker.GetMap();
+        uint16 HookHx = Hooker.HexX;
+        uint16 HookHy = Hooker.HexY;
+        uint8  dir = Hooker.Dir;
+        uint8  revDir;
+        uint8  dist = GetDistantion( cr.HexX, cr.HexY, Hooker.HexX, Hooker.HexY );
+        revDir = dir + 3;
+        if( revDir > 5 )
+            revDir = revDir - 6;
+        Hmap.MoveHexByDir( HookHx, HookHy, revDir, 1 );
+        if( not Hmap.IsHexPassed( HookHx, HookHy ) || ( dist <= 2 ) )
+            return 4 * __TimeMultiplier;
+        if( Hmap.Id != map.Id )
+        {
+            cr.TransitToMap( Hmap.Id, HookHx, HookHy, dir );
+            return 0;
+        }
+        else if( dist < 5 )
+        {
+            cr.TransitToHex( HookHx, HookHy, dir );
+            return 4 * __TimeMultiplier;
+        }
+        else
+        {
+            Hooker.Say( SAY_NETMSG, "Вы отпустили тело" );
+            Hooker.ModeBase[ MODE_NO_RUN ] = 0;
+            return 0;
+        }
+    }
+    else
+        Hooker.ModeBase[ MODE_NO_RUN ] = 0;
+    return 0;
+}
+
+void unsafe_sleep( Critter& cr, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter @ player = ( param1 != 0 ? GetCritter( param1 ) : cr );
+
+    if( !valid( player ) )
+        return;
+    if( !player.IsDead() && !player.IsKnockout() && player.GetTimeEvents( 100, null, null, null ) == 0 )
+    {
+        player.StatBase[ ST_CURRENT_AP ] = -100000;
+        player.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( ( param0 == 0 ) ), 5, player.HexX, player.HexY );
+        player.Say( SAY_NETMSG, "You fell." );
+        player.AddTimeEvent( "cte_sleep", 0, 100, 0 );
+        return;
+    }
+    else if( !player.IsDead() && player.IsKnockout() && player.GetTimeEvents( 100, null, null, null ) != 0 )
+    {
+        player.StatBase[ ST_CURRENT_AP ] = 0;
+        player.EraseTimeEvents( 100 );
+        player.Say( SAY_NETMSG, "You getting up." );
+        return;
+    }
+
+}
+uint cte_sleep( Critter& player, int identifier, uint& rate )
+{
+    if( player.StatBase[ ST_CURRENT_AP ] >= -50000 )
+        player.StatBase[ ST_CURRENT_AP ] = -100000;
+    return 100;
+}
+void unsafe_suicide( Critter& player, int id, int param1, int param2, string@ desc, int[] @ nothing )
+{
+    player.ToDead( 103, GetCritter( player.Id ) );
+}
