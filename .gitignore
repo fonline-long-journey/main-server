@@ -1,0 +1,33 @@
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Trash
+logs/
+save/
+test/engl/
+FOnlineServer.cfg
+*.log
+
+
+# Compiled data
+ scripts\*.fosb
+ *.fosb
+ scripts\*.fosp
+ *.fosp
+ maps\*.fomapb
+ *.fomapb
+ logs\DeadLog.txt
+ logs\GmLog.txt
+ 
+ 
