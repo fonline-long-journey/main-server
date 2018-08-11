@@ -1,21 +1,6 @@
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
 # Trash
 logs/
 save/
-test/engl/
 FOnlineServer.cfg
 *.log
 
@@ -29,5 +14,3 @@ FOnlineServer.cfg
  *.fomapb
  logs\DeadLog.txt
  logs\GmLog.txt
- 
- 
