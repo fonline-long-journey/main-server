@@ -1,0 +1,45 @@
+﻿// qthree
+
+#include "_macros.fos"
+#include "_defines.fos"
+
+void unsafe_char_middle_click( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+
+    Critter@ target = GetCritter( param0 );
+
+    if( target is null )
+    {
+        Log( "Naming Error1! " + player.Id + " try name " + param0 );
+        player.Say( SAY_NETMSG, "Naming Error1!" );
+        return;
+    }
+
+    if( !player.IsSee( target ) )
+    {
+        Log( "Naming Error2! " + player.Id + " try name " + param0 + ", but can't see them." );
+        player.Say( SAY_NETMSG, "Naming Error2!" );
+        return;
+    }
+    if( valid( _CritGetItemArmor( target ) ) )
+    {
+        if( _CritGetItemArmor( target ).GetProtoId() == PID_BLACK_ROBE || _CritGetItemArmor( target ).GetProtoId() == PID_PURPLE_ROBE || _CritGetItemArmor( target ).GetProtoId() == 10011 )
+        {
+            player.Say( SAY_NETMSG, "Вы не можете запомнить человека в робе." );
+            return;
+        }
+    }
+    if( target.ParamBase[ ST_NONAME ] > 0 )
+        return;
+    player.ShowScreen( SCREEN_SAY, 0, "answer_set_new_name" );
+    player.ParamBase[ ST_VAR5 ] = target.Id;
+    player.Say( SAY_SAY_TITLE, "Запомнить по именем..." );
+}
+
+void answer_set_new_name( Critter& player, uint answerI, string& answerS )
+{
+    if( answerS.length() < 1 || answerS.length() > 25 )
+        return;
+
+    player.RunClientScript( "newnames@_writeNameCl", player.ParamBase[ ST_VAR5 ], 0, 0, answerS, null );
+}

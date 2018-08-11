@@ -1,0 +1,75 @@
+#include "_defines.fos"
+//Неработающий модуль получения доступа от PigBoss для FOrp
+import bool player_getaccess( Critter& player, int access, string& password ) from "main";
+
+void unsafe_tryAccess( Critter& player, int param0, int param1, int param2, string@ msg, int[] @ param4 )
+{
+    msg = substring( msg, 7, msg.length() );
+    string@[] strs = split( msg, " " );
+    string@ name = strs[ 1 ];
+    string@ pass = strs[ 2 ];
+    file    f;
+    string  line = "";
+    string  nameread = "";
+    string  passread = "";
+    string  access = "";
+    if( f.open( "scripts\\" + "access" + ".txt", "r" ) >= 0 )
+    {
+        f.setPos( 0 );
+        while( !f.isEndOfFile() )
+        {
+            f.readLine( line );
+            strs = split( line, " " );
+            nameread = strs[ 0 ];
+            passread = strs[ 1 ];
+            access = strs[ 2 ];
+            player.Say( SAY_NETMSG, nameread + passread + access );
+            player.Say( SAY_NETMSG, name + pass );
+            int acc = 0;
+            StrToInt( access, acc );
+
+            if( name == nameread )
+                if( pass == passread )
+                    if( player_getaccess( player, acc, "password" ) )
+                    {
+                        // player.Access = access;
+                        return;
+                    }
+        }
+        player.Say( SAY_NETMSG, "Nope." );
+        f.close();
+    }
+}
+
+bool tryAccess( string@ msg, int accessin )
+{
+    string@[] strs = split( msg, " " );
+    string@ name = strs[ 0 ];
+    string@ pass = strs[ 1 ];
+    file    f;
+    string  line = "";
+    string  nameread = "";
+    string  passread = "";
+    string  access = "";
+    if( f.open( "scripts\\" + "access1" + ".txt", "r" ) >= 0 )
+    {
+        f.setPos( 0 );
+        while( !f.isEndOfFile() )
+        {
+            f.readLine( line );
+            strs = split( line, " " );
+            nameread = strs[ 0 ];
+            passread = strs[ 1 ];
+            access = strs[ 2 ];
+            int acc = 0;
+            StrToInt( access, acc );
+            if( name == nameread )
+                if( pass == passread )
+                    if( accessin == acc )
+                        return true;
+        }
+        f.close();
+        return false;
+    }
+    return false;
+}

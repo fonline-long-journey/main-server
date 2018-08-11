@@ -1,0 +1,638 @@
+CEncounterGroup@ group;
+
+// RP_Weak_Reps
+@group = @EncounterGroups[ GROUP_RP_Weak_Reps ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 0;
+group.AddCritter( 1001 ).Ratio( 45 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" );
+group.AddCritter( 1002 ).Ratio( 25 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_SPRINGER_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_TRASH, 0, 8, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 3, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 2, SLOT_INV );
+group.AddCritter( 1002 ).Ratio( 15 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_SHIT_AUTORIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_TRASH, 0, 20, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 4, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 3, SLOT_INV );
+group.AddCritter( 1003 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_10MM_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_10MM_JHP, 0, 5, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 2, SLOT_INV );
+group.AddCritter( 1003 ).Ratio( 5 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_M1911, 1, 1, SLOT_HAND1 )
+.AddItem( PID_45_CALIBER_AMMO, 0, 12, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 12, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 2, SLOT_INV );
+
+// RP_Medium_Reps
+@group = @EncounterGroups[ GROUP_RP_Medium_Reps ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 1;
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_ASSAULT_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_5MM_JHP, 8, 20, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_CRAFT_IRON_PART, 0, 1, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 5 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_LASER_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_SMALL_ENERGY_CELL, 6, 12, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL_PART, 0, 1, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 15 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_GECKO_SAR, 1, 1, SLOT_HAND1 )
+.AddItem( PID_10MM_JHP, 10, 15, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_CRAFT_POLYMER, 0, 1, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 25 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_HUNTING_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 5, 8, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_MEDICAL_SUPPLIES, 0, 1, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_GREASE_GUN, 1, 1, SLOT_HAND1 )
+.AddItem( PID_45_CALIBER_AMMO, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_CRAFT_IRON, 0, 1, SLOT_INV );
+group.AddCritter( 1005 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_LIGHT_SUPPORT_WEAPON, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 0, 3, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV );
+group.AddCritter( 1005 ).Ratio( 20 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_BPA, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 2, 4, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV );
+
+// RP_Tough_Reps
+@group = @EncounterGroups[ GROUP_RP_Tough_Reps ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 0;
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_STRIKER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_FN_FAL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_7_62MM_AMMO, 10, 20, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_PLASMA_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_MICRO_FUSION_CELL, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_PLASMA_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_MICRO_FUSION_CELL, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1004 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_MAGNETO_LASER_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_SMALL_ENERGY_CELL, 10, 15, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 5, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1005 ).Ratio( 15 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_GALO, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV );
+group.AddCritter( 1005 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_M60, 1, 1, SLOT_HAND1 )
+.AddItem( PID_7_62MM_AMMO, 10, 20, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV );
+group.AddCritter( 1005 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_PLASMA_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_MICRO_FUSION_CELL, 4, 9, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV );
+group.AddCritter( 1006 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_PLASMA_GRENADE, 1, 2, SLOT_HAND1 )
+.AddItem( PID_FRAG_GRENADE, 0, 1, SLOT_INV )
+.AddItem( PID_SPIKED_KNUCKLES, 1, 1, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 50, SLOT_INV );
+group.AddCritter( 1052 ).Ratio( 5 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_YK32_PULSE_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_MICRO_FUSION_CELL, 10, 20, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 100, 250, SLOT_INV )
+.AddItem( PID_CHEMICALS, 1, 2, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 1, 3, SLOT_INV );
+
+// RP_Weak_Thugs
+@group = @EncounterGroups[ GROUP_RP_Weak_Thugs ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 0;
+group.AddCritter( 1007 ).Ratio( 35 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_SPIKED_KNUCKLES, 1, 1, SLOT_HAND1 )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 2, SLOT_INV );
+group.AddCritter( 1008 ).Ratio( 35 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_SPRINGER_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_TRASH, 0, 8, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 12, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 5, SLOT_INV );
+group.AddCritter( 1009 ).Ratio( 20 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_REMMINGTON, 1, 1, SLOT_HAND1 )
+.AddItem( PID_SHOTGUN_SHELLS, 2, 8, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 5, SLOT_INV );
+group.AddCritter( 1010 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_HUNTING_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 5, 7, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 2, SLOT_INV );
+
+// RP_Medium_Thugs
+@group = @EncounterGroups[ GROUP_RP_Medium_Thugs ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 0;
+group.AddCritter( 1009 ).Ratio( 25 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_COMBAT_SHOTGUN, 1, 1, SLOT_HAND1 )
+.AddItem( PID_SHOTGUN_SHELLS, 12, 16, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1010 ).Ratio( 25 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_STRIKER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 10, 15, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 5, SLOT_INV );
+group.AddCritter( 1012 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_M60, 1, 1, SLOT_HAND1 )
+.AddItem( PID_7_62MM_AMMO, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 5, SLOT_INV );
+group.AddCritter( 1012 ).Ratio( 30 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_LASER_RIFLE_EXT_CAP, 1, 1, SLOT_HAND1 )
+.AddItem( PID_MICRO_FUSION_CELL, 10, 15, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1014 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_14MM_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+
+// RP_Tough_Thugs
+@group = @EncounterGroups[ GROUP_RP_Tough_Thugs ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 0;
+group.AddCritter( 1009 ).Ratio( 20 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_PANCOR_JACKHAMMER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_SHOTGUN_SHELLS, 12, 16, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1010 ).Ratio( 20 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_STRIKER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 10, 15, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 10, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 5, SLOT_INV );
+group.AddCritter( 1011 ).Ratio( 15 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_GALO, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 5, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1012 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_M60, 1, 1, SLOT_HAND1 )
+.AddItem( PID_7_62MM_AMMO, 0, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 5, SLOT_INV );
+group.AddCritter( 1012 ).Ratio( 20 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_PLASMA_RIFLE, 1, 1, SLOT_HAND1 )
+.AddItem( PID_MICRO_FUSION_CELL, 10, 15, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1014 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_14MM_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 5, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1054 ).Ratio( 5 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_223_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 15, 20, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 50, 350, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 1, 2, SLOT_INV )
+.AddItem( PID_CHEMICALS, 1, 2, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+
+// RP_Raiders
+@group = @EncounterGroups[ GROUP_RP_Raiders ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 0;
+group.AddCritter( 1011 ).Ratio( 30 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_GALO, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 5, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1011 ).Ratio( 25 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_IMPROVED_FLAMETHROWER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_FLAMETHROWER_FUEL, 1, 5, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1014 ).Ratio( 25 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_14MM_PISTOL, 1, 1, SLOT_HAND1 )
+.AddItem( PID_14MM_AP, 5, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1014 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_HK_P90C, 1, 1, SLOT_HAND1 )
+.AddItem( PID_10MM_JHP, 25, 35, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 0, 15, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 1, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+group.AddCritter( 1013 ).Ratio( 10 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_SPIKED_KNUCKLES, 1, 1, SLOT_HAND1 )
+.AddItem( PID_PUMP_PARTS, 10, 25, SLOT_INV );
+
+// RP_CoolTrader
+@group = @EncounterGroups[ GROUP_RP_CoolTrader ];
+group.TeamNum = 0;
+group.Position = POSITION_WEDGE;
+group.Spacing = 1;
+group.AddCritter( 1106 ).Ratio( 10 ).Dialog( 40003 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_STRIKER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 5, 10, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 50, 1200, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 100, SLOT_INV )
+.AddItem( PID_CHEMICALS, 0, 3, SLOT_INV )
+.AddItem( PID_14MM_AP, 0, 6, SLOT_INV )
+.AddItem( PID_CRAFT_STEEL, 0, 3, SLOT_INV )
+.AddItem( PID_CRAFT_IRON, 0, 5, SLOT_INV )
+.AddItem( PID_MINERAL, 0, 2, SLOT_INV )
+.AddItem( PID_CRAFT_LEAD, 0, 7, SLOT_INV )
+.AddItem( PID_CRAFT_CARBON, 0, 1, SLOT_INV )
+.AddItem( PID_CRAFT_URANIUM_PLATE, 0, 1, SLOT_INV )
+.AddItem( PID_BOTTLE_FULL, 2, 10, SLOT_INV )
+.AddItem( PID_10MM_JHP, 0, 15, SLOT_INV )
+.AddItem( PID_7_62MM_AMMO, 0, 10, SLOT_INV )
+.AddItem( PID_MICRO_FUSION_CELL, 0, 7, SLOT_INV )
+.AddItem( PID_45_CALIBER_AMMO, 0, 12, SLOT_INV )
+.AddItem( PID_FLAMETHROWER_FUEL, 0, 5, SLOT_INV )
+.AddItem( PID_SHOTGUN_SHELLS, 0, 8, SLOT_INV )
+.AddItem( PID_MICRO_FUSION_CELL, 0, 9, SLOT_INV )
+.AddItem( PID_MULTI_TOOL, 0, 1, SLOT_INV )
+.AddItem( PID_SUPER_TOOL_KIT, 0, 1, SLOT_INV );
+group.AddCritter( 1100 ).Ratio( 90 ).Dialog( 0 ).Script( "encounter_npc@_NpcInit" )
+.AddItem( PID_STRIKER, 1, 1, SLOT_HAND1 )
+.AddItem( PID_223_FMJ, 5, 10, SLOT_INV )
+.AddItem( PID_BOTTLE_CAPS, 50, 100, SLOT_INV )
+.AddItem( PID_REAL_BOTTLE_CAPS, 25, 125, SLOT_INV )
+.AddItem( PID_PUMP_PARTS, 0, 10, SLOT_INV );
+
+
+
+@group = @EncounterGroups[ GROUP_RP_Dawgs ];
+group.TeamNum = 0;
+group.Position = POSITION_HUDDLE;
+group.Spacing = 3;
+group.AddCritter( 1036 ).Ratio( 100 ).Dialog( 0 ).Script( "mob@_MobInit" );
+
+@group = @EncounterGroups[ GROUP_RP_Rats ];
+group.TeamNum = 0;
+group.Position = POSITION_HUDDLE;
+group.Spacing = 3;
+group.AddCritter( 1020 ).Ratio( 100 ).Dialog( 0 ).Script( "mob@_MobInit" );
+
+@group = @EncounterGroups[ GROUP_RP_Silver_Geckos ];
+group.TeamNum = 0;
+group.Position = POSITION_HUDDLE;
+group.Spacing = 3;
+group.AddCritter( 1026 ).Ratio( 100 ).Dialog( 0 ).Script( "mob@_MobInit" )
+.AddItem( PID_GECKO_PELT, 1, 1, SLOT_INV )
+.AddItem( PID_MEAT, 3, 5, SLOT_INV );
+
+@group = @EncounterGroups[ GROUP_RP_Golden_Geckos ];
+group.TeamNum = 0;
+group.Position = POSITION_HUDDLE;
+group.Spacing = 3;
+group.AddCritter( 1027 ).Ratio( 100 ).Dialog( 0 ).Script( "mob@_MobInit" )
+.AddItem( PID_GOLDEN_GECKO_PELT, 1, 1, SLOT_INV )
+.AddItem( PID_MEAT, 4, 7, SLOT_INV );
+
+@group = @EncounterGroups[ GROUP_RP_Carnivore_Plants ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 1;
+group.AddCritter( 1025 ).Ratio( 100 ).Dialog( 0 ).Script( "mob@_MobInit" )
+.AddItem( PID_CRAFT_FIBER, 0, 1, SLOT_INV );
+
+@group = @EncounterGroups[ GROUP_RP_Pigrats ];
+group.TeamNum = 0;
+group.Position = POSITION_HUDDLE;
+group.Spacing = 1;
+group.AddCritter( 1021 ).Ratio( 100 ).Dialog( 0 ).Script( "mob@_MobInit" )
+.AddItem( PID_MEAT, 1, 1, SLOT_INV );
+
+@group = @EncounterGroups[ GROUP_RP_Scorpion_Family ];
+group.TeamNum = 0;
+group.Position = POSITION_SURROUNDING;
+group.Spacing = 1;
+group.AddCritter( 1035 ).Ratio( 30 ).Dialog( 0 ).Script( "mob@_MobInit" )
+.AddItem( PID_VACCINE, 5, 10, SLOT_INV );
+group.AddCritter( 1034 ).Ratio( 70 ).Dialog( 0 ).Script( "mob@_MobInit" )
+.AddItem( PID_VACCINE, 0, 2, SLOT_INV );
+
+CEncounterTable@ table;
+
+// PTH_Wild (Ruins)
+@table = @EncounterTables[ TABLE_PTH_Wild ];
+table.AddLocationPid( LOCATION_CityEncounter1 );
+table.AddLocationPid( LOCATION_CityEncounter2 );
+table.AddLocationPid( LOCATION_CityEncounter3 );
+table.AddLocationPid( LOCATION_CityEncounter4 );
+table.AddLocationPid( LOCATION_CityEncounter5 );
+table.AddEncounter( 8, 20000000 ).AddGroup( GROUP_RP_Weak_Reps, 4, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 7, 20000001 ).AddGroup( GROUP_RP_Weak_Reps, 6, 10 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000002 ).AddGroup( GROUP_RP_Weak_Reps, 15, 25 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000003 ).AddGroup( GROUP_RP_Medium_Reps, 6, 8 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000004 ).AddGroup( GROUP_RP_Medium_Reps, 8, 10 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 3, 20000005 ).AddGroup( GROUP_RP_Tough_Reps, 6, 8 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 2, 20000006 ).AddGroup( GROUP_RP_Tough_Reps, 8, 12 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 4, 20000010 ).AddGroup( GROUP_RP_Weak_Thugs, 4, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 4, 20000011 ).AddGroup( GROUP_RP_Weak_Thugs, 6, 9 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 4, 20000012 ).AddGroup( GROUP_RP_Weak_Thugs, 9, 11 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000013 ).AddGroup( GROUP_RP_Medium_Thugs, 6, 9 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 3, 20000014 ).AddGroup( GROUP_RP_Tough_Thugs, 6, 8 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 3, 20000015 ).AddGroup( GROUP_RP_Raiders, 6, 9 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 8, 20000020 ).AddGroup( GROUP_RP_Dawgs, 1, 3 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000021 ).AddGroup( GROUP_RP_Dawgs, 4, 6 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 3, 20000022 ).AddGroup( GROUP_RP_Dawgs, 8, 10 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 10, 20000023 ).AddGroup( GROUP_RP_Rats, 4, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 20, 20000024 ).AddGroup( GROUP_RP_CoolTrader, 10, 10 ).AddGroup( GROUP_Player, 0, 0 );
+
+// PTH_Desert1 (Wasteland)
+@table = @EncounterTables[ TABLE_PTH_Desert1 ];
+table.AddLocationPid( LOCATION_DesertEncounter1 );
+table.AddLocationPid( LOCATION_DesertEncounter2 );
+table.AddLocationPid( LOCATION_DesertEncounter3 );
+table.AddEncounter( 10, 20000033 ).AddGroup( GROUP_RP_Rats, 4, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 6, 20000030 ).AddGroup( GROUP_RP_Silver_Geckos, 2, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000031 ).AddGroup( GROUP_RP_Golden_Geckos, 2, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 5, 20000032 ).AddGroup( GROUP_RP_Carnivore_Plants, 4, 8 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 8, 20000034 ).AddGroup( GROUP_RP_Pigrats, 3, 5 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+table.AddEncounter( 3, 20000037 ).AddGroup( GROUP_RP_Scorpion_Family, 7, 9 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
+
+
+SetZone( 2, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 3, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 4, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 4, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 4, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 4, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 4, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 5, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 5, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 5, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 5, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 5, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 5, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 6, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 6, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 6, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 6, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 6, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 6, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 7, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 8, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 9, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 9, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 9, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+
+SetZone( 14, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+
+SetZone( 10, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 14, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 10, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 14, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 11, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 14, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 12, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 14, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 13, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 14, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 14, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 18, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 15, 7, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 16, 7, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+SetZone( 17, 7, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+
+SetZone( 0, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 4, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 5, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 6, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 2, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 3, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 4, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 5, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 6, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 2, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 3, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 4, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 2, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 3, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 2, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 3, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 2, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 3, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 2, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 3, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 0, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 1, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+
+SetZone( 10, 4, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 4, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 4, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 10, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 10, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 9, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 10, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 18, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 9, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 10, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 15, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 16, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 17, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 18, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 15, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 16, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 17, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 18, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 11, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 16, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 17, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 18, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 15, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 16, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 17, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 18, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 15, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 12, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 15, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 13, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+SetZone( 14, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );

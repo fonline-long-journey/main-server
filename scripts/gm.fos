@@ -1,0 +1,3328 @@
+﻿// GM commands for FOrp by PigBoss
+
+#include "_macros.fos"
+#include "_animation.fos"
+#include "_defines.fos"
+#include "_colors.fos"
+#include "map_central_town.fos"
+
+import string ElectronicLockerCode( int varNum ) from "electronic_lock";
+import void   logger( Critter& cr, int type, string@ message ) from "logger";
+import bool   AddAttackPlane( Critter& npc, uint priority, Critter& target, bool run ) from "npc_planes";
+import bool   AddWalkPlane( Critter& npc, uint priority, uint16 hexX, uint16 hexY, uint8 dir, bool run, uint cut ) from "npc_planes";
+import int NextLevelNeedExp( Critter& cr ) from "parameters";	
+
+//ErlKing spawn menu
+import void GM_MobInit( Critter& npc, int type) from "mob";
+
+void tb( Critter& player, int param0, int param1, int param2 )
+{
+    Map@ map = player.GetMap();
+    if( map.IsTurnBased() )
+        map.EndTurnBased();
+    else
+        map.BeginTurnBased( player );
+}
+
+void gmlock( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ arr )
+{
+    Item@ door = player.GetMap().GetItem( param0 );
+    door.LockerId = Random( 90, 7000 );
+    door.LockerComplexity = 1000;
+	Item @ key = player.AddItem( PID_KEY, 1 );
+	SETFLAG( door.LockerCondition, LOCKER_LOCKED );
+    key.LockerId = door.LockerId;
+    key.Update();
+	door.Update();
+    player.Say( SAY_NETMSG, "Door locked" );
+}
+
+void light( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ arr )
+{
+    Item@ lamp = player.GetMap().GetItem( param0 );
+    lamp.LightIntensity = arr[ 0 ];
+    lamp.LightDistance = arr[ 1 ];
+    lamp.LightColor = arr[ 2 ];
+	if(!FLAG(lamp.Flags, ITEM_LIGHT))
+		SETFLAG(lamp.Flags, ITEM_LIGHT);
+	else
+		UNSETFLAG(lamp.Flags, ITEM_LIGHT);
+	lamp.Update();
+    player.Say( SAY_NETMSG, "Light set" );
+}
+
+void immaterium( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( param0 );
+    if( valid( target ) )
+        target.TransitToMap( GetMapByPid( MAP_immaterium, 0 ).Id, 0 );
+    player.Say( SAY_NETMSG, target.Name + " is send to warp" );
+}
+
+
+void pootisguard( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( param0 );
+    if( valid( target ) )
+        target.SetScript( "_GuardInit" );
+    player.Say( SAY_NETMSG, target.Name + " готов убивать!" );
+}
+
+void clearlex( Critter& player, int param0, int param1, int param2, string@ msg, int[] @ param4 )
+{
+	Critter@ target = GetCritter( param0 );
+    if( valid( target ) )
+        target.SetLexems( "" );
+	player.Say( SAY_NETMSG, "Lexem cleared!" );
+}
+
+void SetCodeDoor( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Item@ door = player.GetMap().GetItem( param0 );
+    if( valid( door ) )
+    {
+        door.Val0 = 0;
+        door.Val1 = 0;
+        door.Val2 = 5;
+        door.Val3 = 0;
+        int i = 0;
+        for( i = 0; i < 6; ++i )
+        {
+            if( GetGlobalVar( 9009 + i ) == door.Id )
+            {
+                GetGlobalVar( 9009 + i ) = 0;
+                player.Say( SAY_NETMSG, "Замок освобожден." );
+                door.EventFinish( true );
+                return;
+            }
+            if( GetGlobalVar( 9009 + i ) == 0 )
+                break;
+            if( i == 5 )
+            {
+                player.Say( SAY_NETMSG, "Все замки заняты." );
+                return;
+            }
+        }
+        door.Val4 = 9009 + i;
+        door.SetScript( "electronic_lock@_LockedInit" );
+        player.Say( SAY_NETMSG, "Код от двери - " + ElectronicLockerCode( door.Val4 ) );
+    }
+}
+
+void deleteloc( Critter& player, int id, int, int )
+{
+    DeleteLocation( id );
+    player.Say( SAY_NETMSG, "Done." );
+}
+
+
+void __sinfsc( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+	
+	if( player.ParamBase[ ST_MODER ] == 0 )
+    {
+        player.Say( SAY_NETMSG, "|0xFFD700 Прослушка включена >:D" );
+        player.ParamBase[ ST_MODER ] = 1;
+    }
+    else
+    {
+        player.Say( SAY_NETMSG, "|0xFFD700 Прослушка выключена =(" );
+        player.ParamBase[ ST_MODER ] = 0;
+    }
+	Critter@[] crs;
+	GetAllPlayers(crs);
+	for(uint i = 0; i < crs.length(); ++i)
+		player.RunClientScript( "rp_client@__setname", crs[i].Id, 0, 0, GetPlayerName(crs[i].Id) + " |0xFFFF0000 " + crs[i].Id + "\n", null);
+	
+}
+
+void refreshnames(Critter& player){
+	Critter@[] crs;
+	GetAllPlayers(crs);
+	
+	if(!valid(crs))
+		return;
+		
+	for(uint i = 0; i < crs.length(); ++i)
+		player.RunClientScript( "rp_client@__setname", crs[i].Id, 0, 0, GetPlayerName(crs[i].Id) + " |0xFFFF0000 " + crs[i].Id, null);
+}
+
+void _say2all( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@[] crs;
+    GetAllPlayers( crs );
+    string str = "|0xFFFF0000 ### |0xFFBB33CC " + param3 + " |0xFFFF0000 ###";
+    int    acc = player.GetAccess();
+
+    for( int i = 0, j = crs.length(); i < j; i++ )
+    {
+        if( crs[ i ] is null || crs[ i ].IsNpc() )
+            continue;
+
+        if( crs[ i ].GetAccess() >= acc )
+            crs[ i ].Say( SAY_NETMSG, "|0xFFFF0000 <|0xFFFFFF00 " + GetPlayerName( player.Id ) + "|0xFFFF0000 >" + str );
+        else
+            crs[ i ].Say( SAY_NETMSG, str );
+    }
+    player.Say( SAY_NETMSG, "Message send" );
+}
+
+void _erasedoor( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Map@  map = player.GetMap();
+    Item@ item = map.GetItem( param0 );
+    item.LockerId = 0;
+    item.LockerComplexity = 0;
+    if( FLAG( item.LockerCondition, LOCKER_LOCKED ) )
+        UNSETFLAG( item.LockerCondition, LOCKER_LOCKED );
+    item.Val9 = 0;
+    player.Say( SAY_NETMSG, "Door cleared" );
+}
+
+void setrain( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    int rain = 0;
+    if( StrToInt( param3, rain ) )
+        player.GetMap().SetRain( rain );
+    player.Say( SAY_NETMSG, "Rain set to - " + rain );
+}
+
+void ItemLexer( Critter& cr, uint answerI, string& answerS )
+{
+    if( valid( _CritGetItemHand( cr ) ) )
+    {
+        _CritGetItemHand( cr ).SetLexems( answerS );
+    }
+    cr.Say( SAY_NETMSG, "Lexem set" );
+}
+
+void _gmpm( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ cr = GetCritter( param0 );
+    cr.Say( SAY_FLASH_WINDOW, "" );
+    cr.Say( SAY_NETMSG, "|0xFFFF0000 <|0xFFFFFF00 " + "gm" + "|0xFFFF0000 > |0xFFCC33AA " + param3 );
+    player.Say( SAY_NETMSG, "Сообщение отправлено." );
+    cr.ParamBase[ LAST_ADMIN ] = player.Id;
+}
+
+void toitem( Critter& cr, int pid, int, int )
+{
+    Map@ map = cr.GetMap();
+    Item@[] items;
+    map.GetItems( pid, items );
+    for( uint i = 0; i < items.length(); ++i )
+        cr.Say( SAY_NETMSG, "Item(" + pid + ") on x-" + items[ i ].HexX + " y-" + items[ i ].HexY );
+}
+
+
+
+void GM_say( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    player.ShowScreen( SCREEN_SAY, 0, "GMsay" );
+    player.ParamBase[ ST_VAR5 ] = param0;
+}
+
+void _lvlup( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ cr = GetCritter( param0 );
+    cr.ParamBase[ ST_EXPERIENCE ] += NextLevelNeedExp(cr) - cr.ParamBase[ ST_EXPERIENCE ] ;
+    player.Say( SAY_NETMSG, cr.ParamBase[ ST_LEVEL ] + " level to " + cr.Name );
+}
+
+void _AddExp( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ cr = GetCritter( param0 );
+    int      exp = 0;
+    if( StrToInt( param3, exp ) )
+        cr.ParamBase[ ST_EXPERIENCE ] += exp;
+    player.Say( SAY_NETMSG, "+ " + exp + " exp, to " + cr.Name );
+}
+
+void _gmsay( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    if( param3 == ":3" || param3 == ":3" )
+    {
+        player.Say( SAY_NETMSG, "Азаза, смайлики от лица неписей." );
+        return;
+    }
+    if( substring( param3, 0, 2 ) == ".э" )
+    {
+        GetCritter( param0 ).Say( SAY_EMOTE, substring( param3, 2, param3.length() ) );
+        return;
+    }
+    if( substring( param3, 0, 2 ) == ".к" )
+    {
+        GetCritter( param0 ).Say( SAY_SHOUT, substring( param3, 2, param3.length() ) );
+        return;
+    }
+    if( substring( param3, 0, 2 ) == ".ш" )
+    {
+        GetCritter( param0 ).Say( SAY_WHISP, substring( param3, 2, param3.length() ) );
+        return;
+    }
+    GetCritter( param0 ).Say( SAY_NORM, param3 );
+}
+
+void GMsay( Critter& cr, uint answerI, string& answerS )
+{
+    // GmLog( cr, 0, 0, 0, "GmHot say " + answerS, null );
+    if( substring( answerS, 0, 2 ) == ".э" )
+    {
+        GetCritter( cr.ParamBase[ ST_VAR5 ] ).Say( SAY_EMOTE, substring( answerS, 2, answerS.length() ) );
+        cr.ParamBase[ ST_VAR5 ] = 0;
+        return;
+    }
+    if( substring( answerS, 0, 2 ) == ".к" )
+    {
+        GetCritter( cr.ParamBase[ ST_VAR5 ] ).Say( SAY_SHOUT, substring( answerS, 2, answerS.length() ) );
+        cr.ParamBase[ ST_VAR5 ] = 0;
+        return;
+    }
+    if( substring( answerS, 0, 2 ) == ".ш" )
+    {
+        GetCritter( cr.ParamBase[ ST_VAR5 ] ).Say( SAY_WHISP, substring( answerS, 2, answerS.length() ) );
+        cr.ParamBase[ ST_VAR5 ] = 0;
+        return;
+    }
+    GetCritter( cr.ParamBase[ ST_VAR5 ] ).Say( SAY_NORM, answerS );
+    logger( cr, GMLOG, answerS );
+    cr.ParamBase[ ST_VAR5 ] = 0;
+    return;
+}
+
+void _spawncar( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    uint16 protoCar = PID_HIGHWAYMAN_GT;
+    Map@   map = player.GetMap();
+    uint16 x = 0, y = 0;
+    map.GetEntireCoords( 243, 0, x, y );
+    Item@  car = map.AddItem( x, y, protoCar, 1 );
+    if( valid( car ) )
+    {
+        car.LockerId = 1337;
+        car.Charge = car.Proto.Car_TankVolume;
+        car.Deterioration = 0;
+        _CarSetBioEngine( car );
+        _CarSetNoLockpick( car );
+        car.Update();
+        Item@ key = player.AddItem( PID_KEY, 1 );
+        if( valid( key ) )
+        {
+            key.LockerId = 1337;
+            key.Update();
+        }
+        Item@ bag = car.GetChild( 0 );
+        if( valid( bag ) )
+        {
+            bag.LockerId = 1337;
+            bag.LockerComplexity =  300;
+            bag.Update();
+        }
+        key.SetLexems( "Ключ от тачки" );
+    }
+}
+
+
+void _ctd( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( param0 );
+
+    if( not valid( target ) )
+        return;
+
+    Map@ map = player.GetMap();
+
+    if( not valid( map ) )
+        return;
+    if( not map.IsHexPassed( player.HexX + 1, player.HexY ) )
+        return;
+
+    target.TransitToMap( map.Id, player.HexX + 1, player.HexY, 0 );
+    player.Say( SAY_NETMSG, target.Name + " summoned" );
+}
+
+void _dct( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( param0 );
+    if( not valid( target ) )
+        return;
+    Map@ map = target.GetMap();
+    if( valid( map ) )
+    {
+        player.TransitToMap( map.Id, target.HexX + 1, target.HexY, 0 );
+        player.Say( SAY_NETMSG, "Done." );
+    }
+    else
+        player.Say( SAY_NETMSG, "Target probably on global map." );
+}
+
+void _GiveAll( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ cr = GetCritter( param0 );
+    Item@[] items;
+    if( param1 == 0 )
+    {
+        cr.GetItems( SLOT_HAND1, items );
+        MoveItems( items, player );
+    }
+    else if( param1 == 1 )
+    {
+        cr.GetItems( SLOT_HAND2, items );
+        MoveItems( items, player );
+    }
+    else if( param1 == 2 )
+    {
+        cr.GetItems( SLOT_ARMOR, items );
+        MoveItems( items, player );
+    }
+    player.Say( SAY_NETMSG, "Done." );
+}
+
+void _Clone( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ cr = GetCritter( param0 );
+    if( valid( cr ) )
+    {
+        for( uint i = 0; i <= 80; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        for( uint i = 200; i <= 207; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        for( uint i = 209; i <= 217; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+
+        for( uint i = 260; i <= 278; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        for( uint i = 300; i <= 439; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        for( uint i = 470; i <= 476; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        for( uint i = 480; i <= 498; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        for( uint i = 550; i <= 565; i++ )
+        {
+            player.ParamBase[ i ] = cr.ParamBase[ i ];
+        }
+        player.Say( SAY_NETMSG, "Вам присвоенны параметры персонажа " + cr.Id );
+        player.Say( SAY_NETMSG, "Сник цели равен " + cr.ParamBase[ 208 ] );
+    }
+}
+
+void _god( Critter& player, int pid, int dlg, int targety, string@ param3, int[] @ param4 )
+{
+    player.ModeBase[ MODE_INVULNERABLE ] = 1;
+    player.PerkBase[ PE_SHARPSHOOTER ] = 100;
+    player.PerkBase[ PE_AWARENESS ] = 2;
+    player.PerkBase[ PE_SILENT_RUNNING ] = 1;
+    player.SkillBase[ SK_SNEAK ] = 300;
+    player.Say( SAY_NETMSG, "God mode enabled" );
+}
+
+void _opendoor( Critter& player, int pid, int dlg, int targety, string@ param3, int[] @ param4 )
+{
+    Map@  map = player.GetMap();
+    Item@ door = map.GetItem( pid );
+    if( _LockerIsOpen( door ) )
+        door.LockerClose();
+    else
+        door.LockerOpen();
+}
+
+void _info( Critter& player, int id, int dlg, int targety, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( id );
+    if( valid( target ) && target.IsPlayer() )
+        player.Say( SAY_NETMSG, "Name - " + GetPlayerName( target.Id )  + ". Id -  " + target.Id );
+}
+
+void _AddNpc( Critter& cr, int pid, int dlg, int targety, string@ param3, int[] @ param4 )
+{
+    if( pid <= 0 )
+    {
+        cr.Say( SAY_NETMSG, "Fail" );
+        return;
+    }
+    cr.GetMap().AddNpc( pid, cr.HexX - 3, cr.HexY - 2, 0, null, null, null ).StatBase[ ST_DIALOG_ID ] = dlg;
+    cr.Say( SAY_NETMSG, "Npc with Pid - " + pid + " and dialog - " + dlg + " spawned" );
+    return;
+}
+
+void _RemoveNpc( Critter& cr, int pid, int dlg, int targety, string@ param3, int[] @ param4 )
+{
+    Critter@ npc = GetCritter( pid );
+    if( npc.IsNpc() )
+    {
+        DeleteNpc( npc );
+        cr.Say( SAY_NETMSG, "Npc removed." );
+    }
+
+}
+void _body( Critter& player, int id, int pid, int targety, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( id );
+    if( not valid( target ) )
+        return;
+    target.ParamBase[ ST_BASE_CRTYPE ] = pid;
+    target.ChangeCrType( pid );
+    player.Say( SAY_NETMSG, "BT changed" );
+}
+
+void _teletoHex( Critter& player, int id, int targetx, int targety, string@ param3, int[] @ param4 )
+{
+    player.TransitToHex( targetx, targety, player.Dir );
+    player.RefreshVisible();
+}
+
+void _GetCritParam(  Critter& player, int pid, int count, int param2, string@ param3, int[] @ param4 )
+{
+    Critter @ cr = GetCritter( param2 );
+    if( valid( cr ) )
+    {
+        player.Say( SAY_NETMSG, "Param #" + pid + " val= " + cr.Param[ pid ] );
+        player.Say( SAY_NETMSG, "ParamBase #" + pid + " val= " + cr.ParamBase[ pid ] );
+    }
+}
+
+void _greytext( Critter& player, int x, int y, int param2, string@ param3, int[] @ param4 )
+{
+    Map@ map = player.GetMap();
+    map.SetText( x, y, COLOR_GRAY, param3 );
+    player.Say( SAY_NETMSG, "Grey text:" + param3 );
+}
+
+void _deleteitem( Critter& cr, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Map@ map = cr.GetMap();
+    Item@[] item;
+    map.GetItems( param1, param2, item );
+    DeleteItems( item );
+    cr.Say( SAY_NETMSG, "Items deleted" );
+}
+
+void _itemlex( Critter& cr, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Map@  map = cr.GetMap();
+    Item@ item = map.GetItem( param0 );
+    item.SetLexems( param3 );
+    cr.Say( SAY_NETMSG, "Lexem set" );
+}
+
+void _GmLex( Critter& player, int id, int param1, int param2, string@ desc, int[] @ nothing )
+{
+    Critter@ cr = GetCritter( id );
+	
+    cr.SetLexems( desc);
+    player.Say( SAY_NETMSG, "Player lexems: " + desc + "." );
+}
+void god( Critter& player, int, int, int, string@ desc, int[] @ nothing )
+{
+    for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
+        player.StatBase[ i ] = 10;
+    for( uint i = ST_NORMAL_ABSORB; i <= ST_EXPLODE_ABSORB; i++ )
+        player.StatBase[ i ] = 100;
+    for( uint i = ST_NORMAL_RESIST; i <= ST_POISON_RESISTANCE; i++ )
+        player.StatBase[ i ] = 100;
+    for( uint i = SK_SMALL_GUNS; i <= SK_OUTDOORSMAN; i++ )
+        player.SkillBase[ i ] = 300;
+    player.StatBase[ ST_MELEE_DAMAGE ] = 999;
+    player.StatBase[ ST_ARMOR_CLASS ] = 100;
+    player.StatBase[ ST_CURRENT_HP ] = 9999;
+    player.StatBase[ ST_MAX_LIFE ] = 9999;
+}
+void _checkinv( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ vals )
+{
+    player.ShowContainer( ( GetCritter( param1 ) ), null, TRANSFER_FAR_CRIT );
+}
+void controlMob( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    player.RunClientScript( "client_gui@_SetControlCritters", param0, 0, 0, null, null );
+    Critter@ target = GetCritter( param0 );
+    if( valid( target ) )
+        target.ParamBase[ MERC_MASTER_ID ] = player.Id;
+}
+
+void moveMob( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ vals )
+{
+    for( uint i = param0 * 10, ii = 10 + param0 * 10; i < ii; i++ )
+    {
+        Critter@ controlled = GetCritter( vals[ i ] );
+
+        if( valid( player ) && valid( controlled ) && controlled.IsNpc() )
+        {
+            controlled.ModeBase[ MODE_NO_HOME ] = 1;
+            controlled.ErasePlane( -1, true );
+            AddWalkPlane( controlled, 1, param1, param2, GetDirection( controlled.HexX, controlled.HexY, param1, param2 ), valid( param3 ), 0 );
+            if( param0 == 0 )
+                controlled.ClearEnemyStack();
+        }
+    }
+}
+void attackMob( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ vals )
+{
+    Critter@ target = GetCritter( param0 );
+
+    for( uint i = param2 * 10, ii = 10 + param2 * 10; i < ii; i++ )
+    {
+        Critter@ controlled = GetCritter( vals[ i ] );
+        if( valid( player ) && valid( controlled ) && valid( target ) && controlled.IsNpc() )
+        {
+            controlled.ModeBase[ MODE_NO_HOME ] = 1;
+            controlled.ErasePlane( -1, true );
+            AddAttackPlane( controlled, 0, target, __RunOnCombat );
+            controlled.AddEnemyInStack( target.Id );
+        }
+    }
+}
+void stopMob( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ vals )
+{
+    for( uint i = param0 * 10, ii = 10 + param0 * 10; i < ii; i++ )
+    {
+        Critter@ controlled = GetCritter( vals[ i ] );
+
+        if( valid( player ) && valid( controlled ) && !controlled.IsPlayer() )
+        {
+            controlled.ErasePlane( -1, true );
+            controlled.ClearEnemyStack();
+            controlled.EraseTimeEvents( 9 );
+            controlled.SetDir( GetDirection( controlled.HexX, controlled.HexY, param1, param2 ) );
+        }
+    }
+}
+
+
+void _gmcont( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Map@ map = player.GetMap();
+    if( !valid( map ) )
+    {
+        player.Say( SAY_NETMSG, "NOT ON GLOBAL YOU MORON" );
+        return;
+    }
+    if( param0 == 0 ) // armor
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 0, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_LEATHER_JACKET, 1, 0 );
+        cont.AddItem( PID_LEATHER_ARMOR, 1, 0 );
+        cont.AddItem( PID_LEATHER_ARMOR_MK_II, 1, 0 );
+        cont.AddItem( PID_CURED_LEATHER_ARMOR, 1, 0 );
+        cont.AddItem( PID_SANDROBE, 1, 0 );
+        cont.AddItem( PID_BLUE_LEATHER_ARMOR, 1, 0 );
+        cont.AddItem( PID_METAL_ARMOR, 1, 0 );
+        cont.AddItem( PID_METAL_ARMOR_MK_II, 1, 0 );
+        cont.AddItem( PID_TESLA_ARMOR, 1, 0 );
+        cont.AddItem( PID_COMBAT_ARMOR, 1, 0 );
+        cont.AddItem( PID_COMBAT_ARMOR_MK_II, 1, 0 );
+        cont.AddItem( PID_BROTHERHOOD_COMBAT_ARMOR, 1, 0 );
+        cont.AddItem( PID_BLACK_COMBAT_ARMOR, 1, 0 );
+        cont.AddItem( PID_CHITIN_ARMOR, 1, 0 );
+        cont.AddItem( PID_CHITIN_ARMOR_MK_II, 1, 0 );
+        cont.AddItem( PID_BLUE_COMBAT_ARMOR, 1, 0 );
+        cont.AddItem( PID_DESERT_COMBAT_ARMOR, 1, 0 );
+        cont.AddItem( PID_BROWN_COMBAT_ARMOR, 1, 0 );
+        cont.AddItem( PID_PURPLE_ROBE, 1, 0 );
+        cont.AddItem( PID_BLACK_ROBE, 1, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 1 ) // pistols
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 1, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_ZIP_GUN, 1, 0 );
+        cont.AddItem( PID_9MM_MAUSER, 1, 0 );
+        cont.AddItem( PID_10MM_PISTOL, 1, 0 );
+        cont.AddItem( PID_14MM_PISTOL, 1, 0 );
+        cont.AddItem( PID_DESERT_EAGLE, 1, 0 );
+        cont.AddItem( PID_DESERT_EAGLE_EXT_MAG, 1, 0 );
+        cont.AddItem( PID_223_PISTOL, 1, 0 );
+        cont.AddItem( PID_44_MAGNUM_REVOLVER, 1, 0 );
+        cont.AddItem( PID_44_MAGNUM_SPEEDLOADER, 1, 0 );
+        cont.AddItem( PID_NEEDLER_PISTOL, 1, 0 );
+        cont.AddItem( PID_PK12_GAUSS_PISTOL, 1, 0 );
+        cont.AddItem( PID_MULTI_BARREL_GUN, 1, 0 );
+        cont.AddItem( PID_MAUSER_SILENCE, 1, 0 );
+        cont.AddItem( PID_ANACONDA, 1, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 2 ) // rifles
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 2, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_HUNTING_RIFLE, 1, 0 );
+        cont.AddItem( PID_SCOPED_HUNTING_RIFLE, 1, 0 );
+        cont.AddItem( PID_SPRINGER_RIFLE, 1, 0 );
+        cont.AddItem( PID_ASSAULT_RIFLE, 1, 0 );
+        cont.AddItem( PID_ASSAULT_RIFLE_EXT_MAG, 1, 0 );
+        cont.AddItem( PID_SNIPER_RIFLE, 1, 0 );
+        cont.AddItem( PID_FN_FAL, 1, 0 );
+        cont.AddItem( PID_FN_FAL_NIGHT_SCOPE, 1, 0 );
+        cont.AddItem( PID_FN_FAL_HPFA, 1, 0 );
+        cont.AddItem( PID_RED_RYDER_BB_GUN, 1, 0 );
+        cont.AddItem( PID_RED_RYDER_LE_BB_GUN, 1, 0 );
+        cont.AddItem( PID_JONNY_BB_GUN, 1, 0 );
+        cont.AddItem( PID_INDEPENDENT, 1, 0 );
+        cont.AddItem( PID_M72_GAUSS_RIFLE, 1, 0 );
+        cont.AddItem( PID_ELEPHANT_GUN, 1, 0 );
+        cont.AddItem( PID_SHOTGUN, 1, 0 );
+        cont.AddItem( PID_SAWED_OFF_SHOTGUN, 1, 0 );
+        cont.AddItem( PID_COMBAT_SHOTGUN, 1, 0 );
+        cont.AddItem( PID_HK_CAWS, 1, 0 );
+        cont.AddItem( PID_PANCOR_JACKHAMMER, 1, 0 );
+        cont.AddItem( PID_10MM_SMG, 1, 0 );
+        cont.AddItem( PID_HK_P90C, 1, 0 );
+        cont.AddItem( PID_TOMMY_GUN, 1, 0 );
+        cont.AddItem( PID_HK_G11, 1, 0 );
+        cont.AddItem( PID_HK_G11E, 1, 0 );
+        cont.AddItem( PID_GREASE_GUN, 1, 0 );
+        cont.AddItem( PID_MAUSER_SMG, 1, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 3 ) // bigguns
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 3, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_FLAMER, 1, 0 );
+        cont.AddItem( PID_IMPROVED_FLAMETHROWER, 1, 0 );
+        cont.AddItem( PID_ROCKET_LAUNCHER, 1, 0 );
+        cont.AddItem( PID_MINIGUN, 1, 0 );
+        cont.AddItem( PID_AVENGER_MINIGUN, 1, 0 );
+        cont.AddItem( PID_VINDICATOR_MINIGUN, 1, 0 );
+        cont.AddItem( PID_BOZAR, 1, 0 );
+        cont.AddItem( PID_LIGHT_SUPPORT_WEAPON, 1, 0 );
+        cont.AddItem( PID_M60, 1, 0 );
+        cont.AddItem( PID_METAL_STORM, 1, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 4 ) // energo
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 4, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_LASER_PISTOL, 1, 0 );
+        cont.AddItem( PID_MAGNETO_LASER_PISTOL, 1, 0 );
+        cont.AddItem( PID_SOLAR_SCORCHER, 1, 0 );
+        cont.AddItem( PID_LASER_RIFLE, 1, 0 );
+        cont.AddItem( PID_LASER_RIFLE_EXT_CAP, 1, 0 );
+        cont.AddItem( PID_GATLING_LASER, 1, 0 );
+        cont.AddItem( PID_ALIEN_LASER_PISTOL, 1, 0 );
+        cont.AddItem( PID_PLASMA_PISTOL, 1, 0 );
+        cont.AddItem( PID_PLASMA_PISTOL_EXT_CART, 1, 0 );
+        cont.AddItem( PID_PLASMA_RIFLE, 1, 0 );
+        cont.AddItem( PID_TURBO_PLASMA_RIFLE, 1, 0 );
+        cont.AddItem( PID_YK32_PULSE_PISTOL, 1, 0 );
+        cont.AddItem( PID_YK42B_PULSE_RIFLE, 1, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 5 ) // throwing
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 5, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_MOLOTOV_COCKTAIL, 50, 0 );
+        cont.AddItem( PID_FRAG_GRENADE, 50, 0 );
+        cont.AddItem( PID_PLASMA_GRENADE, 50, 0 );
+        cont.AddItem( PID_PULSE_GRENADE, 50, 0 );
+        cont.AddItem( PID_DOG_GRENADE, 50, 0 );
+        cont.AddItem( PID_SMOKE_GRENADE, 50, 0 );
+        cont.AddItem( PID_MUSTARD_GAS_GRENADE, 50, 0 );
+        cont.AddItem( PID_FLARE, 50, 0 );
+        cont.AddItem( PID_PLANT_SPIKE, 50, 0 );
+        cont.AddItem( PID_THROWING_KNIFE, 50, 0 );
+        cont.AddItem( PID_ROCK, 50, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 6 ) // melee
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 6, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_KNIFE, 1, 0 );
+        cont.AddItem( PID_COMBAT_KNIFE, 1, 0 );
+        cont.AddItem( PID_LIL_JESUS_WEAPON, 1, 0 );
+        cont.AddItem( PID_SHIV, 1, 0 );
+        cont.AddItem( PID_SWITCHBLADE, 1, 0 );
+        cont.AddItem( PID_WAKIZASHI_BLADE, 1, 0 );
+        cont.AddItem( PID_ELI_KNIFE, 1, 0 );
+        cont.AddItem( PID_SPEAR, 1, 0 );
+        cont.AddItem( PID_SHARP_SPEAR, 1, 0 );
+        cont.AddItem( PID_SHARPENED_POLE, 1, 0 );
+        cont.AddItem( PID_CLUB, 1, 0 );
+        cont.AddItem( PID_CROWBAR, 1, 0 );
+        cont.AddItem( PID_WRENCH, 1, 0 );
+        cont.AddItem( PID_SLEDGEHAMMER, 1, 0 );
+        cont.AddItem( PID_LOUISVILLE_SLUGGER, 1, 0 );
+        cont.AddItem( PID_SUPER_SLEDGE, 1, 0 );
+        cont.AddItem( PID_CATTLE_PROD, 1, 0 );
+        cont.AddItem( PID_SUPER_CATTLE_PROD, 1, 0 );
+        cont.AddItem( PID_RIPPER, 1, 0 );
+        cont.AddItem( PID_BOXING_GLOVES, 1, 0 );
+        cont.AddItem( PID_PLATED_BOXING_GLOVES, 1, 0 );
+        cont.AddItem( PID_RING_BOXING_GLOVES, 1, 0 );
+        cont.AddItem( PID_RING_PLATED_BOXING_GLOVES, 1, 0 );
+        cont.AddItem( PID_POWER_FIST, 1, 0 );
+        cont.AddItem( PID_BRASS_KNUCKLES, 1, 0 );
+        cont.AddItem( PID_SPIKED_KNUCKLES, 1, 0 );
+        cont.AddItem( PID_MEGA_POWER_FIST, 1, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 7 ) // ammo
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 7, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_4_7MM_CASELESS, 200, 0 );
+        cont.AddItem( PID_5MM_JHP, 200, 0 );
+        cont.AddItem( PID_5MM_AP, 200, 0 );
+        cont.AddItem( PID_7_62MM_AMMO, 200, 0 );
+        cont.AddItem( PID_9MM_AMMO, 200, 0 );
+        cont.AddItem( PID_9MM_BALL, 200, 0 );
+        cont.AddItem( PID_10MM_JHP, 200, 0 );
+        cont.AddItem( PID_10MM_AP, 200, 0 );
+        cont.AddItem( PID_14MM_AP, 200, 0 );
+        cont.AddItem( PID_44_MAGNUM_JHP, 200, 0 );
+        cont.AddItem( PID_44_FMJ_MAGNUM, 200, 0 );
+        cont.AddItem( PID_45_CALIBER_AMMO, 200, 0 );
+        cont.AddItem( PID_223_FMJ, 200, 0 );
+        cont.AddItem( PID_SHOTGUN_SHELLS, 200, 0 );
+        cont.AddItem( PID_2MM_EC_AMMO, 200, 0 );
+        cont.AddItem( PID_700_NITRO_EXPRESS, 200, 0 );
+        cont.AddItem( PID_EXPLOSIVE_ROCKET, 200, 0 );
+        cont.AddItem( PID_ROCKET_AP, 200, 0 );
+        cont.AddItem( PID_FLAMETHROWER_FUEL, 200, 0 );
+        cont.AddItem( PID_FLAMETHROWER_FUEL_MK_II, 200, 0 );
+        cont.AddItem( PID_SMALL_ENERGY_CELL, 200, 0 );
+        cont.AddItem( PID_MICRO_FUSION_CELL, 200, 0 );
+        cont.AddItem( PID_BBS, 200, 0 );
+        cont.AddItem( PID_HN_NEEDLER_CARTRIDGE, 200, 0 );
+        cont.AddItem( PID_HN_AP_NEEDLER_CARTRIDGE, 200, 0 );
+        cont.AddItem( PID_EMP_ROCKET, 200, 0 );
+        cont.AddItem( 10023, 200, 0 );
+        cont.AddItem( 10030, 200, 0 );
+        cont.AddItem( 10031, 200, 0 );
+        cont.AddItem( 10032, 200, 0 );
+        cont.AddItem( 10033, 200, 0 );
+        cont.AddItem( 10034, 200, 0 );
+        cont.AddItem( 10035, 200, 0 );
+        cont.AddItem( 10036, 200, 0 );
+        cont.AddItem( 10037, 200, 0 );
+        cont.AddItem( 10038, 200, 0 );
+        cont.AddItem( 10039, 200, 0 );
+        cont.AddItem( 10040, 200, 0 );
+        cont.AddItem( 10041, 200, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 8 ) // drugs
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 8, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_STIMPAK, 200, 0 );
+        cont.AddItem( PID_RADAWAY, 200, 0 );
+        cont.AddItem( PID_ANTIDOTE, 200, 0 );
+        cont.AddItem( PID_RAD_X, 200, 0 );
+        cont.AddItem( PID_SUPER_STIMPAK, 200, 0 );
+        cont.AddItem( PID_JET_ANTIDOTE, 200, 0 );
+        cont.AddItem( PID_HEALING_POWDER, 200, 0 );
+        cont.AddItem( PID_HYPO, 200, 0 );
+        cont.AddItem( PID_NUKA_COLA, 200, 0 );
+        cont.AddItem( PID_BEER, 200, 0 );
+        cont.AddItem( PID_BOOZE, 200, 0 );
+        cont.AddItem( PID_GAMMA_GULP_BEER, 200, 0 );
+        cont.AddItem( PID_ROENTGEN_RUM, 200, 0 );
+        cont.AddItem( PID_ROT_GUT, 200, 0 );
+        cont.AddItem( PID_MENTATS, 200, 0 );
+        cont.AddItem( PID_BUFFOUT, 200, 0 );
+        cont.AddItem( PID_PSYCHO, 200, 0 );
+        cont.AddItem( PID_JET, 200, 0 );
+        cont.AddItem( PID_MUTATED_FRUIT, 200, 0 );
+        cont.AddItem( PID_IGUANA_ON_A_STICK, 200, 0 );
+        cont.AddItem( PID_MEAT_ON_A_STICK, 200, 0 );
+        cont.AddItem( PID_COOKIE, 200, 0 );
+        cont.AddItem( PID_BOX_OF_DOUGHNUTS, 200, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+    if( param0 == 9 ) // misc
+    {
+        Item@ cont = map.AddItem( 1, 1, PID_HIDDEN_CONTAINER, 1 );
+        if( !valid( cont ) )
+        {
+            Item@ contnew = map.GetItem( 1, 1, PID_HIDDEN_CONTAINER );
+            if( !valid( contnew ) )
+                return;
+            DeleteItem( contnew );
+            _gmcont( player, 9, 0, 0, null, null );
+            return;
+        }
+        cont.AddItem( PID_BOTTLE_CAPS, 10000, 0 );
+        cont.AddItem( PID_MORNING_STAR_MINE, 200, 0 );
+        cont.AddItem( PID_KOKOWEEF_MINE_SCRIP, 200, 0 );
+        cont.AddItem( PID_REAL_BOTTLE_CAPS, 200, 0 );
+        cont.AddItem( PID_PUMP_PARTS, 200, 0 );
+        cont.AddItem( PID_SCORPION_TAIL, 200, 0 );
+        cont.AddItem( PID_ROPE, 200, 0 );
+        cont.AddItem( PID_BROC_FLOWER, 200, 0 );
+        cont.AddItem( PID_XANDER_ROOT, 200, 0 );
+        cont.AddItem( PID_GECKO_PELT, 200, 0 );
+        cont.AddItem( PID_GOLDEN_GECKO_PELT, 200, 0 );
+        cont.AddItem( PID_FLINT, 200, 0 );
+        cont.AddItem( PID_MEAT_JERKY, 200, 0 );
+        cont.AddItem( PID_FIREWOOD, 200, 0 );
+        cont.AddItem( PID_HYPODERMIC_NEEDLE, 200, 0 );
+        cont.AddItem( PID_METAL_TRASH, 200, 0 );
+        cont.AddItem( PID_GUNPOWDER, 200, 0 );
+        cont.AddItem( PID_METAL_ORE, 200, 0 );
+        cont.AddItem( PID_MINERAL, 200, 0 );
+        cont.AddItem( PID_TUBE, 200, 0 );
+        cont.AddItem( PID_STEEL, 200, 0 );
+        cont.AddItem( PID_BRAHMIN_SKIN, 200, 0 );
+        cont.AddItem( PID_MEAT, 200, 0 );
+        cont.AddItem( PID_CIGARETTES, 200, 0 );
+        cont.AddItem( PID_RAGS, 200, 0 );
+        cont.AddItem( PID_NITROGLYCERIN, 200, 0 );
+        cont.AddItem( PID_CHEMICALS, 200, 0 );
+        cont.AddItem( PID_TNT, 200, 0 );
+        cont.AddItem( PID_HEXOGEN, 200, 0 );
+        cont.AddItem( PID_PLASTIC_EXPLOSIVES_DULL, 200, 0 );
+        cont.AddItem( PID_MULTI_TOOL, 200, 0 );
+        cont.AddItem( PID_SUPER_TOOL_KIT, 200, 0 );
+        cont.AddItem( PID_OIL_CAN, 200, 0 );
+        cont.AddItem( PID_LOCKPICKS, 200, 0 );
+        cont.AddItem( PID_EXP_LOCKPICK_SET, 200, 0 );
+        cont.AddItem( PID_ELECTRONIC_LOCKPICKS, 200, 0 );
+        cont.AddItem( PID_ELEC_LOCKPICK_MKII, 200, 0 );
+        cont.AddItem( PID_FIRST_AID_KIT, 200, 0 );
+        cont.AddItem( PID_FIELD_MEDIC_KIT, 200, 0 );
+        cont.AddItem( PID_DOCTORS_BAG, 200, 0 );
+        cont.AddItem( PID_PARAMEDICS_BAG, 200, 0 );
+        cont.AddItem( PID_MEDICAL_SUPPLIES, 200, 0 );
+        cont.AddItem( PID_SHOVEL, 200, 0 );
+        cont.AddItem( PID_PLANK, 200, 0 );
+        cont.AddItem( PID_AXE, 200, 0 );
+        cont.AddItem( PID_WELDING, 200, 0 );
+        cont.AddItem( PID_LIGHTER, 200, 0 );
+        cont.AddItem( PID_FLOWER, 200, 0 );
+        cont.AddItem( PID_WATER_FLASK, 200, 0 );
+        cont.AddItem( PID_BOX_OF_NOODLES, 200, 0 );
+        cont.AddItem( PID_FROZEN_DINNER, 200, 0 );
+        cont.AddItem( PID_RUBBER_BOOTS, 200, 0 );
+        cont.AddItem( PID_CHEEZY_POOFS, 200, 0 );
+        cont.AddItem( PID_BLUE_CONDOM, 200, 0 );
+        cont.AddItem( PID_GREEN_CONDOM, 200, 0 );
+        cont.AddItem( PID_RED_CONDOM, 200, 0 );
+        cont.AddItem( PID_COSMETIC_CASE, 200, 0 );
+        cont.AddItem( PID_DICE, 200, 0 );
+        cont.AddItem( PID_LOADED_DICE, 200, 0 );
+        cont.AddItem( PID_DECK_OF_CARDS, 200, 0 );
+        cont.AddItem( PID_MARKED_DECK_OF_CARDS, 200, 0 );
+        cont.AddItem( PID_DOG_TAGS, 200, 0 );
+        cont.AddItem( PID_ELECTRONIC_BUG, 200, 0 );
+        cont.AddItem( PID_CHITIN_ARMOR_RECIPE, 200, 0 );
+        cont.AddItem( PID_WATCH, 200, 0 );
+        cont.AddItem( PID_DEFIB, 200, 0 );
+        cont.AddItem( PID_HANDCUFFS, 5, 0 );
+        cont.AddItem( PID_FIRE_GECKO_PELT, 200, 0 );
+        cont.AddItem( 10010, 2, 0 );
+        cont.AddItem( 10009, 2, 0 );
+        cont.AddItem( 10008, 2, 0 );
+        cont.AddItem( 10007, 2, 0 );
+        cont.AddItem( PID_RADIO, 5, 0 );
+        cont.Update();
+        player.ShowContainer( null, cont, TRANSFER_FAR_CONT );
+    }
+}
+
+
+//ErlKing GM menus
+
+void unsafe_GM_PANNEL_SELF( Critter& player, int crId, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    if( player.GetAccess() >= ACCESS_MODER )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_SELF" );
+        player.Say( SAY_DIALOGBOX_TEXT, "ГМ ПАНЕЛЬ" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "Режимы себя" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Режимы города(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "Смотреть Логи(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "По ID(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Склад" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "телепорт(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "прыг(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "Спавны1(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "Спавны2(неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "убр.лишних мобов(неакт)" );
+    }
+}
+
+
+void answer_GM_PANNEL_SELF( Critter& player, uint answerI, string& answerS )
+{
+    if( answerI == 0 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 5, "answer_GM_PANNEL_SELF_MYMODES" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Выберите режимы" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "ред. как игрока" );
+        if( player.ParamBase[ MODE_INVULNERABLE ] == 0 )
+            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "+ неуязвимость" );
+        else
+            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "- неуязвимость" );
+        if( player.ParamBase[ MODE_UNLIMITED_AMMO ] == 0 )
+            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "+ патроны" );
+        else
+            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "- патроны" );
+        if( player.ParamBase[ MODE_NO_PVP ] == 0 )
+            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "+ nopvp" );
+        else
+            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "- nopvp" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "назад" );
+    }
+    if( answerI == 4 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 11, "answer_GM_PANNEL_SELF_VAULT" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Склад" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "броня" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "пистолеты" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "винтовки" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "пушки" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "энерго" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "метание" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "мили" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "патроны" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "нарк" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "разное" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "назад" );
+    }
+}
+
+void answer_GM_PANNEL_SELF_VAULT( Critter& player, uint answerI, string& answerS )
+{
+    if( answerI == 10 )
+    {
+        unsafe_GM_PANNEL_SELF( player, 0, 0, 0, null, null );
+    }
+	else _gmcont( player, answerI, 0, 0, null, null);
+}
+
+
+void answer_GM_PANNEL_SELF_MYMODES( Critter& player, uint answerI, string& answerS )
+{
+    if( answerI == 0 )
+    {
+        GM_PANNEL_CRITTER_PLAYER( player, player.Id, 0, 0, null, null );
+    }
+    if( answerI == 1 )
+    {
+        if( player.ModeBase[ MODE_INVULNERABLE ] == 0 )
+		{
+            player.ModeBase[ MODE_INVULNERABLE ] = 1;
+		}
+        else
+		{
+            player.ModeBase[ MODE_INVULNERABLE ] = 0;
+		}
+    }
+    if( answerI == 2 )
+    {
+        if( player.ParamBase[ MODE_UNLIMITED_AMMO ] == 0 )
+		{
+            player.ParamBase[ MODE_UNLIMITED_AMMO ] = 1;
+		}
+        else
+		{
+            player.ParamBase[ MODE_UNLIMITED_AMMO ] = 0;
+		}
+    }
+    if( answerI == 3 )
+    {
+        if( player.ModeBase[ MODE_NO_PVP ] == 0 )
+		{
+            player.ModeBase[ MODE_NO_PVP ] = 1;
+		}
+        else
+		{
+            player.ModeBase[ MODE_NO_PVP ] = 0;
+		}
+    }
+    if( answerI == 4 )
+    {
+        unsafe_GM_PANNEL_SELF( player, 0, 0, 0, null, null );
+    }
+}
+
+void GM_PANNEL_CRITTER_PLAYER( Critter& player, int crId, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    if( player.GetAccess() >= ACCESS_MODER )
+    {
+        Critter@ cr = GetCritter( crId );
+        if( cr is null )
+            return;
+        player.StatBase[ ST_VAR0 ] = cr.Id;
+        player.ShowScreen( SCREEN_DIALOGBOX, 5, "answer_GM_PANNEL_CRITTER_PLAYER" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Действия с игроком" + crId );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "режимы иры (неакт)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Параметры" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "Убить" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "Инвентарь" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Поощрения" );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 1 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_CRITTER_PLAYER_STATS" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Параметры игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "SPECIAL" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "SKILLS 0-9" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "SKILLS 10-20" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "Травмы" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Режимы" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "Скин/бодитайп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "Доп парам" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "Лексема" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "назад" );
+    }
+    if( answerI == 2 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 10, "answer_GM_PANNEL_CRITTER_PLAYER_KILL" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Убить предельно жестоким способом" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "Просто смерть" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Вырыв бока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "Разрыв Очередью" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "очередью" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "в прах" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "в куски" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "огонь" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "в соплю" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "пополам" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "назад" );
+    }
+    if( answerI == 3 )
+    {
+        player.ShowContainer( cr, null, TRANSFER_FAR_CRIT );
+    }
+    if( answerI == 4 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_GIFT" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Модерация" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "+Опыт" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "+Карма" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "-Карма" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "+Хп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "-Хп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "выдать перк(некат)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "убрать перк(некат)" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_DIALOGBOX_TEXT, "SPECIAL игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_STRENGTH ] + " - сила" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_PERCEPTION ] + " - восприятие" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ ST_ENDURANCE ] + " - выносливость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ ST_CHARISMA ] + " - харизма" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ ST_INTELLECT ] + " - интеллект" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ ST_AGILITY ] + " - ловкость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ ST_LUCK ] + " - удача" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+    }
+    if( answerI == 1 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 12, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL1" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ SK_SMALL_GUNS ] + " - легкое" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ SK_BIG_GUNS ] + " - тяжелое" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ SK_ENERGY_WEAPONS ] + " - энерго" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ SK_UNARMED ] + " - рукопашная" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ SK_MELEE_WEAPONS ] + " - холодное" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ SK_THROWING ] + " - метание" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ SK_FIRST_AID ] + " - санитар" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + cr.ParamBase[ SK_DOCTOR ] + " - доктор" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + cr.ParamBase[ SK_SNEAK ] + " - скрытность" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "" + cr.ParamBase[ SK_LOCKPICK ] + " - взлом" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "" + cr.ParamBase[ SK_STEAL ] + " - кража" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "назад" );
+    }
+    if( answerI == 2 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL2" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ SK_TRAPS ] + " - ловушки" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ SK_SCIENCE ] + " - наука" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ SK_REPAIR ] + " - ремонт" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ SK_SPEECH ] + " - разговор" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ SK_BARTER ] + " - торговля" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ SK_GAMBLING ] + " - игра" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ SK_OUTDOORSMAN ] + " - скиталец" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+    }
+    if( answerI == 3 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_DAMAGES" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Травмы игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ DAMAGE_EYE ] + " - травма глаза" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ DAMAGE_RIGHT_ARM ] + " - правая рука" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ DAMAGE_LEFT_ARM ] + " - левая рука" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ DAMAGE_RIGHT_LEG ] + " - правая нога" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ DAMAGE_LEFT_LEG ] + " - левая нога" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ DAMAGE_RADIATED ] + " - радиация" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ DAMAGE_POISONED ] + " - отравление" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+    }
+    if( answerI == 4 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 10, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_MODES" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Режимы игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ MODE_NO_PVP ] + " - нопвп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ MODE_INVULNERABLE ] + " - неуязвимость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ MODE_NO_LOOT ] + " - нелутаемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ MODE_NO_STEAL ] + " - неворуемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ MODE_NO_PUSH ] + " - непихаемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ MODE_NO_WALK ] + " - стоять" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ MODE_NO_RUN ] + " - нет бега" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + cr.ParamBase[ MODE_NO_LOOSE_LIMBS ] + " - нет травм" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + cr.ParamBase[ MODE_NO_KNOCK ] + " - несбиваемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "назад" );
+    }
+    if( answerI == 5 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + cr.ParamBase[ ST_BASE_CRTYPE ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_BODY_TYPE ] + " - бодитайп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_BASE_CRTYPE ] + " - скин вручную" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "стандартный" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "дикари" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "гражданские" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "бандитские" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "разное" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+    }
+    if( answerI == 6 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 4, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Дополнительные параметры" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_CURRENT_HP ] + "Текущее хп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_MAX_LIFE ] + "макс хп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ ST_AGE ] + "возраст" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ ST_GENDER ] + "пол" );
+    }
+    if( answerI == 7 )
+    {
+    player.ShowScreen( SCREEN_SAY, 0, "PlayerLexer" );
+        //ShowInputBoxScreen( player, "gm@unsafe_Description#Описание, приметы", 0, INPUTBOX_CLOSE_ON_ENTER );
+    }
+    if( answerI == 8 )
+    {
+        GM_PANNEL_CRITTER_PLAYER( player, cr.Id, 0, 0, null, null );
+    }
+}
+
+void PlayerLexer( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null ) return;
+
+     cr.SetLexems( answerS );
+     player.Say( SAY_NETMSG, "Lexem set" );
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+
+    player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+
+    if( answerI == 0 )
+    {
+        player.ToLife();
+        player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP;
+        player.Say( SAY_SAY_TITLE, "Хп" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_MAX_LIFE;
+        player.Say( SAY_SAY_TITLE, "Макс Хп" );
+    }
+    if( answerI == 2 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_AGE;
+        player.Say( SAY_SAY_TITLE, "Возраст" );
+    }
+    if( answerI == 3 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_GENDER;
+        player.Say( SAY_SAY_TITLE, "Пол" );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_DAMAGES( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        if( cr.ParamBase[ DAMAGE_EYE ] == 0 )
+		{
+            cr.ParamBase[ DAMAGE_EYE ] = 1;
+		}
+        else
+		{
+            cr.ParamBase[ DAMAGE_EYE ] = 0;
+		}
+    }
+    else if( answerI == 1 )
+    {
+        if( cr.ParamBase[ DAMAGE_RIGHT_ARM ] == 0 )
+		{
+            cr.ParamBase[ DAMAGE_RIGHT_ARM ] = 1;
+		}
+        else
+		{
+            cr.ParamBase[ DAMAGE_RIGHT_ARM ] = 0;
+		}			
+    }
+    else if( answerI == 2 )
+    {
+        if( cr.ParamBase[ DAMAGE_LEFT_ARM ] == 0 )
+		{
+            cr.ParamBase[ DAMAGE_LEFT_ARM ] = 1;
+		}			
+        else
+		{
+            cr.ParamBase[ DAMAGE_LEFT_ARM ] = 0;
+		}			
+    }
+    else if( answerI == 3 )
+    {
+        if( cr.ParamBase[ DAMAGE_RIGHT_LEG ] == 0 )
+		{
+            cr.ParamBase[ DAMAGE_RIGHT_LEG ] = 1;
+		}			
+        else
+		{
+            cr.ParamBase[ DAMAGE_RIGHT_LEG ] = 0;
+		}			
+    }
+    else if( answerI == 4 )
+    {
+        if( cr.ParamBase[ DAMAGE_LEFT_LEG ] == 0 )
+		{
+            cr.ParamBase[ DAMAGE_LEFT_LEG ] = 1;
+		}			
+        else
+		{
+            cr.ParamBase[ DAMAGE_LEFT_LEG ] = 0;
+		}			
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 15, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_BODY" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Текущий бодитайп - " + cr.ParamBase[ ST_BODY_TYPE ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "1 мужчина" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "2 женщина" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "3 ребенок" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "4 супермутант" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "5 гуль" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "6 брамин" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "7 радскорпион" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "8 крыса" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "9 летун" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "10 кентавр" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "11 робот" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "12 пес" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 12 ), "13 мантис" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 13 ), "14 коготь смерти" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 14 ), "15 растение" );
+    }
+    if( answerI == 1 )
+    {
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS" );
+        player.Say( SAY_SAY_TITLE, "Номер скина" );
+    }
+    if( answerI == 2 )
+    {
+        cr.ChangeCrType( cr.Stat[ ST_GENDER ] == GENDER_MALE ? CRTYPE_DEFAULT_M : CRTYPE_DEFAULT_F );
+        cr.StatBase[ ST_BASE_CRTYPE ] = cr.Stat[ ST_GENDER ] == GENDER_MALE ? CRTYPE_DEFAULT_M : CRTYPE_DEFAULT_F;
+    }
+    if( answerI == 3 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 6, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_BODY" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + cr.ParamBase[ ST_BASE_CRTYPE ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "62 Дикарь" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "64 сулик" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "110 патлатый" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "120 лысый" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "61 Дикарка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "63 Дикарка хв." );
+    }
+    if( answerI == 4 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 15, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_CIVIL" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + cr.ParamBase[ ST_BASE_CRTYPE ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "33 Блондинка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "36 Девушка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "37 Шлюха" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "39 Негр в кр." );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "40 свитер" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "41 рубашка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "42 Коротышка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "43 Бомж сгорбленный" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "48 Караванщик" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "72 костюм" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "73 Китти" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "77 Вышибала" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 12 ), "57 Доктор" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 13 ), "89 Ученый" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 14 ), "91 Вик" );
+    }
+    if( answerI == 5 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_BATTLE" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + cr.ParamBase[ ST_BASE_CRTYPE ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "9 Негр" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "34 Бандитка панк" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "35 Мет. жен" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "45 Бандит" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "82 Китаец бед" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "92 Китаец кр." );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "93 Китаец син." );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "94 Китайка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "87 Полицейский" );
+    }
+    if( answerI == 6 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 3, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_MISC" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + cr.ParamBase[ ST_BASE_CRTYPE ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "16 собака" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "66 робот боевой" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "65 растение" );
+    }
+}
+
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_CIVIL( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+		
+    if( answerI == 0 )
+    {
+        cr.ChangeCrType( 33 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 33;
+    }
+    if( answerI == 1 )
+    {
+        cr.ChangeCrType( 36 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 36;
+    }
+    if( answerI == 2 )
+    {
+        cr.ChangeCrType( 37 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 37;
+    }
+    if( answerI == 3 )
+    {
+        cr.ChangeCrType( 39 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 39;
+    }
+    if( answerI == 4 )
+    {
+        cr.ChangeCrType( 40 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 40;
+    }
+    if( answerI == 5 )
+    {
+        cr.ChangeCrType( 41 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 41;
+    }
+    if( answerI == 6 )
+    {
+        cr.ChangeCrType( 42 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 42;
+    }
+    if( answerI == 7 )
+    {
+        cr.ChangeCrType( 43 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 43;
+    }
+    if( answerI == 8 )
+    {
+        cr.ChangeCrType( 48 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 48;
+    }
+    if( answerI == 9 )
+    {
+        cr.ChangeCrType( 72 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 72;
+    }
+    if( answerI == 10 )
+    {
+        cr.ChangeCrType( 73 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 73;
+    }
+    if( answerI == 11 )
+    {
+        cr.ChangeCrType( 77 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 77;
+    }
+    if( answerI == 12 )
+    {
+        cr.ChangeCrType( 57 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 57;
+    }
+    if( answerI == 13 )
+    {
+        cr.ChangeCrType( 89 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 89;
+    }
+    if( answerI == 14 )
+    {
+        cr.ChangeCrType( 91 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 91;
+    }
+	
+	//LogGmStuff (player, "GM PANEL: Сменил скин персонажа " + GetPlayerName (cr.Id) + " id: " + cr.Id + " на " + answerI + " в разделе ГРАЖДАНСКИЕ.");
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_BATTLE( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        cr.ChangeCrType( 9 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 9;
+    }
+    if( answerI == 1 )
+    {
+        cr.ChangeCrType( 34 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 34;
+    }
+    if( answerI == 2 )
+    {
+        cr.ChangeCrType( 35 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 35;
+    }
+    if( answerI == 3 )
+    {
+        cr.ChangeCrType( 45 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 45;
+    }
+    if( answerI == 4 )
+    {
+        cr.ChangeCrType( 82 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 82;
+    }
+    if( answerI == 5 )
+    {
+        cr.ChangeCrType( 92 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 92;
+    }
+    if( answerI == 6 )
+    {
+        cr.ChangeCrType( 93 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 93;
+    }
+    if( answerI == 7 )
+    {
+        cr.ChangeCrType( 94 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 94;
+    }
+    if( answerI == 8 )
+    {
+        cr.ChangeCrType( 87 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 87;
+    }
+	//LogGmStuff (player, "GM PANEL: Сменил скин персонажа " + GetPlayerName (cr.Id) + " id: " + cr.Id + " на " + answerI + " в разделе БАНДИТСКИЕ.");
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_MISC( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        cr.ChangeCrType( 16 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 16;
+    }
+    if( answerI == 1 )
+    {
+        cr.ChangeCrType( 66 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 66;
+    }
+    if( answerI == 2 )
+    {
+        cr.ChangeCrType( 66 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 66;
+    }
+	//LogGmStuff (player, "GM PANEL: Сменил скин персонажа " + GetPlayerName (cr.Id) + " id: " + cr.Id + " на " + answerI + " в разделе РАЗНОЕ.");
+}
+
+void ask_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS( Critter& player, uint answerI, string& answerS )
+{
+    if( answerS.length() > 0 )
+    {
+        int      number = 0;
+        StrToInt( answerS, number );
+        Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+        if( !valid( cr ) )
+        {
+            player.Say( SAY_NETMSG, "персонажа " + GetPlayerName( player.ParamBase[ ST_VAR0 ] ) + "  " + player.ParamBase[ ST_VAR0 ] + " нет онлайн " );
+            return;
+        }
+        cr.ChangeCrType( number );
+        cr.StatBase[ ST_BASE_CRTYPE ] = number;
+        player.Say( SAY_NETMSG, "Скин персонажа " + GetPlayerName( player.ParamBase[ ST_VAR0 ] ) + "  " + player.ParamBase[ ST_VAR0 ] + " был изменен на " + number );
+		//LogGmStuff (player, "GM PANEL: Сменил скин персонажа " + GetPlayerName (cr.Id) + " id: " + cr.Id + " на " + number);
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_BODY( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    cr.ParamBase[ ST_BODY_TYPE ] = answerI;
+	
+	if( answerI == 0 )
+    {
+        cr.ChangeCrType( 62 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 62;
+    }
+    if( answerI == 1 )
+    {
+        cr.ChangeCrType( 64 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 64;
+    }
+    if( answerI == 2 )
+    {
+        cr.ChangeCrType( 110 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 110;
+    }
+	if( answerI == 3 )
+    {
+        cr.ChangeCrType( 120 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 120;
+    }
+    if( answerI == 4 )
+    {
+        cr.ChangeCrType( 61 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 61;
+    }
+    if( answerI == 5 )
+    {
+        cr.ChangeCrType( 63 );
+        cr.StatBase[ ST_BASE_CRTYPE ] = 63;
+    }
+	//LogGmStuff (player, "GM PANEL: Сменил скин персонажа " + GetPlayerName (cr.Id) + " id: " + cr.Id + " на " + answerI + " в разделе ДИКАРИ.");
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_MODES( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        if( cr.ModeBase[ MODE_NO_PVP ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_PVP ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_PVP персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_PVP ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_PVP персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 1 )
+    {
+        if( cr.ModeBase[ MODE_INVULNERABLE ] == 0 )
+		{
+            cr.ModeBase[ MODE_INVULNERABLE ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_INVULNERABLE персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_INVULNERABLE ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_INVULNERABLE персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 2 )
+    {
+        if( cr.ModeBase[ MODE_NO_LOOT ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_LOOT ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOT персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_LOOT ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOT персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 3 )
+    {
+        if( cr.ModeBase[ MODE_NO_STEAL ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_STEAL ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_STEAL персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_STEAL ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_STEAL персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 4 )
+    {
+        if( cr.ModeBase[ MODE_NO_PUSH ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_PUSH ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_PUSH персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_PUSH ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_PUSH персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 5 )
+    {
+        if( cr.ModeBase[ MODE_NO_WALK ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_WALK ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_WALK персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_WALK ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_WALK персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 6 )
+    {
+        if( cr.ModeBase[ MODE_NO_RUN ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_RUN ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_RUN персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_RUN ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_RUN персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 7 )
+    {
+        if( cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOSE_LIMBS для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOSE_LIMBS для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+    if( answerI == 8 )
+    {
+        if( cr.ModeBase[ MODE_NO_KNOCK ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_KNOCK ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_KNOCK для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_KNOCK ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_KNOCK для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
+		}
+    }
+
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL2( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 211;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Ловушки" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 212;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Наука" );
+    }
+    if( answerI == 2 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 213;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Ремонт" );
+    }
+    if( answerI == 3 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 214;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Разговор" );
+    }
+    if( answerI == 4 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 215;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Торговля" );
+    }
+    if( answerI == 5 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 216;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Азартные игры" );
+    }
+    if( answerI == 6 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 217;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "Скиталец" );
+    }
+}
+
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL1( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+
+    player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+    if( answerI == 0 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 200;
+        player.Say( SAY_SAY_TITLE, "Легкое" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 201;
+        player.Say( SAY_SAY_TITLE, "Тяжелое" );
+    }
+    if( answerI == 2 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 202;
+        player.Say( SAY_SAY_TITLE, "Энерго" );
+    }
+    if( answerI == 3 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 203;
+        player.Say( SAY_SAY_TITLE, "Рукопашная" );
+    }
+    if( answerI == 4 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 204;
+        player.Say( SAY_SAY_TITLE, "Холодное" );
+    }
+    if( answerI == 5 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 205;
+        player.Say( SAY_SAY_TITLE, "Метание" );
+    }
+    if( answerI == 6 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 206;
+        player.Say( SAY_SAY_TITLE, "Санитар" );
+    }
+    if( answerI == 7 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 207;
+        player.Say( SAY_SAY_TITLE, "Доктор" );
+    }
+    if( answerI == 8 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 208;
+        player.Say( SAY_SAY_TITLE, "Скрытность" );
+    }
+    if( answerI == 9 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 209;
+        player.Say( SAY_SAY_TITLE, "Взлом" );
+    }
+    if( answerI == 10 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 210;
+        player.Say( SAY_SAY_TITLE, "Воровство" );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+
+    player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+
+    if( answerI == 0 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 0;
+        player.Say( SAY_SAY_TITLE, "Сила" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 1;
+        player.Say( SAY_SAY_TITLE, "Восприятие" );
+    }
+    if( answerI == 2 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 2;
+        player.Say( SAY_SAY_TITLE, "Выносливость" );
+    }
+    if( answerI == 3 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 3;
+        player.Say( SAY_SAY_TITLE, "Харизма" );
+    }
+    if( answerI == 4 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 4;
+        player.Say( SAY_SAY_TITLE, "Интеллект" );
+    }
+    if( answerI == 5 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 5;
+        player.Say( SAY_SAY_TITLE, "Ловкость" );
+    }
+    if( answerI == 6 )
+    {
+        player.ParamBase[ ST_VAR1 ] = 6;
+        player.Say( SAY_SAY_TITLE, "Удача" );
+    }
+}
+
+void ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ target = GetCritter( player.Stat[ ST_VAR0 ] );
+    int      parameter = player.Stat[ ST_VAR1 ];
+    if( !valid( target ) )
+        return;
+    if( answerS.length() > 0 )
+    {
+        int number = 0;
+        StrToInt( answerS, number );
+        target.ParamBase[ parameter ] = number;
+        player.Say( SAY_NETMSG, "вы изменили параметр " + parameter + " на " + number + " у игрока " + target.Id );
+		logger( player, GMLOG, " param " + target.Id + " " + parameter + " " + number + " gmpanel");
+        if( parameter >= 0 && parameter <= 6 )
+        {
+            player.ShowScreen( SCREEN_DIALOGBOX, 7, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+            player.Say( SAY_DIALOGBOX_TEXT, "SPECIAL игрока" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + target.ParamBase[ ST_STRENGTH ] + " - сила" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + target.ParamBase[ ST_PERCEPTION ] + " - восприятие" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + target.ParamBase[ ST_ENDURANCE ] + " - выносливость" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + target.ParamBase[ ST_CHARISMA ] + " - харизма" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + target.ParamBase[ ST_INTELLECT ] + " - интеллект" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + target.ParamBase[ ST_AGILITY ] + " - ловкость" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + target.ParamBase[ ST_LUCK ] + " - удача" );
+        }
+        if( parameter >= 200 && parameter <= 210 )
+        {
+            player.ShowScreen( SCREEN_DIALOGBOX, 11, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL1" );
+            player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + target.ParamBase[ SK_SMALL_GUNS ] + " - легкое" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + target.ParamBase[ SK_BIG_GUNS ] + " - тяжолое" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + target.ParamBase[ SK_ENERGY_WEAPONS ] + " - энерго" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + target.ParamBase[ SK_UNARMED ] + " - рукопашная" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + target.ParamBase[ SK_MELEE_WEAPONS ] + " - холодное" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + target.ParamBase[ SK_THROWING ] + " - метание" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + target.ParamBase[ SK_FIRST_AID ] + " - санитар" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + target.ParamBase[ SK_DOCTOR ] + " - доктор" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + target.ParamBase[ SK_SNEAK ] + " - скрытность" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "" + target.ParamBase[ SK_LOCKPICK ] + " - взлом" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "" + target.ParamBase[ SK_STEAL ] + " - кража" );
+        }
+        if( parameter >= 211 && parameter <= 217 )
+        {
+            player.ShowScreen( SCREEN_DIALOGBOX, 7, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL2" );
+            player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + target.ParamBase[ SK_TRAPS ] + " - ловушки" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + target.ParamBase[ SK_SCIENCE ] + " - наука" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + target.ParamBase[ SK_REPAIR ] + " - ремонт" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + target.ParamBase[ SK_SPEECH ] + " - разговор" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + target.ParamBase[ SK_BARTER ] + " - торговля" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + target.ParamBase[ SK_GAMBLING ] + " - игра" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + target.ParamBase[ SK_OUTDOORSMAN ] + " - скиталец" );
+        }
+        if( parameter == ST_CURRENT_HP || parameter == ST_MAX_LIFE || parameter == ST_AGE || parameter == ST_GENDER )
+        {
+            player.ShowScreen( SCREEN_DIALOGBOX, 4, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM" );
+            player.Say( SAY_DIALOGBOX_TEXT, "Дополнительные параметры" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + target.ParamBase[ ST_CURRENT_HP ] + "Текущее хп" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + target.ParamBase[ ST_MAX_LIFE ] + "макс хп" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + target.ParamBase[ ST_AGE ] + "возраст" );
+            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + target.ParamBase[ ST_GENDER ] + "пол" );
+        }
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_GIFT( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+
+    if( answerI == 0 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_EXPERIENCE;
+		player.ParamBase[ ST_VAR2 ] = 0;
+		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
+        player.Say( SAY_SAY_TITLE, "Опыт" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_KARMA;
+		player.ParamBase[ ST_VAR2 ] = 0;
+		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
+        player.Say( SAY_SAY_TITLE, "Карма" );
+    }
+    if( answerI == 2 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_KARMA;
+		player.ParamBase[ ST_VAR2 ] = 1;
+		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
+        player.Say( SAY_SAY_TITLE, "Карма" );
+    }
+    if( answerI == 3 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP;
+		player.ParamBase[ ST_VAR2 ] = 0;
+		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
+        player.Say( SAY_SAY_TITLE, "Хп" );
+    }
+    if( answerI == 4 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP;
+		player.ParamBase[ ST_VAR2 ] = 1;
+		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
+        player.Say( SAY_SAY_TITLE, "Хп" );
+    }
+    if( answerI == 7 )
+    {
+        GM_PANNEL_CRITTER_PLAYER( player, cr.Id, 0, 0, null, null );
+    }
+}
+
+void ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ target = GetCritter( player.Stat[ ST_VAR0 ] );
+    int parameter = player.Stat[ ST_VAR1 ];
+    if( !valid( target ) )
+        return;
+    if( answerS.length() > 0 )
+    {
+        int number = 0;
+        StrToInt( answerS, number );
+		if( player.Stat[ ST_VAR2 ] == 0 )
+			{
+			target.ParamBase[ parameter ] += number;
+			player.Say( SAY_NETMSG, "вы увеличили параметр " + parameter + " на " + number + " у игрока " + target.Id );
+			logger( player, GMLOG, " param " + target.Id + " " + parameter + " " + number + " gmpanel");
+			}
+        else
+			{
+			target.ParamBase[ parameter ] -= number;
+			player.Say( SAY_NETMSG, "вы уменьшили параметр " + parameter + " на " + number + " у игрока " + target.Id );
+			logger( player, GMLOG, " param " + target.Id + " " + parameter + " " + number + " gmpanel");
+			}
+	}
+	GM_PANNEL_CRITTER_PLAYER( player, target.Id, 0, 0, null, null );
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_KILL( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null ) return;
+
+    if( answerI == 9 )
+    {
+        GM_PANNEL_CRITTER_PLAYER( player, cr.Id, 0, 0, null, null );
+		return;
+    }
+
+	killbytype( player, answerI, 0, 0, null, null );
+	logger( player, GMLOG, " kill " + cr.Id + " gmpanel");
+}
+
+void killbytype( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ target = GetCritter( param0 );
+    if( target is null )
+    {
+        player.Say( SAY_NETMSG, "неверный криттер" );
+        return;
+    }
+
+    uint16 deadType = 0;
+    if( param1 > 0 && param1 < 9 )
+        deadType = ANIM2_DEAD_BLOODY_SINGLE - 1 + param1;
+    else
+        deadType = ( Random( 0, 1 ) > 0 ? ANIM2_DEAD_FRONT : ANIM2_DEAD_BACK );
+
+    target.ToDead( deadType, null );
+}
+
+
+void GM_PANNEL_CRITTER_NPC( Critter& player, int crId, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@ cr = GetCritter( crId );
+    if( cr is null )
+        return;
+    if( player.GetAccess() >= ACCESS_MODER )
+    {
+        player.StatBase[ ST_VAR0 ] = crId;
+	int AI_type = cr.ParamBase[ MERC_TYPE ];
+
+	string AI_string;
+
+	switch( AI_type )
+	{
+	case 10:	AI_string = "контроль";break;
+	case 11:	AI_string = "болванка";break;
+	case 12:	AI_string = "манекен";break;
+	case 13:	AI_string = "монстр";break;
+	case 14:	AI_string = "рейдер";break;
+	case 15:	AI_string = "охрана";break;
+	case 16:	AI_string = "мутант";break;
+	case 17:	AI_string = "респавн";break;
+	case 18:	AI_string = "зерг раш";break;
+	default:	AI_string = "не спавн";break;
+	}
+
+        player.ShowScreen( SCREEN_DIALOGBOX, 4, "answer_GM_PANNEL_CRITTER_NPC" );
+        player.Say( SAY_DIALOGBOX_TEXT, "НПЦ, protoId - " + cr.GetProtoId() + ", диалог - " + cr.ParamBase[ ST_DIALOG_ID ] + " , АИ=" + AI_string + " Team=" + cr.ParamBase[ ST_TEAM_ID ]  );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "Режимы" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Параметры" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "НПЦ-Параметры" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "АИ-Параметры" );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_NPC( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.StatBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 14, "answer_GM_PANNEL_CRITTER_NPC_MODES" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Режимы игрока" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ MODE_NO_HOME ] + " - нет дом гекса" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ MODE_NO_ENEMY_STACK ] + " - не запоминает врагов" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ MODE_NO_LOOT ] + " - нелутаемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ MODE_NO_STEAL ] + " - неворуемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ MODE_NO_PUSH ] + " - непихаемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ MODE_NO_WALK ] + " - стоять" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ MODE_NO_RUN ] + " - нет бега" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + cr.ParamBase[ MODE_NO_LOOSE_LIMBS ] + " - нет травм" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + cr.ParamBase[ MODE_NO_KNOCK ] + " - несбиваемость" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "" + cr.ParamBase[ MODE_NO_BARTER ] + " - неторгует" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "" + cr.ParamBase[ MODE_BARTER_ONLY_CASH ] + " - только наличные" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "" + cr.ParamBase[ MODE_NO_TALK ] + " - не разговаривает" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 12 ), "" + cr.ParamBase[ MODE_UNLIMITED_AMMO ] + " - беск патроны" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 13 ), "" + cr.ParamBase[ MODE_INVULNERABLE ] + " - неуязвимость" );
+    }
+    if( answerI == 1 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_CRITTER_PLAYER_STATS" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Параметры, protoId - " + cr.GetProtoId() + ", диалог - " + cr.ParamBase[ ST_DIALOG_ID ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "SPECIAL" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "SKILLS 0-9" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "SKILLS 10-20" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "Травмы" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Режимы" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "Скин/бодитайп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "Доп парам" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "Лексема" );
+    }
+    if( answerI == 2 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 6, "answer_GM_PANNEL_CRITTER_NPC_STATS" );
+        player.Say( SAY_DIALOGBOX_TEXT, "НПЦ параметры, protoId - " + cr.GetProtoId() + ", диалог - " + cr.ParamBase[ ST_DIALOG_ID ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_DIALOG_ID ] + "Диалог" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_AI_ID ] + "AI ID" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ ST_NPC_ROLE ] + "NPC ROLE" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ MERC_MASTER_ID ] + "хозяин" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ ST_TEAM_ID ] + "TEAM_ID" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "назад" );
+    }
+    if( answerI == 3 )
+    {
+	int AI_type = cr.ParamBase[ MERC_TYPE ];
+
+	string AI_string;
+
+	switch( AI_type )
+	{
+	case 10:	AI_string = "контроль";break;
+	case 11:	AI_string = "болванка";break;
+	case 12:	AI_string = "манекен";break;
+	case 13:	AI_string = "монстр";break;
+	case 14:	AI_string = "рейдер";break;
+	case 15:	AI_string = "охрана";break;
+	case 16:	AI_string = "мутант";break;
+	case 17:	AI_string = "респавн";break;
+	case 18:	AI_string = "зерг раш";break;
+	default:	AI_string = "не спавн";break;
+	}
+        player.ShowScreen( SCREEN_DIALOGBOX, 3, "answer_GM_PANNEL_CRITTER_NPC_AI" );
+        player.Say( SAY_DIALOGBOX_TEXT, "НПЦ, protoId - " + cr.GetProtoId() + " , АИ=" + AI_string + " , Team=" + cr.ParamBase[ ST_TEAM_ID ]  );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "АИ - " + AI_string );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "TEAM - " + cr.ParamBase[ ST_TEAM_ID ] );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "назад" );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_NPC_AI( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+	int AI_type = cr.ParamBase[ MERC_TYPE ];
+
+	string AI_string;
+
+	switch( AI_type )
+	{
+	case 10:	AI_string = "контроль";break;
+	case 11:	AI_string = "болванка";break;
+	case 12:	AI_string = "манекен";break;
+	case 13:	AI_string = "монстр";break;
+	case 14:	AI_string = "рейдер";break;
+	case 15:	AI_string = "охрана";break;
+	case 16:	AI_string = "мутант";break;
+	case 17:	AI_string = "респавн";break;
+	case 18:	AI_string = "зерг раш";break;
+	default:	AI_string = "не спавн";break;
+	}
+
+        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_NPC_AI_Type" );
+        player.Say( SAY_DIALOGBOX_TEXT, "АИ, текущее - " + AI_type + " - " + AI_string );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "1 - болванка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "2 - манекен" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "3 - монстр" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "4 - рейдер" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "5 - охрана" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "6 - мутант" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "7 - респавн" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_TEAM_ID;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "TEAM_ID" );
+    }
+    if( answerI == 2 )
+    {
+        GM_PANNEL_CRITTER_NPC( player, cr.Id, 0, 0, null, null );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_NPC_AI_Type( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI != 7 )
+    {
+        GM_MobInit( cr, answerI +1 );
+    }
+    if( answerI == 7 )
+    {
+        GM_PANNEL_CRITTER_NPC( player, cr.Id, 0, 0, null, null );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_NPC_STATS( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        player.ToLife();
+        player.ParamBase[ ST_VAR1 ] = ST_DIALOG_ID;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "DIALOG_ID" );
+    }
+    if( answerI == 1 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_AI_ID;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "AI_ID" );
+    }
+    if( answerI == 2 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_NPC_ROLE;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "NPC_ROLE" );
+    }
+    if( answerI == 3 )
+    {
+        player.ParamBase[ ST_VAR1 ] = MERC_MASTER_ID;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "MERC_MASTER_ID" );
+    }
+    if( answerI == 4 )
+    {
+        player.ParamBase[ ST_VAR1 ] = ST_TEAM_ID;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "TEAM_ID" );
+    }
+    if( answerI == 5 )
+    {
+        GM_PANNEL_CRITTER_NPC( player, cr.Id, 0, 0, null, null );
+    }
+}
+
+void answer_GM_PANNEL_CRITTER_NPC_MODES( Critter& player, uint answerI, string& answerS )
+{
+    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+    if( cr is null )
+        return;
+    if( answerI == 0 )
+    {
+        if( cr.ModeBase[ MODE_NO_HOME ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_HOME ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_HOME для NPC id: " + cr.Id);
+		}	
+        else
+		{
+            cr.ModeBase[ MODE_NO_HOME ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_HOME для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 1 )
+    {
+        if( cr.ModeBase[ MODE_NO_ENEMY_STACK ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_ENEMY_STACK ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_ENEMY_STACK для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_ENEMY_STACK ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_ENEMY_STACK для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 2 )
+    {
+        if( cr.ModeBase[ MODE_NO_LOOT ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_LOOT ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOT для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_LOOT ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOT для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 3 )
+    {
+        if( cr.ModeBase[ MODE_NO_STEAL ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_STEAL ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_STEAL для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_STEAL ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_STEAL для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 4 )
+    {
+        if( cr.ModeBase[ MODE_NO_PUSH ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_PUSH ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_PUSH для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_PUSH ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_PUSH для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 5 )
+    {
+        if( cr.ModeBase[ MODE_NO_WALK ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_WALK ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_WALK для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_WALK ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_WALK для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 6 )
+    {
+        if( cr.ModeBase[ MODE_NO_RUN ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_RUN ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_RUN для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_RUN ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_RUN для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 7 )
+    {
+        if( cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOSE_LIMBS для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOSE_LIMBS для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 8 )
+    {
+        if( cr.ModeBase[ MODE_NO_KNOCK ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_KNOCK ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_KNOCK для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_KNOCK ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_KNOCK для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 9 )
+    {
+        if( cr.ModeBase[ MODE_NO_BARTER ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_BARTER ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_BARTER для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_BARTER ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_BARTER для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 10 )
+    {
+        if( cr.ModeBase[ MODE_BARTER_ONLY_CASH ] == 0 )
+		{
+            cr.ModeBase[ MODE_BARTER_ONLY_CASH ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_BARTER_ONLY_CASH для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_BARTER_ONLY_CASH ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_BARTER_ONLY_CASH для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 11 )
+    {
+        if( cr.ModeBase[ MODE_NO_TALK ] == 0 )
+		{
+            cr.ModeBase[ MODE_NO_TALK ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_TALK для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_NO_TALK ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_TALK для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 12 )
+    {
+        if( cr.ModeBase[ MODE_UNLIMITED_AMMO ] == 0 )
+		{
+            cr.ModeBase[ MODE_UNLIMITED_AMMO ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_UNLIMITED_AMMO для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_UNLIMITED_AMMO ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_UNLIMITED_AMMO для NPC id: " + cr.Id);
+		}
+    }
+    if( answerI == 13 )
+    {
+        if( cr.ModeBase[ MODE_INVULNERABLE ] == 0 )
+		{
+            cr.ModeBase[ MODE_INVULNERABLE ] = 1;
+			//LogGmStuff (player, "GM PANEL: Включил MODE_INVULNERABLE для NPC id: " + cr.Id);
+		}
+        else
+		{
+            cr.ModeBase[ MODE_INVULNERABLE ] = 0;
+			//LogGmStuff (player, "GM PANEL: Выключил MODE_INVULNERABLE для NPC id: " + cr.Id);
+		}
+    }
+}
+
+
+
+
+
+
+
+
+void GM_PANNEL_ITEM( Critter& player, int itemId, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    if( player.GetAccess() >= ACCESS_MODER )
+    {
+        Item@ item = GetItem( itemId );
+        if( item is null )
+            return;
+        player.StatBase[ ST_VAR0 ] = itemId;
+        player.ShowScreen( SCREEN_DIALOGBOX, 3, "answer_GM_PANNEL_ITEM" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + itemId );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "переменные" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "назначить скрипт" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "флаги" );
+    }
+}
+
+void answer_GM_PANNEL_ITEM( Critter& player, uint answerI, string& answerS )
+{
+    Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+    if( item is null ) return;
+    if( answerI == 0 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_ITEM_VALS" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), ""+item.Val0 +" Val0" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), ""+item.Val1 +" Val1" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), ""+item.Val2 +" Val2" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), ""+item.Val3 +" Val3" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), ""+item.Val4 +" Val4" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), ""+item.Val5 +" Val5" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), ""+item.Val6 +" Val6" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), ""+item.Val7 +" Val7" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), ""+item.Val8 +" Val8" );
+    }
+	if( answerI == 1 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 1, "answer_GM_PANNEL_ITEM_SCRIPT" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "верстак (неакт)");
+    }
+	if( answerI == 2 )
+	{
+		player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_ITEM_FLAG" );
+		player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
+		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "плоский " + FLAG( item.Flags, ITEM_FLAT ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "проходимый " + FLAG( item.Flags, ITEM_NO_BLOCK ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "прострел " + FLAG( item.Flags, ITEM_SHOOT_THRU ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "не блок свет " + FLAG( item.Flags, ITEM_LIGHT_THRU ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "нет обводки " + FLAG( item.Flags, ITEM_NO_HIGHLIGHT ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "используемый " + FLAG( item.Flags, ITEM_CAN_USE ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "источник света " + FLAG( item.Flags, ITEM_LIGHT ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "игнор света " + FLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE ) );
+		player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "подбираемый " + FLAG( item.Flags, ITEM_CAN_PICKUP ) );
+	}
+}
+
+void answer_GM_PANNEL_ITEM_SCRIPT( Critter& player, uint answerI, string& answerS )
+{
+        Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+        if( item is null )
+            return;
+    if( answerI == 0 )
+    {
+	if( (item.GetProtoId() != 157) && (player.GetAccess() <= ACCESS_MODER) ) { player.Say( SAY_NETMSG, "Не тот прототип." ); return; } 
+	else
+	{
+	//SetWorkbench( player, item.Id, 0, 0 );
+	//LogGmStuff (player, "GM PANEL: Выставил предмету " + item.Id + " скрипт верстака.");
+	}
+	}
+}
+
+void answer_GM_PANNEL_ITEM_VALS( Critter& player, uint answerI, string& answerS )
+{
+        Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+        if( item is null )
+            return;
+        player.ParamBase[ ST_VAR1 ] = answerI;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_ITEM" );
+        player.Say( SAY_SAY_TITLE, "Val"+answerI);
+}
+
+void answer_GM_PANNEL_ITEM_FLAG( Critter& player, uint answerI, string& answerS )
+{
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null )
+        return;
+	
+	string logflag;
+
+	switch( answerI )
+	{
+	case 0:
+	{
+		if FLAG( item.Flags, ITEM_FLAT ) 
+			UNSETFLAG( item.Flags, ITEM_FLAT );
+		else
+			SETFLAG( item.Flags, ITEM_FLAT );
+		logflag = "ITEM_FLAT";
+	}
+	break;
+	case 1:
+	{
+		if FLAG( item.Flags, ITEM_NO_BLOCK ) 
+			UNSETFLAG( item.Flags, ITEM_NO_BLOCK );
+		else
+			SETFLAG( item.Flags, ITEM_NO_BLOCK );
+		logflag = "ITEM_NO_BLOCK";
+	}
+	break;
+	case 2:
+	{
+		if FLAG( item.Flags, ITEM_SHOOT_THRU ) 
+			UNSETFLAG( item.Flags, ITEM_SHOOT_THRU );
+		else
+			SETFLAG( item.Flags, ITEM_SHOOT_THRU );
+		logflag = "ITEM_SHOOT_THRU";
+	}
+	break;
+	case 3:
+	{
+		if FLAG( item.Flags, ITEM_LIGHT_THRU ) 
+			UNSETFLAG( item.Flags, ITEM_LIGHT_THRU );
+		else
+			SETFLAG( item.Flags, ITEM_LIGHT_THRU );
+		logflag = "ITEM_LIGHT_THRU";
+	}
+	break;
+	case 4:
+	{
+		if FLAG( item.Flags, ITEM_NO_HIGHLIGHT ) 
+			UNSETFLAG( item.Flags, ITEM_NO_HIGHLIGHT );
+		else
+			SETFLAG( item.Flags, ITEM_NO_HIGHLIGHT );
+		logflag = "ITEM_NO_HIGHLIGHT";
+	}
+	break;
+	case 5:
+	{
+		if FLAG( item.Flags, ITEM_CAN_USE ) 
+			UNSETFLAG( item.Flags, ITEM_CAN_USE );
+		else
+			SETFLAG( item.Flags, ITEM_CAN_USE );
+		logflag = "ITEM_CAN_USE";
+	}
+	break;
+	case 6:
+	{
+		if FLAG( item.Flags, ITEM_LIGHT ) 
+			UNSETFLAG( item.Flags, ITEM_LIGHT );
+		else
+			SETFLAG( item.Flags, ITEM_LIGHT );
+		logflag = "ITEM_LIGHT";
+	}
+	break;
+	case 7:
+	{
+		if FLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE ) 
+			UNSETFLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE );
+		else
+			SETFLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE );
+		logflag = "ITEM_NO_LIGHT_INFLUENCE";
+	}
+	break;
+	case 8:
+	{
+		if FLAG( item.Flags, ITEM_CAN_PICKUP ) 
+			UNSETFLAG( item.Flags, ITEM_CAN_PICKUP );
+		else
+			SETFLAG( item.Flags, ITEM_CAN_PICKUP );
+		logflag = "ITEM_CAN_PICKUP";
+	}
+	break;
+	}
+	item.Update();
+	string logmsg = "GM PANEL: Изменил флаг " + logflag + " для предмета " + item.Id; 
+	//LogGmStuff (player, logmsg);
+}
+
+void ask_GM_PANNEL_ITEM( Critter& player, uint answerI, string& answerS )
+{
+        Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+        if( item is null ) return;
+    if( answerS.length() > 0 )
+    {
+        int val_number = player.StatBase[ ST_VAR1 ];
+        int number = 0;
+        StrToInt( answerS, number );
+      switch( val_number )
+      {
+      case  0: item.Val0=number;  break;
+      case  1: item.Val1=number;  break;
+      case  2: item.Val2=number;  break;
+      case  3: item.Val3=number;  break;
+      case  4: item.Val4=number;  break;
+      case  5: item.Val5=number;  break;
+      case  6: item.Val6=number;  break;
+      case  7: item.Val7=number;  break;
+      case  8: item.Val8=number;  break;
+      }
+        player.Say( SAY_NETMSG, "вы изменили val" + val_number + " на " + number + " у предмета " + item.Id );
+		//LogGmStuff (player, "GM PANEL: Изменил предмету " + item.Id + " переменную Val" + val_number + " на " + number);
+
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_ITEM_VALS" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), ""+item.Val0 +" Val0" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), ""+item.Val1 +" Val1" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), ""+item.Val2 +" Val2" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), ""+item.Val3 +" Val3" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), ""+item.Val4 +" Val4" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), ""+item.Val5 +" Val5" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), ""+item.Val6 +" Val6" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), ""+item.Val7 +" Val7" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), ""+item.Val8 +" Val8" );
+    }
+}
+
+
+void GM_PANNEL_HEX( Critter& player, int hexX, int hexY, int param2, string@ param3, int[] @ param4 )
+{
+    if( player.GetAccess() >= ACCESS_MODER )
+    {
+        player.ParamBase[ MERC_LOSE_DIST ] = hexX;
+        player.ParamBase[ MERC_MASTER_DIST ] = hexY;
+        int type = player.ParamBase[ MERC_DEFEND_MASTER ],
+        weapon = player.ParamBase[ MERC_ASSIST_MASTER ],
+        AI_type = player.ParamBase[ MERC_TYPE ],
+        AI_Team = player.ParamBase[ MERC_CANCEL_ON_ATTACK ],
+        HexX = player.ParamBase[ MERC_LOSE_DIST ],
+        HexY = player.ParamBase[ MERC_MASTER_DIST ],
+        bonus_hp = player.ParamBase[ MERC_CANCEL_TIME ],
+        bonus_dmg = player.ParamBase[ MERC_CANCEL_ON_GLOBAL ],
+        bonus_skill = player.ParamBase[ MERC_WAIT_FOR_MASTER ];
+
+	string AI_string;
+
+	switch( AI_type )
+	{
+	case 0:	AI_string = "контроль";break;
+	case 1:	AI_string = "болванка";break;
+	case 2:	AI_string = "манекен";break;
+	case 3:	AI_string = "монстр";break;
+	case 4:	AI_string = "рейдер";break;
+	case 5:	AI_string = "охрана";break;
+	case 6:	AI_string = "мутант";break;
+	case 7:	AI_string = "респавн";break;
+	case 8:	AI_string = "зерг раш";break;
+	default: AI_string = "не спавн";break;
+	}
+
+        player.ShowScreen( SCREEN_DIALOGBOX, 2, "answer_GM_PANNEL_HEX" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Действия с пустым гексом x " + HexX + " y " + HexY + " , тек тип="+ type +", АИ="+ AI_string + ", hp+=" + bonus_hp + ", dmg+=" + bonus_dmg + ", sk+=" + bonus_skill);
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "повтор спавн" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "создать нпц" );
+    }
+}
+
+
+void answer_GM_PANNEL_HEX( Critter& player, uint answerI, string& answerS )
+{
+        int type = player.ParamBase[ MERC_DEFEND_MASTER ];
+        int weapon = player.ParamBase[ MERC_ASSIST_MASTER ];
+        int AI_type = player.ParamBase[ MERC_TYPE ];
+        int AI_Team = player.ParamBase[ MERC_CANCEL_ON_ATTACK ];
+        int hexX = player.ParamBase[ MERC_LOSE_DIST ];
+        int hexY = player.ParamBase[ MERC_MASTER_DIST ];
+        int bonus_hp = player.ParamBase[ MERC_CANCEL_TIME ];
+        int bonus_dmg = player.ParamBase[ MERC_CANCEL_ON_GLOBAL ];
+        int bonus_skill = player.ParamBase[ MERC_WAIT_FOR_MASTER ];
+
+	string AI_string;
+
+	switch( AI_type )
+	{
+	case 0:	AI_string = "контроль";break;
+	case 1:	AI_string = "болванка";break;
+	case 2:	AI_string = "манекен";break;
+	case 3:	AI_string = "монстр";break;
+	case 4:	AI_string = "рейдер";break;
+	case 5:	AI_string = "охрана";break;
+	case 6:	AI_string = "мутант";break;
+	case 7:	AI_string = "респавн";break;
+	case 8:	AI_string = "зерг раш";break;
+	default: AI_string = "не спавн";break;
+	}
+
+    if( answerI == 0 )
+    {
+        Map@ map = player.GetMap();
+        GM_SPAWN( player, map, type, weapon, AI_type, AI_Team, hexX, hexY, bonus_hp, bonus_dmg, bonus_skill );
+        GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+		//LogGmStuff (player, "GM PANEL: Повторил спавн нпц " + type + " на карте " + player.GetMapId() + " , гексы: " + hexX + " " + hexY);
+    }
+    if( answerI == 1 )
+    {
+        string plead;
+        player.ShowScreen( SCREEN_DIALOGBOX, 11, "answer_GM_PANNEL_HEX_SPAWN" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Выберите тип спавна нпц, АИ=" + AI_string + ", hp+=" + bonus_hp + ", dmg+=" + bonus_dmg + ", sk+=" + bonus_skill );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "АИ = " + AI_type );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Team = " + AI_Team );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "животные" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "монстры" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "рейдеры" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "мутанты" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "гражданские" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "разное" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "бонус хп" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "бонус дмг" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "бонус скил" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "назад" );
+    }
+}
+
+void answer_GM_PANNEL_HEX_SPAWN( Critter& player, uint answerI, string& answerS )
+{
+    int AI_type = player.ParamBase[ MERC_TYPE ],
+        AI_Team = player.ParamBase[ MERC_CANCEL_ON_ATTACK ],
+        weapon = player.ParamBase[ MERC_ASSIST_MASTER ],
+        bonus_hp = player.ParamBase[ MERC_CANCEL_TIME ],
+        bonus_dmg = player.ParamBase[ MERC_CANCEL_ON_GLOBAL ],
+        bonus_skill = player.ParamBase[ MERC_WAIT_FOR_MASTER ];
+
+	string AI_string;
+
+	switch( AI_type )
+	{
+	case 0:	AI_string = "контроль";break;
+	case 1:	AI_string = "болванка";break;
+	case 2:	AI_string = "манекен";break;
+	case 3:	AI_string = "монстр";break;
+	case 4:	AI_string = "рейдер";break;
+	case 5:	AI_string = "охрана";break;
+	case 6:	AI_string = "мутант";break;
+	case 7:	AI_string = "респавн";break;
+	case 8:	AI_string = "зерг раш";break;
+	default: AI_string = "не спавн";break;
+	}
+
+    if( answerI == 0 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_HEX_SPAWN_AI" );
+        player.Say( SAY_DIALOGBOX_TEXT, "АИ, текущее - " + AI_type + " - " + AI_string );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "0 - контроль" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "1 - болванка" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "2 - манекен" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "3 - монстр" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "4 - рейдер" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "5 - охрана" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "6 - мутант" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "7 - респавн" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "8 - зерг раш" );
+    }
+    if( answerI == 1 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 13, "answer_GM_PANNEL_HEX_SPAWN_TEAM" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Team, текущее - " + AI_Team );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "0" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "1" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "2" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "3" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "4" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "5" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "6" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "7" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "8" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "9" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "10" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "11" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 12 ), "12" );
+    }
+    if( answerI == 2 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 14, "answer_GM_PANNEL_HEX_SPAWN_ANIMAL" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Выберите вид животного, АИ=" + AI_string + ", hp+=" + bonus_hp + ", dmg+=" + bonus_dmg + ", sk+=" + bonus_skill );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "крыса" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "мантис" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "муравей" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "свинокрыс" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "кротокрыс" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "большой кротокрыс" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "гекко" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "золотой гекко" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "собака" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "малый скорпион" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "большой скорпион" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "брамин" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 12 ), "цвет" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 13 ), "назад" );
+    }
+    if( answerI == 3 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_HEX_SPAWN_MONSTER" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Выберите вид монстра, АИ=" + AI_string + ", hp+=" + bonus_hp + ", dmg+=" + bonus_dmg + ", sk+=" + bonus_skill );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "чужой" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "малый коготь" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "большой коготь" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "серый коготь" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "огнегекко" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "кентавр" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "летун" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "болотник" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "назад" );
+    }
+    if( answerI == 4 )
+    {
+        player.ShowScreen( SCREEN_DIALOGBOX, 11, "answer_GM_PANNEL_HEX_SPAWN_RAIDER" );
+        player.Say( SAY_DIALOGBOX_TEXT, "Выберите вид рейдера, АИ=" + AI_string + ", hp+=" + bonus_hp + ", dmg+=" + bonus_dmg + ", sk+=" + bonus_skill );
+        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "кан.+нож" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "кан.+копье" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "кан.ж +нож" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "кан.ж +мяч" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "рейдер+дубин" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "рейдер+нож" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "рейдер+винтов" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "рейдер+пистолет" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "рейдерша+пистолет" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "рейдерша+копье" );
+        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "рейдерша+пп" );
+    }
+    if( answerI == 5 )
+    {
+        player.Say( SAY_NETMSG, "Игрок не найден." );
+    }
+    if( answerI == 6 )
+    {
+        player.Say( SAY_NETMSG, "Игрок не найден." );
+    }
+    if( answerI == 7 )
+    {
+        player.Say( SAY_NETMSG, "Игрок не найден." );
+    }
+    if( answerI == 8 )
+    {
+        player.ParamBase[ ST_VAR1 ] = MERC_CANCEL_TIME;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "бонус хп" );
+    }
+    if( answerI == 9 )
+    {
+        player.ParamBase[ ST_VAR1 ] = MERC_CANCEL_ON_GLOBAL;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "бонус дмг" );
+    }
+    if( answerI == 10 )
+    {
+        player.ParamBase[ ST_VAR1 ] = MERC_WAIT_FOR_MASTER;
+        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+        player.Say( SAY_SAY_TITLE, "бонус скилл" );
+    }
+    if( answerI == 11 )
+    {
+        GM_PANNEL_HEX( player, player.ParamBase[ MERC_LOSE_DIST ], player.ParamBase[ MERC_MASTER_DIST ], 0, null, null );
+    }
+
+}
+
+void answer_GM_PANNEL_HEX_SPAWN_AI( Critter& player, uint answerI, string& answerS )
+{
+        player.ParamBase[ MERC_TYPE ] = answerI;
+        GM_PANNEL_HEX( player, player.ParamBase[ MERC_LOSE_DIST ], player.ParamBase[ MERC_MASTER_DIST ], 0, null, null );
+}
+
+void answer_GM_PANNEL_HEX_SPAWN_TEAM( Critter& player, uint answerI, string& answerS )
+{
+        player.ParamBase[ MERC_CANCEL_ON_ATTACK ] = answerI;
+        GM_PANNEL_HEX( player, player.ParamBase[ MERC_LOSE_DIST ], player.ParamBase[ MERC_MASTER_DIST ], 0, null, null );
+}
+
+void answer_GM_PANNEL_HEX_SPAWN_ANIMAL( Critter& player, uint answerI, string& answerS )
+{
+    if( answerI >= 0 && answerI <= 12 )
+    {
+        Map@ map = player.GetMap();
+        player.ParamBase[ MERC_DEFEND_MASTER ] = answerI + 610;
+        player.ParamBase[ MERC_ASSIST_MASTER ] = 0;
+
+        int hexX = player.ParamBase[ MERC_LOSE_DIST ],
+        hexY = player.ParamBase[ MERC_MASTER_DIST ];
+
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    else if( answerI == 13 )
+	GM_PANNEL_HEX( player, player.ParamBase[ MERC_LOSE_DIST ], player.ParamBase[ MERC_MASTER_DIST ], 0, null, null );
+}
+
+void answer_GM_PANNEL_HEX_SPAWN_MONSTER( Critter& player, uint answerI, string& answerS )
+{
+    if( answerI >= 0 && answerI <= 7 )
+    {
+        player.ParamBase[ MERC_DEFEND_MASTER ] = answerI + 623;
+        player.ParamBase[ MERC_ASSIST_MASTER ] = 0;
+
+	GM_PANNEL_HEX_SPAWN( player );
+
+        int hexX = player.ParamBase[ MERC_LOSE_DIST ],
+        hexY = player.ParamBase[ MERC_MASTER_DIST ];
+
+        GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    else if( answerI == 8 )
+	GM_PANNEL_HEX( player, player.ParamBase[ MERC_LOSE_DIST ], player.ParamBase[ MERC_MASTER_DIST ], 0, null, null );
+}
+
+void answer_GM_PANNEL_HEX_SPAWN_RAIDER( Critter& player, uint answerI, string& answerS )
+{
+        int hexX = player.ParamBase[ MERC_LOSE_DIST ],
+        hexY = player.ParamBase[ MERC_MASTER_DIST ];
+
+    if( answerI == 0 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_KNIFE;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  635;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 1 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_SPEAR;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  635;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 2 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_KNIFE;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  636;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 3 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_ROCK;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  636;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 4 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_CLUB;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  637;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 5 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_KNIFE;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  637;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 6 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_ZIP_GUN;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  637;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 7 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_SPRINGER_RIFLE;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  637;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 8 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_ZIP_GUN;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  638;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 9 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_SPEAR;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  637;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+    if( answerI == 10 )
+    {
+	player.ParamBase[ MERC_ASSIST_MASTER ] = PID_10MM_SMG;
+	player.ParamBase[ MERC_DEFEND_MASTER ] =  638;
+	GM_PANNEL_HEX_SPAWN( player );
+	GM_PANNEL_HEX( player, hexX + Random( -1, 1 ), hexY + Random( -1, 1 ), 0, null, null );
+    }
+}
+
+void GM_PANNEL_HEX_SPAWN( Critter& player )
+{
+        Map@ map = player.GetMap();
+        int type = player.ParamBase[ MERC_DEFEND_MASTER ],
+            weapon = player.ParamBase[ MERC_ASSIST_MASTER ],
+            AI_type = player.ParamBase[ MERC_TYPE ],
+            AI_Team = player.ParamBase[ MERC_CANCEL_ON_ATTACK ],
+            hexX = player.ParamBase[ MERC_LOSE_DIST ],
+            hexY = player.ParamBase[ MERC_MASTER_DIST ],
+            bonus_hp = player.ParamBase[ MERC_CANCEL_TIME ],
+            bonus_dmg = player.ParamBase[ MERC_CANCEL_ON_GLOBAL ],
+            bonus_skill = player.ParamBase[ MERC_WAIT_FOR_MASTER ];
+
+        GM_SPAWN( player, map, type, weapon, AI_type, AI_Team, hexX, hexY, bonus_hp, bonus_dmg, bonus_skill );
+}
+
+/*
+void GM_teleport_to_next_player( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+    Critter@[] crs;
+    GetAllPlayers( crs );
+    if( player.StatBase[ ST_VAR0 ] >= crs.length() )
+		{
+        player.StatBase[ ST_VAR0 ] = 0;
+		player.EraseTimeEvents( 1);
+		}
+    Critter@ daddy = crs[ player.StatBase[ ST_VAR0 ] ];
+    if( not valid( daddy ) )
+    {
+        player.Say( SAY_NETMSG, "не верный криттер" );
+        player.StatBase[ ST_VAR0 ]++;
+        return;
+    }
+    player.StatBase[ ST_VAR0 ]++;
+    if( daddy.Id == player.Id )
+        return;
+    Map@ map = daddy.GetMap();
+    if( not valid( map ) )
+    {
+        player.Say( SAY_NETMSG, "игрок " + GetPlayerName( daddy.Id ) + " на глобале" );
+        return;
+    }
+    else if( map.GetProtoId() == 90 )
+    {
+        player.Say( SAY_NETMSG, "игрок " + GetPlayerName( daddy.Id ) + " на карте обучения" );
+        return;
+    }
+    else if( map.GetProtoId() == 92 )
+    {
+        player.Say( SAY_NETMSG, "игрок " + GetPlayerName( daddy.Id ) + " на стартовой карте" );
+        return;
+    }
+	uint[] rates;
+	player.GetTimeEvents( 1, null, null, rates );
+    for( uint ii = 0; ii < rates.length(); ii++ )
+    {
+		if( rates[ii] == daddy.Id )
+			{
+			player.Say( SAY_NETMSG, "игрока " + GetPlayerName( daddy.Id ) + " уже просматривали ранее" );
+			return;
+			}
+    }
+
+    uint8 temp_dir = Random( 0, 5 );
+    for( uint i = 0; i < 6; i++ )
+    {
+        uint16 hexX = daddy.HexX, hexY = daddy.HexY;
+        map.MoveHexByDir( hexX, hexY, ( temp_dir + i ) % 6, 1 );
+        if( not map.IsHexPassed( hexX, hexY ) ) continue;
+        player.TransitToMap( map.Id, hexX, hexY, 0 );
+        player.Say( SAY_NETMSG, "вы прыгнули к игроку " + GetPlayerName( daddy.Id ) + " " + daddy.Id );
+		Critter@[] critters;
+		map.GetCrittersHex( hexX, hexY, 20, FIND_ALL | FIND_ONLY_PLAYERS, critters );
+		    for( uint j = 0; j < critters.length(); j++ )
+			{
+			player.AddTimeEvent("cte_visited", 10*60*__TimeMultiplier, 7, critters[j].Id );
+			}
+        break;
+    }
+}
+
+uint cte_visited( Critter& cr, int identifier, uint& rate )
+{
+        return 0;
+}
+*/
+
+void GM_SPAWN( Critter& player, Map& map, int type, int weapon, int AI_type, int AI_Team, uint16 hexX, uint16 hexY, int bonus_hp, int bonus_dmg, int bonus_skill )
+{
+	logger( player, GMLOG, "spawned npc with type " + type + "." );
+    Critter@ cr = map.AddNpc( type, hexX, hexY, Random( 0, 5 ), null, null, null );
+    if( valid( cr ) )
+    {
+
+        cr.StatBase[ ST_AI_ID ] = 207;
+        cr.ParamBase[ MERC_TYPE ] = 10;
+        cr.ParamBase[ ST_TEAM_ID ] = AI_Team;
+        cr.ParamBase[ MERC_MASTER_ID ] = player.Id;
+
+        cr.ModeBase[ MODE_NO_HOME ] = 1;
+        cr.ModeBase[ MODE_UNLIMITED_AMMO ] = 1;
+
+        cr.ParamBase[ ST_MAX_LIFE ] = cr.ParamBase[ ST_MAX_LIFE ] + bonus_hp;
+        cr.ParamBase[ ST_MELEE_DAMAGE ] = cr.ParamBase[ ST_MELEE_DAMAGE ] + bonus_dmg;
+        cr.ParamBase[ SK_SMALL_GUNS ] = cr.ParamBase[ SK_SMALL_GUNS ] + bonus_skill;
+        cr.ParamBase[ SK_BIG_GUNS ] = cr.ParamBase[ SK_BIG_GUNS ] + bonus_skill;
+        cr.ParamBase[ SK_ENERGY_WEAPONS ] = cr.ParamBase[ SK_ENERGY_WEAPONS ] + bonus_skill;
+        cr.ParamBase[ SK_UNARMED ] = cr.ParamBase[ SK_UNARMED ] + bonus_skill;
+        cr.ParamBase[ SK_MELEE_WEAPONS ] = cr.ParamBase[ SK_MELEE_WEAPONS ] + bonus_skill;
+        cr.ParamBase[ SK_THROWING ] = cr.ParamBase[ SK_THROWING ] + bonus_skill;
+
+        if( weapon > 0 )
+            cr.AddItem( weapon, 1 );
+    }
+    if( AI_type == 0 && valid( player ) )
+    {
+        GM_MobInit( cr, 1 );
+        controlMob( player, cr.Id, 0, 0, null, null );
+    }
+    else if( AI_type >= 1 && AI_type <= 7 )
+    {
+        GM_MobInit( cr, AI_type );
+    }
+    else if( AI_type == 8 )
+    {
+        GM_MobInit( cr, 3 );
+        Critter@[] players;
+        if( valid( player ) && valid( cr ) && map.GetCritters( 0, FIND_LIFE_AND_KO | FIND_ONLY_PLAYERS, players ) > 0 )
+        {
+            for( uint j = 0, jj = players.length(); j < jj; j++ )
+            {
+                if( players[ j ].Id != uint( cr.ParamBase[ MERC_MASTER_ID ] ) )
+                {
+                    AddAttackPlane( cr, 0, players[ j ], __RunOnCombat );
+                    cr.AddEnemyInStack( players[ j ].Id );
+                }
+            }
+        }
+    }
+}
+

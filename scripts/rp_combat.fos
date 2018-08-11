@@ -1,0 +1,231 @@
+﻿// Combat by PigBoss for FOrp
+
+#include "_macros.fos"
+#include "_defines.fos"
+#include "combat.fos"
+
+void unsafe_sniperpos( Critter& player, int id, int itemId, int param2, string@ param3, int[] @ param4 )
+{
+    if( player.IsDead() || player.IsKnockout() )
+        return;
+    if( not valid( _CritGetItemHand( player ) ) )
+        return;
+    if( _CritGetItemHand( player ).Proto.Weapon_Sniper == false )
+    {
+        player.Say( SAY_NETMSG, "Это оружие не нуждается в прицеливании." );
+        return;
+    }
+    sniperpos( player );
+}
+
+void sniperpos( Critter& player )
+{
+    if( player.GetTimeEvents( 102, null, null, null ) > 0 )
+    {
+        player.EraseTimeEvents( 102 );
+        player.Say( SAY_NETMSG, "Прицеливание прекращено." );
+        player.ModeBase[ MODE_SNIPERPOS ] = 0;
+        return;
+    }
+	if ( player.ParamBase[ PE_SHARPSHOT ] != 0 )
+	{
+		player.AddTimeEvent( "cte_sniperpos", 2 * __TimeMultiplier, 102, player.Id );
+		player.AddTimeEvent( "cte_stope", 1, 103, 0 );
+		player.Say( SAY_NETMSG, "Вы начали целиться." );
+		//player.Say( SAY_EMOTE_ON_HEAD, "Вскидывает оружие и начинает целиться!" );
+		player.SetHomePos( player.HexX, player.HexY, player.Dir );
+		return;
+	}
+}
+
+uint cte_sniperpos( Critter& cr, int identifier, uint& rate )
+{
+    uint   mapid = 0;
+    uint16 x = 0;
+    uint16 y = 0;
+    uint8  dir = 0;
+    cr.GetHomePos( mapid, x, y, dir );
+    if( cr.ModeBase[ MODE_SNIPERPOS ] == 0 && cr.HexX == x && cr.HexY == y )
+    {
+        cr.ModeBase[ MODE_SNIPERPOS ] = 1;
+        cr.ParamBase[ PE_BETTER_CRITICALS ] = 1;
+        cr.Say( SAY_NETMSG, "Вы готовы стрелять." );
+        cr.EraseTimeEvents( 103 );
+        cr.AddTimeEvent( "cte_stope", 1, 103, 0 );
+        return 4 * __TimeMultiplier;
+    }
+    else if( cr.ModeBase[ MODE_SNIPERPOS ] == 1 )
+    {
+        cr.ParamBase[ PE_BETTER_CRITICALS ] = 0;
+        cr.ModeBase[ MODE_SNIPERPOS ] = 0;
+        cr.Say( SAY_NETMSG, "У вас сбилось дыхание." );
+        cr.EraseTimeEvents( 103 );
+        return 0;
+    }
+    else if( cr.ModeBase[ MODE_SNIPERPOS ] == 0 )
+    {
+        cr.ParamBase[ PE_BETTER_CRITICALS ] = 0;
+        cr.Say( SAY_NETMSG, "Вы прекратили прицеливание." );
+        cr.EraseTimeEvents( 103 );
+        return 0;
+    }
+    return 0;
+}
+
+void stopaim(Critter& cr){
+	cr.ParamBase[ PE_BETTER_CRITICALS ] = 0;
+    cr.ModeBase[ MODE_SNIPERPOS ] = 0;
+    cr.Say( SAY_NETMSG, "У вас сбилось дыхание." );
+    cr.EraseTimeEvents( 103 );
+}
+
+uint cte_stope( Critter& cr, int identifier, uint& rate )
+{
+    uint   mapid = 0;
+    uint16 x = 0;
+    uint16 y = 0;
+    uint8  dir = 0;
+    cr.GetHomePos( mapid, x, y, dir );
+    if( cr.HexX == x && cr.HexY == y )
+    {
+        return 1;
+    }
+    else
+    {
+        cr.ParamBase[ PE_BETTER_CRITICALS ] = 0;
+        cr.ModeBase[ MODE_SNIPERPOS ] = 0;
+        cr.Say( SAY_NETMSG, "Вы убежали." );
+        cr.EraseTimeEvents( 102 );
+        return 0;
+    }
+}
+
+void hearshot( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo )
+{
+    Item@ wep = _CritGetItemHand( cr );
+    if( valid( wep ) )
+    {
+        uint minrad = wep.Proto.Weapon_MinRadius;
+        if( minrad >= GetCrittersDistantion( cr, target ) )
+        {
+            cr.SayMsg( SAY_NETMSG, TEXTMSG_COMBAT, 150 );
+        }
+        int    type = 0;      // обычный одиночный выстрел
+        uint8  use = _WeaponModeUse( weaponMode );
+        uint16 ammoRound = _WeaponRound( weapon, use );
+        if( ammoRound > 1 )
+        {
+            type = 1;
+        }
+        if( _WeaponSkill( weapon, use ) != SK_MELEE_WEAPONS && wep.Proto.Weapon_HearRadius != 0 )
+        {
+            Critter@[] crits;
+            cr.GetMap().GetCrittersHex( cr.HexX, cr.HexY, wep.Proto.Weapon_HearRadius, FIND_ALL | FIND_ONLY_PLAYERS, crits );
+            for( uint i = 0; i < crits.length(); i++ )
+            {
+                if( type == 0 && !crits[ i ].IsSee( cr ) )
+                    crits[ i ].PlaySound( 'W', SOUND_WEAPON_USE, _WeaponSoundId( wep.Proto, use ), '1', true );
+                if( type == 1 && !crits[ i ].IsSee( cr ) )
+                    crits[ i ].PlaySound( 'W', SOUND_WEAPON_USE, _WeaponSoundId( wep.Proto, use ), '2', true );
+                crits[ i ].RunClientScript( "rp_client@__HearShot", cr.HexX, cr.HexY, type, null, null );
+            }
+        }
+    }
+}
+
+/*void unsafe_qabil( Critter& player, int targetId, int param1, int param2, string@ param3, int[] @ param4 ) 
+{
+	Critter@ target = GetCritter (targetId);
+	if ( player.Perk[PE_VITANI] > 0 && !player.IsDead() && !player.IsKnockout() )
+	{
+		if ( player.Stat[ST_CURRENT_AP] >= 10 && player.Mode[MODE_INTERCEPT] == 0 )
+		{
+			player.ParamBase[ST_CURRENT_AP] -= 10;
+			player.ModeBase[MODE_INTERCEPT] = 1;
+			player.Wait (50);
+		}
+		else if ( player.Mode[MODE_INTERCEPT] == 0 && player.Stat[ST_CURRENT_AP] < 10 )
+			player.Say (SAY_NETMSG, "Недостаточно очков действий!");
+		else if ( player.Mode[MODE_INTERCEPT] == 1 )
+			player.ModeBase[MODE_INTERCEPT] = 0;
+	}
+}*/
+
+void unsafe_wabil( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 ) 
+{
+	if ( player.Perk[PE_VITANI] > 0 && !player.IsDead() && !player.IsKnockout() )
+	{
+		if ( player.Stat[ST_CURRENT_AP] >= 10 && player.Mode[MODE_INTERCEPT] == 0 )
+		{
+			player.ParamBase[ST_CURRENT_AP] -= 1000;
+			player.ModeBase[MODE_INTERCEPT] = 1;
+		}
+		else if ( player.Mode[MODE_INTERCEPT] == 0 && player.Stat[ST_CURRENT_AP] < 10 )
+			player.Say (SAY_NETMSG, "Недостаточно очков действий!");
+		else if ( player.Mode[MODE_INTERCEPT] == 1 )
+			player.ModeBase[MODE_INTERCEPT] = 0;
+	}
+}
+
+uint cte_Thirst( Critter& cr, int identifier, uint& rate )
+{
+	if( !cr.IsDead() && cr.StatBase[ ST_BODY_TYPE ] != BT_ROBOT ) 
+		cr.StatBase[ ST_WATAH ] -= 1;
+	return 50 * __TimeMultiplier;;
+}
+
+
+uint cte_AssOnFire( Critter& cr, int identifier, uint& rate )
+{
+    if( cr.ParamBase[ ASS_ON_FIRE_STACK ] > 2 )
+    {
+        cr.ParamBase[ ASS_ON_FIRE_STACK ] = 0;
+        return 0;
+    }
+    CombatRes[] results;
+    AttackStruct attack;
+    @attack.Attacker = cr;
+    @attack.RealWeapon = null;
+    attack.Hx = cr.HexX;
+    attack.Hy = cr.HexY;
+    attack.Aim = HIT_LOCATION_TORSO;
+    attack.IsBurst = false;
+    attack.BloodyMess = true;
+    attack.CombatMessage = true;
+    attack.DmgMin = rate / 4;
+    attack.DmgMax = rate / 3;
+    attack.DmgType = DAMAGE_FIRE;
+    attack.BonusDmg = 0;
+    cr.Say( SAY_EMOTE_ON_HEAD, "Горит!" );
+    cr.ParamBase[ ASS_ON_FIRE_STACK ] += 1;
+    ApplyDamage( attack, cr, 1, false, false, results );
+    return 3;
+}
+
+uint cte_bleed( Critter& cr, int identifier, uint& rate )
+{
+    if( cr.ParamBase[ BLEED_STACK ] > 10 )
+    {
+        cr.ParamBase[ BLEED_STACK ] = 0;
+        return 0;
+    }
+    CombatRes[] results;
+    AttackStruct attack;
+    @attack.Attacker = cr;
+    @attack.RealWeapon = null;
+    attack.Hx = cr.HexX;
+    attack.Hy = cr.HexY;
+    attack.Aim = HIT_LOCATION_TORSO;
+    attack.IsBurst = false;
+    attack.BloodyMess = false;
+    attack.CombatMessage = false;
+    attack.DmgMin = 0;
+    attack.DmgMax = 0;
+    attack.DmgType = DAMAGE_UNCALLED;
+    attack.BonusDmg = rate;
+    attack.DRMod = -100;
+    cr.Say( SAY_EMOTE_ON_HEAD, "Истекает кровью" );
+    cr.ParamBase[ BLEED_STACK ] += 1;
+    ApplyDamage( attack, cr, 1, false, false, results );
+    return 10;
+}

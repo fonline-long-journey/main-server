@@ -1,0 +1,160 @@
+// Shared client\server commands responser by PigBoss for FOrp
+
+#include "_client_defines.fos"
+#define MonitorCrit    GetMonitorCritter( __MouseX, __MouseY )
+#define MonitorItem    GetMonitorItem( __MouseX, __MouseY )
+
+void CommandCall( CritterCl& player, int param0, int param1, int param2, string@ message, int[] @ param4 )
+{
+    if( CmdName( message ) == "npcdel" )
+        RunServerScript( "gm@_RemoveNpc", MonitorCrit.Id, 0, 0, null, null );
+    if( CmdName( message ) == "gmlex" )
+        RunServerScript( "gm@_GmLex", MonitorCrit.Id, 0, 0,fixstring( substring(message, 6, message.length())), null );
+    if( CmdName( message ) == "itemlex" )
+        RunServerScript( "gm@_itemlex", MonitorItem.Id, 0, 0, fixstring(substring(message, 8, message.length())), null );
+    if( CmdName( message ) == "cleardoor" )
+        RunServerScript( "gm@_erasedoor", MonitorItem.Id, 0, 0, null, null );
+    if( CmdName( message ) == "setcodedoor" )
+        RunServerScript( "gm@SetCodeDoor", MonitorItem.Id, 0, 0, null, null );
+    if( CmdName( message ) == "getp" )
+        RunServerScript( "gm@_GetCritParam", getarg( 0, message ), 0, MonitorCrit.Id, null, null );
+    if( CmdName( message ) == "skin" )
+        RunServerScript( "gm@_body", MonitorCrit.Id, getarg( 0, message ), 0, null, null );
+    if( CmdName( message ) == "spawnnpc" )
+        RunServerScript( "gm@_AddNpc", getarg( 0, message ), getarg( 1, message ), 0, null, null );
+    if( CmdName( message ) == "god" )
+        RunServerScript( "gm@_god", 0, 0, 0, null, null );
+    if( CmdName( message ) == "info" )
+        RunServerScript( "gm@_info", MonitorCrit.Id, 0, 0, null, null );
+    if( CmdName( message ) == "door" )
+        RunServerScript( "gm@_opendoor", MonitorItem.Id, 0, 0, null, null );
+    if( CmdName( message ) == "clone" )
+        RunServerScript( "gm@_Clone", MonitorCrit.Id, 0, 0, null, null );
+    if( CmdName( message ) == "giveall" )
+        RunServerScript( "gm@_GiveAll", MonitorCrit.Id, getarg( 0, message ), 0, null, null );
+    if( CmdName( message ) == "ctd" )
+        RunServerScript( "gm@_ctd", getarg( 0, message ), 0, 0, null, null );
+    if( CmdName( message ) == "dct" )
+        RunServerScript( "gm@_dct", getarg( 0, message ), 0, 0, null, null );
+    if( CmdName( message ) == "coolcar" )
+        RunServerScript( "gm@_spawncar", 0, 0, 0, null, null );
+    if( CmdName( message ) == "lvl" )
+        RunServerScript( "gm@_lvlup", MonitorCrit.Id, 0, 0, null, null );
+    if( CmdName( message ) == "pm" )
+        RunServerScript( "gm@_gmpm", MonitorCrit.Id, 0, 0, fixstring(substring(message, 3, message.length())), null );
+    if( CmdName( message ) == "rain" )
+        RunServerScript( "gm@setrain", 0, 0, 0, getstrarg( 0, message ), null );
+    if( CmdName( message ) == "exp" )
+        RunServerScript( "gm@_AddExp", MonitorCrit.Id, 0, 0, getstrarg( 0, message ), null );
+    if( CmdName( message ) == "armor" )
+        RunServerScript( "gm@_gmcont", 0, 0, 0, null, null );
+    if( CmdName( message ) == "pistols" )
+        RunServerScript( "gm@_gmcont", 1, 0, 0, null, null );
+    if( CmdName( message ) == "rifles" )
+        RunServerScript( "gm@_gmcont", 2, 0, 0, null, null );
+    if( CmdName( message ) == "bigguns" )
+        RunServerScript( "gm@_gmcont", 3, 0, 0, null, null );
+    if( CmdName( message ) == "energo" )
+        RunServerScript( "gm@_gmcont", 4, 0, 0, null, null );
+    if( CmdName( message ) == "throwing" )
+        RunServerScript( "gm@_gmcont", 5, 0, 0, null, null );
+    if( CmdName( message ) == "melee" )
+        RunServerScript( "gm@_gmcont", 6, 0, 0, null, null );
+    if( CmdName( message ) == "ammo" )
+        RunServerScript( "gm@_gmcont", 7, 0, 0, null, null );
+    if( CmdName( message ) == "drugs" )
+        RunServerScript( "gm@_gmcont", 8, 0, 0, null, null );
+    if( CmdName( message ) == "misc" )
+        RunServerScript( "gm@_gmcont", 9, 0, 0, null, null );
+    if( CmdName( message ) == "goddlyapetuhov" )
+        RunServerScript( "gm@god", 0, 0, 0, null, null );
+    if( CmdName( message ) == "getdeadlog" )
+        RunServerScript( "logger@_getlog", DEADLOG, 0, 0, null, null );
+    if( CmdName( message ) == "getradiolog" )
+        RunServerScript( "logger@_getlog", RADIOLOG, 0, 0, null, null );
+    if( CmdName( message ) == "say2all" )
+        RunServerScript( "gm@_say2all", 0, 0, 0, fixstring(substring(message, 8, message.length())), null );
+    if( CmdName( message ) == "say" )
+        RunServerScript( "gm@_gmsay", MonitorCrit.Id, 0, 0, fixstring( substring(message, 4, message.length())), null );
+    if( CmdName( message ) == "gmvision" )
+        RunServerScript( "gm@__sinfsc", 0, 0, 0, null, null );
+    if( CmdName( message ) == "warp" )
+        RunServerScript( "gm@immaterium", MonitorCrit.Id, 0, 0, null, null );
+    if( CmdName( message ) == "lockdoor" )
+        RunServerScript( "gm@gmlock", MonitorItem.Id, 0, 0, null, null );
+	if(CmdName(message)=="setguard")
+		RunServerScript("gm@pootisguard", MonitorCrit.Id,0,0,null,null);
+	if( CmdName( message ) == "clearlex" )
+        RunServerScript( "gm@clearlex", getarg( 0, message ), 0, 0, null, null );
+
+    if( CmdName( message ) == "delitems" )
+    {
+        uint16 p1 = 0;
+        uint16 p2 = 0;
+        if( GetMonitorHex( __MouseX, __MouseY, p1, p2 ) == true )
+        {
+            RunServerScript( "gm@_deleteitem", 0, p1, p2, null, null );
+        }
+    }
+    if( CmdName( message ) == "greytext" )
+    {
+        uint16 x = 0;
+        uint16 y = 0;
+        if( GetMonitorHex( __MouseX, __MouseY, x, y ) )
+        {
+            RunServerScript( "gm@_greytext", x, y, 0, fixstring( substring(message, 8, message.length())), null );
+        }
+    }
+    if( CmdName( message ) == "light" )
+    {
+		int[] arr = {getarg( 0, message ), getarg( 1, message ), getarg( 2, message )};
+        RunServerScript( "gm@light", MonitorItem.Id, 0, 0, null, arr );
+    }
+
+}
+
+int argcount( string@ message )
+{
+    int pos = 0;
+    for( int count = 0; ; ++count )
+    {
+        pos = findFirstOf( message, " ", pos );
+        if( pos == -1 )
+            return count;
+    }
+    return 0;
+}
+
+int getarg( int num, string@ message )
+{
+    message += " ";
+    int res = 0;
+    string@[] strs = splitEx( message, " " );
+    if( StrToInt( strs[ num + 1 ], res ) )
+    {
+        return res;
+    }
+    return 0;
+}
+
+string CmdName( string@ message )
+{
+    message += " ";
+    int res = 0;
+    string@[] strs = splitEx( message, " " );
+    return strs[ 0 ];
+}
+
+string getstrarg( int num, string@ message )
+{
+    message += " ";
+    string@[] strs = splitEx( message, " " );
+    return strs[ num + 1 ];
+}
+
+string fixstring(string@ msg){
+	string@[] strs = splitEx(msg, " ");
+	msg = join(strs, " ");
+	msg = substring(msg, 0, msg.length() - 1);
+	return msg;
+}

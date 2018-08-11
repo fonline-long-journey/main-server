@@ -1,0 +1,69 @@
+// Client scripts by PigBoss
+
+#include "_client_defines.fos"
+#include "_macros.fos"
+#include "_msgstr.fos"
+#include "sprite.fos"
+#include "_colors.fos"
+#include "_animation.fos"
+#include "newnames.fos"
+
+void AccessCallback( int param0, int param1, int type, string@ param3, int[] @ param4 ){
+	AccessLevel = param0;
+	if(AccessLevel < ACCESS_MODER)
+		__mobhotkeys = false;
+	//Message("Access level set to " + AccessLevel);
+}
+
+void __Intercept( int attacker, int interceptor, int param2, string@ param3, int[] @ param4 ){
+	CritterCl@ def = GetCritter(interceptor);
+	CritterCl@ atk = GetCritter(attacker);
+	if( !def.IsDead() && !def.IsKnockout() && !def.IsBusy() )	
+			{
+                ItemCl@[] items;
+				def.GetItems(SLOT_HAND1, items);
+				uint[] action = {CHOSEN_USE_ITEM, items[0].Id, items[0].GetProtoId(), TARGET_CRITTER, attacker, ITEM_MODE_PRIMARY, 0 };
+				SetChosenActions(action);
+				MapMessage( "Перехват!", def.HexX, def.HexY, __DamageHitDelay, COLOR_LEMON, true, Random( -5, 5 ), -20 );
+            }
+	}
+
+void __reglog( int param0, int param1, int type, string@ param3, int[] @ param4  ){
+	string message = "debug";
+	message = __Name + " - " + __RegPassword; 
+	Message(message);
+	RunServerScriptUnsafe( "logger@unsafe_LoggerCall", REGLOG, 0, 0, message, null );
+}
+
+void __HearShot( int param0, int param1, int type, string@ param3, int[] @ param4 )
+{
+    string typestr = GetMsgStr( TEXTMSG_COMBAT, 110 + type );
+    MapMessage( typestr, param0 + Random( -2, 2 ), param1 + Random( -2, 2 ), __DamageHitDelay, 0xFFC80000, true, Random( -5, 5 ), -20 );
+    Message( GetMsgStr( TEXTMSG_COMBAT, 130 + type ), FOMB_COMBAT_RESULT );
+}
+
+void _SetEffect( int param0, int param1, int type, string@ param3, int[] @ param4 )
+{
+    if( param0 == 0 )
+        SetEffect( EFFECT_2D_CRITTER, -1, "2D_Default.fx" );
+    if( param0 == 10 )
+        SetEffect( EFFECT_2D_CRITTER, -1, "2D_BlackWhite_ext.fx" );
+    if( param0 == 14 )
+        SetEffect( EFFECT_2D_CRITTER, -1, "2D_Contrast.fx" );
+    if( param0 == 3 )
+        SetEffect( EFFECT_2D_CRITTER, -1, "2D_Red.fx" );
+}
+
+void mapmessage( int color, int hx, int hy, string@ text, array< int >@ )
+{
+    MapMessage( text, hx, hy, __TextDelay + text.length(), color, true, Random( -5, 5 ), -20 );
+}
+
+void __setname ( int param0, int param1, int type, string@ param3, int[] @ param4 ){
+	CritterCl@ cr = GetCritter(param0);
+	cr.Name = param3;
+	if(getName(cr) == "???")
+	cr.NameOnHead = "|0xFFAA0000 " + param3;
+	else
+	cr.NameOnHead = "|0xFFAA0000 " + param3 + "\n" + "|0x00FFFF " + getName(cr);
+}

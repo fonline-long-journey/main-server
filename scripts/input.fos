@@ -1,0 +1,738 @@
+#include "_client_defines.fos"
+#include "_msgstr.fos"
+#include "gui_h.fos"
+
+import void TryExit() from "gui_screens";
+import void ThrowingKeyDown( uint8 key ) from "throwing";
+import void ThrowingKeyUp( uint8 key ) from "throwing";
+import void ThrowingInputLost() from "throwing";
+import bool ThrowingMouseDown( int click ) from "throwing";
+import int to_hit_hex() from "bin_hex_attack_client";
+
+bool[] KeyPressed;
+bool[] MousePressed;
+bool get_CtrlDown()  { return KeyPressed[ DIK_RCONTROL ] || KeyPressed[ DIK_LCONTROL ]; }
+bool get_AltDown()   { return KeyPressed[ DIK_LMENU ] || KeyPressed[ DIK_RMENU ]; }
+bool get_ShiftDown() { return KeyPressed[ DIK_LSHIFT ] || KeyPressed[ DIK_RSHIFT ]; }
+
+
+int[] controlled = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint8  current_group;
+string name0;
+string name1;
+string name2;
+string name3;
+string name4;
+string name5;
+string name6;
+string name7;
+string name8;
+string name9;
+
+
+class ScriptInitializer
+{
+    ScriptInitializer()
+    {
+        KeyPressed.resize( 0x100 );
+        MousePressed.resize( MOUSE_BUTTON_EXT4 + 1 );
+    }
+}
+ScriptInitializer _ScriptInitializer;
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Mouse behaviours. Button states look in _client_defines.fos, Mouse buttons.
+// Return true to disable engine events.
+void mouse_down( int button ) // Engine callback
+{
+    MousePressed[ button ] = true;
+	
+	if( button == MOUSE_BUTTON_MIDDLE )
+    {
+        CritterCl @cr = GetMonitorCritter( __MouseX, __MouseY );
+		if( @cr != null )
+        RunServerScriptUnsafe( "names@unsafe_char_middle_click", cr.Id, 0, 0, null, null );
+    }
+//Erlking gm menu
+            else if( button == MOUSE_BUTTON_RIGHT && ( KeyPressed[ DIK_LMENU ] || KeyPressed[ DIK_M ] ) )
+            {
+                if( __mobhotkeys )
+                {
+                    uint16    x = __MouseX, y = __MouseY;
+                    CritterCl @cr = GetMonitorCritter( x, y );
+                    ItemCl    @it = GetMonitorItem( x, y );
+                    if( @cr != null )
+                    {
+                        if( cr.IsPlayer() )
+                            RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );                     // панель действий с игроком
+                        else
+                            RunServerScript( "gm@GM_PANNEL_CRITTER_NPC", cr.Id, 0, 0, null, null );                        // панель действий с нпц
+                    }
+                    else if( @it != null )
+                    {
+                        RunServerScript( "gm@GM_PANNEL_ITEM", it.Id, 0, 0, null, null );                       // панель действий с итемом
+                    }
+                    else
+                    {
+                        uint16 hexX = 0, hexY = 0;
+                        GetMonitorHex( x, y, hexX, hexY );
+                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                       // панель действий с гексом
+                    }
+                }
+            }
+//Erlking gm menu
+
+	ThrowingMouseDown( button );
+    GUI_EngineCallback_MouseDown( button );
+}
+
+void mouse_up( int button ) // Engine callback
+{
+    MousePressed[ button ] = false;
+
+    GUI_EngineCallback_MouseUp( button );
+}
+
+void mouse_move() // Engine callback
+{
+    GUI_EngineCallback_MouseMove();
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Keyboard behaviours. Key codes look in _client_defines.fos DirectInput keyboard scan codes.
+// Return true to disable engine events.
+void key_down( uint8 key, string@ text ) // Engine callback
+{
+    // Avoid repeating
+    if( KeyPressed[ key ] )
+    {
+        if( key != DIK_TEXT && key != DIK_SPACE && key != DIK_BACK )
+            return;
+    }
+
+    if( __waiting )
+    {
+        CritterCl@ ch = GetChosen();
+        if( @ch != null )
+        {
+            if( key == DIK_ESCAPE || key == DIK_SPACE )
+            {
+                RunServerScriptUnsafe( "ltp@unsafe_StopProcess",  0, 0, 0, null, null );
+            }
+            return;
+        }
+        else
+            __waiting = false;
+    }
+
+    ThrowingKeyDown( key );
+
+    KeyPressed[ key ] = true;
+
+    // Hotkeys handler
+    bool isHotkey = HandleHotkeys( key );
+
+    // GUI handler
+    if( !isHotkey )
+        GUI_EngineCallback_KeyDown( key, text );
+
+    // Pressed keys
+    if( key != DIK_TEXT )
+        HandlePressedKeys();
+}
+
+void key_up( uint8 key ) // Engine callback
+{
+    // Avoid repeating
+    if( !KeyPressed[ key ] )
+        return;
+    KeyPressed[ key ] = false;
+
+    // GUI handler
+    GUI_EngineCallback_KeyUp( key );
+
+    // Pressed keys
+    if( key != DIK_TEXT )
+        HandlePressedKeys();
+
+    ThrowingKeyUp( key );
+
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Called on mouse/keyboard input lost (alt-tab, minimize, lost focus).
+void input_lost() // Engine callback
+{
+    // Reset states
+    for( uint i = 0, j = KeyPressed.length(); i < j; i++ )
+        KeyPressed[ i ] = false;
+    for( uint i = 0, j = MousePressed.length(); i < j; i++ )
+        MousePressed[ i ] = false;
+
+    // GUI handler
+    GUI_EngineCallback_InputLost();
+
+	ThrowingInputLost();
+	
+    // Pressed keys
+    HandlePressedKeys();
+}
+
+// Hotkeys handler
+bool HandleHotkeys( uint8 key )
+{
+    // Effect example, temporary
+    if( AltDown && key == DIK_Q )
+        SetEffect( EFFECT_FLUSH_MAP, 0, null );
+    if( AltDown && key == DIK_W )
+        SetEffect( EFFECT_FLUSH_MAP, 0, "Flush_Map_BlackWhite.glsl" );
+
+    if(  GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME  )
+    {
+        if( key == DIK_H && GetCurrentCursor() == CURSOR_DEFAULT && !__ConsoleActive )
+        {
+            CritterCl @cr = GetMonitorCritter( __MouseX, __MouseY );
+            ItemCl    @it = GetMonitorItem( __MouseX, __MouseY );
+
+            if( @cr != null )
+                RunServerScriptUnsafe( "rp_unsafe@unsafe_itemhit", cr.Id, 0, 0, null, null );
+            else if( @it != null )
+                RunServerScriptUnsafe( "rp_unsafe@unsafe_itemhit", it.Id, 0, 0, null, null );
+            ChangeCursor( CURSOR_DEFAULT );
+            return true;
+        }
+    }
+    if(  GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME  )
+    {
+        if( key == DIK_E && !__ConsoleActive && !KeyPressed[ DIK_LCONTROL ] )
+        {
+            CritterCl@ chos = GetChosen();
+            if( !chos.IsDead() && !chos.IsKnockout() && !chos.IsBusy() )
+            {
+                RunServerScriptUnsafe( "rp_unsafe@unsafe_opendoor", 0, 0, 0, null, null );
+            }
+            return true;
+
+        }
+		else if( key == DIK_R && !__ConsoleActive && !KeyPressed[ DIK_LCONTROL ])
+		{
+		CritterCl@ chos = GetChosen();
+		if( !chos.IsDead() && !chos.IsKnockout() && !chos.IsBusy() )
+            {
+                ItemCl@[] items;
+				chos.GetItems(SLOT_HAND1, items);
+				uint[] action = {CHOSEN_USE_ITEM, items[0].Id, items[0].GetProtoId(), TARGET_SELF_ITEM, 0, ITEM_MODE_RELOAD, 0 };
+				SetChosenActions(action);
+            }
+        return true;
+		
+		
+		
+		}
+    }
+
+    if( key == DIK_0 && KeyPressed[ DIK_LCONTROL ] && AccessLevel >= ACCESS_MODER )
+    {
+        if( __mobhotkeys )
+        {
+            Message( "Hotkeys disabled" );
+            __mobhotkeys = false;
+        }
+        else
+        {
+            __mobhotkeys = true;
+            Message( "Hotkeys enabled" );
+            return false;
+        }
+    }
+	
+	//if( key == DIK_X && CtrlDown){
+		//RunServerScriptUnsafe( "new_combat@unsafe_combat", 0, 0, 0, null, null );
+	//}
+
+    if(  GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME )
+    {
+        if( key == DIK_X && !__ConsoleActive )
+        {
+            RunServerScriptUnsafe( "rp_combat@unsafe_sniperpos", 0, 0, 0, null, null );
+        }
+    }
+	
+	/*if(  GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME )
+		{
+		if( key == DIK_Q && KeyPressed[ DIK_LSHIFT ] && !__ConsoleActive )
+			{
+				uint16     x = __MouseX, y = __MouseY;
+				CritterCl@ target = GetMonitorCritter( x, y );
+				RunServerScriptUnsafe( "rp_combat@unsafe_qabil",  target.Id, 0, 0, null, null );
+				return false;
+			}	
+		}*/
+		
+	if(  GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME )
+		{
+		if( key == DIK_W && KeyPressed[ DIK_LSHIFT ] && !__ConsoleActive )
+			{
+				RunServerScriptUnsafe( "rp_combat@unsafe_wabil",  0, 0, 0, null, null );
+				return false;
+			}	
+		}
+		
+		
+    if( __mobhotkeys )
+    {
+        if( GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME  )
+        {
+            if( key == DIK_T && KeyPressed[ DIK_LCONTROL ] && GetCurrentCursor() == CURSOR_DEFAULT && !__ConsoleActive )
+            {
+                uint16 x = 0;
+                uint16 y = 0;
+                if( GetMonitorHex( __MouseX, __MouseY, x, y ) == true )
+                {
+                    RunServerScript( "gm@_teletoHex", 0, x, y, null, null );
+                }
+            }
+        }
+
+        if(  GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME )
+        {
+            if( key == DIK_E && KeyPressed[ DIK_LCONTROL ] )
+            {
+                RunServerScript( "gm@_checkinv", GetChosen().Id, GetMonitorCritter( __MouseX, __MouseY ).Id, 0, null, null );
+            }
+        }
+        if( key == DIK_V && KeyPressed[ DIK_LCONTROL ] )
+        {
+            uint16     x = __MouseX, y = __MouseY;
+            CritterCl@ target = GetMonitorCritter( x, y );
+            RunServerScript( "gm@GM_say",  target.Id, 0, 0, null, null );
+            return false;
+        }
+        if( key == DIK_1 && KeyPressed[ DIK_LCONTROL ] )
+        {
+            current_group = 0;
+            name0 = "";
+            name1 = "";
+            name2 = "";
+            name3 = "";
+            name4 = "";
+            name5 = "";
+            name6 = "";
+            name7 = "";
+            name8 = "";
+            name9 = "";
+            return false;
+        }
+        else if( key == DIK_2 && KeyPressed[ DIK_LCONTROL ] )
+        {
+            current_group = 1;
+            name0 = "";
+            name1 = "";
+            name2 = "";
+            name3 = "";
+            name4 = "";
+            name5 = "";
+            name6 = "";
+            name7 = "";
+            name8 = "";
+            name9 = "";
+            return false;
+        }
+        else if( key == DIK_3 && KeyPressed[ DIK_LCONTROL ] )
+        {
+            current_group = 2;
+            name0 = "";
+            name1 = "";
+            name2 = "";
+            name3 = "";
+            name4 = "";
+            name5 = "";
+            name6 = "";
+            name7 = "";
+            name8 = "";
+            name9 = "";
+            return false;
+        }
+        else if( key == DIK_C && KeyPressed[ DIK_LCONTROL ] )
+        {
+            uint16     x = __MouseX, y = __MouseY;
+            CritterCl@ target = GetMonitorCritter( x, y );
+            SetControlCritters( target.Id );
+            return false;
+        }
+        else if( key == DIK_A && KeyPressed[ DIK_LCONTROL ] )
+        {
+            uint16     x = __MouseX, y = __MouseY;
+            CritterCl@ target = GetMonitorCritter( x, y );
+            if( @target != null )
+                RunServerScript( "gm@attackMob",  target.Id, current_group, 0, null, controlled );
+            else
+            {
+                uint16 hexX = 0, hexY = 0;
+                string run = "1";
+                GetMonitorHex( x, y, hexX, hexY );
+                RunServerScript( "gm@moveMob", current_group, hexX, hexY, run, controlled );
+            }
+            return false;
+        }
+        else if( key == DIK_W && KeyPressed[ DIK_LCONTROL ] )
+        {
+            uint16 x = __MouseX, y = __MouseY, hexX = 0, hexY = 0;
+            GetMonitorHex( x, y, hexX, hexY );
+            RunServerScript( "gm@moveMob", current_group, hexX, hexY, null, controlled );
+            return false;
+        }
+        else if( key == DIK_Q && KeyPressed[ DIK_LCONTROL ] )
+        {
+            controlled[ 0 + current_group * 10 ] = 0;
+            controlled[ 1 + current_group * 10 ] = 0;
+            controlled[ 2 + current_group * 10 ] = 0;
+            controlled[ 3 + current_group * 10 ] = 0;
+            controlled[ 4 + current_group * 10 ] = 0;
+            controlled[ 5 + current_group * 10 ] = 0;
+            controlled[ 6 + current_group * 10 ] = 0;
+            controlled[ 7 + current_group * 10 ] = 0;
+            controlled[ 8 + current_group * 10 ] = 0;
+            controlled[ 9 + current_group * 10 ] = 0;
+            return false;
+        }
+        else if( key == DIK_X && KeyPressed[ DIK_LCONTROL ] )
+        {
+            uint16 x = __MouseX, y = __MouseY, hexX = 0, hexY = 0;
+            GetMonitorHex( x, y, hexX, hexY );
+            RunServerScript( "gm@stopMob", current_group, hexX, hexY, null, controlled );
+            return false;
+        }
+//ErlKing gm menu
+            else if( key == DIK_G && KeyPressed[ DIK_LCONTROL ] )
+            {
+                RunServerScriptUnsafe( "gm@unsafe_GM_PANNEL_SELF", 0, 0, 0, null, null );
+                return false;
+            }
+            else if( key == DIK_N && KeyPressed[ DIK_LCONTROL ] )
+            {
+                RunServerScript( "gm@GM_teleport_to_next_player",  0, 0, 0, null, null );
+                return false;
+            }
+//ErlKing gm menu
+    }
+    if( key == MOUSE_BUTTON_LEFT && __isHexAttack && to_hit_hex() > 0 )
+    {
+        uint16 hexX = 0, hexY = 0;
+        GetMonitorHex( __MouseX, __MouseY, hexX, hexY );
+        RunServerScriptUnsafe( "bin_hex_attack_server@unsafe_hex_attack", hexX, hexY, 0, null, null );
+    }
+    if( key == DIK_N && KeyPressed[ DIK_LCONTROL ] )
+    {
+        CritterCl @cr = GetMonitorCritter( __MouseX, __MouseY );
+        RunServerScriptUnsafe( "names@unsafe_char_middle_click", cr.Id, 0, 0, null, null );
+    }
+    // Hotkeys
+    bool isHotkey = true;
+    bool inputFocused = ( cast< GUITextInput >( GUI_GetFocusedObject() ) !is null );
+
+    if( !CtrlDown && !AltDown && !ShiftDown )
+    {
+        switch( key )
+        {
+        case DIK_F1:
+            __HelpInfo = !__HelpInfo;
+            break;
+
+        case DIK_F2:
+            if( CustomCall( "SaveLogFile" ) == "OK" )
+                Message( MSG_GAME( STR_LOG_SAVED ) );
+            else
+                Message( MSG_GAME( STR_LOG_NOT_SAVED ) );
+            break;
+        case DIK_F3:
+            if( CustomCall( "SaveScreenshot" ) == "OK" )
+                Message( MSG_GAME( STR_SCREENSHOT_SAVED ) );
+            else
+                Message( MSG_GAME( STR_SCREENSHOT_NOT_SAVED ) );
+            break;
+
+        case DIK_F4:
+            if( GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME )
+                CustomCall( "SwitchIntVisible" );
+            break;
+        case DIK_F5:
+            if( GUI_GetActiveMainScreen().Index == CLIENT_MAIN_SCREEN_GAME )
+                CustomCall( "SwitchIntAddMess" );
+            break;
+
+        case DIK_F6:
+            __ShowPlayerNames = !__ShowPlayerNames;
+            break;
+        case DIK_F7:
+            if( __DebugInfo )
+                __ShowNpcNames = !__ShowNpcNames;
+            break;
+
+        case DIK_F8:
+            __MouseScroll = !__MouseScroll;
+            __ScrollMouseRight = false;
+            __ScrollMouseLeft = false;
+            __ScrollMouseDown = false;
+            __ScrollMouseUp = false;
+            break;
+
+        case DIK_F9:
+            if( __DebugInfo )
+                CustomCall( "SwitchShowTrack" );
+            break;
+        case DIK_F10:
+            if( __DebugInfo )
+                CustomCall( "SwitchShowHex" );
+            break;
+
+        // Fullscreen
+        case DIK_F11:
+            CustomCall( "SwitchFullscreen" );
+            break;
+        // Minimize
+        case DIK_F12:
+            CustomCall( "MinimizeWindow" );
+            break;
+
+        // Mouse wheel emulate
+        case DIK_PRIOR:
+            MouseClick( __MouseX, __MouseY, MOUSE_BUTTON_WHEEL_UP, -1 );
+            break;
+        case DIK_NEXT:
+            MouseClick( __MouseX, __MouseY, MOUSE_BUTTON_WHEEL_DOWN, -1 );
+            break;
+
+        // Text input switching
+        case DIK_TAB:
+            GUI_NextTextInput();
+            break;
+
+        // Exit
+        case DIK_ESCAPE:
+            TryExit();
+            break;
+
+        default:
+            break;
+        }
+
+        if( !inputFocused )
+        {
+            GUIScreen@ screen = GUI_GetActiveScreen();
+            if( ( key == DIK_TAB && screen.Index == CLIENT_SCREEN_CHARACTER ) ||
+                ( key == DIK_C && screen.Index == CLIENT_SCREEN_CHARACTER ) ||
+                ( key == DIK_P && screen.Index == CLIENT_SCREEN_PIP_BOY ) ||
+                ( key == DIK_F && screen.Index == CLIENT_SCREEN_FIX_BOY ) ||
+                ( key == DIK_I && screen.Index == CLIENT_SCREEN_INVENTORY ) )
+                TryExit();
+            else if( key == DIK_Q && screen.Index == CLIENT_MAIN_SCREEN_GAME && !__ConsoleActive )
+                CustomCall( "SwitchLookBorders" );
+            else if( key == DIK_W && screen.Index == CLIENT_MAIN_SCREEN_GAME && !__ConsoleActive )
+                CustomCall( "SwitchShootBorders" );
+            else if( key == DIK_SPACE && __Singleplayer )
+                CustomCall( "SwitchSingleplayerPause" );
+            else
+                isHotkey = false;
+        }
+        else
+        {
+            isHotkey = false;
+        }
+    }
+    else
+    {
+        switch( key )
+        {
+        case DIK_F6:
+            if( __DebugInfo && CtrlDown )
+                __ShowCritId = !__ShowCritId;
+            break;
+        case DIK_F7:
+            if( __DebugInfo && CtrlDown )
+                __ShowCritId = !__ShowCritId;
+            break;
+        case DIK_F10:
+            if( ShiftDown )
+                CustomCall( "DumpAtlases" );
+            break;
+
+        // Num Pad
+        case DIK_EQUALS:
+        case DIK_ADD:
+            if( !inputFocused )
+            {
+                if( CtrlDown )
+                    __SoundVolume = CLAMP( __SoundVolume + 2, 0, 100 );
+                else if( ShiftDown )
+                    __MusicVolume = CLAMP( __MusicVolume + 2, 0, 100 );
+                else if( AltDown && __FixedFPS < 10000 )
+                    __FixedFPS++;
+            }
+            break;
+        case DIK_MINUS:
+        case DIK_SUBTRACT:
+            if( !inputFocused )
+            {
+                if( CtrlDown )
+                    __SoundVolume = CLAMP( __SoundVolume - 2, 0, 100 );
+                else if( ShiftDown )
+                    __MusicVolume = CLAMP( __MusicVolume - 2, 0, 100 );
+                else if( AltDown && __FixedFPS > -10000 )
+                    __FixedFPS--;
+            }
+            break;
+
+        // Exit
+        case DIK_ESCAPE:
+            if( ShiftDown )
+                __Quit = true;
+            break;
+
+        default:
+            isHotkey = false;
+            break;
+        }
+
+        if( key == DIK_RCONTROL || key == DIK_LCONTROL || key == DIK_RCONTROL || key == DIK_LCONTROL )
+            CustomCall( "SetCursorPos" );
+    }
+    return isHotkey;
+}
+
+// Pressed keys handler
+void HandlePressedKeys()
+{
+    bool isGameWithoutConsole = ( GUI_GetActiveScreen().Index == CLIENT_MAIN_SCREEN_GAME && !__ConsoleActive );
+    __MapZooming = ( isGameWithoutConsole && KeyPressed[ DIK_Z ] );
+    __ScrollKeybLeft = ( isGameWithoutConsole && KeyPressed[ DIK_LEFT ] );
+    __ScrollKeybRight = ( isGameWithoutConsole && KeyPressed[ DIK_RIGHT ] );
+    __ScrollKeybUp = ( isGameWithoutConsole && KeyPressed[ DIK_UP ] );
+    __ScrollKeybDown = ( isGameWithoutConsole && KeyPressed[ DIK_DOWN ] );
+}
+
+void _SetControlCritters( int Id, int p1, int p2, string@ + p3, int[] @ + p4 )
+{
+    SetControlCritters( Id );
+}
+
+void SetControlCritters( int Id )
+{
+    CritterCl@ chosen = GetChosen();
+    uint8      Ex = 0;
+    for( uint i = current_group * 10, ii = 9 + current_group * 10; i < ii; i++ )
+    {
+        if( controlled[ i ] == Id )
+        {
+            Message( "РЎРЅСЏС‚ РєРѕРЅС‚СЂРѕР»СЊ СЃ РєСЂРёС‚С‚РµСЂР° " + Id );
+            Ex = i - current_group * 10 + 10;
+        }
+        if( Ex != 0 )
+        {
+            if( i != 9 )
+                controlled[ i ] = controlled[ i + 1 ];
+            else
+                controlled[ i ] = 0;
+        }
+    }
+    if( Ex == 0 )
+    {
+        for( uint i = current_group * 10, ii = 10 + current_group * 10; i < ii; i++ )
+        {
+            if( controlled[ i ] == 0 )
+            {
+                controlled[ i ] = Id;
+                Message( "Р’Р·СЏС‚ РїРѕРґ РєРѕРЅС‚СЂРѕР»СЊ РєСЂРёС‚С‚РµСЂ " + Id );
+                CritterCl@ Cont = GetCritter( controlled[ i ] );
+                if( Cont.IsPlayer() )
+                {
+                    switch( i - current_group * 10 )
+                    {
+                    case 0:
+                        name0 = Cont.Name;
+                    case 1:
+                        name1 = Cont.Name;
+                    case 2:
+                        name2 = Cont.Name;
+                    case 3:
+                        name3 = Cont.Name;
+                    case 4:
+                        name4 = Cont.Name;
+                    case 5:
+                        name5 = Cont.Name;
+                    case 6:
+                        name6 = Cont.Name;
+                    case 7:
+                        name7 = Cont.Name;
+                    case 8:
+                        name8 = Cont.Name;
+                    case 9:
+                        name9 = Cont.Name;
+                    }
+                }
+                else
+                {
+                    uint   dlgId = Cont.Stat[ ST_DIALOG_ID ];
+                    uint16 npcPid = Cont.Pid;
+                    switch( i - current_group * 10 )
+                    {
+                    case 0:
+                        name0 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 1:
+                        name1 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 2:
+                        name2 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 3:
+                        name3 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 4:
+                        name4 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 5:
+                        name5 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 6:
+                        name6 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 7:
+                        name7 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 8:
+                        name8 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    case 9:
+                        name9 = GetMsgStr( TEXTMSG_DLG, STR_NPC_NAME( dlgId, npcPid ) );
+                    }
+                }
+                return;
+            }
+        }
+    }
+    else
+    {
+        if( Ex <= 10 )
+            name0 = name1;
+        if( Ex <= 11 )
+            name1 = name2;
+        if( Ex <= 12 )
+            name2 = name3;
+        if( Ex <= 13 )
+            name3 = name4;
+        if( Ex <= 14 )
+            name4 = name5;
+        if( Ex <= 15 )
+            name5 = name6;
+        if( Ex <= 16 )
+            name6 = name7;
+        if( Ex <= 17 )
+            name7 = name8;
+        if( Ex <= 18 )
+            name8 = name9;
+        if( Ex <= 19 )
+            name9 = "";
+    }
+}
+
+int[] control()
+{
+    return controlled;
+}
+
+uint8 current()
+{
+    return current_group;
+}
