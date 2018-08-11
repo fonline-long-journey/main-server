@@ -14,3 +14,6 @@ FOnlineServer.cfg
  *.fomapb
  logs\DeadLog.txt
  logs\GmLog.txt
+/maps/*.fomapb
+/scripts/*.fosb
+/scripts/*.fosp
