@@ -215,10 +215,10 @@ void        render_iface( uint layer )
 			for(uint j = 0; j < hungerProc; ++j){
 			data[i] = 20 + (j * 3);
 			data[i + 1] = 40;
-			data[i + 2] = COLOR_GREEN;
+			data[i + 2] = int( COLOR_GREEN );
 			data[i + 3] = 30 + (j * 3);
 			data[i + 4] = 45;
-			data[i + 5] = COLOR_GREEN;
+			data[i + 5] = int( COLOR_GREEN );
 			i += 6;
 			}
 			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, data);
@@ -228,10 +228,10 @@ void        render_iface( uint layer )
 			for(uint j = 0; j < thristProc; ++j){
 			drawData[i] = 30 + (j * 3);
 			drawData[i + 1] = 50;
-			drawData[i + 2] = COLOR_BLUE;
+			drawData[i + 2] = int( COLOR_BLUE );
 			drawData[i + 3] = 20 + (j * 3);
 			drawData[i + 4] = 55;
-			drawData[i + 5] = COLOR_BLUE;
+			drawData[i + 5] = int( COLOR_BLUE );
 			i += 6;
 			}
 			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
@@ -241,10 +241,10 @@ void        render_iface( uint layer )
 			for(uint j = 0; j < overdoseProc; ++j){
 			drawData[i] = 30 + (j * 2);
 			drawData[i + 1] = 45;
-			drawData[i + 2] = COLOR_RED;
+			drawData[i + 2] = int( COLOR_RED );
 			drawData[i + 3] = 30 + (j * 2);
 			drawData[i + 4] = 50;
-			drawData[i + 5] = COLOR_RED;
+			drawData[i + 5] = int( COLOR_RED );
 			i += 6;
 			}
 			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
