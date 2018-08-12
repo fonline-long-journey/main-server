@@ -64,19 +64,19 @@ void mouse_down( int button ) // Engine callback
                     if( @cr != null )
                     {
                         if( cr.IsPlayer() )
-                            RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );                     // панель действий с игроком
+                            RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );                     // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РёРіСЂРѕРєРѕРј
                         else
-                            RunServerScript( "gm@GM_PANNEL_CRITTER_NPC", cr.Id, 0, 0, null, null );                        // панель действий с нпц
+                            RunServerScript( "gm@GM_PANNEL_CRITTER_NPC", cr.Id, 0, 0, null, null );                        // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РЅРїС†
                     }
                     else if( @it != null )
                     {
-                        RunServerScript( "gm@GM_PANNEL_ITEM", it.Id, 0, 0, null, null );                       // панель действий с итемом
+                        RunServerScript( "gm@GM_PANNEL_ITEM", it.Id, 0, 0, null, null );                       // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РёС‚РµРјРѕРј
                     }
                     else
                     {
                         uint16 hexX = 0, hexY = 0;
                         GetMonitorHex( x, y, hexX, hexY );
-                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                       // панель действий с гексом
+                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                       // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РіРµРєСЃРѕРј
                     }
                 }
             }
