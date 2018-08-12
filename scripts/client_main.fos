@@ -169,13 +169,6 @@ void        render_iface( uint layer )
         GUI_EngineCallback_Render( false );
 		
         RenderThrowing();
-    }
-    if( layer == 2 )
-    {
-        GUI_EngineCallback_Render( true );
-        DrawChosenTabs();
-        GUI_EngineCallback_Render( false );
-
         // Help info
         if( __HelpInfo )
         {
@@ -209,15 +202,17 @@ void        render_iface( uint layer )
         }
 		//***********
 		//DrawText("\n\n   Голод \n\n   Жажда", 0, 10, __ScreenWidth, __ScreenHeight, COLOR_GREEN, FONT_DEFAULT, 0 );
-		
-		uint8 hungerProc = ( GetChosen().StatBase[ST_FUD] / 25 ) ,
-		thristProc = ( GetChosen().StatBase[ST_WATAH] / 25 ) ,
-		overdoseProc = ( GetChosen().StatBase[ST_DRUGS] / 3 ) ;
 		if( valid( GetChosen() ) )
 		{
+			renderBars();
+
+			uint8 hungerProc = ( GetChosen().StatBase[ST_FUD] / 25 ) ,
+			thristProc = ( GetChosen().StatBase[ST_WATAH] / 25 ) ,
+			overdoseProc = ( GetChosen().StatBase[ST_DRUGS] / 3 ) ;
+
 			int[] data(600);
 			int i = 0;
-			for(int j = 0; j < hungerProc; ++j){
+			for(uint j = 0; j < hungerProc; ++j){
 			data[i] = 20 + (j * 3);
 			data[i + 1] = 40;
 			data[i + 2] = COLOR_GREEN;
@@ -230,7 +225,7 @@ void        render_iface( uint layer )
 			
 			int[] drawData(600);
 			i = 0;
-			for(int j = 0; j < thristProc; ++j){
+			for(uint j = 0; j < thristProc; ++j){
 			drawData[i] = 30 + (j * 3);
 			drawData[i + 1] = 50;
 			drawData[i + 2] = COLOR_BLUE;
@@ -243,7 +238,7 @@ void        render_iface( uint layer )
 			
 			int[] moarData(600);
 			i = 0;
-			for(int j = 0; j < overdoseProc; ++j){
+			for(uint j = 0; j < overdoseProc; ++j){
 			drawData[i] = 30 + (j * 2);
 			drawData[i + 1] = 45;
 			drawData[i + 2] = COLOR_RED;
@@ -271,6 +266,35 @@ void        render_iface( uint layer )
         // Для примера, расчет текущего пикселя группы:
         // x = __GmapGroupX / __GmapZoom + __GmapOffsetX, y = __GmapGroupY / __GmapZoom + __GmapOffsetY.
     }
+}
+
+void renderBars()
+{
+	renderApBar();
+}
+
+void renderApBar()
+{
+	uint sprite = LoadSprite( "test_bar.png", PT_ART_INTRFACE );
+	uint xPos = 200;
+    uint yPos = 300;
+    float widthBase = 400.0;
+	
+	CritterCl@ chosen = GetChosen();
+	
+	uint width = uint( widthBase * getProc(chosen.Param[ST_CURRENT_AP], chosen.Param[ST_ACTION_POINTS]) );
+	
+    uint heigth = 30;
+    DrawSprite( sprite, -1, xPos, yPos, width, heigth, false, 0, false );
+
+}
+
+float getProc(int first, int second)
+{
+	float firstNum = float(first);
+	float secondNum = float(second);
+
+	return firstNum / secondNum;
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
