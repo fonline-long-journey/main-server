@@ -270,7 +270,7 @@ void        render_iface( uint layer )
 
 void renderBars()
 {
-	renderApBar();
+	renderNewStyleApBar();
 }
 
 void renderApBar()
@@ -286,7 +286,47 @@ void renderApBar()
 	
     uint heigth = 30;
     DrawSprite( sprite, -1, xPos, yPos, width, heigth, false, 0, false );
+}
 
+#define MAX_BULBS (76)
+void renderNewStyleApBar()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 600;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = chosen.Param[ST_ACTION_POINTS] / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_CURRENT_AP] ) / bulbValue );
+		uint color = chosen.Param[ST_CURRENT_AP] > 0 ? getBulbColor(bulbCount) : COLOR_DDRED;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+uint getBulbColor(uint bulbCount)
+{
+	uint percentage = uint( getProc(bulbCount, MAX_BULBS) * 100.0 );
+	
+	if( percentage > 70)
+	{
+		return COLOR_GREEN;
+	}
+	
+	if( percentage > 40)
+	{
+		return COLOR_SAND;
+	}
+
+	return COLOR_RED;
 }
 
 float getProc(int first, int second)
