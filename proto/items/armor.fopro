@@ -507,7 +507,7 @@ Armor_DRElectro=100
 Armor_DTElectro=100
 Armor_DTEmp=100
 
-[Proto] # PID_BLACK_COMBAT_ARMOR_MK_II {Черная боевая броня мод. II}
+[Proto] # PID_BLACK_COMBAT_ARMOR {Черная боевая броня}
 ProtoId=547
 Type=1
 PicMap=art\items\CMBTFLXB.FRM
@@ -558,7 +558,7 @@ Armor_DRExplode=0
 Armor_AC=35
 Armor_Perk=5
 
-[Proto] # PID_FAKE_JUMPSUIT {Костюм Убежища}
+[Proto] # PID_FAKE_JUMPSUIT {Поддельный Костюм Убежища}
 ProtoId=559
 Type=1
 PicMap=art\items\box2.frm
@@ -574,7 +574,7 @@ Armor_CrTypeFemale=4
 Armor_DRExplode=0
 Armor_AC=35
 
-[Proto] # PID_BALL {Серая роба}
+[Proto] # PID_BLACK_ROBE {Серая роба}
 ProtoId=585
 Type=1
 PicMap=art\items\ROBEB.FRM
@@ -598,7 +598,7 @@ Armor_DRExplode=0
 Armor_DREmp=20
 Armor_DTPlasma=0
 
-[Proto] # PID_BALL_DEAD {Кустарная боевая броня}
+[Proto] # PID_CHITIN_ARMOR  {Хитиновая броня}
 ProtoId=586
 Type=1
 PicMap=art\items\CMBTFLXB.FRM
@@ -694,7 +694,7 @@ Armor_DRPlasma=0
 Armor_DREmp=20
 Armor_DTPlasma=0
 
-[Proto] # PID_UNIFORM_SPECIALIST {Униформа специалиста}
+[Proto] # PID_BLUE_LEATHER_ARMOR {Униформа специалиста}
 ProtoId=10012
 Type=1
 PicMap=art\items\leatherblue.frm
@@ -724,7 +724,7 @@ Armor_Perk=6
 Armor_DRElectro=20
 Armor_DTPlasma=2
 
-[Proto] # PID_CEREMONIAL_BATTLE_ARMOR {Парадная боевая броня}
+[Proto] # PID_BLUE_COMBAT_ARMOR {Парадная боевая броня}
 ProtoId=10013
 Type=1
 PicMap=art\items\BLUCAITM.FRM
@@ -756,7 +756,7 @@ Armor_DTEmp=0
 Armor_DTExplode=3
 Armor_DRElectro=15
 
-[Proto] # PID_MILITARY_ARMOR_SCOUT {Боевая броня разведчика}
+[Proto] # PID_DESERT_COMBAT_ARMOR   {Боевая броня разведчика}
 ProtoId=10017
 Type=1
 PicMap=art\items\DSRTCA.FRM
@@ -788,7 +788,7 @@ Armor_DTExplode=4
 Armor_DRElectro=20
 Armor_DTElectro=1
 
-[Proto] # PID_ASSAULT_BATTLE_ARMOR {Штурмовая боевая броня}
+[Proto] # PID_BROWN_COMBAT_ARMOR  {Штурмовая боевая броня}
 ProtoId=10018
 Type=1
 PicMap=art\items\CMBDR.FRM

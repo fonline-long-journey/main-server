@@ -140,7 +140,7 @@
 #define PID_SOLAR_SCORCHER                   ( 390 ) // No ammo
 #define PID_LASER_RIFLE                      ( 118 )
 #define PID_LASER_RIFLE_EXT_CAP              ( 401 )
-#define PID_PID_LASER_RIFLE_UPGRADE          ( 10028 )
+#define PID_LASER_RIFLE_UPGRADE              ( 10028 )
 #define PID_GATLING_LASER                    ( 28 )
 #define PID_ALIEN_LASER_PISTOL               ( 120 )
 // Plasma
