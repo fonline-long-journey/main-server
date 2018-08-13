@@ -26,7 +26,7 @@ void InitializeGame()                    // Export
     __NoAnswerShuffle           = true;
     __FixBoyDefaultExperience   = 50;
     __SneakDivider              = 1;
-    __LevelCap                  = 10;
+    __LevelCap                  = 30;
     __LevelCapAddExperience     = true;
     __LookNormal                = 20;
     __LookMinimum               = 0;
@@ -147,7 +147,7 @@ void InitializeGame()                    // Export
     // Other is Vilified
 
     // Registation values
-    __StartSpecialPoints  = 40;
+    __StartSpecialPoints  = 0;
     __StartTagSkillPoints = 3;
 
     // Skill modifiers
