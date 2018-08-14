@@ -1,4 +1,4 @@
-![alt text](https://fonline-status.ru/status.php?s=server.long-journey.vault72.cc&p=3000&.png)
+![alt text](https://fonline-status.ru/status.php?s=server.long-journey.vault72.cc&p=2280&.png)
 
 # Ubuntu Installation
 In order to run FOnlineServer r462 on Ubuntu 16 x64/32 you might need to install libs:
