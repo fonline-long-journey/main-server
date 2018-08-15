@@ -637,11 +637,15 @@
 871    PID_EB_EMITTER_HOR3
 872    PID_EB_EMITTER_VERT3
 10011  PID_SANDROBE
+10012  PID_BLUE_LEATHER_ARMOR
+10013  PID_BLUE_COMBAT_ARMOR
 10014  PID_GALO
+10017  PID_DESERT_COMBAT_ARMOR  
+10018  PID_BROWN_COMBAT_ARMOR 
 10020  PID_ANACONDA
 10023  PID_TRASH
 10024  PID_BROWNING
-10028  PID_PID_LASER_RIFLE_UPGRADE
+10028  PID_LASER_RIFLE_UPGRADE
 10030  PID_10MM_SPECIAL
 10031  PID_10MM_EX
 10032  PID_HUNTING_SHELLS
@@ -705,11 +709,6 @@
 #---------------------------------------------------------------------------------------------
 # The Long Journey - Armors <13000 - 13999>
 #---------------------------------------------------------------------------------------------
-
-13001  PID_BLUE_LEATHER_ARMOR
-13002  PID_BLUE_COMBAT_ARMOR
-13003  PID_DESERT_COMBAT_ARMOR
-13004  PID_BROWN_COMBAT_ARMOR
 
 #---------------------------------------------------------------------------------------------
 # The Long Journey - Weapons <14000 - 14999>
