@@ -473,24 +473,24 @@
 #define SKILL_END                                ( __SkillEnd )
 #define SKILL_COUNT                              ( SKILL_END - SKILL_BEGIN + 1 )
 #define MAX_SKILL_VAL                            ( __SkillMaxValue )
-#define SK_SMALL_GUNS                            ( 200 )
-#define SK_BIG_GUNS                              ( 201 )
-#define SK_ENERGY_WEAPONS                        ( 202 )
-#define SK_UNARMED                               ( 203 ) // Hardcoded
-#define SK_MELEE_WEAPONS                         ( 204 )
-#define SK_THROWING                              ( 205 )
-#define SK_FIRST_AID                             ( 206 ) // Hardcoded
-#define SK_DOCTOR                                ( 207 ) // Hardcoded
-#define SK_SNEAK                                 ( 208 ) // Hardcoded
-#define SK_LOCKPICK                              ( 209 ) // Hardcoded
-#define SK_STEAL                                 ( 210 ) // Hardcoded
-#define SK_TRAPS                                 ( 211 ) // Hardcoded
-#define SK_SCIENCE                               ( 212 ) // Hardcoded
-#define SK_REPAIR                                ( 213 ) // Hardcoded
-#define SK_SPEECH                                ( 214 ) // Hardcoded
-#define SK_BARTER                                ( 215 ) // Hardcoded
-#define SK_GAMBLING                              ( 216 )
-#define SK_OUTDOORSMAN                           ( 217 )
+#define SK_SMALL_GUNS                            ( 200 ) // Огнестрельное оружие
+#define SK_BIG_GUNS                              ( 201 ) //(Merge with small guns)
+#define SK_ENERGY_WEAPONS                        ( 202 ) // Энергетическое оружие
+#define SK_UNARMED                               ( 203 ) // Ближний бой
+#define SK_MELEE_WEAPONS                         ( 204 ) //( Merge with Unarmed )
+#define SK_THROWING                              ( 205 ) // Тактическое оружие
+#define SK_FIRST_AID                             ( 206 ) //( Merge with doctor )
+#define SK_DOCTOR                                ( 207 ) // Медицина
+#define SK_SNEAK                                 ( 208 ) // Скрытность
+#define SK_LOCKPICK                              ( 209 ) //( Merge with Sneak on specs )
+#define SK_STEAL                                 ( 210 ) //( Merge with Sneak on specs )
+#define SK_TRAPS                                 ( 211 ) //( Merge with Throwing )
+#define SK_SCIENCE                               ( 212 ) // Наука
+#define SK_REPAIR                                ( 213 ) // Механика
+#define SK_SPEECH                                ( 214 ) //(Merge with barter)
+#define SK_BARTER                                ( 215 ) // Убеждение
+#define SK_GAMBLING                              ( 216 ) //(Don't use at all)
+#define SK_OUTDOORSMAN                           ( 217 ) // Выживание
 // 218..225
 
 // / Tag skills
@@ -1426,7 +1426,11 @@
 #define COMMAND_CHANGE_PASSWORD                  ( 35 )
 #define COMMAND_DROP_UID                         ( 36 )
 #define COMMAND_LOG                              ( 37 )
-
+// New defaults of war! Without registration and SMS.
+#define DEFAULT_WAIT_TIME						 ( 1200 )
+#define DEFAULT_AP_SKILL						 ( 2 )
+#define DEFAULT_AP_USE							 ( 3 )
+#define DEFAULT_AP_ACTION						 ( 2 )
 
 #ifndef SKIP_PRAGMAS
 
@@ -1467,7 +1471,7 @@
 // /
 
 # pragma crdata "Stat           0 199"
-# pragma crdata "Skill        200 217"
+# pragma crdata "Skill        200 210"
 # pragma crdata "TagSkill     226 229"
 # pragma crdata "Timeout      230 249"
 # pragma crdata "Kill         260 280"
@@ -1515,8 +1519,8 @@
 # pragma bindfield "const int    ProtoItem::Armor_DTElectr     -> 160"
 # pragma bindfield "const int    ProtoItem::Armor_DTEmp        -> 164"
 # pragma bindfield "const int    ProtoItem::Armor_DTExplode    -> 168"
-# pragma bindfield "const int    ProtoItem::Armor_MinStrength  -> 172"
-# pragma bindfield "const bool   ProtoItem::Armor_Flexible     -> 176"
+// # pragma bindfield "const int    ProtoItem::Armor_MinStrength  -> 172"
+# pragma bindfield "const bool   ProtoItem::Armor_Flexible     -> 172"
 // Weapon
 # pragma bindfield "const int    ProtoItem::Weapon_DmgType_0 -> 200"
 # pragma bindfield "const int    ProtoItem::Weapon_DmgType_1 -> 204"
@@ -1549,6 +1553,10 @@
 # pragma bindfield "const int    ProtoItem::Ammo_DrMod   -> 304"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgMult -> 308"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgDiv  -> 312"
+// Time is running...
+# pragma bindfield "const uint16 ProtoItem::Wait_Time_0      -> 400"
+# pragma bindfield "const uint16 ProtoItem::Wait_Time_1      -> 402"
+# pragma bindfield "const uint16 ProtoItem::Wait_Time_2      -> 404"
 
 // Test function
 # ifdef __SERVER

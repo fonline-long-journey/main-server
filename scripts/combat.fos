@@ -8,6 +8,7 @@
 #include "npc_ai.fos"
 #include "combat_h.fos"
 #include "critical_failures.fos"
+#include "wait_time_h.fos"
 
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
@@ -2119,12 +2120,19 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
                 {
                     map.GetHexCoordWall( target.HexX, target.HexY, knockHx, knockHy, 180.0f, knockDist );
                     target.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( attackFront ), 0, knockHx, knockHy );
+					target.Wait(GetActionTime(ACTION_KNOCKOUT, target));
                 }
                 else
+				{
                     target.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( attackFront ), 0, target.HexX, target.HexY );
+					target.Wait(GetActionTime(ACTION_KNOCKOUT, target));
+				}
             }
             else
+			{
                 target.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( attackFront ), 0, target.HexX, target.HexY );
+				target.Wait(GetActionTime(ACTION_KNOCKOUT, target));
+			}
         }
         if( targetAp < currentAp )
             target.StatBase[ ST_CURRENT_AP ] = 100 * targetAp;
@@ -2558,8 +2566,11 @@ void CriticalFailure( Critter& cr, ProtoItem& weapon, uint8 weaponUse, ProtoItem
     }
 
     if( FLAG( eff, MF_KNOCKED_DOWN ) && !cr.IsKnockout() && cr.Perk[ PE_SWAN_SONG ] == 0 )
+	{
         cr.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( true ), cr.Perk[ PE_TERMINATOR ] != 0 ? 0 : 3, cr.HexX, cr.HexY );
-
+		cr.Wait(GetActionTime(ACTION_KNOCKOUT, cr));
+	}
+		
     if( FLAG( eff, MF_CRIPPLED_RANDOM_LIMB ) && cr.Mode[ MODE_NO_LOOSE_LIMBS ] == 0 )
     {
         switch( Random( 1, 4 ) )
@@ -2602,7 +2613,10 @@ void CriticalFailure( Critter& cr, ProtoItem& weapon, uint8 weaponUse, ProtoItem
         if( cr.Stat[ ST_CURRENT_HP ] > __DeadHitPoints && cr.Mode[ MODE_NO_KNOCK ] == 0 )
         {
             if( !cr.IsKnockout() )
+			{
                 cr.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( true ), 0, cr.HexX, cr.HexY );
+				cr.Wait(GetActionTime(ACTION_KNOCKOUT, cr));
+			}
         }
         else
         {
