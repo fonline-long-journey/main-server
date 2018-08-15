@@ -7,6 +7,9 @@
 #include "teams_table.fos"
 #include "_client_defines.fos"
 #include "_colors.fos"
+#include "wait_time_h.fos"
+#include "apcost_h.fos"
+#include "critter_types_h.fos"
 
 // Imports
 import void InitializeGame() from "config";
@@ -61,12 +64,14 @@ import void HairCut( Critter& cr, Critter& onCr ) from "hair";
 import void Shave( Critter& cr, Critter& onCr ) from "hair";
 import void logger( Critter& cr, int type, string@ message ) from "logger";
 import void refreshnames(Critter& player) from "gm";
+import void InitCritterTypes() from "critter_types";
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Called before world generation.
 void init()
 {
     InitializeGame();
+	InitCritterTypes();
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,6 +233,7 @@ void        critter_attack( Critter& cr, Critter& target, ProtoItem& weapon, uin
     cr.TimeoutBase[ TO_AGGRESSOR ] = __FullSecond + REAL_MINUTE( 1 );
     hearshot( cr, target, weapon, weaponMode, ammo );
     CombatAttack( cr, target, weapon, weaponMode, ammo );
+	cr.Wait(GetProtoTime(weapon, weaponMode, cr));
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -425,6 +431,10 @@ bool critter_use_item( Critter& cr, Item& item, Critter@ targetCr, Item@ targetI
     bool   isPlayer = cr.IsPlayer();
     uint16 pid = item.GetProtoId();
     bool   useOnSelf = ( not valid( targetCr ) && not valid( targetItem ) && not valid( targetScen ) );
+	cr.Wait(GetProtoTime(item.Proto, 0, cr));
+	cr.StatBase[ST_CURRENT_AP] -= GetProtoApCost(item.Proto, 0, cr);
+	// string message = cr.StatBase[ST_CURRENT_AP];
+	// cr.Say(SAY_NETMSG, message);
 
     // Radio
     if( FLAG( item.Flags, ITEM_RADIO ) && useOnSelf )
@@ -720,6 +730,7 @@ bool critter_use_skill( Critter& cr, int skill, Critter@ targetCr, Item@ targetI
 {
     bool isPlayer = cr.IsPlayer();
     bool onSelf = ( ( !valid( targetCr ) ) && ( !valid( targetItem ) ) && ( !valid( targetScen ) ) );
+	cr.Wait(GetSkillTime(skill, cr));
     // Cars
     if( valid( targetItem ) && targetItem.GetType() == ITEM_TYPE_CAR && UseSkillOnCar( cr, targetItem, skill ) )
         return true;
@@ -1177,6 +1188,7 @@ bool critter_use_skill( Critter& cr, int skill, Critter@ targetCr, Item@ targetI
 // If ammo is not valid than only unload.
 void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 {
+	cr.Wait(GetActionTime(ACTION_RELOAD_WEAPON, cr));
     // Special weapons
     if( weapon.Proto.Weapon_Caliber == 0 )
     {

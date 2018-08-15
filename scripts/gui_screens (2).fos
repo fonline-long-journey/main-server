@@ -1,6 +1,6 @@
 ﻿// GUI scheme name: The Long Journey
-// Custom gui created by VVish.
-// Current GUI version - 0.5b
+// RESERVED GUI SCHEME, DON'T TOUCH SUKA
+// Version 0.5b
 
 #include "_macros.fos"
 #include "_client_defines.fos"
@@ -253,10 +253,9 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 0, 0 );
-            SetSize( alpha, omega );
+            SetModal( true );
+            SetSize( 800, 600 );
             SetDock( DOCK_FILL );
-			SetBackgroundImage ( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
         }
 
         void OnInit() override
@@ -269,7 +268,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( alpha/2 - 640/2, omega/2 - 480/2 );
+            SetPosition( 158, 1 );
             SetSize( 640, 597 );
             SetBackgroundImage( "art/intrface/register_tlj.png" );
         }

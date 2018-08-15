@@ -78,13 +78,30 @@
 #define _WeaponMaxDist               # ( proto, use )( ( use ) == 0 ? proto.Weapon_MaxDist_0 : ( ( use ) == 1 ? proto.Weapon_MaxDist_1 : ( ( use ) == 2 ? proto.Weapon_MaxDist_2 : 0 ) ) )
 #define _WeaponEffect                # ( proto, use )( ( use ) == 0 ? proto.Weapon_Effect_0 : ( ( use ) == 1 ? proto.Weapon_Effect_1 : ( ( use ) == 2 ? proto.Weapon_Effect_2 : 0 ) ) )
 #define _WeaponRound                 # ( proto, use )( ( use ) == 0 ? proto.Weapon_Round_0  : ( ( use ) == 1 ? proto.Weapon_Round_1  : ( ( use ) == 2 ? proto.Weapon_Round_2  : 0 ) ) )
-#define _WeaponApCost                # ( proto, use )( ( use ) == 0 ? proto.Weapon_ApCost_0 : ( ( use ) == 1 ? proto.Weapon_ApCost_1 : ( ( use ) == 2 ? proto.Weapon_ApCost_2 : 0 ) ) )
+#define _WeaponApCost                # ( proto, use )( (use == 0 ? proto.Weapon_ApCost_0 == 0 ? DEFAULT_AP_USE  : proto.Weapon_ApCost_0  \
+                                                     : use == 1 ? proto.Weapon_ApCost_1 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_1 \
+                                                     : use == 2 ? proto.Weapon_ApCost_2 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_2 \
+                                                     : DEFAULT_AP_USE) )
 #define _WeaponSoundId               # ( proto, use )( ( use ) == 0 ? proto.Weapon_SoundId_0 : ( ( use ) == 1 ? proto.Weapon_SoundId_1 : ( ( use ) == 2 ? proto.Weapon_SoundId_2 : 0 ) ) )
 #define _WeaponRemove                # ( proto, use )( ( use ) == 0 ? proto.Weapon_Remove_0 : ( ( use ) == 1 ? proto.Weapon_Remove_1 : ( ( use ) == 2 ? proto.Weapon_Remove_2 : false ) ) )
 #define _WeaponAim                   # ( proto, use )( ( use ) == 0 ? proto.Weapon_Aim_0    : ( ( use ) == 1 ? proto.Weapon_Aim_1    : ( ( use ) == 2 ? proto.Weapon_Aim_2    : false ) ) )
 #define _WeaponModeUse               # (weaponMode) ( ( weaponMode ) & 0xF )
 #define _WeaponModeAim               # (weaponMode) ( ( ( weaponMode ) >> 4 ) & 0xF )
 #define _WeaponModeMake              # ( use, aim )( ( ( ( aim ) << 4 ) | ( ( use ) & 0xF ) ) & 0xFF )
+
+// Time is running...
+#define _GetProtoTime                 # (prot, use)     (use == 0 ? prot.Wait_Time_0 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_0  \
+                                                        : use == 1 ? prot.Wait_Time_1 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_1 \
+                                                        : use == 2 ? prot.Wait_Time_2 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_2 \
+                                                        : DEFAULT_WAIT_TIME)													 
+#define _GetProtoWaitTime             # (prot, use)     (_GetProtoTime(prot, use))
+#define _GetSkillWaitTime             # (sk)        	(DEFAULT_WAIT_TIME) // for future needs
+#define _GetActionWaitTime            # (action) 		(DEFAULT_WAIT_TIME)
+
+// ApCost Spice must flow
+#define _GetProtoAp                   # (prot, use)      ((_WeaponApCost (prot, use) -1) * 100)
+#define _GetSkillAp            		  # (sk)     		 ((DEFAULT_AP_SKILL -1)  * 100) // for future needs
+#define _GetActionAp            	  # (action)  		 ((DEFAULT_AP_ACTION -1)* 100)   
 
 // Locker
 #define _LockerIsOpen                # (door) ( ( door.LockerCondition & LOCKER_ISOPEN ) != 0 )

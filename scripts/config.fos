@@ -32,37 +32,37 @@ void InitializeGame()                    // Export
     __LookMinimum               = 0;
     __CritterIdleTick           = 10000;
     __TurnBasedTick             = 30000;
-    __Breaktime                 = 1200;
+    __Breaktime                 = 0;     // Default - 1200
     __TimeoutTransfer           = 0;
     __TimeoutBattle             = REAL_SECOND( 15 );
     __ApRegeneration            = 3500;
     __RtApCostCritterWalk       = 0;     // 1 AP == 100, maximim 255
     __RtApCostCritterRun        = 50;    // 1 AP == 100, maximim 255
     __RtApCostMoveItemContainer = 0;
-    __RtApCostMoveItemInventory = 2;
-    __RtApCostPickItem          = 1;
-    __RtApCostDropItem          = 1;
-    __RtApCostReloadWeapon      = 5;
-    __RtApCostPickCritter       = 1;
-    __RtApCostUseItem           = 3;
-    __RtApCostUseSkill          = 2;
+    __RtApCostMoveItemInventory = 0;
+    __RtApCostPickItem          = 0;
+    __RtApCostDropItem          = 0;
+    __RtApCostReloadWeapon      = 0;
+    __RtApCostPickCritter       = 0;
+    __RtApCostUseItem           = 0;
+    __RtApCostUseSkill          = 0;
     __RtAlwaysRun               = false;
-    __TbApCostCritterMove       = 1;
+    __TbApCostCritterMove       = 0;
     __TbApCostMoveItemContainer = 0;
-    __TbApCostMoveItemInventory = 2;
-    __TbApCostPickItem          = 3;
-    __TbApCostDropItem          = 2;
-    __TbApCostReloadWeapon      = 5;
-    __TbApCostPickCritter       = 3;
-    __TbApCostUseItem           = 3;
-    __TbApCostUseSkill          = 2;
+    __TbApCostMoveItemInventory = 0;
+    __TbApCostPickItem          = 0;
+    __TbApCostDropItem          = 0;
+    __TbApCostReloadWeapon      = 0;
+    __TbApCostPickCritter       = 0;
+    __TbApCostUseItem           = 0;
+    __TbApCostUseSkill          = 0;
     __TbAlwaysRun               = false;
-    __ApCostAimEyes             = 3;
-    __ApCostAimHead             = 2;
-    __ApCostAimGroin            = 1;
-    __ApCostAimTorso            = 1;
-    __ApCostAimArms             = 1;
-    __ApCostAimLegs             = 1;
+    __ApCostAimEyes             = 0;
+    __ApCostAimHead             = 0;
+    __ApCostAimGroin            = 0;
+    __ApCostAimTorso            = 0;
+    __ApCostAimArms             = 0;
+    __ApCostAimLegs             = 0;
     __HitAimEyes                = 40;
     __HitAimHead                = 30;
     __HitAimGroin               = 30;
@@ -87,8 +87,8 @@ void InitializeGame()                    // Export
     __AccountPlayTime           = 0;      // In real seconds, 0 to disable
     __TalkDistance              = 5;
     __NpcMaxTalkers             = 1;
-    __MinNameLength             = 1;      // Minimum 1
-    __MaxNameLength             = 30;     // Maximum 30
+    __MinNameLength             = 2;      // Minimum 2
+    __MaxNameLength             = 22;     // Maximum 22
     __PermanentDeath            = 0;      // Disable
     __DlgTalkMinTime            = 100000;
     __DlgBarterMinTime          = 50000;
@@ -119,7 +119,7 @@ void InitializeGame()                    // Export
     // Range of values for client engine
     __AbsoluteOffsets = true;
     __SkillBegin      = 200;
-    __SkillEnd        = 217;
+    __SkillEnd        = 209;
     __TimeoutBegin    = 230;
     __TimeoutEnd      = 249;
     __KillBegin       = 260;
@@ -137,6 +137,7 @@ void InitializeGame()                    // Export
     __ReputationBegin = 570;
     __ReputationEnd   = 599;
 
+
     // Compare with >=
     __ReputationLoved     =  14;
     __ReputationLiked     =  9;
@@ -147,11 +148,11 @@ void InitializeGame()                    // Export
     // Other is Vilified
 
     // Registation values
-    __StartSpecialPoints  = 40;
+    __StartSpecialPoints  = 3;
     __StartTagSkillPoints = 3;
 
     // Skill modifiers
-    __SkillMaxValue = 300;
+    __SkillMaxValue = 250; //Изменено максимальное количество скиллпоинтов до 250.
     __SkillModAdd2  = 100;
     __SkillModAdd3  = 150;
     __SkillModAdd4  = 175;
@@ -202,7 +203,7 @@ void InitializeGame()                    // Export
     SetParameterGetBehaviour( ST_CHARISMA, dllName + "getParam_Charisma"       );
     SetParameterGetBehaviour( ST_INTELLECT, dllName + "getParam_Intellegence"   );
     SetParameterGetBehaviour( ST_AGILITY, dllName + "getParam_Agility"        );
-    SetParameterGetBehaviour( ST_LUCK, dllName + "getParam_Luck"           );
+    // SetParameterGetBehaviour( ST_LUCK, dllName + "getParam_Luck"           );
     SetParameterGetBehaviour( ST_CURRENT_HP, dllName + "getParam_Hp"             );
     SetParameterGetBehaviour( ST_MAX_LIFE, dllName + "getParam_MaxLife"        );
     SetParameterGetBehaviour( ST_ACTION_POINTS, dllName + "getParam_MaxAp"          );
@@ -246,7 +247,7 @@ void InitializeGame()                    // Export
     #  endif
 
     // / Registration parameters
-    for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
+    for( uint i = ST_STRENGTH; i <= ST_AGILITY; i++ )
         SetRegistrationParameter( i, true );
     for( uint i = TAG_SKILL1; i <= TAG_SKILL3; i++ )
         SetRegistrationParameter( i, true );

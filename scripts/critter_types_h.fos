@@ -1,0 +1,26 @@
+//critter types table parser header
+// Vice Dice 2018
+
+#ifndef CRITTER_TYPES_H
+
+#define CRITTER_TYPES_H
+
+shared interface ICritterType
+{
+	uint16 getWalkTime();
+	uint16 getRunTime();
+}
+
+#ifndef _CRITTER_TYPES_MODULE_
+import ICritterType@ GetCrType(uint16 crtype) from "critter_types";
+#endif  
+
+#ifdef _CRITTER_TYPES_MODULE_
+#include "_defines.fos"
+#include "_macros.fos"
+// #include "utils_h.fos"
+#include "strtoint_h.fos"
+#endif
+
+#endif
+

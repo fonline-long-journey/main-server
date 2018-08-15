@@ -29,7 +29,7 @@ Armor_DRExplode=0
 Armor_DREmp=30
 Armor_DTNormal=0
 Armor_Perk=8
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=55
 Armor_DTLaser=0
 Armor_DTFire=1
@@ -65,7 +65,7 @@ Armor_DTFire=0
 Armor_DTPlasma=0
 Armor_DTExplode=3
 Armor_Perk=9
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
 [Proto] # PID_POWERED_ARMOR {Силовая броня}
 ProtoId=3
@@ -95,7 +95,7 @@ Armor_DTFire=15
 Armor_DTPlasma=7
 Armor_DTExplode=20
 Armor_Perk=1
-Armor_MinStrength=1
+Weapon_MinStrength=1
 
 [Proto] # PID_COMBAT_ARMOR {Боевая броня}
 ProtoId=17
@@ -125,7 +125,7 @@ Armor_DTFire=1
 Armor_DTPlasma=1
 Armor_DTExplode=3
 Armor_Perk=8
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=15
 Armor_DTElectro=1
 Armor_DTEmp=0
@@ -153,7 +153,7 @@ Armor_DRPlasma=0
 Armor_DRExplode=0
 Armor_DREmp=15
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTNormal=0
 Armor_DTPlasma=0
 Armor_DTFire=1
@@ -183,7 +183,7 @@ Armor_DRPlasma=0
 Armor_DRExplode=0
 Armor_DREmp=10
 Armor_DTPlasma=0
-Armor_MinStrength=1
+Weapon_MinStrength=1
 
 [Proto] # PID_HARDENED_POWER_ARMOR {Закаленная силовая броня}
 ProtoId=232
@@ -213,7 +213,7 @@ Armor_DTFire=15
 Armor_DTPlasma=8
 Armor_DTExplode=20
 Armor_Perk=1
-Armor_MinStrength=3
+Weapon_MinStrength=3
 
 [Proto] # PID_BROTHERHOOD_COMBAT_ARMOR {Броня Братства}
 ProtoId=239
@@ -245,7 +245,7 @@ Armor_Perk=9
 Armor_DRElectro=35
 Armor_DTElectro=1
 Armor_DTEmp=0
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
 [Proto] # PID_TESLA_ARMOR {Броня Тесла}
 ProtoId=240
@@ -278,7 +278,7 @@ Armor_Perk=7
 Armor_DRElectro=150
 Armor_DTElectro=5
 Armor_DTEmp=0
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
 [Proto] # PID_CURED_LEATHER_ARMOR {Боевая кожаная куртка}
 ProtoId=265
@@ -306,7 +306,7 @@ Armor_DTNormal=0
 Armor_DTFire=0
 Armor_DTLaser=0
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTPlasma=0
 Armor_DRElectro=50
 Armor_DTElectro=2
@@ -341,7 +341,7 @@ Armor_DTExplode=20
 Armor_Perk=3
 Armor_DTElectro=5
 Armor_DRElectro=10
-Armor_MinStrength=3
+Weapon_MinStrength=3
 
 [Proto] # PID_ADVANCED_POWER_ARMOR_MK2 {Улучш. силовая броня мод. II}
 ProtoId=349
@@ -371,7 +371,7 @@ Armor_DTFire=21
 Armor_DTPlasma=21
 Armor_DTExplode=21
 Armor_Perk=4
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=40
 Armor_DTElectro=10
 
@@ -403,7 +403,7 @@ Armor_DTFire=1
 Armor_DTPlasma=0
 Armor_DTExplode=1
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DRElectro=60
 Armor_DTElectro=2
 Armor_DTEmp=0
@@ -441,7 +441,7 @@ Armor_DTFire=0
 Armor_DTPlasma=0
 Armor_DTExplode=4
 Armor_Perk=9
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
 [Proto] # PID_COMBAT_ARMOR_MK_II {Боевая броня МК2}
 ProtoId=381
@@ -471,7 +471,7 @@ Armor_DTFire=1
 Armor_DTPlasma=2
 Armor_DTExplode=4
 Armor_Perk=9
-Armor_MinStrength=5
+Weapon_MinStrength=5
 Armor_DTEmp=1
 Armor_DRElectro=20
 Armor_DTElectro=1
@@ -535,7 +535,7 @@ Armor_DTFire=1
 Armor_DTPlasma=2
 Armor_DTExplode=3
 Armor_Perk=8
-Armor_MinStrength=8
+Weapon_MinStrength=8
 Armor_DTEmp=0
 Armor_DRElectro=20
 Armor_DTElectro=1
@@ -626,7 +626,7 @@ Armor_DTFire=2
 Armor_DTPlasma=0
 Armor_DTExplode=1
 Armor_Perk=8
-Armor_MinStrength=4
+Weapon_MinStrength=4
 
 [Proto] # PID_CHITIN_ARMOR_MK_II {Тяжелая хитиновая броня}
 ProtoId=596
@@ -656,7 +656,7 @@ Armor_DTFire=2
 Armor_DTPlasma=0
 Armor_DTExplode=2
 Armor_Perk=9
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
 [Proto] # ПУСТОЙ СЛОТ БРОНИ
 ProtoId=1100
@@ -716,7 +716,7 @@ Armor_DRFire=55
 Armor_DRPlasma=40
 Armor_DREmp=35
 Armor_DTFire=3
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTLaser=1
 Armor_DTElectro=1
 Armor_DTExplode=1
@@ -751,7 +751,7 @@ Armor_DTLaser=1
 Armor_DTFire=1
 Armor_DTPlasma=1
 Armor_DTElectro=1
-Armor_MinStrength=4
+Weapon_MinStrength=4
 Armor_DTEmp=0
 Armor_DTExplode=3
 Armor_DRElectro=15
@@ -782,7 +782,7 @@ Armor_DTNormal=1
 Armor_DTLaser=1
 Armor_DTFire=1
 Armor_DTPlasma=2
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DTEmp=1
 Armor_DTExplode=4
 Armor_DRElectro=20
@@ -815,7 +815,7 @@ Armor_DTLaser=2
 Armor_DTFire=2
 Armor_DTPlasma=2
 Armor_DTElectro=2
-Armor_MinStrength=6
+Weapon_MinStrength=6
 Armor_DTExplode=2
 Armor_DRElectro=45
 
@@ -842,7 +842,7 @@ Armor_DRPlasma=40
 Armor_DRExplode=0
 Armor_DREmp=40
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTNormal=1
 Armor_DTPlasma=1
 Armor_DTFire=1
@@ -875,7 +875,7 @@ Armor_DRExplode=0
 Armor_DREmp=30
 Armor_DTNormal=1
 Armor_Perk=8
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=10
 Armor_DTLaser=0
 Armor_DTFire=1

@@ -778,6 +778,7 @@ Weapon_DmgMin_0=70
 Weapon_DmgMax_0=90
 Weapon_Effect_0=4025
 Weapon_MaxDist_0=15
+Wait_Time_0=900
 Weapon_ApCost_0=6
 Weapon_SoundId_0=79
 
@@ -2306,7 +2307,7 @@ Weapon_Type=11
 [Proto] # PID_GREASE_GUN {M3A1 Grease Gun}
 ProtoId=332
 Type=3
-PicMap=art\items\uzi.frm
+PicMap=art\items\weapons\greasegn.fofrm
 PicInv=art\inven\greasegn.frm
 Flags=134217758
 DisableEgg=1
