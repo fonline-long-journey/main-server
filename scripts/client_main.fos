@@ -34,6 +34,10 @@ import void PlayAnimSound( uint crType, int gender, uint anim1, uint anim2 ) fro
 import void RenderThrowing() from "throwing";
 import int to_hit_hex() from "bin_hex_attack_client";
 
+#ifdef __CLIENT_DRAWING_H__
+import distCalcFunc@ GetCalcFunc() from "hitchance";
+#endif
+
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on client loaded or new client_main.fos script received.
 bool start()
@@ -110,7 +114,9 @@ bool start()
         "VbMaleSkeleton.fo3d"
     };
     Preload3dFiles( preload3dFiles, PT_ART_CRITTERS );
+
     #endif
+	CreateWeaponRadius(0xFFFFFFFF).SetDistFunc(GetCalcFunc());
 
     return true;
 }
@@ -161,14 +167,9 @@ void screen_change( bool show, int screen, dictionary@ params )
 //    100 (over map), 101 (over all)
 void        render_iface( uint layer )
 {
-	if( layer == 4 )
-    {
-		if (__ConfigDrawMuzzles)
-		{
-			DrawMuzzleFlashes();
-			DrawBurstMuzzles();
-		}
-	}
+	// if( layer == 1 )
+    // {
+	// }
 
     if( layer == 3 )
     {
@@ -188,6 +189,13 @@ void        render_iface( uint layer )
 		GUI_EngineCallback_Render( true );
         DrawChosenTabs();
         GUI_EngineCallback_Render( false );
+		
+		if (__ConfigDrawMuzzles)
+		{
+			DrawMuzzleFlashes();
+			DrawBurstMuzzles();
+		}
+		DrawWepRadius(GetChosen());
 		
         RenderThrowing();
         // Help info

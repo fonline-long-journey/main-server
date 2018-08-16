@@ -358,6 +358,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		} 
     // main roll
     int margin = to_hit(cr, target, weapon, weaponMode, ammo) - Random( 1, 100 );
+	//Log("margin for hit is " + margin );
 
     if( margin < 0 ) // if missed
     {

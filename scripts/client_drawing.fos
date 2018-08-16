@@ -294,16 +294,20 @@ class BurstRay : IBurstRay
 // Что: Эффективная дистанция оружия, радиусом.
 // Куда: Пихать на момент инициализации клиента.
 // https://gyazo.com/00fed0917f5c4f2439ca5c288fe108ce - white is Effective distance. Белая - это эффективная дистанция.
-class WeaponRadiusChosen
+class WeaponRadiusChosen : IWeaponRadiusChosen
 {
 	ItemCl@ chosenWeapon;
 	uint color;
 	array<int> data = array<int>(21,0); // yes, 7 points right
 	uint8 drawType;
 	
-	WeaponRadiusChosen(uint color)
+	distCalcFunc@ distFunc = null;
+	
+	WeaponRadiusChosen(uint color, distCalcFunc@ funcIn)
 	{
 		this.color = color; 
+		if(valid(funcIn))
+			@distFunc = funcIn;
 		//@wepRadChos = @this;
 		for(uint8 i = 0, j = data.length()/3; i<j; i++)
 		{
@@ -315,11 +319,17 @@ class WeaponRadiusChosen
 	{
 		RecalculateVertices();
 		DrawPrimitive(drawType, data);
+		// Message("Drawing suka");
 	} 
 
 	void SetDrawType(uint8 type)
 	{
 		this.drawType = type;
+	}
+	
+	void SetDistFunc(distCalcFunc@ funcIn)
+	{
+		@this.distFunc = funcIn;
 	}
 	
  	void RecalculateVertices()
@@ -331,7 +341,7 @@ class WeaponRadiusChosen
 			
 			uint16 hexX, hexY;
 			uint8 wepMode  = chosenWeapon.Mode&0x0F;
-			uint wpnMaxDist = _WeaponMaxDist(chosenWeapon.Proto, wepMode);
+			uint wpnMaxDist = @distFunc!=null ? distFunc(chosen, chosenWeapon) : _WeaponMaxDist(chosenWeapon.Proto, wepMode);
 			#ifdef _2238
 			wpnMaxDist += checkBonus(chosenWeapon, BONUS_WEAPON_MAX_RANGE);
 			if(chosen.Perk[PE_MARKSMAN]!=0)
@@ -874,6 +884,11 @@ uint FindFreeBurstMuzzleCell()
 	return BurstMuzzles.length()-1;
 }
 
+IWeaponRadiusChosen@ GetWeaponRadiusChosen()
+{
+	return wepRadChos;
+}
+
 // array-drawings
 void DrawRays()
 {
@@ -964,7 +979,7 @@ void DrawBurstMuzzles()
 			if(@BurstMuzzles[i]!=null)
 			{
 				BurstMuzzles[i].Draw();
-				Message("Mamka pyromancera sledit za toboi.");
+				// Message("Mamka pyromancera sledit za toboi."); // Test message, total count.
 			}
 		}
 	}
@@ -1012,7 +1027,7 @@ void DrawWMZones() // require manual define for ZONE_IDX, and some checks, aswel
 
 // API
 
-void CreateRay( int[] drawData) // need 2 points to draw ray between them, each point is 3 array cells = X,Y,Color, so, its 6 cells minimum for a single ray.
+IRayMap@ CreateRay( int[] drawData) // need 2 points to draw ray between them, each point is 3 array cells = X,Y,Color, so, its 6 cells minimum for a single ray.
 {							  
 	if(__ConfigDrawRays)
 	{
@@ -1023,10 +1038,12 @@ void CreateRay( int[] drawData) // need 2 points to draw ray between them, each 
 		@RaysMap[ray.Id] = ray;
 		
 		rays += 1;
+		return ray;
 	}
+	return null;
 }
 
-void CreateBurstRay(int [] drawData)
+IBurstRay@ CreateBurstRay(int [] drawData)
 {
 	if(__ConfigDrawRays)
 	{
@@ -1037,10 +1054,12 @@ void CreateBurstRay(int [] drawData)
 		@BurstRays[burstRay.Id] = burstRay;
 		
 		burstRays += 1;
+		return burstRay;
 	}
+	return null;
 }
 
-void CreateMuzzle( int[] drawData) 
+IMuzzleFlash@ CreateMuzzle( int[] drawData) 
 {							  
 
 	if(__ConfigDrawRays)
@@ -1054,10 +1073,12 @@ void CreateMuzzle( int[] drawData)
 		@MuzzleFlashes[muzzle.Id] = muzzle;
 		
 		muzzleFlashes += 1;
+		return muzzle;
 	}
+	return null;
 }
 
-void CreateBurstMuzzle( int[] drawData) 
+IBurstMuzzle@ CreateBurstMuzzle( int[] drawData) 
 {							  
 	if(__ConfigDrawRays)
 	{
@@ -1071,7 +1092,10 @@ void CreateBurstMuzzle( int[] drawData)
 		
 		muzzleFlashes += drawData[8];
 		burstMuzzles += 1;
+		
+		return burstMuzzle;
 	}
+	return null;
 }
 
 // Cache of images.
@@ -1104,7 +1128,7 @@ void InitSprites() //Типа рабочий пример инициализац
 }
 
 // to use with RunClientScript
-void _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[]@ param4)
+IDelayedText@ _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[]@ param4)
 {
 	DelayedText@ text = DelayedText(param0, param1, param2, uint(param4[0]), param4[1], param3, param4[2]>0 ? true : false, param4[3], param4[4], param4[5], param4[6]);
 	text.SetId(FindFreeTextCell());
@@ -1112,6 +1136,7 @@ void _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[
 	
 	texts += 1;
 	
+	return text;
 }
 
 // to use with RunClientScript
@@ -1159,12 +1184,15 @@ void CreateCustomRadius(uint color, uint radius)
 	CustomChosenHexes.insertLast(cch);
 }
 
-void CreateWeaponRadius(uint color)
+IWeaponRadiusChosen@ CreateWeaponRadius(uint color)
 {
-	WeaponRadiusChosen@ wrc = WeaponRadiusChosen(color);
+	WeaponRadiusChosen@ wrc = WeaponRadiusChosen(color, null);
 	wrc.SetDrawType(DRAW_PRIMITIVE_LINESTRIP);
 	@wepRadChos = wrc;
+	return wrc;
 }
+
+
 
 
 #endif

@@ -7,6 +7,7 @@ int client_to_hit(CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, u
 	return to_hit(cr, target, weapon, weaponMode, null);
 }
 
+
 int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 weaponMode, ProtoItem@ ammo) 
 {
 
@@ -15,9 +16,9 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
     ItemMutual@ realWeapon	= _CritGetItemHand( cr );
     int   wpnMaxDist		= _WeaponMaxDist( weapon, use );  //Definition of weapon's max distance, macros.fos
     uint skillNum			= _WeaponSkill   ( weapon, weaponMode ); //can be any number - skill that affects your Maximum Distance and Effective Distance
-    int  skillVal			= int(cr.Skill[skillNum] - BLIND_PENALTY_RNG)* cr.Damage[DAMAGE_EYE];                 // 
-    int  effDistance		= wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100; //your Effective Distance, linear buildup
-	uint8  weaponSubtype	=
+    int  skillVal			= int(cr.Skill[skillNum]);                 // 
+    uint8 effDistance		= wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100; //your Effective Distance, linear buildup
+	uint8 weaponSubtype		=
         ( skillNum == SK_SMALL_GUNS || skillNum == SK_BIG_GUNS || skillNum == SK_ENERGY_WEAPONS ) ? WS_GUN : ( ( skillNum == SK_THROWING ) ? WS_THROWING : ( skillNum == SK_MELEE_WEAPONS ) ? WS_MELEE : WS_UNARMED );
 	bool   isRanged = ( weaponSubtype == WS_THROWING || weaponSubtype == WS_GUN );
     bool   isUnarmed = weapon.Weapon_IsUnarmed;
@@ -183,8 +184,29 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
 		Message(""+(hitChance));
 	#endif */
 	
-    return hitChance+95; // test
+    return CLAMP(hitChance, 0, 95); // test
 }
+
+#ifdef __CLIENT
+
+// Callback. Функция - её объявление и определение.
+uint8 CalcEffRange (CritterCl@ source, ItemCl@ weapon)
+{
+	uint8  use				= _WeaponModeUse( weapon.Mode );
+	int  wpnMaxDist			= _WeaponMaxDist( weapon.Proto, weapon.Mode&0x0F );
+	uint skillNum			= _WeaponSkill  ( weapon.Proto, weapon.Mode );
+	int  skillVal			= int(source.Skill[skillNum]);            // 
+	uint8 effRange		    = wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100;//your Effective Distance, linear buildup
+	// Message(""+effRange);
+    return (effRange); 
+}
+// Getter. Возвращает указатель на функцию "CalcEffRange" типа "distCalcFunc".
+distCalcFunc@ GetCalcFunc()
+{
+	return CalcEffRange;
+}
+#endif
+
     // Дистанция до цели может быть любым числом.
     // Если эффективная дистанция больше или равна дистанции до цели, то шанс попасть = 95 при навыке 200.
     // Эффективная дистанция равна %75% от целого числа Максимальной дистанции, число может быть любым.

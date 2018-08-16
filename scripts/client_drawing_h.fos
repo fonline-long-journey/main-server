@@ -8,6 +8,8 @@
 	#define ItemMutual ItemCl
 #endif
 
+funcdef uint8 distCalcFunc(CritterCl@ source, ItemCl@ weapon);
+
 // finish the interfaces later
 shared interface IWMZoneRender
 {
@@ -58,6 +60,13 @@ shared interface IBurstMuzzle
 	void Draw();
 }
 
+shared interface IWeaponRadiusChosen
+{
+	void Draw();
+	void SetDrawType(uint8 type);
+	void SetDistFunc(distCalcFunc@ funcIn);
+}
+
 
 #ifdef __CLIENT_DRAWING_MODULE__
 #include "_macros.fos"  // strict dependancy
@@ -93,13 +102,13 @@ import int checkBonus(ItemCl@ it, int bonusType) from "client_combat"; // 2238 m
 
 #include "sprite.fos"
 
-import void CreateRay( int[] drawData)	from "client_drawing";
-import void CreateBurstRay(int [] drawData) from "client_drawing";
-import void CreateMuzzle( int[] drawData) from "client_drawing";
-import void CreateBurstMuzzle( int[] drawData) from "client_drawing";
-import void _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[]@ param4) from "client_drawing";
+import IRayMap@ CreateRay( int[] drawData)	from "client_drawing";
+import IBurstRay@ CreateBurstRay(int [] drawData) from "client_drawing";
+import IMuzzleFlash@ CreateMuzzle( int[] drawData) from "client_drawing";
+import IBurstMuzzle@ CreateBurstMuzzle( int[] drawData) from "client_drawing";
+import IDelayedText@ _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[]@ param4) from "client_drawing";
 import void CreateCustomRadius(uint color, uint radius) from "client_drawing";
-import void CreateWeaponRadius(uint color) from "client_drawing";
+import IWeaponRadiusChosen@ CreateWeaponRadius(uint color) from "client_drawing";
 
 import void DrawRays() from "client_drawing";
 import void DrawBurstRays() from "client_drawing";
@@ -112,6 +121,7 @@ import void DrawCustomRadiuses() from "client_drawing";
 import void DrawWMZones() from "client_drawing"; // void implementation
 
 import Sprite@ GetSprite(int spriteDef) from "client_drawing";
+import IWeaponRadiusChosen@ GetWeaponRadiusChosen() from "client_drawing";
 import void InitSprites() from "client_drawing";
 
 #endif

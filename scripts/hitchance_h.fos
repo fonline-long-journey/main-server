@@ -14,6 +14,9 @@
 #ifdef HITCHANCE_MODULE
 	#include "_macros.fos"
 	#include "combat_h.fos"
+	#ifdef __CLIENT
+		#include "client_drawing_h.fos"
+	#endif
 #endif
 
 #ifndef HITCHANCE_MODULE
