@@ -6,6 +6,7 @@
 #include "sprite.fos"
 #include "gui_h.fos"
 #include "wait_time_h.fos"
+#include "client_drawing_h.fos"
 
 import void InitializeGame() from "config";
 import void InitTestScreen() from "client_screen_test";
@@ -56,7 +57,7 @@ bool start()
 	}
 	else
 	{
-	
+
     Message( GetMsgStr (TEXTMSG_GAME, STR_WELCOME_TO_TLJ) ); //"Файлы, возможно, даже и успешно загружены, а карта мира и интерфейс - изменены для игры на сервере не Вашей мечты - The Long Journey." + "\n" + "Команда разработки и просто нормальные ребята желают Вам приятного дня!" );
 	}
     LoadFont( FONT_COURIER_NEW_SMALL, "CourierNewSmall" );
@@ -159,6 +160,15 @@ void screen_change( bool show, int screen, dictionary@ params )
 //    100 (over map), 101 (over all)
 void        render_iface( uint layer )
 {
+	if( layer == 4 )
+    {
+		if (__ConfigDrawMuzzles)
+		{
+			DrawMuzzleFlashes();
+			DrawBurstMuzzles();
+		}
+	}
+
     if( layer == 3 )
     {
         GUI_EngineCallback_Render( true );
@@ -216,52 +226,53 @@ void        render_iface( uint layer )
 		{
 			renderBars();
 
-			uint8 hungerProc = ( GetChosen().StatBase[ST_FUD] / 25 ) ,
-			thristProc = ( GetChosen().StatBase[ST_WATAH] / 25 ) ,
-			overdoseProc = ( GetChosen().StatBase[ST_DRUGS] / 3 ) ;
+			// uint8 hungerProc = ( GetChosen().StatBase[ST_FUD] / 25 ) ,
+			// thristProc = ( GetChosen().StatBase[ST_WATAH] / 25 ) ,
+			// overdoseProc = ( GetChosen().StatBase[ST_DRUGS] / 3 ) ;
 
-			int[] data(600);
-			int i = 0;
-			for(uint j = 0; j < hungerProc; ++j){
-			data[i] = 20 + (j * 3);
-			data[i + 1] = 40;
-			data[i + 2] = int( COLOR_GREEN );
-			data[i + 3] = 30 + (j * 3);
-			data[i + 4] = 45;
-			data[i + 5] = int( COLOR_GREEN );
-			i += 6;
-			}
-			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, data);
+			// int[] data(600);
+			// int i = 0;
+			// for(uint j = 0; j < hungerProc; ++j){
+			// data[i] = 20 + (j * 3);
+			// data[i + 1] = 40;
+			// data[i + 2] = int( COLOR_GREEN );
+			// data[i + 3] = 30 + (j * 3);
+			// data[i + 4] = 45;
+			// data[i + 5] = int( COLOR_GREEN );
+			// i += 6;
+			// }
+			// DrawPrimitive(DRAW_PRIMITIVE_LINELIST, data);
 			
-			int[] drawData(600);
-			i = 0;
-			for(uint j = 0; j < thristProc; ++j){
-			drawData[i] = 30 + (j * 3);
-			drawData[i + 1] = 50;
-			drawData[i + 2] = int( COLOR_BLUE );
-			drawData[i + 3] = 20 + (j * 3);
-			drawData[i + 4] = 55;
-			drawData[i + 5] = int( COLOR_BLUE );
-			i += 6;
-			}
-			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
+			// int[] drawData(600);
+			// i = 0;
+			// for(uint j = 0; j < thristProc; ++j){
+			// drawData[i] = 30 + (j * 3);
+			// drawData[i + 1] = 50;
+			// drawData[i + 2] = int( COLOR_BLUE );
+			// drawData[i + 3] = 20 + (j * 3);
+			// drawData[i + 4] = 55;
+			// drawData[i + 5] = int( COLOR_BLUE );
+			// i += 6;
+			// }
+			// DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
 			
-			int[] moarData(600);
-			i = 0;
-			for(uint j = 0; j < overdoseProc; ++j){
-			drawData[i] = 30 + (j * 2);
-			drawData[i + 1] = 45;
-			drawData[i + 2] = int( COLOR_RED );
-			drawData[i + 3] = 30 + (j * 2);
-			drawData[i + 4] = 50;
-			drawData[i + 5] = int( COLOR_RED );
-			i += 6;
-			}
-			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
+			// int[] moarData(600);
+			// i = 0;
+			// for(uint j = 0; j < overdoseProc; ++j){
+			// drawData[i] = 30 + (j * 2);
+			// drawData[i + 1] = 45;
+			// drawData[i + 2] = int( COLOR_RED );
+			// drawData[i + 3] = 30 + (j * 2);
+			// drawData[i + 4] = 50;
+			// drawData[i + 5] = int( COLOR_RED );
+			// i += 6;
+			// }
+			// DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
 			
 		}
 		//***********
     }
+		
     else if( layer == 100 && __GmapActive )
     {
         // Here you can draw on global map
@@ -281,6 +292,9 @@ void        render_iface( uint layer )
 void renderBars()
 {
 	renderNewStyleApBar();
+	renderRandaruFud();
+	renderRandaruWatah();
+	renderRandaruDrugs();
 }
 
 void renderApBar()
@@ -305,7 +319,7 @@ void renderNewStyleApBar()
 	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
 	
 	uint xPos = 400;
-    uint yPos = 600;
+    uint yPos = 650;
 
 	CritterCl@ chosen = GetChosen();
 	if(valid(chosen))
@@ -321,6 +335,76 @@ void renderNewStyleApBar()
 		
 	}
 }
+
+void renderRandaruFud()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 600;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = 100 / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_FUD] ) / bulbValue );
+		uint color = COLOR_GREEN;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+void renderRandaruWatah()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 550;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = 100 / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_WATAH] ) / bulbValue );
+		uint color = COLOR_BLUE;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+void renderRandaruDrugs()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 500;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = 100 / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_DRUGS] ) / bulbValue );
+		uint color = COLOR_GRAY;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
 
 uint getBulbColor(uint bulbCount)
 {
@@ -2768,4 +2852,12 @@ void message_box( string& messageText, int messageType, bool scriptCall )
     GUI_CollectMessageBoxes( messageBoxes );
     for( uint i = 0; i < messageBoxes.length(); i++ )
         messageBoxes[ i ].AddMessage( messageText, messageType );
+}
+
+void __DrawBustMuzzle(int param0, int param1, int param2, string@ param3, int[]@ drawData)
+{
+	CreateBurstMuzzle( drawData );
+	// Message("Privet mame pyromancera!");
+	for (uint i = 0; i < drawData.length(); i++ )
+		Message("" + drawData[i]);
 }

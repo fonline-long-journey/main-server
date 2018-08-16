@@ -1,6 +1,6 @@
 ﻿// GUI scheme name: The Long Journey
 // Custom gui created by VVish.
-// Current GUI version - 0.5b
+// Current GUI version - 0.6b
 
 #include "_macros.fos"
 #include "_client_defines.fos"
@@ -16,21 +16,26 @@ void InitializeScreens()
     Options::Init( CLIENT_MAIN_SCREEN_OPTIONS );
 }
 
-int alpha = __ScreenHeight;
-int omega = __ScreenWidth;
-
-namespace Login_TLJ 
+namespace Login_TLJ
 {
-
-
     class Login : GUIScreen
     {
         void OnConstruct() override
         {
-            SetPosition( 0, 0 );
-            SetSize( alpha, omega );
+            SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-			SetBackgroundImage ( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
+            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
+        }
+
+        void OnInit() override
+        {
+            SetSize( __ScreenHeight, __ScreenWidth );
+        }
+
+        void OnGlobalInput( uint8 key, string@ text ) override
+        {
+            if( key == DIK_RETURN || key == DIK_NUMPADENTER )
+                CustomCall( "Login\n" + Screen.FindText("InputLogin").Text + "\n" + Screen.FindText("InputPassword").Text, "\n" );
         }
     }
 
@@ -38,10 +43,13 @@ namespace Login_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( alpha/2 - 640/2, omega/2 - 480/2 );
             SetSize( 360, 273 );
             SetBackgroundImage( "art/intrface/login_tlj.png" );
-			// SetCanMove( true, false );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetPosition( __ScreenHeight/2 - 360/2, __ScreenWidth/2 - 273/2);
         }
     }
 
@@ -93,6 +101,7 @@ namespace Login_TLJ
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_MAIN_SCREEN_OPTIONS );
+            PlaySound ( "pyromother.wav");
         }
     }
 
@@ -115,14 +124,16 @@ namespace Login_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 210, 232 );
+            SetPosition( 211, 232 );
             SetSize( 49, 25 );
             SetPressedImage( "art/intrface2/ok2.png" );
         }
 
         void OnLMouseClick() override
         {
+            PlaySound ("pyromother.wav");
             TryExit();
+            
         }
     }
 
@@ -130,8 +141,8 @@ namespace Login_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 62, 130 );
-            SetSize( 156, 18 );
+            SetPosition( 61, 129 );
+            SetSize( 155, 18 );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetInputLength( __MaxNameLength );
         }
@@ -147,7 +158,7 @@ namespace Login_TLJ
         void OnConstruct() override
         {
             SetPosition( 0, 18 );
-            SetSize( 156, 18 );
+            SetSize( 155, 18 );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetInputLength( __MaxNameLength );
             SetInputPassword( "#" );
@@ -181,6 +192,33 @@ namespace Login_TLJ
         }
     }
 
+    class UpdateLogPanel : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetSize( 377, 477 );
+            SetDock( DOCK_RIGHT );
+            SetBackgroundImage( "art/intrface/log_tlj.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetPosition( 0, __ScreenWidth - 477);
+        }
+    }
+
+    class UpdateLogText : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 25 );
+            SetSize( 330, 340 );
+            SetAnchor( ANCHOR_TOP );
+            SetText( ( MSG_GAME( STR_UPDATE_LOG_INFO ) ) );
+            SetTextFlags( FT_BORDERED );
+        }
+    }
+
     void Init( int screenIndex )
     {
         Login _Login();
@@ -205,6 +243,10 @@ namespace Login_TLJ
         _MessageBox.Init( _Menu );
         Version _Version();
         _Version.Init( _Login );
+        UpdateLogPanel _UpdateLogPanel();
+        _UpdateLogPanel.Init( _Login );
+        UpdateLogText _UpdateLogText();
+        _UpdateLogText.Init( _UpdateLogPanel );
         GUI_RegisterScreen( screenIndex, _Login );
     }
 }
@@ -214,12 +256,12 @@ namespace Register_TLJ
     import void player_data_generate( int[]& params ) from "client_main";
     import bool player_data_check( int[]& params ) from "client_main";
     
-    int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
-    int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
-    int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_NORMAL_RESIST, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
-    int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
-    int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
-    int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
+        int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
+        int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
+        int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_NORMAL_RESIST, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
+        int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
+        int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
+        int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
     
     int[] Params( PARAMS_COUNT );
     
@@ -253,10 +295,9 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 0, 0 );
-            SetSize( alpha, omega );
+            SetModal( true );
+            SetSize( 800, 600 );
             SetDock( DOCK_FILL );
-			SetBackgroundImage ( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
         }
 
         void OnInit() override
@@ -269,7 +310,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( alpha/2 - 640/2, omega/2 - 480/2 );
+            SetPosition( 158, 1 );
             SetSize( 640, 597 );
             SetBackgroundImage( "art/intrface/register_tlj.png" );
         }
@@ -330,7 +371,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 44, 2 );
+            SetPosition( 44, 3 );
             SetSize( 30, 24 );
             SetTextFont( FONT_BIG_NUM );
             SetTextColor( COLOR_IFACE );
@@ -625,7 +666,7 @@ namespace Register_TLJ
         void OnConstruct() override
         {
             SetPosition( 22, 0 );
-            SetSize( 120, 14 );
+            SetSize( 115, 14 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
         }
@@ -666,7 +707,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 125, 1 );
+            SetPosition( 125, 2 );
             SetSize( 17, 11 );
             SetPressedImage( "art/intrface/TGSKLON.png" );
         }
@@ -698,8 +739,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 5, 0 );
-            SetSize( 120, 14 );
+            SetPosition( 16, 0 );
+            SetSize( 105, 14 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
         }
@@ -794,7 +835,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 237, -1 );
+            SetPosition( 244, -1 );
             SetSize( 40, 13 );
             SetTextFlags( FT_CENTERY );
         }
@@ -1149,8 +1190,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 75, 6 );
-            SetSize( 31, 29 );
+            SetPosition( 75, 5 );
+            SetSize( 34, 32 );
             SetPressedImage( "art/intrface/male_button_dn.png" );
         }
 
@@ -1173,7 +1214,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 113, 4 );
+            SetPosition( 114, 5 );
             SetSize( 33, 31 );
             SetPressedImage( "art/intrface/female_button_dn.png" );
         }
@@ -1291,7 +1332,7 @@ namespace Register_TLJ
         void OnConstruct() override
         {
             SetActive( false );
-            SetPosition( 270, -25 );
+            SetPosition( 87, 4 );
             SetSize( 139, 43 );
             SetBackgroundImage( "art/intrface/cha_age.png" );
         }
@@ -1411,7 +1452,6 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetActive( false );
             SetPosition( 79, 257 );
             SetSize( 135, 175 );
             SetBackgroundImage( "art/intrface/character_select_main.png" );

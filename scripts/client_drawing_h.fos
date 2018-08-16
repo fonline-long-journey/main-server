@@ -1,0 +1,122 @@
+
+#ifdef __CLIENT
+
+#ifndef __CLIENT_DRAWING_H__
+#define __CLIENT_DRAWING_H__
+
+#ifndef ItemMutual
+	#define ItemMutual ItemCl
+#endif
+
+// finish the interfaces later
+shared interface IWMZoneRender
+{
+	void SetX(int xin);
+	void SetY(int yin);
+	void SetColor(uint colorin);
+	void SetDrawType(uint8 type);
+	void SetZoneLength(int len);
+	void SetLayer(uint layer);
+	void Draw(uint layer);
+}
+
+shared interface IRayMap
+{
+	void SetDrawType(uint8 type);
+	void SetColors(uint color1In, uint color2In);
+	void SetId(uint id);
+	void Draw();
+}
+
+shared interface IBurstRay
+{
+	void SetDrawType(uint8 type);
+	void SetColors(uint color1In, uint color2In);
+	void SetId(uint id);
+	void Draw();
+}
+
+shared interface IDelayedText
+{
+	void SetId(uint id);
+	void Draw();
+}
+
+shared interface IMuzzleFlash
+{
+	void SetDrawType(uint8 type);
+	void SetColors(uint color1In, uint color2In);
+	void SetId(uint id);
+	void Draw();
+}
+
+shared interface IBurstMuzzle
+{
+	void SetDrawType(uint8 type);
+	void SetColors(uint color1In, uint color2In);
+	void SetId(uint id);
+	void Draw();
+}
+
+
+#ifdef __CLIENT_DRAWING_MODULE__
+#include "_macros.fos"  // strict dependancy
+#include "_defines.fos" // strict dependancy
+#include "_client_defines.fos"
+#include "_colors.fos"
+#include "_time.fos"
+
+#ifdef _2238
+import bool IsGrenade(ItemMutual& item) from "hexThrow";
+import int checkBonus(ItemCl@ it, int bonusType) from "client_combat"; // 2238 modding system specific
+#endif
+#endif
+
+#define RAYDATA_MAPX1 	  (0)
+#define RAYDATA_MAPY1	  (1)
+#define RAYDATA_MAPX2     (3)
+#define RAYDATA_MAPY2	  (4)
+#define RAYDATA_TIME	  (7) // used only for bursts
+#define RAYDATA_AMOUNT	  (6) // used only for bursts
+
+#define MUZZLEDATA_MAPX1  (0)
+#define MUZZLEDATA_MAPY1  (1)
+#define MUZZLEDATA_MAPX2  (3)
+#define MUZZLEDATA_MAPY2  (4)
+#define MUZZLEDATA_SPEED  (6)
+#define MUZZLEDATA_DELAY  (7) // used only for bursts
+#define MUZZLEDATA_AMOUNT (8) // used only for bursts
+
+#include "sprite.fos" // strict dependancy
+
+#ifndef __CLIENT_DRAWING_MODULE__
+
+#include "sprite.fos"
+
+import void CreateRay( int[] drawData)	from "client_drawing";
+import void CreateBurstRay(int [] drawData) from "client_drawing";
+import void CreateMuzzle( int[] drawData) from "client_drawing";
+import void CreateBurstMuzzle( int[] drawData) from "client_drawing";
+import void _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[]@ param4) from "client_drawing";
+import void CreateCustomRadius(uint color, uint radius) from "client_drawing";
+import void CreateWeaponRadius(uint color) from "client_drawing";
+
+import void DrawRays() from "client_drawing";
+import void DrawBurstRays() from "client_drawing";
+import void DrawTexts() from "client_drawing";
+import void DrawMuzzleFlashes() from "client_drawing";
+import void DrawBurstMuzzles() from "client_drawing";
+import void DrawWepRadius(CritterCl@ chosen) from "client_drawing";
+import void DrawCustomRadiuses() from "client_drawing";
+
+import void DrawWMZones() from "client_drawing"; // void implementation
+
+import Sprite@ GetSprite(int spriteDef) from "client_drawing";
+import void InitSprites() from "client_drawing";
+
+#endif
+
+#endif
+
+#endif
+

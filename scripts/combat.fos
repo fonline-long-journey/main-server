@@ -1387,6 +1387,33 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         target.Action( ACTION_DODGE, 0, null ); // Todo: type front/back
     }
 
+	// void CombatAttack( Critter& cr, Critter@ target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo, uint16 hexX, uint16 hexY ) // Export
+	if (weapPid == PID_AVENGER_MINIGUN)
+	{
+		// Muzzle Data Massive Translation
+		// Перевод на человеческий ячеек drawdata								// ENG						// RU
+		// muzzleData[0]=hx; 													// attacker.X				// атакующий.X
+        // muzzleData[1]=hy; 													// attacker.Y				// атакующий.Y
+        // muzzleData[2]=0xFFFFFF66; 											// color					// цвет
+        
+        // muzzleData[3]=tx; 													// target.X					// цель.X
+        // muzzleData[4]=ty; 													// target.Y					// цель.Y
+        // muzzleData[5]=0xFFCC6600; 											//color						// цвет
+        
+        // muzzleData[6]=3000; 													// Random(1500,3000); 		// Скорость самой отрисовки трассеров.
+        // muzzleData[7]=GetProtoTime(weapon.Proto, weapon.Mode, null)/rounds;  // delay between muzzles	// Задержка между отрисовками, в идеале зависит от Wait_Speed если она есть.
+        // muzzleData[8]=rounds;	 											// amount of muzzles		// Количество отрисовок, нужно привязать к 'rounds'.
+		array<int> drawdata = {cr.HexX, cr.HexY, 0xFFFF0000, target.HexX, target.HexY, 0xFF00FF00, 3000, 1200/20, 20};
+		array<Critter@> critters;
+		array<Critter@> attacker = {cr};
+		map.GetCrittersSeeing( attacker, true, FIND_LIFE | FIND_ONLY_PLAYERS, critters);
+        for(uint i = 0, j = critters.length(); i<j; i++)
+		{
+			critters[i].RunClientScript ("client_main@__DrawBustMuzzle", 0, 0, 0, null, drawdata );
+		}
+		
+	}
+	
     return;
 
 }

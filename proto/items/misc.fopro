@@ -1,7 +1,9 @@
 ###############################################################
-# 	13.08.2018, by VVish									  #
-#	   														  #
+# 	13.08.2018, by VVish									  # 														  #
 #	3.1.8 	Added new file structure for The Long Journey.    #
+###############################################################
+#	16.08.2018, by VVish  									  # 												  #
+#	3.1.9 	Added two new proto files.   					  #
 ###############################################################
 
 [Proto]
@@ -3922,3 +3924,30 @@ SoundId=48
 Cost=100
 Material=1
 
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Misc + Craft <15000 - 15999>
+#---------------------------------------------------------------------------------------------
+
+[Proto] # PID_ACCUMULATOR_HITECH {Аккумулятор} 
+ProtoId=15000
+Type=5
+PicMap=art\items\craft\accumulator.fofrm
+PicInv=art\inven\craft\accumulator.png
+Flags=150994974
+DisableEgg=1
+Stackable=1
+Volume=1
+SoundId=48
+Material=1
+
+[Proto] # PID_RUBBER_GLOVES {Резиновые перчатки}
+ProtoId=15001
+Type=5
+PicMap=art\items\craft\rubbergloves.fofrm
+PicInv=art\inven\craft\RubberGloves.png
+Flags=150994974
+DisableEgg=1
+Stackable=1
+Volume=1
+SoundId=48
+Material=1

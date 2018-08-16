@@ -520,8 +520,8 @@ bool HandleHotkeys( uint8 key )
         if( !inputFocused )
         {
             GUIScreen@ screen = GUI_GetActiveScreen();
-            if( ( key == DIK_TAB && screen.Index == CLIENT_SCREEN_CHARACTER ) ||
-                ( key == DIK_C && screen.Index == CLIENT_SCREEN_CHARACTER ) ||
+            if( ( key == DIK_TAB && screen.Index == CLIENT_SCREEN_CHARACTER_TLJ ) ||
+                ( key == DIK_C && screen.Index == CLIENT_SCREEN_CHARACTER_TLJ ) ||
                 ( key == DIK_P && screen.Index == CLIENT_SCREEN_PIP_BOY ) ||
                 ( key == DIK_F && screen.Index == CLIENT_SCREEN_FIX_BOY ) ||
                 ( key == DIK_I && screen.Index == CLIENT_SCREEN_INVENTORY ) )

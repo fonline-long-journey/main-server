@@ -371,6 +371,11 @@
 #define STR_OPTIONS_PROXY_ACCESS             ( 1130 )
 #define STR_OPTIONS_BACK                     ( 1149 )
 
+// TLJ Update Log
+#define STR_UPDATE_LOG_BEGIN				 ( 1200 )
+#define STR_UPDATE_LOG_INFO					 ( 1201 )
+#define STR_UPDATE_LOG_END					 ( 1202 )
+
 // Parameters
 #define STR_PARAM_NAME                       # (index)         ( 100000 + ( index ) * 10 + 1 )
 #define STR_PARAM_DESC                       # (index)         ( 100000 + ( index ) * 10 + 2 )
