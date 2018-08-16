@@ -195,7 +195,6 @@ void        render_iface( uint layer )
 			DrawMuzzleFlashes();
 			DrawBurstMuzzles();
 		}
-		DrawWepRadius(GetChosen());
 		
         RenderThrowing();
         // Help info
@@ -229,57 +228,12 @@ void        render_iface( uint layer )
             // Help
             DrawText( MSG_GAME( STR_GAME_HELP ), 0, 0, __ScreenWidth, __ScreenHeight, COLOR_WHITE, FONT_DEFAULT, FT_CENTERX | FT_CENTERY );
         }
-		//***********
-		//DrawText("\n\n   Голод \n\n   Жажда", 0, 10, __ScreenWidth, __ScreenHeight, COLOR_GREEN, FONT_DEFAULT, 0 );
+		
 		if( valid( GetChosen() ) )
 		{
 			renderBars();
-
-			// uint8 hungerProc = ( GetChosen().StatBase[ST_FUD] / 25 ) ,
-			// thristProc = ( GetChosen().StatBase[ST_WATAH] / 25 ) ,
-			// overdoseProc = ( GetChosen().StatBase[ST_DRUGS] / 3 ) ;
-
-			// int[] data(600);
-			// int i = 0;
-			// for(uint j = 0; j < hungerProc; ++j){
-			// data[i] = 20 + (j * 3);
-			// data[i + 1] = 40;
-			// data[i + 2] = int( COLOR_GREEN );
-			// data[i + 3] = 30 + (j * 3);
-			// data[i + 4] = 45;
-			// data[i + 5] = int( COLOR_GREEN );
-			// i += 6;
-			// }
-			// DrawPrimitive(DRAW_PRIMITIVE_LINELIST, data);
-			
-			// int[] drawData(600);
-			// i = 0;
-			// for(uint j = 0; j < thristProc; ++j){
-			// drawData[i] = 30 + (j * 3);
-			// drawData[i + 1] = 50;
-			// drawData[i + 2] = int( COLOR_BLUE );
-			// drawData[i + 3] = 20 + (j * 3);
-			// drawData[i + 4] = 55;
-			// drawData[i + 5] = int( COLOR_BLUE );
-			// i += 6;
-			// }
-			// DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
-			
-			// int[] moarData(600);
-			// i = 0;
-			// for(uint j = 0; j < overdoseProc; ++j){
-			// drawData[i] = 30 + (j * 2);
-			// drawData[i + 1] = 45;
-			// drawData[i + 2] = int( COLOR_RED );
-			// drawData[i + 3] = 30 + (j * 2);
-			// drawData[i + 4] = 50;
-			// drawData[i + 5] = int( COLOR_RED );
-			// i += 6;
-			// }
-			// DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
-			
+			DrawWepRadius(GetChosen());
 		}
-		//***********
     }
 		
     else if( layer == 100 && __GmapActive )
