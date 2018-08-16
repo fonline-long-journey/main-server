@@ -9,6 +9,7 @@
 #include "combat_h.fos"
 #include "critical_failures.fos"
 #include "wait_time_h.fos"
+#include "hitchance_h.fos"
 
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
@@ -175,7 +176,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     // essential start
 
     // baseToHit used for all targets, adjusted for distance and other target-dependent qualities every time it is necessary
-    int baseToHit = skillVal;
+     int baseToHit = skillVal;
     if( eyeDamage )
         baseToHit -= 25;
     if( cr.Perk[ PE_VAMPIRE_ACCURACY ] > 0 && IS_NIGHT( __Hour ) )
@@ -184,30 +185,11 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     {
         if( cr.Trait[ TRAIT_ONE_HANDER ] != 0 )
             baseToHit += ( FLAG( weapon.Flags, ITEM_TWO_HANDS ) ? -40 : 20 );
-		/*
-        int handlingStrength = cr.Stat[ ST_STRENGTH ];
-        int reqStrength = weapon.Weapon_MinStrength;
-        if( cr.Perk[ PE_WEAPON_HANDLING ] != 0 )
-            handlingStrength += 3;
-		if ( cr.Perk[ PE_ONE_HANDER ] != 0 )
-			handlingStrength += ( FLAG( weapon.Flags, ITEM_TWO_HANDS ) ? 10 : 0 );
-		if ( cr.Perk[ PE_SWAN_SONG ] != 0 )
-			handlingStrength += 10;
-        if( handlingStrength < reqStrength )
-        {
-            // baseToHit -= ( reqStrength - handlingStrength ) * 20; //vanilla
-            int failchance = reqStrength - handlingStrength;
-            if( Random( 0, 10 ) >= failchance )
-                if( cr.ParamBase[ DAMAGE_RIGHT_ARM ] == 0 )
-                    cr.ParamBase[ DAMAGE_RIGHT_ARM ] = 1;
-                else
-                    cr.ParamBase[ DAMAGE_LEFT_ARM ] = 1;
-        }
-		*/
+
 
         if( weaponPerk == WEAPON_PERK_ACCURATE )
             baseToHit += 20;
-    }
+    } 
 
     // main attack structure
     AttackStruct attack;
@@ -312,7 +294,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 
     // here we're deciding the real toHit;
     int toHit = baseToHit;
-    toHit -= isHthAttack ? ( GetHitAim( aim ) / 2 ) : GetHitAim( aim );
+    toHit -= isHthAttack ? ( GetHitAim( aim ) / 2 ) : GetHitAim( aim ); 
 
     // range considerations, we're storing everything for a later use
     int distmod1 = 2; // used for initial weapon bonus
@@ -332,7 +314,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     int accloss = ( crIsPlayer ? ( perception - 2 ) * distmod1 : ( perception * distmod1 ) );
     int sharpshooter = 2 * cr.Perk[ PE_SHARPSHOOTER ];
 
-    if( !isHthAttack )
+     if( !isHthAttack )
     {
         if( dist < distmod2 )
             acc += distmod2;
@@ -349,8 +331,8 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         if( !target.IsKnockout() )
             blockers--;
         toHit -= 10 * blockers;
-    }
-    acmod = target.Stat[ ST_ARMOR_CLASS ];
+    } 
+     acmod = target.Stat[ ST_ARMOR_CLASS ];
     if( valid( ammo ) )
         acmod += ammo.Ammo_ACMod;
     if( acmod > 0 )
@@ -358,17 +340,9 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     if( target.IsKnockout() )
         toHit += 40;
     if( target.GetMultihex() > 0 )
-        toHit += 15;
-    /*if( valid( realWeapon ) )
-    {
-	
-        if ( realWeapon.Proto.Weapon_Sniper == true &&  isSneak == false && cr.ModeBase[ MODE_SNIPERPOS ] == 0  )  //&& cr.IsPlayer() cr.ModeBase[ MODE_SNIPERPOS ] != 0
-			{
-				toHit -= 100500;
-			}
+        toHit += 15; 
 
-    }*/
-    toHit = CLAMP( toHit, 5, 95 );
+     toHit = CLAMP( toHit, 5, 95 );
 	if( cr.Perk[ PE_SWAN_SONG ] == 0 && cr.Perk[ PE_SHARPSHOOTER ] == 0 )
 		toHit -= target.Stat[ ST_ARMOR_CLASS ]; //ФИНАЛЬНЫЙ ДОДЖ
     // smoke penalty
@@ -381,9 +355,10 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		toHit = 0;
 		target.RunClientScript( "rp_client@__Intercept", cr.Id, target.Id, 0, null, null );
 		target.ModeBase[ MODE_INTERCEPT ] = 0;
-		}
+		} 
     // main roll
-    int margin = toHit - Random( 1, 100 );
+    int margin = to_hit(cr, target, weapon, weaponMode, ammo) - Random( 1, 100 );
+	//Log("margin for hit is " + margin );
 
     if( margin < 0 ) // if missed
     {
@@ -1387,6 +1362,33 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         target.Action( ACTION_DODGE, 0, null ); // Todo: type front/back
     }
 
+	// void CombatAttack( Critter& cr, Critter@ target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo, uint16 hexX, uint16 hexY ) // Export
+	if (weapPid == PID_AVENGER_MINIGUN)
+	{
+		// Muzzle Data Massive Translation
+		// Перевод на человеческий ячеек drawdata								// ENG						// RU
+		// muzzleData[0]=hx; 													// attacker.X				// атакующий.X
+        // muzzleData[1]=hy; 													// attacker.Y				// атакующий.Y
+        // muzzleData[2]=0xFFFFFF66; 											// color					// цвет
+        
+        // muzzleData[3]=tx; 													// target.X					// цель.X
+        // muzzleData[4]=ty; 													// target.Y					// цель.Y
+        // muzzleData[5]=0xFFCC6600; 											//color						// цвет
+        
+        // muzzleData[6]=3000; 													// Random(1500,3000); 		// Скорость самой отрисовки трассеров.
+        // muzzleData[7]=GetProtoTime(weapon.Proto, weapon.Mode, null)/rounds;  // delay between muzzles	// Задержка между отрисовками, в идеале зависит от Wait_Speed если она есть.
+        // muzzleData[8]=rounds;	 											// amount of muzzles		// Количество отрисовок, нужно привязать к 'rounds'.
+		array<int> drawdata = {cr.HexX, cr.HexY, 0xFFFF0000, target.HexX, target.HexY, 0xFF00FF00, 3000, 1200/20, 20};
+		array<Critter@> critters;
+		array<Critter@> attacker = {cr};
+		map.GetCrittersSeeing( attacker, true, FIND_LIFE | FIND_ONLY_PLAYERS, critters);
+        for(uint i = 0, j = critters.length(); i<j; i++)
+		{
+			critters[i].RunClientScript ("client_main@__DrawBustMuzzle", 0, 0, 0, null, drawdata );
+		}
+		
+	}
+	
     return;
 
 }

@@ -1,12 +1,17 @@
 #ifndef __CLIENT_DEFINES__
 #define __CLIENT_DEFINES__
 
-#pragma globalvar "bool __isHexAttack = false"
-#pragma globalvar "bool __IsCtrlHot = false"
-#pragma globalvar "bool __waiting = false"
-#pragma globalvar "bool __mobhotkeys = false"
+#pragma globalvar "bool __isHexAttack 					 = false"
+#pragma globalvar "bool __IsCtrlHot						 = false"
+#pragma globalvar "bool __waiting 					  	 = false"
+#pragma globalvar "bool __mobhotkeys					 = false"
 #pragma globalvar "string __nameView"
-#pragma globalvar "int AccessLevel = 0"
+#pragma globalvar "int AccessLevel						 = 0"
+#pragma globalvar "bool __ConfigDrawRays                 = true" // default, overriden from fonline 2238 config
+#pragma globalvar "bool __ConfigDrawWMZones              = true"
+#pragma globalvar "uint __ConfigWeaponDistColor          = 0"
+#pragma globalvar "bool __ConfigDrawWeaponDist           = false"
+#pragma globalvar "bool __ConfigDrawMuzzles              = true" 
 
 // logger
 #define DEADLOG                            ( 0 )
@@ -111,6 +116,7 @@
 // User screens
 #define CLIENT_SCREEN_TEST                 ( 40 ) // client_screen_test.fos
 #define CLIENT_SCREEN_RADIO                ( 41 ) // radio.fos
+#define CLIENT_SCREEN_CHARACTER_TLJ		   ( 42 ) // The Long Journey custom character screen.
 
 // Cursors
 #define CURSOR_DEFAULT                     ( 0 )

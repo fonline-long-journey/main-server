@@ -1,10 +1,15 @@
 ###############################################################
 # 	13.08.2018, by VVish									  #
-#	   														  #
 #	3.1.8 	Added new file structure for The Long Journey.    #
 ###############################################################
+#	16.08.2018, by VVish  									  # 											
+#	3.1.9 	Added two new proto files.   					  #
+###############################################################
+#	16.08.2018, by Gasai 									  # 											
+#	3.2.0 	Restored PID indexes    					      #
+###############################################################
 
-[Proto] # PID_BOTTLE_CAPS {Деньги}
+[Proto] # PID_BOTTLE_CAPS {Р”РµРЅСЊРіРё}
 ProtoId=41
 Type=5
 PicMap=art\items\bag.frm
@@ -16,7 +21,7 @@ SoundId=48
 Cost=1
 Material=1
 
-[Proto] # PID_FIRST_AID_KIT {Аптечка парамедика}
+[Proto] # PID_FIRST_AID_KIT {РђРїС‚РµС‡РєР° РїР°СЂР°РјРµРґРёРєР°}
 ProtoId=47
 Type=5
 PicMap=art\items\bpack2.frm
@@ -30,7 +35,7 @@ SoundId=48
 Cost=75
 Material=1
 
-[Proto] # PID_DYNAMITE {Динамит}
+[Proto] # PID_DYNAMITE {Р”РёРЅР°РјРёС‚}
 ProtoId=51
 Type=5
 PicMap=art\items\dynamite.frm
@@ -44,7 +49,7 @@ SoundId=48
 Cost=500
 Material=1
 
-[Proto] # PID_GEIGER_COUNTER {Счетчик Гейгера}
+[Proto] # PID_GEIGER_COUNTER {РЎС‡РµС‚С‡РёРє Р“РµР№РіРµСЂР°}
 ProtoId=52
 Type=5
 PicMap=art\items\geiger.frm
@@ -58,7 +63,7 @@ Cost=650
 Material=1
 StartValue_2=220
 
-[Proto] # PID_STEALTH_BOY {Невидимка}
+[Proto] # PID_STEALTH_BOY {РќРµРІРёРґРёРјРєР°}
 ProtoId=54
 Type=5
 PicMap=art\items\box2.frm
@@ -72,7 +77,7 @@ SoundId=48
 Cost=1800
 Material=1
 
-[Proto] # PID_WATER_CHIP {Водяной чип}
+[Proto] # PID_WATER_CHIP {Р’РѕРґСЏРЅРѕР№ С‡РёРї}
 ProtoId=55
 Type=5
 PicMap=art\items\chip.frm
@@ -86,7 +91,7 @@ SoundId=48
 Cost=1
 Material=1
 
-[Proto] # PID_DOG_TAGS {Жетон}
+[Proto] # PID_DOG_TAGS {Р–РµС‚РѕРЅ}
 ProtoId=56
 Type=5
 ScriptModule=item
@@ -101,7 +106,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_ELECTRONIC_BUG {Жучок}
+[Proto] # PID_ELECTRONIC_BUG {Р–СѓС‡РѕРє}
 ProtoId=57
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -115,7 +120,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_HOLODISK {Пленка}
+[Proto] # PID_HOLODISK {РџР»РµРЅРєР°}
 ProtoId=58
 Type=5
 PicMap=art\items\box2.frm
@@ -128,7 +133,7 @@ SoundId=48
 Cost=40
 Material=1
 
-[Proto] # PID_MOTION_SENSOR {Сенсор движения}
+[Proto] # PID_MOTION_SENSOR {РЎРµРЅСЃРѕСЂ РґРІРёР¶РµРЅРёСЏ}
 ProtoId=59
 Type=5
 PicMap=art\items\motion.frm
@@ -142,7 +147,7 @@ SoundId=48
 Cost=800
 Material=1
 
-[Proto] # PID_BRIEFCASE {Чемоданчик}
+[Proto] # PID_BRIEFCASE {Р§РµРјРѕРґР°РЅС‡РёРє}
 ProtoId=72
 Type=5
 PicMap=art\items\bcasefl.frm
@@ -156,7 +161,7 @@ SoundId=48
 Cost=35
 Material=7
 
-[Proto] # PID_BIG_BOOK_OF_SCIENCE {Большая научная книга}
+[Proto] # PID_BIG_BOOK_OF_SCIENCE {Р‘РѕР»СЊС€Р°СЏ РЅР°СѓС‡РЅР°СЏ РєРЅРёРіР°}
 ProtoId=73
 Type=5
 PicMap=art\items\book.frm
@@ -169,7 +174,7 @@ SoundId=48
 Cost=400
 Material=3
 
-[Proto] # PID_ELECTRONIC_LOCKPICKS {Электронная отмычка}
+[Proto] # PID_ELECTRONIC_LOCKPICKS {Р­Р»РµРєС‚СЂРѕРЅРЅР°СЏ РѕС‚РјС‹С‡РєР°}
 ProtoId=77
 Type=5
 PicMap=art\items\elecpic.frm
@@ -183,7 +188,7 @@ SoundId=48
 Cost=375
 Material=1
 
-[Proto] # PID_FUZZY_PAINTING {Выцветшая картинка}
+[Proto] # PID_FUZZY_PAINTING {Р’С‹С†РІРµС‚С€Р°СЏ РєР°СЂС‚РёРЅРєР°}
 ProtoId=78
 Type=5
 PicMap=art\items\elvis.frm
@@ -197,7 +202,7 @@ SoundId=48
 Cost=300
 Material=1
 
-[Proto] # PID_LOCKPICKS {Отмычки}
+[Proto] # PID_LOCKPICKS {РћС‚РјС‹С‡РєРё}
 ProtoId=84
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -211,7 +216,7 @@ SoundId=48
 Cost=150
 Material=1
 
-[Proto] # PID_PLASTIC_EXPLOSIVES {Пластиковая взрывчатка}
+[Proto] # PID_PLASTIC_EXPLOSIVES {РџР»Р°СЃС‚РёРєРѕРІР°СЏ РІР·СЂС‹РІС‡Р°С‚РєР°}
 ProtoId=85
 Type=5
 PicMap=art\items\plstic.frm
@@ -225,7 +230,7 @@ SoundId=48
 Cost=850
 Material=1
 
-[Proto] # PID_SCOUT_HANDBOOK {Настольная книга скаута}
+[Proto] # PID_SCOUT_HANDBOOK {РќР°СЃС‚РѕР»СЊРЅР°СЏ РєРЅРёРіР° СЃРєР°СѓС‚Р°}
 ProtoId=86
 Type=5
 PicMap=art\items\book.frm
@@ -239,7 +244,7 @@ SoundId=48
 Cost=200
 Material=3
 
-[Proto] # PID_WATCH {Часы}
+[Proto] # PID_WATCH {Р§Р°СЃС‹}
 ProtoId=88
 Type=5
 PicMap=art\items\donotuse.frm
@@ -252,7 +257,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_DOCTORS_BAG {Хирургический набор}
+[Proto] # PID_DOCTORS_BAG {РҐРёСЂСѓСЂРіРёС‡РµСЃРєРёР№ РЅР°Р±РѕСЂ}
 ProtoId=91
 Type=5
 PicMap=art\items\docbag.frm
@@ -266,7 +271,7 @@ SoundId=48
 Cost=150
 Material=7
 
-[Proto] # PID_GOLD_LOCKET {Золотой кулон}
+[Proto] # PID_GOLD_LOCKET {Р—РѕР»РѕС‚РѕР№ РєСѓР»РѕРЅ}
 ProtoId=99
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -280,7 +285,7 @@ SoundId=48
 Cost=400
 Material=1
 
-[Proto] # PID_RADIO {Рация}
+[Proto] # PID_RADIO {Р Р°С†РёСЏ}
 ProtoId=100
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -293,7 +298,7 @@ SoundId=48
 Cost=350
 Material=1
 
-[Proto] # PID_TAPE_RECORDER {Магнитофон}
+[Proto] # PID_TAPE_RECORDER {РњР°РіРЅРёС‚РѕС„РѕРЅ}
 ProtoId=104
 Type=5
 PicMap=art\items\box2.frm
@@ -307,7 +312,7 @@ SoundId=48
 Cost=80
 Material=1
 
-[Proto] # PID_URN {Урна}
+[Proto] # PID_URN {РЈСЂРЅР°}
 ProtoId=112
 Type=5
 PicMap=art\items\trophy.frm
@@ -320,7 +325,7 @@ SoundId=48
 Cost=130
 Material=1
 
-[Proto] # PID_TANGLERS_HAND {Рука Танглера}
+[Proto] # PID_TANGLERS_HAND {Р СѓРєР° РўР°РЅРіР»РµСЂР°}
 ProtoId=114
 Type=5
 PicMap=art\items\thand.frm
@@ -334,7 +339,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_FLOWER {Цветочек}
+[Proto] # PID_FLOWER {Р¦РІРµС‚РѕС‡РµРє}
 ProtoId=117
 Type=5
 PicMap=art\items\flower.frm
@@ -348,7 +353,7 @@ SoundId=48
 Cost=5
 Material=1
 
-[Proto] # PID_NECKLACE {Ожерелье}
+[Proto] # PID_NECKLACE {РћР¶РµСЂРµР»СЊРµ}
 ProtoId=119
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -361,7 +366,7 @@ Volume=1
 SoundId=48
 Cost=700
 
-[Proto] # PID_PSYCHIC_NULLIFIER {Психонейтрализатор}
+[Proto] # PID_PSYCHIC_NULLIFIER {РџСЃРёС…РѕРЅРµР№С‚СЂР°Р»РёР·Р°С‚РѕСЂ}
 ProtoId=123
 Type=5
 PicMap=art\items\box2.frm
@@ -375,7 +380,7 @@ SoundId=48
 Cost=1000
 Material=1
 
-[Proto] # PID_WATER_FLASK {Фляга}
+[Proto] # PID_WATER_FLASK {Р¤Р»СЏРіР°}
 ProtoId=126
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -389,7 +394,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_ROPE {Веревка}
+[Proto] # PID_ROPE {Р’РµСЂРµРІРєР°}
 ProtoId=127
 Type=5
 ScriptModule=handcuffs
@@ -405,7 +410,7 @@ SoundId=48
 Cost=10
 Material=7
 
-[Proto] # PID_ACCESS_CARD {Карта доступа}
+[Proto] # PID_ACCESS_CARD {РљР°СЂС‚Р° РґРѕСЃС‚СѓРїР°}
 ProtoId=140
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -419,7 +424,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_BLACK_COC_BADGE {Значок ДС}
+[Proto] # PID_BLACK_COC_BADGE {Р—РЅР°С‡РѕРє Р”РЎ}
 ProtoId=141
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -433,7 +438,7 @@ SoundId=48
 Cost=400
 Material=1
 
-[Proto] # PID_RED_COC_BADGE {Значок ДС}
+[Proto] # PID_RED_COC_BADGE {Р—РЅР°С‡РѕРє Р”РЎ}
 ProtoId=142
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -447,7 +452,7 @@ SoundId=48
 Cost=12
 Material=1
 
-[Proto] # PID_MISC_BOOKCASE_0 {Книжные полки}
+[Proto] # PID_MISC_BOOKCASE_0 {РљРЅРёР¶РЅС‹Рµ РїРѕР»РєРё}
 ProtoId=148
 Type=5
 PicMap=art\items\bkshlf4.frm
@@ -460,7 +465,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_MISC_BOOKCASE_1 {Книжные полки}
+[Proto] # PID_MISC_BOOKCASE_1 {РљРЅРёР¶РЅС‹Рµ РїРѕР»РєРё}
 ProtoId=150
 Type=5
 PicMap=art\items\bkshlf6.frm
@@ -473,7 +478,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_MISC_SHELVES_0 {Полки}
+[Proto] # PID_MISC_SHELVES_0 {РџРѕР»РєРё}
 ProtoId=154
 Type=5
 PicMap=art\items\wshelv4.frm
@@ -486,7 +491,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_MISC_SHELVES_1 {Полки}
+[Proto] # PID_MISC_SHELVES_1 {РџРѕР»РєРё}
 ProtoId=156
 Type=5
 PicMap=art\items\wshelv6.frm
@@ -499,7 +504,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_BROTHERHOOD_TAPE {Пленка Братства}
+[Proto] # PID_BROTHERHOOD_TAPE {РџР»РµРЅРєР° Р‘СЂР°С‚СЃС‚РІР°}
 ProtoId=164
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -513,7 +518,7 @@ SoundId=48
 Cost=70
 Material=1
 
-[Proto] # PID_DISK_FEV {Диск ВРЭ}
+[Proto] # PID_DISK_FEV {Р”РёСЃРє Р’Р Р­}
 ProtoId=190
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -527,7 +532,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_DISK_SECURITY {Диск охраны}
+[Proto] # PID_DISK_SECURITY {Р”РёСЃРє РѕС…СЂР°РЅС‹}
 ProtoId=191
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -541,7 +546,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_ALPHA_EXPERIMENT {Диск эксперимента "Альфа"}
+[Proto] # PID_DISK_ALPHA_EXPERIMENT {Р”РёСЃРє СЌРєСЃРїРµСЂРёРјРµРЅС‚Р° "РђР»СЊС„Р°"}
 ProtoId=192
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -555,7 +560,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_DELTA_EXPERIMENT {Диск эксперимента "Дельта"}
+[Proto] # PID_DISK_DELTA_EXPERIMENT {Р”РёСЃРє СЌРєСЃРїРµСЂРёРјРµРЅС‚Р° "Р”РµР»СЊС‚Р°"}
 ProtoId=193
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -569,7 +574,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_VREES_EXPERIMENT {Диск эксперимента Ври}
+[Proto] # PID_DISK_VREES_EXPERIMENT {Р”РёСЃРє СЌРєСЃРїРµСЂРёРјРµРЅС‚Р° Р’СЂРё}
 ProtoId=194
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -583,7 +588,7 @@ SoundId=48
 Cost=75
 Material=1
 
-[Proto] # PID_DISK_BROTHERHOOD_HONOR_CODE {Кодекс чести Братства}
+[Proto] # PID_DISK_BROTHERHOOD_HONOR_CODE {РљРѕРґРµРєСЃ С‡РµСЃС‚Рё Р‘СЂР°С‚СЃС‚РІР°}
 ProtoId=195
 Type=5
 PicMap=art\items\donotuse.frm
@@ -597,7 +602,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_MUTANT_TRANSMISSIONS {Радиосообщения мутантов}
+[Proto] # PID_DISK_MUTANT_TRANSMISSIONS {Р Р°РґРёРѕСЃРѕРѕР±С‰РµРЅРёСЏ РјСѓС‚Р°РЅС‚РѕРІ}
 ProtoId=196
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -611,7 +616,7 @@ SoundId=48
 Cost=125
 Material=1
 
-[Proto] # PID_ACTIVE_DYNAMITE {Динамит}
+[Proto] # PID_ACTIVE_DYNAMITE {Р”РёРЅР°РјРёС‚}
 ProtoId=206
 Type=5
 PicMap=art\items\dynamite.frm
@@ -624,7 +629,7 @@ SoundId=48
 Cost=500
 Material=1
 
-[Proto] # PID_ACTIVE_GEIGER_COUNTER {Счетчик Гейгера}
+[Proto] # PID_ACTIVE_GEIGER_COUNTER {РЎС‡РµС‚С‡РёРє Р“РµР№РіРµСЂР°}
 ProtoId=207
 Type=5
 PicMap=art\items\geiger.frm
@@ -638,7 +643,7 @@ SoundId=48
 Cost=650
 Material=1
 
-[Proto] # PID_ACTIVE_MOTION_SENSOR {Сенсор движения}
+[Proto] # PID_ACTIVE_MOTION_SENSOR {РЎРµРЅСЃРѕСЂ РґРІРёР¶РµРЅРёСЏ}
 ProtoId=208
 Type=5
 PicMap=art\items\motion.frm
@@ -652,7 +657,7 @@ SoundId=48
 Cost=800
 Material=1
 
-[Proto] # PID_ACTIVE_PLASTIC_EXPLOSIVE {Пластиковая взрывчатка}
+[Proto] # PID_ACTIVE_PLASTIC_EXPLOSIVE {РџР»Р°СЃС‚РёРєРѕРІР°СЏ РІР·СЂС‹РІС‡Р°С‚РєР°}
 ProtoId=209
 Type=5
 PicMap=art\items\plstic.frm
@@ -665,7 +670,7 @@ SoundId=48
 Cost=850
 Material=1
 
-[Proto] # PID_ACTIVE_STEALTH_BOY {Невидимка}
+[Proto] # PID_ACTIVE_STEALTH_BOY {РќРµРІРёРґРёРјРєР°}
 ProtoId=210
 Type=5
 PicMap=art\items\box2.frm
@@ -679,7 +684,7 @@ SoundId=48
 Cost=1800
 Material=1
 
-[Proto] # PID_BARTER_TANDI {Танди}
+[Proto] # PID_BARTER_TANDI {РўР°РЅРґРё}
 ProtoId=212
 Type=5
 PicMap=art\items\donotuse.frm
@@ -693,7 +698,7 @@ SoundId=48
 Cost=600
 Material=7
 
-[Proto] # PID_DISK_BROTHERHOOD_HISTORY {История Братства}
+[Proto] # PID_DISK_BROTHERHOOD_HISTORY {РСЃС‚РѕСЂРёСЏ Р‘СЂР°С‚СЃС‚РІР°}
 ProtoId=215
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -707,7 +712,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_MAXSON_HISTORY {История Максона}
+[Proto] # PID_DISK_MAXSON_HISTORY {РСЃС‚РѕСЂРёСЏ РњР°РєСЃРѕРЅР°}
 ProtoId=216
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -721,7 +726,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_MAXSON_JOURNAL {Дневник Максона}
+[Proto] # PID_DISK_MAXSON_JOURNAL {Р”РЅРµРІРЅРёРє РњР°РєСЃРѕРЅР°}
 ProtoId=217
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -735,7 +740,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_BARTER_LIGHT_HEALING {Малое исцеление}
+[Proto] # PID_BARTER_LIGHT_HEALING {РњР°Р»РѕРµ РёСЃС†РµР»РµРЅРёРµ}
 ProtoId=218
 Type=5
 PicMap=art\items\donotuse.frm
@@ -748,7 +753,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_BARTER_MEDIUM_HEALING {Среднее исцеление}
+[Proto] # PID_BARTER_MEDIUM_HEALING {РЎСЂРµРґРЅРµРµ РёСЃС†РµР»РµРЅРёРµ}
 ProtoId=219
 Type=5
 PicMap=art\items\donotuse.frm
@@ -761,7 +766,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_BARTER_HEAVY_HEALING {Серьезное исцеление}
+[Proto] # PID_BARTER_HEAVY_HEALING {РЎРµСЂСЊРµР·РЅРѕРµ РёСЃС†РµР»РµРЅРёРµ}
 ProtoId=220
 Type=5
 PicMap=art\items\donotuse.frm
@@ -774,7 +779,7 @@ SoundId=48
 Cost=100
 Material=1
 
-[Proto] # PID_SECURITY_CARD {Карта-пропуск}
+[Proto] # PID_SECURITY_CARD {РљР°СЂС‚Р°-РїСЂРѕРїСѓСЃРє}
 ProtoId=221
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -787,7 +792,7 @@ SoundId=48
 Cost=40
 Material=1
 
-[Proto] # PID_TOGGLE_SWITCH {Полевой переключатель}
+[Proto] # PID_TOGGLE_SWITCH {РџРѕР»РµРІРѕР№ РїРµСЂРµРєР»СЋС‡Р°С‚РµР»СЊ}
 ProtoId=222
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -799,7 +804,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_SMALL_STATUETTE {Небольшая статуэтка}
+[Proto] # PID_SMALL_STATUETTE {РќРµР±РѕР»СЊС€Р°СЏ СЃС‚Р°С‚СѓСЌС‚РєР°}
 ProtoId=224
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -813,7 +818,7 @@ SoundId=48
 Cost=300
 Material=3
 
-[Proto] # PID_CATS_PAW {Журнал "Кошачья лапка"}
+[Proto] # PID_CATS_PAW {Р–СѓСЂРЅР°Р» "РљРѕС€Р°С‡СЊСЏ Р»Р°РїРєР°"}
 ProtoId=225
 Type=5
 PicMap=art\items\book.frm
@@ -827,7 +832,7 @@ SoundId=48
 Cost=5
 Material=7
 
-[Proto] # PID_BOX_OF_NOODLES {Коробка лапши}
+[Proto] # PID_BOX_OF_NOODLES {РљРѕСЂРѕР±РєР° Р»Р°РїС€Рё}
 ProtoId=226
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -841,7 +846,7 @@ SoundId=48
 Cost=35
 Material=3
 
-[Proto] # PID_FROZEN_DINNER {Какая-то пыльная коробка}
+[Proto] # PID_FROZEN_DINNER {РљР°РєР°СЏ-С‚Рѕ РїС‹Р»СЊРЅР°СЏ РєРѕСЂРѕР±РєР°}
 ProtoId=227
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -855,7 +860,7 @@ SoundId=48
 Cost=20
 Material=1
 
-[Proto] # PID_TECHNICAL_MANUAL {Техническое руководство}
+[Proto] # PID_TECHNICAL_MANUAL {РўРµС…РЅРёС‡РµСЃРєРѕРµ СЂСѓРєРѕРІРѕРґСЃС‚РІРѕ}
 ProtoId=228
 Type=5
 PicMap=art\items\book.frm
@@ -869,7 +874,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_DISK_VAULT_RECORDS {Архивы Убежища}
+[Proto] # PID_DISK_VAULT_RECORDS {РђСЂС…РёРІС‹ РЈР±РµР¶РёС‰Р°}
 ProtoId=230
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -883,7 +888,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DISK_MILITARY_BASE_SEC_CODE {Код доступа к военной базе}
+[Proto] # PID_DISK_MILITARY_BASE_SEC_CODE {РљРѕРґ РґРѕСЃС‚СѓРїР° Рє РІРѕРµРЅРЅРѕР№ Р±Р°Р·Рµ}
 ProtoId=231
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -896,7 +901,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_DISK_REGULATOR_TRANSMISSIONS {Радиосообщения регулятора}
+[Proto] # PID_DISK_REGULATOR_TRANSMISSIONS {Р Р°РґРёРѕСЃРѕРѕР±С‰РµРЅРёСЏ СЂРµРіСѓР»СЏС‚РѕСЂР°}
 ProtoId=238
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -910,7 +915,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_BONES {Скелет Анны}
+[Proto] # PID_BONES {РЎРєРµР»РµС‚ РђРЅРЅС‹}
 ProtoId=251
 Type=5
 PicMap=art\items\arbones.frm
@@ -923,7 +928,7 @@ Volume=1
 SoundId=48
 Material=5
 
-[Proto] # PID_ANNA_GOLD_LOCKET {Золотой кулон Анны}
+[Proto] # PID_ANNA_GOLD_LOCKET {Р—РѕР»РѕС‚РѕР№ РєСѓР»РѕРЅ РђРЅРЅС‹}
 ProtoId=252
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -936,7 +941,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_CAR_FUEL_CELL_CONTROLLER {Топливный контроллер}
+[Proto] # PID_CAR_FUEL_CELL_CONTROLLER {РўРѕРїР»РёРІРЅС‹Р№ РєРѕРЅС‚СЂРѕР»Р»РµСЂ}
 ProtoId=253
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -949,7 +954,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_CAR_FUEL_INJECTION {Топливный регулятор}
+[Proto] # PID_CAR_FUEL_INJECTION {РўРѕРїР»РёРІРЅС‹Р№ СЂРµРіСѓР»СЏС‚РѕСЂ}
 ProtoId=254
 Type=5
 PicMap=art\items\box2.frm
@@ -962,7 +967,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_DAY_PASS {Дневной пропуск}
+[Proto] # PID_DAY_PASS {Р”РЅРµРІРЅРѕР№ РїСЂРѕРїСѓСЃРє}
 ProtoId=255
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -975,7 +980,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_FAKE_CITIZENSHIP {Фальшивое удостоверение Гражданина}
+[Proto] # PID_FAKE_CITIZENSHIP {Р¤Р°Р»СЊС€РёРІРѕРµ СѓРґРѕСЃС‚РѕРІРµСЂРµРЅРёРµ Р“СЂР°Р¶РґР°РЅРёРЅР°}
 ProtoId=256
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -988,7 +993,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_CORNELIUS_GOLD_WATCH {Золотые часы Корнелиуса}
+[Proto] # PID_CORNELIUS_GOLD_WATCH {Р—РѕР»РѕС‚С‹Рµ С‡Р°СЃС‹ РљРѕСЂРЅРµР»РёСѓСЃР°}
 ProtoId=257
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1001,7 +1006,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_HY_MAG_PART {Гидроэлектрический прибор}
+[Proto] # PID_HY_MAG_PART {Р“РёРґСЂРѕСЌР»РµРєС‚СЂРёС‡РµСЃРєРёР№ РїСЂРёР±РѕСЂ}
 ProtoId=258
 Type=5
 PicMap=art\items\box2.frm
@@ -1014,7 +1019,7 @@ Volume=2
 SoundId=48
 Material=1
 
-[Proto] # PID_RUBBER_BOOTS {Резиновые сапоги}
+[Proto] # PID_RUBBER_BOOTS {Р РµР·РёРЅРѕРІС‹Рµ СЃР°РїРѕРіРё}
 ProtoId=262
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -1027,7 +1032,7 @@ Volume=1
 SoundId=48
 Material=2
 
-[Proto] # PID_SLAG_MESSAGE {Послание ушельцев}
+[Proto] # PID_SLAG_MESSAGE {РџРѕСЃР»Р°РЅРёРµ СѓС€РµР»СЊС†РµРІ}
 ProtoId=263
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1040,7 +1045,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_SMITH_COOL_ITEM {Классная штука Смита}
+[Proto] # PID_SMITH_COOL_ITEM {РљР»Р°СЃСЃРЅР°СЏ С€С‚СѓРєР° РЎРјРёС‚Р°}
 ProtoId=264
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1053,7 +1058,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_VIC_RADIO {Рация Вика}
+[Proto] # PID_VIC_RADIO {Р Р°С†РёСЏ Р’РёРєР°}
 ProtoId=266
 Type=5
 PicMap=art\items\box2.frm
@@ -1066,7 +1071,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_VIC_WATER_FLASK {Фляга Вика}
+[Proto] # PID_VIC_WATER_FLASK {Р¤Р»СЏРіР° Р’РёРєР°}
 ProtoId=267
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1079,7 +1084,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_ROBOT_PARTS {Детали робота}
+[Proto] # PID_ROBOT_PARTS {Р”РµС‚Р°Р»Рё СЂРѕР±РѕС‚Р°}
 ProtoId=269
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -1092,7 +1097,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_BROC_FLOWER {Цветок Брок}
+[Proto] # PID_BROC_FLOWER {Р¦РІРµС‚РѕРє Р‘СЂРѕРє}
 ProtoId=271
 Type=5
 PicMap=art\items\brocflwr.frm
@@ -1104,7 +1109,7 @@ SoundId=48
 Cost=1
 Material=1
 
-[Proto] # PID_XANDER_ROOT {Корень Зандер}
+[Proto] # PID_XANDER_ROOT {РљРѕСЂРµРЅСЊ Р—Р°РЅРґРµСЂ}
 ProtoId=272
 Type=5
 PicMap=art\items\xander.frm
@@ -1116,7 +1121,7 @@ SoundId=48
 Cost=2
 Material=1
 
-[Proto] # PID_TROPHY_OF_RECOGNITION {Награда}
+[Proto] # PID_TROPHY_OF_RECOGNITION {РќР°РіСЂР°РґР°}
 ProtoId=275
 Type=5
 PicMap=art\items\trophy.frm
@@ -1130,7 +1135,7 @@ SoundId=48
 Cost=2000
 Material=1
 
-[Proto] # PID_FLINT {Кремень}
+[Proto] # PID_FLINT {РљСЂРµРјРµРЅСЊ}
 ProtoId=278
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1144,7 +1149,7 @@ SoundId=48
 Cost=5
 Material=5
 
-[Proto] # PID_NEURAL_INTERFACE {Нейрошлем}
+[Proto] # PID_NEURAL_INTERFACE {РќРµР№СЂРѕС€Р»РµРј}
 ProtoId=279
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -1158,7 +1163,7 @@ SoundId=48
 Cost=800
 Material=1
 
-[Proto] # PID_DIXON_EYE {Глаз Диксона}
+[Proto] # PID_DIXON_EYE {Р“Р»Р°Р· Р”РёРєСЃРѕРЅР°}
 ProtoId=281
 Type=5
 PicMap=art\items\jar.frm
@@ -1170,7 +1175,7 @@ Weight=453
 Volume=1
 SoundId=48
 
-[Proto] # PID_CLIFTON_EYE {Глаз Клифтона}
+[Proto] # PID_CLIFTON_EYE {Р“Р»Р°Р· РљР»РёС„С‚РѕРЅР°}
 ProtoId=282
 Type=5
 PicMap=art\items\jar.frm
@@ -1182,7 +1187,7 @@ Weight=453
 Volume=1
 SoundId=48
 
-[Proto] # PID_CAR_FUEL_CELL {Топливные элементы для машины}
+[Proto] # PID_CAR_FUEL_CELL {РўРѕРїР»РёРІРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹ РґР»СЏ РјР°С€РёРЅС‹}
 ProtoId=288
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -1195,7 +1200,7 @@ Volume=2
 SoundId=48
 Material=1
 
-[Proto] # PID_SHOVEL {Лопата}
+[Proto] # PID_SHOVEL {Р›РѕРїР°С‚Р°}
 ProtoId=289
 Type=5
 PicMap=art\items\shovel1.frm
@@ -1209,7 +1214,7 @@ SoundId=48
 Cost=15
 Material=1
 
-[Proto] # PID_HOLODISK_FAKE_V13 {Диск Убежища 13}
+[Proto] # PID_HOLODISK_FAKE_V13 {Р”РёСЃРє РЈР±РµР¶РёС‰Р° 13}
 ProtoId=294
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1223,7 +1228,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_TRAPPER_TOWN_KEY {Ключ от Городка трапперов}
+[Proto] # PID_TRAPPER_TOWN_KEY {РљР»СЋС‡ РѕС‚ Р“РѕСЂРѕРґРєР° С‚СЂР°РїРїРµСЂРѕРІ}
 ProtoId=298
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1235,7 +1240,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_CLIPBOARD {Планшет}
+[Proto] # PID_CLIPBOARD {РџР»Р°РЅС€РµС‚}
 ProtoId=301
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1248,7 +1253,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_GECKO_DATA_DISK {Диск из Гекко}
+[Proto] # PID_GECKO_DATA_DISK {Р”РёСЃРє РёР· Р“РµРєРєРѕ}
 ProtoId=302
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1262,7 +1267,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_REACTOR_DATA_DISK {Диск реактора}
+[Proto] # PID_REACTOR_DATA_DISK {Р”РёСЃРє СЂРµР°РєС‚РѕСЂР°}
 ProtoId=303
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1276,7 +1281,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DECK_OF_TRAGIC_CARDS {Колода карт TTG}
+[Proto] # PID_DECK_OF_TRAGIC_CARDS {РљРѕР»РѕРґР° РєР°СЂС‚ TTG}
 ProtoId=304
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1290,7 +1295,7 @@ SoundId=48
 Cost=50
 Material=7
 
-[Proto] # PID_YELLOW_REACTOR_KEYCARD {Желтая карта допуска реактора}
+[Proto] # PID_YELLOW_REACTOR_KEYCARD {Р–РµР»С‚Р°СЏ РєР°СЂС‚Р° РґРѕРїСѓСЃРєР° СЂРµР°РєС‚РѕСЂР°}
 ProtoId=305
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1304,7 +1309,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_RED_REACTOR_KEYCARD {Красная карта допуска реактора}
+[Proto] # PID_RED_REACTOR_KEYCARD {РљСЂР°СЃРЅР°СЏ РєР°СЂС‚Р° РґРѕРїСѓСЃРєР° СЂРµР°РєС‚РѕСЂР°}
 ProtoId=306
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1318,7 +1323,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_TALISMAN {Талисман}
+[Proto] # PID_TALISMAN {РўР°Р»РёСЃРјР°РЅ}
 ProtoId=309
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1332,7 +1337,7 @@ SoundId=48
 Cost=25
 Material=5
 
-[Proto] # PID_PART_REQUISITION_FORM {Форма заявки на получение детали}
+[Proto] # PID_PART_REQUISITION_FORM {Р¤РѕСЂРјР° Р·Р°СЏРІРєРё РЅР° РїРѕР»СѓС‡РµРЅРёРµ РґРµС‚Р°Р»Рё}
 ProtoId=312
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1346,7 +1351,7 @@ SoundId=48
 Cost=10
 Material=7
 
-[Proto] # PID_BLUE_CONDOM {Презерватив (в синей упаковке)}
+[Proto] # PID_BLUE_CONDOM {РџСЂРµР·РµСЂРІР°С‚РёРІ (РІ СЃРёРЅРµР№ СѓРїР°РєРѕРІРєРµ)}
 ProtoId=314
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1360,7 +1365,7 @@ SoundId=48
 Cost=2
 Material=2
 
-[Proto] # PID_GREEN_CONDOM {Презерватив (в зеленой упаковке)}
+[Proto] # PID_GREEN_CONDOM {РџСЂРµР·РµСЂРІР°С‚РёРІ (РІ Р·РµР»РµРЅРѕР№ СѓРїР°РєРѕРІРєРµ)}
 ProtoId=315
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1374,7 +1379,7 @@ SoundId=48
 Cost=2
 Material=2
 
-[Proto] # PID_RED_CONDOM {Презерватив (в красной упаковке)}
+[Proto] # PID_RED_CONDOM {РџСЂРµР·РµСЂРІР°С‚РёРІ (РІ РєСЂР°СЃРЅРѕР№ СѓРїР°РєРѕРІРєРµ)}
 ProtoId=316
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1388,7 +1393,7 @@ SoundId=48
 Cost=2
 Material=2
 
-[Proto] # PID_COSMETIC_CASE {Косметичка}
+[Proto] # PID_COSMETIC_CASE {РљРѕСЃРјРµС‚РёС‡РєР°}
 ProtoId=317
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1402,7 +1407,7 @@ SoundId=48
 Cost=25
 Material=2
 
-[Proto] # PID_CYBERNETIC_BRAIN {Кибермозг}
+[Proto] # PID_CYBERNETIC_BRAIN {РљРёР±РµСЂРјРѕР·Рі}
 ProtoId=321
 Type=5
 PicMap=art\items\jar.frm
@@ -1416,7 +1421,7 @@ SoundId=48
 Cost=2000
 Material=1
 
-[Proto] # PID_HUMAN_BRAIN {Человеческий мозг}
+[Proto] # PID_HUMAN_BRAIN {Р§РµР»РѕРІРµС‡РµСЃРєРёР№ РјРѕР·Рі}
 ProtoId=322
 Type=5
 PicMap=art\items\jar.frm
@@ -1429,7 +1434,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_CHIMP_BRAIN {Мозг шимпанзе}
+[Proto] # PID_CHIMP_BRAIN {РњРѕР·Рі С€РёРјРїР°РЅР·Рµ}
 ProtoId=323
 Type=5
 PicMap=art\items\jar.frm
@@ -1442,7 +1447,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_ABNORMAL_BRAIN {Мутировавший мозг}
+[Proto] # PID_ABNORMAL_BRAIN {РњСѓС‚РёСЂРѕРІР°РІС€РёР№ РјРѕР·Рі}
 ProtoId=324
 Type=5
 PicMap=art\items\jar.frm
@@ -1455,7 +1460,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_DICE {Кости}
+[Proto] # PID_DICE {РљРѕСЃС‚Рё}
 ProtoId=325
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1468,7 +1473,7 @@ SoundId=48
 Cost=5
 Material=2
 
-[Proto] # PID_LOADED_DICE {Шулерские кости}
+[Proto] # PID_LOADED_DICE {РЁСѓР»РµСЂСЃРєРёРµ РєРѕСЃС‚Рё}
 ProtoId=326
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1481,7 +1486,7 @@ SoundId=48
 Cost=20
 Material=2
 
-[Proto] # PID_EASTER_EGG {Пасхальное яйцо}
+[Proto] # PID_EASTER_EGG {РџР°СЃС…Р°Р»СЊРЅРѕРµ СЏР№С†Рѕ}
 ProtoId=327
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1494,7 +1499,7 @@ SoundId=48
 Cost=1
 Material=7
 
-[Proto] # PID_MAGIC_8_BALL {Волшебный бильярдный шар}
+[Proto] # PID_MAGIC_8_BALL {Р’РѕР»С€РµР±РЅС‹Р№ Р±РёР»СЊСЏСЂРґРЅС‹Р№ С€Р°СЂ}
 ProtoId=328
 Type=5
 ScriptModule=magic_ball
@@ -1510,7 +1515,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_MUTAGENIC_SYRUM {Мутагенная сыворотка}
+[Proto] # PID_MUTAGENIC_SYRUM {РњСѓС‚Р°РіРµРЅРЅР°СЏ СЃС‹РІРѕСЂРѕС‚РєР°}
 ProtoId=329
 Type=5
 PicMap=art\items\bpack2.frm
@@ -1522,7 +1527,7 @@ Volume=1
 SoundId=48
 Material=2
 
-[Proto] # PID_CATS_PAW_ISSUE_5 {Кошачья лапка, выпуск 5}
+[Proto] # PID_CATS_PAW_ISSUE_5 {РљРѕС€Р°С‡СЊСЏ Р»Р°РїРєР°, РІС‹РїСѓСЃРє 5}
 ProtoId=331
 Type=5
 PicMap=art\items\book.frm
@@ -1535,7 +1540,7 @@ SoundId=48
 Cost=50
 Material=7
 
-[Proto] # PID_HEART_PILLS {Сердечные пилюли}
+[Proto] # PID_HEART_PILLS {РЎРµСЂРґРµС‡РЅС‹Рµ РїРёР»СЋР»Рё}
 ProtoId=333
 Type=5
 PicMap=art\items\bpack2.frm
@@ -1548,7 +1553,7 @@ SoundId=48
 Cost=50
 Material=2
 
-[Proto] # PID_MOORE_BAD_BRIEFCASE {Чемоданчик Мура}
+[Proto] # PID_MOORE_BAD_BRIEFCASE {Р§РµРјРѕРґР°РЅС‡РёРє РњСѓСЂР°}
 ProtoId=335
 Type=5
 PicMap=art\items\bcasefl.frm
@@ -1562,7 +1567,7 @@ SoundId=48
 Cost=35
 Material=7
 
-[Proto] # PID_MOORE_GOOD_BRIEFCASE {Чемоданчик Мура}
+[Proto] # PID_MOORE_GOOD_BRIEFCASE {Р§РµРјРѕРґР°РЅС‡РёРє РњСѓСЂР°}
 ProtoId=336
 Type=5
 PicMap=art\items\bcasefl.frm
@@ -1576,7 +1581,7 @@ SoundId=48
 Cost=35
 Material=7
 
-[Proto] # PID_LYNETTE_HOLO {Голодиск Линетт}
+[Proto] # PID_LYNETTE_HOLO {Р“РѕР»РѕРґРёСЃРє Р›РёРЅРµС‚С‚}
 ProtoId=337
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1590,7 +1595,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_WESTIN_HOLO {Диск Вестина}
+[Proto] # PID_WESTIN_HOLO {Р”РёСЃРє Р’РµСЃС‚РёРЅР°}
 ProtoId=338
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1604,7 +1609,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_SPY_HOLO {Диск шпиона НКР}
+[Proto] # PID_SPY_HOLO {Р”РёСЃРє С€РїРёРѕРЅР° РќРљР }
 ProtoId=339
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1618,7 +1623,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DR_HENRY_PAPERS {Бумаги доктора}
+[Proto] # PID_DR_HENRY_PAPERS {Р‘СѓРјР°РіРё РґРѕРєС‚РѕСЂР°}
 ProtoId=340
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1630,7 +1635,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_PRESIDENTIAL_PASS {Пропуск, выданный президентом}
+[Proto] # PID_PRESIDENTIAL_PASS {РџСЂРѕРїСѓСЃРє, РІС‹РґР°РЅРЅС‹Р№ РїСЂРµР·РёРґРµРЅС‚РѕРј}
 ProtoId=341
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1642,7 +1647,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_RANGER_PIN {Значок рейнджера}
+[Proto] # PID_RANGER_PIN {Р—РЅР°С‡РѕРє СЂРµР№РЅРґР¶РµСЂР°}
 ProtoId=342
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1656,7 +1661,7 @@ SoundId=48
 Cost=10
 Material=1
 
-[Proto] # PID_RANGER_MAP {Карта рейнджеров}
+[Proto] # PID_RANGER_MAP {РљР°СЂС‚Р° СЂРµР№РЅРґР¶РµСЂРѕРІ}
 ProtoId=343
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1669,7 +1674,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_COMPUTER_VOICE_MODULE {Модуль голосового управления}
+[Proto] # PID_COMPUTER_VOICE_MODULE {РњРѕРґСѓР»СЊ РіРѕР»РѕСЃРѕРІРѕРіРѕ СѓРїСЂР°РІР»РµРЅРёСЏ}
 ProtoId=356
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1683,7 +1688,7 @@ SoundId=48
 Cost=3000
 Material=1
 
-[Proto] # PID_ROBOT_MOTIVATOR {Двигатель робота}
+[Proto] # PID_ROBOT_MOTIVATOR {Р”РІРёРіР°С‚РµР»СЊ СЂРѕР±РѕС‚Р°}
 ProtoId=364
 Type=5
 PicMap=art\items\motor.frm
@@ -1697,7 +1702,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_GECK {ГЭКК.}
+[Proto] # PID_GECK {Р“Р­РљРљ.}
 ProtoId=366
 Type=5
 PicMap=art\items\geck.frm
@@ -1710,7 +1715,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_V15_KEYCARD {Карта допуска Убежища 15}
+[Proto] # PID_V15_KEYCARD {РљР°СЂС‚Р° РґРѕРїСѓСЃРєР° РЈР±РµР¶РёС‰Р° 15}
 ProtoId=373
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1723,7 +1728,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_FIELD_MEDIC_KIT {Аптечка первой помощи военфельдшера}
+[Proto] # PID_FIELD_MEDIC_KIT {РђРїС‚РµС‡РєР° РїРµСЂРІРѕР№ РїРѕРјРѕС‰Рё РІРѕРµРЅС„РµР»СЊРґС€РµСЂР°}
 ProtoId=408
 Type=5
 PicMap=art\items\bpack2.frm
@@ -1737,7 +1742,7 @@ SoundId=48
 Cost=400
 Material=1
 
-[Proto] # PID_PARAMEDICS_BAG {Сумка парамедика}
+[Proto] # PID_PARAMEDICS_BAG {РЎСѓРјРєР° РїР°СЂР°РјРµРґРёРєР°}
 ProtoId=409
 Type=5
 PicMap=art\items\docbag.frm
@@ -1751,7 +1756,7 @@ SoundId=48
 Cost=600
 Material=7
 
-[Proto] # PID_EXP_LOCKPICK_SET {Большой набор отмычек}
+[Proto] # PID_EXP_LOCKPICK_SET {Р‘РѕР»СЊС€РѕР№ РЅР°Р±РѕСЂ РѕС‚РјС‹С‡РµРє}
 ProtoId=410
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1765,7 +1770,7 @@ SoundId=48
 Cost=400
 Material=1
 
-[Proto] # PID_ELEC_LOCKPICK_MKII {Электронная отмычка мод. II}
+[Proto] # PID_ELEC_LOCKPICK_MKII {Р­Р»РµРєС‚СЂРѕРЅРЅР°СЏ РѕС‚РјС‹С‡РєР° РјРѕРґ. II}
 ProtoId=411
 Type=5
 PicMap=art\items\elecpic.frm
@@ -1779,7 +1784,7 @@ SoundId=48
 Cost=700
 Material=1
 
-[Proto] # PID_STABLES_ID_BADGE {Пропуск в конюшни}
+[Proto] # PID_STABLES_ID_BADGE {РџСЂРѕРїСѓСЃРє РІ РєРѕРЅСЋС€РЅРё}
 ProtoId=413
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1791,7 +1796,7 @@ Volume=1
 SoundId=48
 Material=2
 
-[Proto] # PID_VAULT_13_SHACK_KEY {Ключ от радиорубки Убежища 15}
+[Proto] # PID_VAULT_13_SHACK_KEY {РљР»СЋС‡ РѕС‚ СЂР°РґРёРѕСЂСѓР±РєРё РЈР±РµР¶РёС‰Р° 15}
 ProtoId=414
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1803,7 +1808,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_SPECTACLES {Очки}
+[Proto] # PID_SPECTACLES {РћС‡РєРё}
 ProtoId=415
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1816,7 +1821,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_EMPTY_JET {Пустая банка из-под винта}
+[Proto] # PID_EMPTY_JET {РџСѓСЃС‚Р°СЏ Р±Р°РЅРєР° РёР·-РїРѕРґ РІРёРЅС‚Р°}
 ProtoId=416
 Type=5
 PicMap=art\items\bpack2.frm
@@ -1828,7 +1833,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_OXYGEN_TANK {Кислородный баллон}
+[Proto] # PID_OXYGEN_TANK {РљРёСЃР»РѕСЂРѕРґРЅС‹Р№ Р±Р°Р»Р»РѕРЅ}
 ProtoId=417
 Type=5
 PicMap=art\items\box2.frm
@@ -1842,7 +1847,7 @@ SoundId=48
 Cost=20
 Material=1
 
-[Proto] # PID_POISON_TANK {Баллон с ядом}
+[Proto] # PID_POISON_TANK {Р‘Р°Р»Р»РѕРЅ СЃ СЏРґРѕРј}
 ProtoId=418
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -1855,7 +1860,7 @@ Volume=3
 SoundId=48
 Material=1
 
-[Proto] # PID_MORNING_STAR_MINE {Банкнота шахты "Утренняя звезда"}
+[Proto] # PID_MORNING_STAR_MINE {Р‘Р°РЅРєРЅРѕС‚Р° С€Р°С…С‚С‹ "РЈС‚СЂРµРЅРЅСЏСЏ Р·РІРµР·РґР°"}
 ProtoId=420
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1868,7 +1873,7 @@ SoundId=48
 Cost=1
 Material=7
 
-[Proto] # PID_GOLD_TOOTH {Золотой зуб}
+[Proto] # PID_GOLD_TOOTH {Р—РѕР»РѕС‚РѕР№ Р·СѓР±}
 ProtoId=429
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1881,7 +1886,7 @@ SoundId=48
 Cost=50
 Material=5
 
-[Proto] # PID_HOWITZER_SHELL {Гаубичный снаряд}
+[Proto] # PID_HOWITZER_SHELL {Р“Р°СѓР±РёС‡РЅС‹Р№ СЃРЅР°СЂСЏРґ}
 ProtoId=430
 Type=5
 PicMap=art\items\rshell.frm
@@ -1895,7 +1900,7 @@ SoundId=48
 Cost=20
 Material=1
 
-[Proto] # PID_RAMIREZ_BOX_CLOSED {Ящик Рамиреса, закрыт}
+[Proto] # PID_RAMIREZ_BOX_CLOSED {РЇС‰РёРє Р Р°РјРёСЂРµСЃР°, Р·Р°РєСЂС‹С‚}
 ProtoId=431
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1909,7 +1914,7 @@ SoundId=48
 Cost=500
 Material=3
 
-[Proto] # PID_RAMIREZ_BOX_OPEN {Ящик Рамиреса, открыт}
+[Proto] # PID_RAMIREZ_BOX_OPEN {РЇС‰РёРє Р Р°РјРёСЂРµСЃР°, РѕС‚РєСЂС‹С‚}
 ProtoId=432
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1922,7 +1927,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_MIRROR_SHADES {Зеркальные солнечные очки}
+[Proto] # PID_MIRROR_SHADES {Р—РµСЂРєР°Р»СЊРЅС‹Рµ СЃРѕР»РЅРµС‡РЅС‹Рµ РѕС‡РєРё}
 ProtoId=433
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1936,7 +1941,7 @@ SoundId=48
 Cost=20
 Material=2
 
-[Proto] # PID_DECK_OF_CARDS {Колода карт}
+[Proto] # PID_DECK_OF_CARDS {РљРѕР»РѕРґР° РєР°СЂС‚}
 ProtoId=436
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1950,7 +1955,7 @@ SoundId=48
 Cost=2
 Material=7
 
-[Proto] # PID_MARKED_DECK_OF_CARDS {Колода крапленых карт}
+[Proto] # PID_MARKED_DECK_OF_CARDS {РљРѕР»РѕРґР° РєСЂР°РїР»РµРЅС‹С… РєР°СЂС‚}
 ProtoId=437
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1964,7 +1969,7 @@ SoundId=48
 Cost=1
 Material=7
 
-[Proto] # PID_BLONDIE_DOG_TAG {Солдатский жетон Блонди}
+[Proto] # PID_BLONDIE_DOG_TAG {РЎРѕР»РґР°С‚СЃРєРёР№ Р¶РµС‚РѕРЅ Р‘Р»РѕРЅРґРё}
 ProtoId=441
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1976,7 +1981,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_ANGEL_EYES_DOG_TAG {Солдатский жетон Ангелочка}
+[Proto] # PID_ANGEL_EYES_DOG_TAG {РЎРѕР»РґР°С‚СЃРєРёР№ Р¶РµС‚РѕРЅ РђРЅРіРµР»РѕС‡РєР°}
 ProtoId=442
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -1988,7 +1993,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_TUCO_DOG_TAG {Солдатский жетон Тако}
+[Proto] # PID_TUCO_DOG_TAG {РЎРѕР»РґР°С‚СЃРєРёР№ Р¶РµС‚РѕРЅ РўР°РєРѕ}
 ProtoId=443
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2000,7 +2005,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_RAIDERS_MAP {Карта налетчиков}
+[Proto] # PID_RAIDERS_MAP {РљР°СЂС‚Р° РЅР°Р»РµС‚С‡РёРєРѕРІ}
 ProtoId=444
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2013,7 +2018,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_SHERIFF_BADGE {Значок шерифа}
+[Proto] # PID_SHERIFF_BADGE {Р—РЅР°С‡РѕРє С€РµСЂРёС„Р°}
 ProtoId=445
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2027,7 +2032,7 @@ SoundId=48
 Cost=5
 Material=1
 
-[Proto] # PID_VERTIBIRD_PLANS {Чертежи винтокрыла}
+[Proto] # PID_VERTIBIRD_PLANS {Р§РµСЂС‚РµР¶Рё РІРёРЅС‚РѕРєСЂС‹Р»Р°}
 ProtoId=446
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2039,7 +2044,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_BISHOPS_HOLODISK {Диск Бишопа}
+[Proto] # PID_BISHOPS_HOLODISK {Р”РёСЃРє Р‘РёС€РѕРїР°}
 ProtoId=447
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2053,7 +2058,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_ACCOUNT_BOOK {Конторская книга}
+[Proto] # PID_ACCOUNT_BOOK {РљРѕРЅС‚РѕСЂСЃРєР°СЏ РєРЅРёРіР°}
 ProtoId=448
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2066,7 +2071,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_TORN_PAPER_1 {Оторванный клочок бумаги 1}
+[Proto] # PID_TORN_PAPER_1 {РћС‚РѕСЂРІР°РЅРЅС‹Р№ РєР»РѕС‡РѕРє Р±СѓРјР°РіРё 1}
 ProtoId=450
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2078,7 +2083,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_TORN_PAPER_2 {Оторванный клочок бумаги 2}
+[Proto] # PID_TORN_PAPER_2 {РћС‚РѕСЂРІР°РЅРЅС‹Р№ РєР»РѕС‡РѕРє Р±СѓРјР°РіРё 2}
 ProtoId=451
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2090,7 +2095,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_TORN_PAPER_3 {Оторванный клочок бумаги 3}
+[Proto] # PID_TORN_PAPER_3 {РћС‚РѕСЂРІР°РЅРЅС‹Р№ РєР»РѕС‡РѕРє Р±СѓРјР°РіРё 3}
 ProtoId=452
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2102,7 +2107,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_PASSWORD_PAPER {Список паролей}
+[Proto] # PID_PASSWORD_PAPER {РЎРїРёСЃРѕРє РїР°СЂРѕР»РµР№}
 ProtoId=453
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2114,7 +2119,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_EXPLOSIVE_SWITCH {Переключатель взрывного устройства}
+[Proto] # PID_EXPLOSIVE_SWITCH {РџРµСЂРµРєР»СЋС‡Р°С‚РµР»СЊ РІР·СЂС‹РІРЅРѕРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°}
 ProtoId=454
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2127,7 +2132,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_ELRON_FIELD_REP {Полевой отчет хабологов}
+[Proto] # PID_ELRON_FIELD_REP {РџРѕР»РµРІРѕР№ РѕС‚С‡РµС‚ С…Р°Р±РѕР»РѕРіРѕРІ}
 ProtoId=457
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2140,7 +2145,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_ENCLAVE_HOLODISK_5 {Диск ВБ №5}
+[Proto] # PID_ENCLAVE_HOLODISK_5 {Р”РёСЃРє Р’Р‘ в„–5}
 ProtoId=458
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2154,7 +2159,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_ENCLAVE_HOLODISK_1 {Диск ВБ №1}
+[Proto] # PID_ENCLAVE_HOLODISK_1 {Р”РёСЃРє Р’Р‘ в„–1}
 ProtoId=459
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2168,7 +2173,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_ENCLAVE_HOLODISK_2 {Диск ВБ №2}
+[Proto] # PID_ENCLAVE_HOLODISK_2 {Р”РёСЃРє Р’Р‘ в„–2}
 ProtoId=460
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2182,7 +2187,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_ENCLAVE_HOLODISK_3 {Диск ВБ №3}
+[Proto] # PID_ENCLAVE_HOLODISK_3 {Р”РёСЃРє Р’Р‘ в„–3}
 ProtoId=461
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2196,7 +2201,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_ENCLAVE_HOLODISK_4 {Диск ВБ №4}
+[Proto] # PID_ENCLAVE_HOLODISK_4 {Р”РёСЃРє Р’Р‘ в„–4}
 ProtoId=462
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2210,7 +2215,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_EVACUATION_HOLODISK {Диск эвакуации}
+[Proto] # PID_EVACUATION_HOLODISK {Р”РёСЃРє СЌРІР°РєСѓР°С†РёРё}
 ProtoId=463
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2224,7 +2229,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_EXPERIMENT_HOLODISK {Диск эксперимента}
+[Proto] # PID_EXPERIMENT_HOLODISK {Р”РёСЃРє СЌРєСЃРїРµСЂРёРјРµРЅС‚Р°}
 ProtoId=464
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2238,7 +2243,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_MEDICAL_HOLODISK {Медицинский диск}
+[Proto] # PID_MEDICAL_HOLODISK {РњРµРґРёС†РёРЅСЃРєРёР№ РґРёСЃРє}
 ProtoId=465
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2252,7 +2257,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_PASSWORD_HOLODISK {Список паролей}
+[Proto] # PID_PASSWORD_HOLODISK {РЎРїРёСЃРѕРє РїР°СЂРѕР»РµР№}
 ProtoId=466
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2266,7 +2271,7 @@ SoundId=48
 Cost=5
 Material=1
 
-[Proto] # PID_BALL_GAG {Шариковый кляп}
+[Proto] # PID_BALL_GAG {РЁР°СЂРёРєРѕРІС‹Р№ РєР»СЏРї}
 ProtoId=470
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2280,7 +2285,7 @@ SoundId=48
 Cost=20
 Material=1
 
-[Proto] # PID_BECKY_BOOK {"Цветок лаванды"}
+[Proto] # PID_BECKY_BOOK {"Р¦РІРµС‚РѕРє Р»Р°РІР°РЅРґС‹"}
 ProtoId=471
 Type=5
 PicMap=art\items\book.frm
@@ -2293,7 +2298,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_ELRON_MEMBER_HOLO {Диск хабологов}
+[Proto] # PID_ELRON_MEMBER_HOLO {Р”РёСЃРє С…Р°Р±РѕР»РѕРіРѕРІ}
 ProtoId=472
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2307,7 +2312,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_DAISIES {Маргаритки}
+[Proto] # PID_DAISIES {РњР°СЂРіР°СЂРёС‚РєРё}
 ProtoId=474
 Type=5
 PicMap=art\items\potflwr.frm
@@ -2320,7 +2325,7 @@ Volume=1
 SoundId=48
 Material=6
 
-[Proto] # PID_ENLIGHTENED_ONE_LETTER {Письмо Просветленной}
+[Proto] # PID_ENLIGHTENED_ONE_LETTER {РџРёСЃСЊРјРѕ РџСЂРѕСЃРІРµС‚Р»РµРЅРЅРѕР№}
 ProtoId=476
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2332,7 +2337,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_BROADCAST_HOLODISK {Диск с сообщением}
+[Proto] # PID_BROADCAST_HOLODISK {Р”РёСЃРє СЃ СЃРѕРѕР±С‰РµРЅРёРµРј}
 ProtoId=477
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2346,7 +2351,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_SIERRA_MISSION_HOLODISK {Диск с заданием Сьерра}
+[Proto] # PID_SIERRA_MISSION_HOLODISK {Р”РёСЃРє СЃ Р·Р°РґР°РЅРёРµРј РЎСЊРµСЂСЂР°}
 ProtoId=478
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2360,7 +2365,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_NAVCOM_PARTS {Части навигационного компьютера}
+[Proto] # PID_NAVCOM_PARTS {Р§Р°СЃС‚Рё РЅР°РІРёРіР°С†РёРѕРЅРЅРѕРіРѕ РєРѕРјРїСЊСЋС‚РµСЂР°}
 ProtoId=479
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2373,7 +2378,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_FALLOUT_2_HINTBOOK {Книга советов Fallout II}
+[Proto] # PID_FALLOUT_2_HINTBOOK {РљРЅРёРіР° СЃРѕРІРµС‚РѕРІ Fallout II}
 ProtoId=483
 Type=5
 PicMap=art\items\book.frm
@@ -2385,7 +2390,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_PLAYERS_EAR {Ухо игрока}
+[Proto] # PID_PLAYERS_EAR {РЈС…Рѕ РёРіСЂРѕРєР°}
 ProtoId=484
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2397,7 +2402,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_MASTICATORS_EAR {Ухо Дробителя}
+[Proto] # PID_MASTICATORS_EAR {РЈС…Рѕ Р”СЂРѕР±РёС‚РµР»СЏ}
 ProtoId=485
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2410,7 +2415,7 @@ SoundId=48
 Cost=750
 Material=1
 
-[Proto] # PID_MEMO {Записка от Фрэнсиса}
+[Proto] # PID_MEMO {Р—Р°РїРёСЃРєР° РѕС‚ Р¤СЂСЌРЅСЃРёСЃР°}
 ProtoId=487
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2424,7 +2429,7 @@ StartValue_1=-1
 StartValue_2=20
 StartValue_3=12732588
 
-[Proto] # PID_K9_MOTIVATOR {Двигатель К-9}
+[Proto] # PID_K9_MOTIVATOR {Р”РІРёРіР°С‚РµР»СЊ Рљ-9}
 ProtoId=488
 Type=5
 PicMap=art\items\motor.frm
@@ -2438,7 +2443,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_NCR_HISTORY_HOLODISK {Диск истории НКР}
+[Proto] # PID_NCR_HISTORY_HOLODISK {Р”РёСЃРє РёСЃС‚РѕСЂРёРё РќРљР }
 ProtoId=490
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2452,7 +2457,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_MR_NIXON_DOLL {Кукла Мистер Никсон}
+[Proto] # PID_MR_NIXON_DOLL {РљСѓРєР»Р° РњРёСЃС‚РµСЂ РќРёРєСЃРѕРЅ}
 ProtoId=491
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2464,7 +2469,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_TANKER_FOB {Ключ танкера}
+[Proto] # PID_TANKER_FOB {РљР»СЋС‡ С‚Р°РЅРєРµСЂР°}
 ProtoId=492
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2476,7 +2481,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_ELRON_TEACH_HOLO {Обучающий диск}
+[Proto] # PID_ELRON_TEACH_HOLO {РћР±СѓС‡Р°СЋС‰РёР№ РґРёСЃРє}
 ProtoId=493
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2490,7 +2495,7 @@ SoundId=48
 Cost=50
 Material=1
 
-[Proto] # PID_KOKOWEEF_MINE_SCRIP {Банкнота шахты "Коковеф"}
+[Proto] # PID_KOKOWEEF_MINE_SCRIP {Р‘Р°РЅРєРЅРѕС‚Р° С€Р°С…С‚С‹ "РљРѕРєРѕРІРµС„"}
 ProtoId=494
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2503,7 +2508,7 @@ SoundId=48
 Cost=1
 Material=7
 
-[Proto] # PID_PRES_ACCESS_KEY {Карта доступа президентского уровня}
+[Proto] # PID_PRES_ACCESS_KEY {РљР°СЂС‚Р° РґРѕСЃС‚СѓРїР° РїСЂРµР·РёРґРµРЅС‚СЃРєРѕРіРѕ СѓСЂРѕРІРЅСЏ}
 ProtoId=495
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2515,7 +2520,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_DERMAL_PIP_BOY_DISK {Лингвистический усилитель Pip Boy}
+[Proto] # PID_DERMAL_PIP_BOY_DISK {Р›РёРЅРіРІРёСЃС‚РёС‡РµСЃРєРёР№ СѓСЃРёР»РёС‚РµР»СЊ Pip Boy}
 ProtoId=499
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2529,7 +2534,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_MEM_CHIP_BLUE {Синий модуль памяти}
+[Proto] # PID_MEM_CHIP_BLUE {РЎРёРЅРёР№ РјРѕРґСѓР»СЊ РїР°РјСЏС‚Рё}
 ProtoId=503
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2541,7 +2546,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_MEM_CHIP_GREEN {Зеленый модуль памяти}
+[Proto] # PID_MEM_CHIP_GREEN {Р—РµР»РµРЅС‹Р№ РјРѕРґСѓР»СЊ РїР°РјСЏС‚Рё}
 ProtoId=504
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2553,7 +2558,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_MEM_CHIP_RED {Красный модуль памяти}
+[Proto] # PID_MEM_CHIP_RED {РљСЂР°СЃРЅС‹Р№ РјРѕРґСѓР»СЊ РїР°РјСЏС‚Рё}
 ProtoId=505
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2565,7 +2570,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_MEM_CHIP_YELLOW {Желтый модуль памяти}
+[Proto] # PID_MEM_CHIP_YELLOW {Р–РµР»С‚С‹Р№ РјРѕРґСѓР»СЊ РїР°РјСЏС‚Рё}
 ProtoId=506
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2577,7 +2582,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_DECOMPOSING_BODY {Разлагающийся труп}
+[Proto] # PID_DECOMPOSING_BODY {Р Р°Р·Р»Р°РіР°СЋС‰РёР№СЃСЏ С‚СЂСѓРї}
 ProtoId=507
 Type=5
 PicMap=art\items\body.frm
@@ -2590,7 +2595,7 @@ Volume=10
 SoundId=48
 Material=7
 
-[Proto] # PID_BLOW_UP_DOLL {Резиновая кукла}
+[Proto] # PID_BLOW_UP_DOLL {Р РµР·РёРЅРѕРІР°СЏ РєСѓРєР»Р°}
 ProtoId=508
 Type=5
 PicMap=art\items\bigbox2.frm
@@ -2604,7 +2609,7 @@ SoundId=48
 Cost=50
 Material=2
 
-[Proto] # PID_POPPED_BLOW_UP_DOLL {Поврежденная резиновая кукла}
+[Proto] # PID_POPPED_BLOW_UP_DOLL {РџРѕРІСЂРµР¶РґРµРЅРЅР°СЏ СЂРµР·РёРЅРѕРІР°СЏ РєСѓРєР»Р°}
 ProtoId=509
 Type=5
 PicMap=art\items\box2.frm
@@ -2617,7 +2622,7 @@ Volume=5
 SoundId=48
 Material=2
 
-[Proto] # PID_PIP_BOY_MEDICAL_ENHANCER {Медицинский усилитель Pip Boy}
+[Proto] # PID_PIP_BOY_MEDICAL_ENHANCER {РњРµРґРёС†РёРЅСЃРєРёР№ СѓСЃРёР»РёС‚РµР»СЊ Pip Boy}
 ProtoId=516
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2631,7 +2636,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_REAL_BOTTLE_CAPS {Крышки от бутылок}
+[Proto] # PID_REAL_BOTTLE_CAPS {РљСЂС‹С€РєРё РѕС‚ Р±СѓС‚С‹Р»РѕРє}
 ProtoId=519
 Type=5
 PicMap=art\items\bag.frm
@@ -2643,7 +2648,7 @@ SoundId=48
 Cost=1
 Material=1
 
-[Proto] # PID_MAP {Геологическая карта}
+[Proto] # PID_MAP {Р“РµРѕР»РѕРіРёС‡РµСЃРєР°СЏ РєР°СЂС‚Р°}
 ProtoId=523
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2657,7 +2662,7 @@ StartValue_1=-1
 StartValue_2=20
 StartValue_3=168652658
 
-[Proto] # PID_PART_OF_ROPE {Кусок веревки}
+[Proto] # PID_PART_OF_ROPE {РљСѓСЃРѕРє РІРµСЂРµРІРєРё}
 ProtoId=534
 Type=5
 PicMap=art\items\pump.frm
@@ -2671,7 +2676,7 @@ SoundId=48
 Cost=3
 Material=7
 
-[Proto] # PID_MEAT {Мясо}
+[Proto] # PID_MEAT {РњСЏСЃРѕ}
 ProtoId=539
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2684,7 +2689,7 @@ SoundId=48
 Cost=1
 Material=7
 
-[Proto] # PID_CIGARETTES {Сигареты}
+[Proto] # PID_CIGARETTES {РЎРёРіР°СЂРµС‚С‹}
 ProtoId=541
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2697,7 +2702,7 @@ SoundId=48
 Cost=3
 Material=3
 
-[Proto] # PID_MINE {Мина}
+[Proto] # PID_MINE {РњРёРЅР°}
 ProtoId=544
 Type=5
 PicMap=art\items\mine.fofrm
@@ -2711,7 +2716,7 @@ SoundId=48
 Cost=850
 Material=1
 
-[Proto] # PID_ACTIVE_MINE {Активированная мина}
+[Proto] # PID_ACTIVE_MINE {РђРєС‚РёРІРёСЂРѕРІР°РЅРЅР°СЏ РјРёРЅР°}
 ProtoId=545
 Type=5
 PicMap=art\items\mine.fofrm
@@ -2724,7 +2729,7 @@ SoundId=48
 Cost=850
 Material=1
 
-[Proto] # PID_POSTMAN_LETTER {Запечатанный конверт}
+[Proto] # PID_POSTMAN_LETTER {Р—Р°РїРµС‡Р°С‚Р°РЅРЅС‹Р№ РєРѕРЅРІРµСЂС‚}
 ProtoId=548
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2735,7 +2740,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_CHOSEN_HOLO {Голодиск Избранного}
+[Proto] # PID_CHOSEN_HOLO {Р“РѕР»РѕРґРёСЃРє РР·Р±СЂР°РЅРЅРѕРіРѕ}
 ProtoId=549
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2748,7 +2753,7 @@ SoundId=48
 Material=1
 StartValue_1=99999
 
-[Proto] # PID_CHOSEN_HOLO_DECODED {Голодиск Избранного}
+[Proto] # PID_CHOSEN_HOLO_DECODED {Р“РѕР»РѕРґРёСЃРє РР·Р±СЂР°РЅРЅРѕРіРѕ}
 ProtoId=550
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2761,7 +2766,7 @@ SoundId=48
 Material=1
 StartValue_1=99999
 
-[Proto] # PID_LETTER_TO_LIN {Послание Линнет}
+[Proto] # PID_LETTER_TO_LIN {РџРѕСЃР»Р°РЅРёРµ Р›РёРЅРЅРµС‚}
 ProtoId=551
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2775,7 +2780,7 @@ Cost=40
 Material=1
 StartValue_1=99999
 
-[Proto] # PID_LETTER_TO_TODD {Послание Тодду Стьюарду}
+[Proto] # PID_LETTER_TO_TODD {РџРѕСЃР»Р°РЅРёРµ РўРѕРґРґСѓ РЎС‚СЊСЋР°СЂРґСѓ}
 ProtoId=552
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2789,7 +2794,7 @@ Cost=40
 Material=1
 StartValue_1=99999
 
-[Proto] # PID_EDWARD_REPORT {Отчёты Доктора Эдварда}
+[Proto] # PID_EDWARD_REPORT {РћС‚С‡С‘С‚С‹ Р”РѕРєС‚РѕСЂР° Р­РґРІР°СЂРґР°}
 ProtoId=553
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2803,7 +2808,7 @@ Cost=40
 Material=1
 StartValue_1=99999
 
-[Proto] # PID_LETTER_TO_SINDY {Письмо Синди}
+[Proto] # PID_LETTER_TO_SINDY {РџРёСЃСЊРјРѕ РЎРёРЅРґРё}
 ProtoId=554
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2814,7 +2819,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_LETTER_TO_CASSIDY {Письмо Кэссиди}
+[Proto] # PID_LETTER_TO_CASSIDY {РџРёСЃСЊРјРѕ РљСЌСЃСЃРёРґРё}
 ProtoId=555
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2825,7 +2830,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_DANTON_POISON {Отрава}
+[Proto] # PID_DANTON_POISON {РћС‚СЂР°РІР°}
 ProtoId=557
 Type=5
 PicMap=art\items\beer.frm
@@ -2838,7 +2843,7 @@ Volume=1
 SoundId=48
 Cost=50
 
-[Proto] # PID_ARROYO_SYRINGE {Шприц}
+[Proto] # PID_ARROYO_SYRINGE {РЁРїСЂРёС†}
 ProtoId=560
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2850,7 +2855,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_DEATH_STAR_PLANS {Голодиск со схемами}
+[Proto] # PID_DEATH_STAR_PLANS {Р“РѕР»РѕРґРёСЃРє СЃРѕ СЃС…РµРјР°РјРё}
 ProtoId=561
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2864,7 +2869,7 @@ SoundId=48
 Cost=300
 Material=1
 
-[Proto] # PID_FALLOUT_3_HOLO {Голодиск с игрой}
+[Proto] # PID_FALLOUT_3_HOLO {Р“РѕР»РѕРґРёСЃРє СЃ РёРіСЂРѕР№}
 ProtoId=562
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2878,7 +2883,7 @@ SoundId=48
 Cost=300
 Material=1
 
-[Proto] # PID_FAKE_GECK {Реплика ГЕККа}
+[Proto] # PID_FAKE_GECK {Р РµРїР»РёРєР° Р“Р•РљРљР°}
 ProtoId=563
 Type=5
 PicMap=art\items\geck.frm
@@ -2892,7 +2897,7 @@ SoundId=48
 Cost=300
 Material=1
 
-[Proto] # PID_USED_GECK {Пустой ГЕКК}
+[Proto] # PID_USED_GECK {РџСѓСЃС‚РѕР№ Р“Р•РљРљ}
 ProtoId=564
 Type=5
 PicMap=art\items\geck.frm
@@ -2906,7 +2911,7 @@ SoundId=48
 Cost=300
 Material=1
 
-[Proto] # PID_WELDING_USED {Сварка (израсх.)}
+[Proto] # PID_WELDING_USED {РЎРІР°СЂРєР° (РёР·СЂР°СЃС….)}
 ProtoId=566
 Type=5
 PicMap=art\items\box2.frm
@@ -2920,7 +2925,7 @@ SoundId=48
 Cost=120
 Material=1
 
-[Proto] # PID_HUBOLOGIST_BOOK {Книга Хаба}
+[Proto] # PID_HUBOLOGIST_BOOK {РљРЅРёРіР° РҐР°Р±Р°}
 ProtoId=571
 Type=5
 PicMap=art\items\book.frm
@@ -2933,7 +2938,7 @@ SoundId=48
 Cost=25
 Material=1
 
-[Proto] # PID_PLASTIC_EXPLOSIVES_DULL {Кусок взрывчатки}
+[Proto] # PID_PLASTIC_EXPLOSIVES_DULL {РљСѓСЃРѕРє РІР·СЂС‹РІС‡Р°С‚РєРё}
 ProtoId=577
 Type=5
 PicMap=art\items\rock2.frm
@@ -2946,7 +2951,7 @@ Volume=1
 SoundId=48
 Cost=300
 
-[Proto] # PID_REBEL_TAG {Солдатский жетон рейнджера}
+[Proto] # PID_REBEL_TAG {РЎРѕР»РґР°С‚СЃРєРёР№ Р¶РµС‚РѕРЅ СЂРµР№РЅРґР¶РµСЂР°}
 ProtoId=579
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -2957,7 +2962,7 @@ Volume=1
 SoundId=48
 Material=1
 
-[Proto] # PID_SANDBAG_1 {Мешок с песком}
+[Proto] # PID_SANDBAG_1 {РњРµС€РѕРє СЃ РїРµСЃРєРѕРј}
 ProtoId=580
 Type=5
 ScriptModule=sandbag
@@ -2969,7 +2974,7 @@ DisableEgg=1
 Weight=42000
 Material=6
 
-[Proto] # PID_SANDBAG_2 {Мешки с песком}
+[Proto] # PID_SANDBAG_2 {РњРµС€РєРё СЃ РїРµСЃРєРѕРј}
 ProtoId=581
 Type=5
 ScriptModule=sandbag
@@ -2981,7 +2986,7 @@ DisableEgg=1
 Weight=248000
 Material=6
 
-[Proto] # PID_SANDBAG_3 {Мешки с песком}
+[Proto] # PID_SANDBAG_3 {РњРµС€РєРё СЃ РїРµСЃРєРѕРј}
 ProtoId=582
 Type=5
 ScriptModule=sandbag
@@ -2993,7 +2998,7 @@ DisableEgg=1
 Weight=360000
 Material=6
 
-[Proto] # PID_SANDBAG_4 {Мешки с песком}
+[Proto] # PID_SANDBAG_4 {РњРµС€РєРё СЃ РїРµСЃРєРѕРј}
 ProtoId=583
 Type=5
 ScriptModule=sandbag
@@ -3005,7 +3010,7 @@ DisableEgg=1
 Weight=250000
 Material=6
 
-[Proto] # PID_SANDBAG_5 {Мешки с песком}
+[Proto] # PID_SANDBAG_5 {РњРµС€РєРё СЃ РїРµСЃРєРѕРј}
 ProtoId=584
 Type=5
 ScriptModule=sandbag
@@ -3017,7 +3022,7 @@ DisableEgg=1
 Weight=300000
 Material=6
 
-[Proto] # PID_SANDBAG_EMPTY {Мешок}
+[Proto] # PID_SANDBAG_EMPTY {РњРµС€РѕРє}
 ProtoId=587
 Type=5
 PicMap=art\items\bag.frm
@@ -3031,7 +3036,7 @@ SoundId=48
 Cost=5
 Material=7
 
-[Proto] # PID_KOTW_BEER {Пиво "Гамма-глоток"}
+[Proto] # PID_KOTW_BEER {РџРёРІРѕ "Р“Р°РјРјР°-РіР»РѕС‚РѕРє"}
 ProtoId=588
 Type=5
 PicMap=art\items\beer.frm
@@ -3043,7 +3048,7 @@ LightDistance=1
 LightIntensity=50
 LightColor=-16777216
 
-[Proto] # PID_KOTW_GRAIL {Пиво "Гамма-глоток"}
+[Proto] # PID_KOTW_GRAIL {РџРёРІРѕ "Р“Р°РјРјР°-РіР»РѕС‚РѕРє"}
 ProtoId=589
 Type=5
 PicMap=art\items\beer.frm
@@ -3057,7 +3062,7 @@ LightDistance=2
 LightIntensity=50
 LightColor=-15007923
 
-[Proto] # PID_KOTW_STATUETTE {Статуэтка}
+[Proto] # PID_KOTW_STATUETTE {РЎС‚Р°С‚СѓСЌС‚РєР°}
 ProtoId=590
 Type=5
 PicMap=art\items\kotw_statuette_ground.fofrm
@@ -3069,7 +3074,7 @@ Material=1
 LightDistance=1
 LightIntensity=50
 
-[Proto] # PID_CHITIN_ARMOR_RECIPE {Инструкция}
+[Proto] # PID_CHITIN_ARMOR_RECIPE {РРЅСЃС‚СЂСѓРєС†РёСЏ}
 ProtoId=597
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -3082,7 +3087,7 @@ Volume=1
 SoundId=48
 Material=3
 
-[Proto] # PID_FAKE_LETTER {Подложные документы}
+[Proto] # PID_FAKE_LETTER {РџРѕРґР»РѕР¶РЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹}
 ProtoId=600
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -3093,7 +3098,7 @@ Volume=1
 SoundId=48
 Material=7
 
-[Proto] # PID_POT {Стеклянная банка}
+[Proto] # PID_POT {РЎС‚РµРєР»СЏРЅРЅР°СЏ Р±Р°РЅРєР°}
 ProtoId=601
 Type=5
 PicMap=art\items\jar.frm
@@ -3104,7 +3109,7 @@ Weight=453
 Volume=1
 SoundId=48
 
-[Proto] # PID_BOTTLE_AMMIAK {Бутылка с аммиаком}
+[Proto] # PID_BOTTLE_AMMIAK {Р‘СѓС‚С‹Р»РєР° СЃ Р°РјРјРёР°РєРѕРј}
 ProtoId=605
 Type=5
 PicMap=art\items\box2.frm
@@ -3116,7 +3121,7 @@ Volume=1
 Cost=1
 Material=2
 
-[Proto] # PID_SMOKE {Дым}
+[Proto] # PID_SMOKE {Р”С‹Рј}
 ProtoId=606
 Type=5
 PicMap=art\scenery\steam01.frm
@@ -3127,7 +3132,7 @@ SoundId=48
 Material=7
 LightColor=1879048191
 
-[Proto] # PID_MUSTARD_GAS {Иприт}
+[Proto] # PID_MUSTARD_GAS {РРїСЂРёС‚}
 ProtoId=607
 Type=5
 PicMap=art\scenery\steam02.frm
@@ -3138,7 +3143,7 @@ SoundId=48
 Material=7
 LightColor=1877924994
 
-[Proto] # PID_REPLICATOR_TANK {Репликатор}
+[Proto] # PID_REPLICATOR_TANK {Р РµРїР»РёРєР°С‚РѕСЂ}
 ProtoId=613
 Type=5
 PicMap=art\scenery\gtank01.frm
@@ -3146,7 +3151,7 @@ PicInv=art\inven\reserved.frm
 Flags=33554960
 Weight=9999999
 
-[Proto] # PID_REPLICATOR_TANK_BROKEN {Сломанный репликатор}
+[Proto] # PID_REPLICATOR_TANK_BROKEN {РЎР»РѕРјР°РЅРЅС‹Р№ СЂРµРїР»РёРєР°С‚РѕСЂ}
 ProtoId=614
 Type=5
 PicMap=art\scenery\gtank02.frm
@@ -3154,7 +3159,7 @@ PicInv=art\inven\reserved.frm
 Flags=33554960
 Weight=9999999
 
-[Proto] # PID_POSTER_1 {Плакат}
+[Proto] # PID_POSTER_1 {РџР»Р°РєР°С‚}
 ProtoId=615
 Type=5
 PicMap=art\scenery\girlp002.frm
@@ -3163,7 +3168,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_2 {Плакат}
+[Proto] # PID_POSTER_2 {РџР»Р°РєР°С‚}
 ProtoId=616
 Type=5
 PicMap=art\scenery\girlp004.frm
@@ -3172,7 +3177,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_3 {Плакат}
+[Proto] # PID_POSTER_3 {РџР»Р°РєР°С‚}
 ProtoId=617
 Type=5
 PicMap=art\scenery\girlp006.frm
@@ -3181,7 +3186,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_4 {Плакат}
+[Proto] # PID_POSTER_4 {РџР»Р°РєР°С‚}
 ProtoId=618
 Type=5
 PicMap=art\scenery\girlp008.frm
@@ -3190,7 +3195,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_5 {Плакат}
+[Proto] # PID_POSTER_5 {РџР»Р°РєР°С‚}
 ProtoId=619
 Type=5
 PicMap=art\scenery\girlp010.frm
@@ -3199,7 +3204,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_6 {Плакат}
+[Proto] # PID_POSTER_6 {РџР»Р°РєР°С‚}
 ProtoId=620
 Type=5
 PicMap=art\scenery\girlp012.frm
@@ -3208,7 +3213,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_7 {Плакат}
+[Proto] # PID_POSTER_7 {РџР»Р°РєР°С‚}
 ProtoId=621
 Type=5
 PicMap=art\scenery\girlp014.frm
@@ -3217,7 +3222,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_8 {Плакат}
+[Proto] # PID_POSTER_8 {РџР»Р°РєР°С‚}
 ProtoId=622
 Type=5
 PicMap=art\scenery\girlp016.frm
@@ -3226,7 +3231,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_9 {Плакат}
+[Proto] # PID_POSTER_9 {РџР»Р°РєР°С‚}
 ProtoId=623
 Type=5
 PicMap=art\scenery\girlp018.frm
@@ -3235,7 +3240,7 @@ Corner=5
 Flags=33554460
 Material=1
 
-[Proto] # PID_POSTER_BUNDLE {Плакат}
+[Proto] # PID_POSTER_BUNDLE {РџР»Р°РєР°С‚}
 ProtoId=624
 Type=5
 ScriptModule=poster
@@ -3247,7 +3252,7 @@ DisableEgg=1
 Volume=1
 SoundId=48
 
-[Proto] # PID_PETBOX_MANTISS {Коробка с мантиссом}
+[Proto] # PID_PETBOX_MANTISS {РљРѕСЂРѕР±РєР° СЃ РјР°РЅС‚РёСЃСЃРѕРј}
 ProtoId=700
 Type=5
 ScriptModule=pet
@@ -3260,7 +3265,7 @@ Weight=500
 Material=2
 StartValue_2=12
 
-[Proto] # PID_STILL_B_BROKEN {Пивоваренная установка}  
+[Proto] # PID_STILL_B_BROKEN {РџРёРІРѕРІР°СЂРµРЅРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР°}  
 ProtoId=810
 Type=5
 PicMap=art\items\still.fofrm
@@ -3272,7 +3277,7 @@ Volume=100
 SoundId=48
 Material=1
 
-[Proto] # PID_STILL_S_BROKEN {Самогонный аппарат}
+[Proto] # PID_STILL_S_BROKEN {РЎР°РјРѕРіРѕРЅРЅС‹Р№ Р°РїРїР°СЂР°С‚}
 ProtoId=811
 Type=5
 PicMap=art\items\still.fofrm
@@ -3290,7 +3295,7 @@ AnimShow_1=1
 AnimHide_0=1
 AnimHide_1=1
 
-[Proto] # PID_STILL_B {Пивоваренная установка}
+[Proto] # PID_STILL_B {РџРёРІРѕРІР°СЂРµРЅРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР°}
 ProtoId=812
 Type=5
 PicMap=art\items\still.fofrm
@@ -3308,7 +3313,7 @@ AnimShow_1=2
 AnimHide_0=2
 AnimHide_1=2
 
-[Proto] # PID_STILL_B_ACTIVE {Пивоваренная установка}
+[Proto] # PID_STILL_B_ACTIVE {РџРёРІРѕРІР°СЂРµРЅРЅР°СЏ СѓСЃС‚Р°РЅРѕРІРєР°}
 ProtoId=813
 Type=5
 PicMap=art\items\still.fofrm
@@ -3326,7 +3331,7 @@ AnimShow_1=4
 AnimHide_0=4
 AnimHide_1=4
 
-[Proto] # PID_STILL_S {Самогонный аппарат}
+[Proto] # PID_STILL_S {РЎР°РјРѕРіРѕРЅРЅС‹Р№ Р°РїРїР°СЂР°С‚}
 ProtoId=814
 Type=5
 PicMap=art\items\still.fofrm
@@ -3344,7 +3349,7 @@ AnimShow_1=3
 AnimHide_0=3
 AnimHide_1=3
 
-[Proto] # PID_STILL_S_ACTIVE {Самогонный аппарат}
+[Proto] # PID_STILL_S_ACTIVE {РЎР°РјРѕРіРѕРЅРЅС‹Р№ Р°РїРїР°СЂР°С‚}
 ProtoId=815
 Type=5
 PicMap=art\items\still.fofrm
@@ -3362,7 +3367,7 @@ AnimShow_1=24
 AnimHide_0=24
 AnimHide_1=24
 
-[Proto] # PID_UNVISIBLE_BLOCK {Невидимый блокиратор}
+[Proto] # PID_UNVISIBLE_BLOCK {РќРµРІРёРґРёРјС‹Р№ Р±Р»РѕРєРёСЂР°С‚РѕСЂ}
 ProtoId=820
 Type=5
 PicMap=art\items\blank.png
@@ -3371,7 +3376,7 @@ Flags=4122
 DisableEgg=1
 Material=1
 
-[Proto] # PID_EB_LONG_HOR {Силовое поле}
+[Proto] # PID_EB_LONG_HOR {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=850
 Type=5
 ScriptModule=energy_barier
@@ -3389,7 +3394,7 @@ LightIntensity=65
 LightColor=-16777216
 AnimWaitBase=1
 
-[Proto] # PID_EB_LONG_VERT {Силовое поле}
+[Proto] # PID_EB_LONG_VERT {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=851
 Type=5
 ScriptModule=energy_barier
@@ -3405,7 +3410,7 @@ Material=1
 LightColor=-16777216
 AnimWaitBase=1
 
-[Proto] # PID_EB_BLOCKER {Автоблокиратор}
+[Proto] # PID_EB_BLOCKER {РђРІС‚РѕР±Р»РѕРєРёСЂР°С‚РѕСЂ}
 ProtoId=852
 Type=5
 PicMap=art\items\blank.fofrm
@@ -3418,7 +3423,7 @@ Material=1
 LightDistance=3
 LightIntensity=65
 
-[Proto] # PID_ENERGY_BARIER_ACCESS_CARD {Карта-пропуск}
+[Proto] # PID_ENERGY_BARIER_ACCESS_CARD {РљР°СЂС‚Р°-РїСЂРѕРїСѓСЃРє}
 ProtoId=853
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -3430,7 +3435,7 @@ Weight=300
 Volume=1
 Material=2
 
-[Proto] # PID_EB_TRIGGER {Триггер}
+[Proto] # PID_EB_TRIGGER {РўСЂРёРіРіРµСЂ}
 ProtoId=854
 Type=5
 PicMap=art\items\blank.fofrm
@@ -3441,7 +3446,7 @@ Stackable=1
 Weight=5000000
 Material=1
 
-[Proto] # PID_EB_SHORT_HOR1 {Силовое поле}
+[Proto] # PID_EB_SHORT_HOR1 {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=855
 Type=5
 ScriptModule=energy_barier
@@ -3459,7 +3464,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147483392
 
-[Proto] # PID_EB_SHORT_VERT1 {Силовое поле}
+[Proto] # PID_EB_SHORT_VERT1 {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=856
 Type=5
 ScriptModule=energy_barier
@@ -3476,7 +3481,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147483392
 
-[Proto] # PID_EB_SHORT_HOR1_RED {Силовое поле}
+[Proto] # PID_EB_SHORT_HOR1_RED {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=857
 Type=5
 PicMap=art\items\FFIELD02.FRM
@@ -3492,7 +3497,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147418112
 
-[Proto] # PID_EB_SHORT_VERT1_RED {Силовое поле}
+[Proto] # PID_EB_SHORT_VERT1_RED {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=858
 Type=5
 PicMap=art\items\FFIELD04.FRM
@@ -3507,7 +3512,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147418112
 
-[Proto] # PID_EB_SHORT_HOR2 {Силовое поле}
+[Proto] # PID_EB_SHORT_HOR2 {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=859
 Type=5
 ScriptModule=energy_barier
@@ -3525,7 +3530,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147483392
 
-[Proto] # PID_EB_SHORT_VERT2 {Силовое поле}
+[Proto] # PID_EB_SHORT_VERT2 {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=860
 Type=5
 ScriptModule=energy_barier
@@ -3543,7 +3548,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147483392
 
-[Proto] # PID_EB_SHORT_HOR2_RED {Силовое поле}
+[Proto] # PID_EB_SHORT_HOR2_RED {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=861
 Type=5
 PicMap=art\items\FORCFD04.FRM
@@ -3559,7 +3564,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147418112
 
-[Proto] # PID_EB_SHORT_VERT2_RED {Силовое поле}
+[Proto] # PID_EB_SHORT_VERT2_RED {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=862
 Type=5
 PicMap=art\items\FORCFD03.FRM
@@ -3575,7 +3580,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147418112
 
-[Proto] # PID_EB_SHORT_HOR3 {Силовое поле}
+[Proto] # PID_EB_SHORT_HOR3 {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=863
 Type=5
 ScriptModule=energy_barier
@@ -3593,7 +3598,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147483392
 
-[Proto] # PID_EB_SHORT_VERT3 {Силовое поле}
+[Proto] # PID_EB_SHORT_VERT3 {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=864
 Type=5
 ScriptModule=energy_barier
@@ -3611,7 +3616,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147483392
 
-[Proto] # PID_EB_SHORT_HOR3_RED {Силовое поле}
+[Proto] # PID_EB_SHORT_HOR3_RED {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=865
 Type=5
 PicMap=art\items\FORCFD06.FRM
@@ -3627,7 +3632,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147418112
 
-[Proto] # PID_EB_SHORT_VERT3_RED {Силовое поле}
+[Proto] # PID_EB_SHORT_VERT3_RED {РЎРёР»РѕРІРѕРµ РїРѕР»Рµ}
 ProtoId=866
 Type=5
 PicMap=art\items\FORCFD05.FRM
@@ -3643,7 +3648,7 @@ LightDistance=3
 LightIntensity=65
 LightColor=2147418112
 
-[Proto] # PID_EB_EMITTER_HOR1 {Генератор силового поля}
+[Proto] # PID_EB_EMITTER_HOR1 {Р“РµРЅРµСЂР°С‚РѕСЂ СЃРёР»РѕРІРѕРіРѕ РїРѕР»СЏ}
 ProtoId=867
 Type=5
 ScriptModule=energy_barier
@@ -3657,7 +3662,7 @@ Weight=5000000
 Volume=100
 Material=1
 
-[Proto] # PID_EB_EMITTER_VERT1 {Генератор силового поля}
+[Proto] # PID_EB_EMITTER_VERT1 {Р“РµРЅРµСЂР°С‚РѕСЂ СЃРёР»РѕРІРѕРіРѕ РїРѕР»СЏ}
 ProtoId=868
 Type=5
 ScriptModule=energy_barier
@@ -3671,7 +3676,7 @@ Weight=5000000
 Volume=100
 Material=1
 
-[Proto] # PID_EB_EMITTER_HOR2 {Генератор силового поля}
+[Proto] # PID_EB_EMITTER_HOR2 {Р“РµРЅРµСЂР°С‚РѕСЂ СЃРёР»РѕРІРѕРіРѕ РїРѕР»СЏ}
 ProtoId=869
 Type=5
 ScriptModule=energy_barier
@@ -3685,7 +3690,7 @@ Weight=5000000
 Volume=100
 Material=1
 
-[Proto] # PID_EB_EMITTER_VERT2 {Генератор силового поля}
+[Proto] # PID_EB_EMITTER_VERT2 {Р“РµРЅРµСЂР°С‚РѕСЂ СЃРёР»РѕРІРѕРіРѕ РїРѕР»СЏ}
 ProtoId=870
 Type=5
 ScriptModule=energy_barier
@@ -3699,7 +3704,7 @@ Weight=5000000
 Volume=100
 Material=1
 
-[Proto] # PID_EB_EMITTER_HOR3 {Генератор силового поля}
+[Proto] # PID_EB_EMITTER_HOR3 {Р“РµРЅРµСЂР°С‚РѕСЂ СЃРёР»РѕРІРѕРіРѕ РїРѕР»СЏ}
 ProtoId=871
 Type=5
 ScriptModule=energy_barier
@@ -3713,7 +3718,7 @@ Weight=5000000
 Volume=100
 Material=1
 
-[Proto] # PID_EB_EMITTER_VERT3 {Генератор силового поля}
+[Proto] # PID_EB_EMITTER_VERT3 {Р“РµРЅРµСЂР°С‚РѕСЂ СЃРёР»РѕРІРѕРіРѕ РїРѕР»СЏ}
 ProtoId=872
 Type=5
 ScriptModule=energy_barier
@@ -3727,7 +3732,7 @@ Weight=5000000
 Volume=100
 Material=1
 
-[Proto] # PID_WANTED_SIGN {Плакат "Разыскиваются!"}
+[Proto] # PID_WANTED_SIGN {РџР»Р°РєР°С‚ "Р Р°Р·С‹СЃРєРёРІР°СЋС‚СЃСЏ!"}
 ProtoId=3228
 Type=5
 PicMap=art\items\wantedsign.fofrm
@@ -3736,7 +3741,7 @@ Flags=33558556
 DisableEgg=1
 Material=1
 
-[Proto] # PID_ERROR!!! {Яцо транспарации!} 
+[Proto] # PID_ERROR!!! {РЇС†Рѕ С‚СЂР°РЅСЃРїР°СЂР°С†РёРё!} 
 ProtoId=5000
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -3747,7 +3752,7 @@ Weight=10
 Cost=100
 Material=1
 
-[Proto] # PID_HANDCUFFS {Наручники}
+[Proto] # PID_HANDCUFFS {РќР°СЂСѓС‡РЅРёРєРё}
 ProtoId=10000
 Type=5
 ScriptModule=handcuffs
@@ -3762,7 +3767,7 @@ SoundId=48
 Cost=200
 Material=1
 
-[Proto] # PID_CUFFS_KEY {Ключи}
+[Proto] # PID_CUFFS_KEY {РљР»СЋС‡Рё}
 ProtoId=10001
 Type=5
 ScriptModule=handcuffs
@@ -3775,7 +3780,7 @@ Weight=15
 Volume=1
 Material=1
 
-[Proto] # PID_HANDCUFFS_USED { Надетые наручники}
+[Proto] # PID_HANDCUFFS_USED { РќР°РґРµС‚С‹Рµ РЅР°СЂСѓС‡РЅРёРєРё}
 ProtoId=10002
 Type=5
 ScriptModule=handcuffs
@@ -3788,7 +3793,7 @@ Weight=300
 Volume=1
 SoundId=48
 
-[Proto] # PID_BROKEN_CUFFS {Сломанные наручники}
+[Proto] # PID_BROKEN_CUFFS {РЎР»РѕРјР°РЅРЅС‹Рµ РЅР°СЂСѓС‡РЅРёРєРё}
 ProtoId=10003
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -3799,7 +3804,7 @@ Weight=295
 Volume=1
 Material=1
 
-[Proto] # PID_ROPE_USED {Веревка}
+[Proto] # PID_ROPE_USED {Р’РµСЂРµРІРєР°}
 ProtoId=10004
 Type=5
 ScriptModule=handcuffs
@@ -3810,7 +3815,7 @@ Flags=167772188
 DisableEgg=1
 Volume=1
 
-[Proto] # PID_DEFIB {Дефибриллятор}
+[Proto] # PID_DEFIB {Р”РµС„РёР±СЂРёР»Р»СЏС‚РѕСЂ}
 ProtoId=10005
 Type=5
 ScriptModule=defib
@@ -3825,7 +3830,7 @@ Volume=1
 Cost=1000
 Material=1
 
-[Proto] # PID_ERROR!!! {Электронный замок}
+[Proto] # PID_ERROR!!! {Р­Р»РµРєС‚СЂРѕРЅРЅС‹Р№ Р·Р°РјРѕРє}
 ProtoId=10006
 Type=5
 ScriptModule=lock
@@ -3835,7 +3840,7 @@ PicInv=art\inven\motion.frm
 Flags=419430428
 DisableEgg=1
 
-[Proto] # PID_ERROR!!! {ГМ замок}
+[Proto] # PID_ERROR!!! {Р“Рњ Р·Р°РјРѕРє}
 ProtoId=10007
 Type=5
 ScriptModule=lock
@@ -3848,7 +3853,7 @@ Material=1
 StartValue_9=300
 StartValue_10=300
 
-[Proto] # PID_ERROR!!! {Замок}
+[Proto] # PID_ERROR!!! {Р—Р°РјРѕРє}
 ProtoId=10008
 Type=5
 ScriptModule=lock
@@ -3863,7 +3868,7 @@ Cost=1000
 StartValue_9=80
 StartValue_10=80
 
-[Proto] # PID_ERROR!!! {Замок}
+[Proto] # PID_ERROR!!! {Р—Р°РјРѕРє}
 ProtoId=10009
 Type=5
 ScriptModule=lock
@@ -3879,7 +3884,7 @@ Material=1
 StartValue_9=50
 StartValue_10=50
 
-[Proto] # PID_ERROR!!! {Замок}
+[Proto] # PID_ERROR!!! {Р—Р°РјРѕРє}
 ProtoId=10010
 Type=5
 ScriptModule=lock
@@ -3895,7 +3900,7 @@ Material=1
 StartValue_9=30
 StartValue_10=30
 
-[Proto] # PID_ERROR!!! {Кустарные боеприпасы}
+[Proto] # PID_ERROR!!! {РљСѓСЃС‚Р°СЂРЅС‹Рµ Р±РѕРµРїСЂРёРїР°СЃС‹}
 ProtoId=10025
 Type=5
 ScriptModule=item
@@ -3908,7 +3913,7 @@ Weight=500
 Volume=1
 Cost=500
 
-[Proto] # PID_INJECTOR {Пустой инъектор}
+[Proto] # PID_INJECTOR {РџСѓСЃС‚РѕР№ РёРЅСЉРµРєС‚РѕСЂ}
 ProtoId=10082
 Type=5
 PicMap=art\items\smalbox2.frm
@@ -3925,3 +3930,27 @@ Material=1
 #---------------------------------------------------------------------------------------------
 # The Long Journey - Misc + Craft <15000 - 15999>
 #---------------------------------------------------------------------------------------------
+
+[Proto] # PID_ACCUMULATOR_HITECH {РђРєРєСѓРјСѓР»СЏС‚РѕСЂ} 
+ProtoId=15000
+Type=5
+PicMap=art\items\craft\accumulator.fofrm
+PicInv=art\inven\craft\accumulator.png
+Flags=150994974
+DisableEgg=1
+Stackable=1
+Volume=1
+SoundId=48
+Material=1
+
+[Proto] # PID_RUBBER_GLOVES {Р РµР·РёРЅРѕРІС‹Рµ РїРµСЂС‡Р°С‚РєРё}
+ProtoId=15001
+Type=5
+PicMap=art\items\craft\rubbergloves.fofrm
+PicInv=art\inven\craft\RubberGloves.png
+Flags=150994974
+DisableEgg=1
+Stackable=1
+Volume=1
+SoundId=48
+Material=1

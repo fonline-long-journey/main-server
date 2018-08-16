@@ -1431,6 +1431,10 @@
 #define DEFAULT_AP_SKILL						 ( 2 )
 #define DEFAULT_AP_USE							 ( 3 )
 #define DEFAULT_AP_ACTION						 ( 2 )
+// client side cached sprites to work with ( non-dynamically loaded ones )
+#define CACHED_SPRITES_COUNT                     (500) // just for now
+#define CACHED_MAIN_MENU_SPRITE                  (0)
+#define CACHED_REG_SPRITE                        (1)
 
 #ifndef SKIP_PRAGMAS
 
