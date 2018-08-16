@@ -1,43 +1,18 @@
-// wait_time_h.fos
+// wait_time.fos
 
 #ifndef WAIT_TIME_H
 #define WAIT_TIME_H
 
-#ifdef __SERVER
+#include "mutual_h.fos"
 
-	#ifndef CritterMutual
-		#define CritterMutual Critter
+	#ifndef WAIT_TIME_MODULE
+	import uint GetProtoTime(ProtoItem& prot, uint8 mode, CritterMutual@ crit) from "wait_time";
+	import uint GetSkillTime (int     sk, CritterMutual@ crit) from "wait_time";
+	import uint GetActionTime(int action, CritterMutual@ crit) from "wait_time";
 	#endif
-
-
-	#ifndef ItemMutual
-		#define ItemMutual  Item
+	
+	#ifdef WAIT_TIME_MODULE
+	#include "_macros.fos"
 	#endif
-
-#endif
-
-#ifdef __CLIENT
-
-	#ifndef CritterMutual
-		#define CritterMutual CritterCl
-	#endif
-
-
-	#ifndef ItemMutual
-		#define ItemMutual  ItemCl
-	#endif
-
-#endif
-
-
-#ifndef WAIT_TIME_MODULE
-import uint GetProtoTime(ProtoItem& prot, uint8 mode, CritterMutual@ crit) from "wait_time";
-import uint GetSkillTime (int     sk, CritterMutual@ crit) from "wait_time";
-import uint GetActionTime(int action, CritterMutual@ crit) from "wait_time";
-#endif
-
-#ifdef WAIT_TIME_MODULE
-#include "_macros.fos"
-#endif
 
 #endif

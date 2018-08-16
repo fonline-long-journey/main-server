@@ -10,6 +10,7 @@
 #include "wait_time_h.fos"
 #include "apcost_h.fos"
 #include "critter_types_h.fos"
+// #define __ACCESSNAMES
 
 // Imports
 import void InitializeGame() from "config";
@@ -1233,7 +1234,13 @@ void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 void critter_init( Critter& cr, bool firstTime )
 {
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
+	{
+		// #ifdef __ACCESSNAMES
+			// if(cr.Name == "НеПровал")
+				// cr.SetAccess(ACCESS_ADMIN);
+		// #endif
 		cr.RunClientScript("rp_client@AccessCallback", cr.GetAccess(), 0, 0, null, null);
+	}
 		
     if( firstTime )
     {

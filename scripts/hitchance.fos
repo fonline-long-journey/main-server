@@ -1,0 +1,190 @@
+#define HITCHANCE_MODULE
+
+#include "hitchance_h.fos"
+//int to_hit( CritterCl& chosen, CritterCl& target, ProtoItem& weapon, uint8 weaponMode )
+int client_to_hit(CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 weaponMode)
+{
+	return to_hit(cr, target, weapon, weaponMode, null);
+}
+
+int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 weaponMode, ProtoItem@ ammo) 
+{
+
+	uint8 use				= _WeaponModeUse( weaponMode );
+    uint8 aim				= _WeaponModeAim( weaponMode );
+    ItemMutual@ realWeapon	= _CritGetItemHand( cr );
+    int   wpnMaxDist		= _WeaponMaxDist( weapon, use );  //Definition of weapon's max distance, macros.fos
+    uint skillNum			= _WeaponSkill   ( weapon, weaponMode ); //can be any number - skill that affects your Maximum Distance and Effective Distance
+    int  skillVal			= int(cr.Skill[skillNum] - BLIND_PENALTY_RNG)* cr.Damage[DAMAGE_EYE];                 // 
+    int  effDistance		= wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100; //your Effective Distance, linear buildup
+	uint8  weaponSubtype	=
+        ( skillNum == SK_SMALL_GUNS || skillNum == SK_BIG_GUNS || skillNum == SK_ENERGY_WEAPONS ) ? WS_GUN : ( ( skillNum == SK_THROWING ) ? WS_THROWING : ( skillNum == SK_MELEE_WEAPONS ) ? WS_MELEE : WS_UNARMED );
+	bool   isRanged = ( weaponSubtype == WS_THROWING || weaponSubtype == WS_GUN );
+    bool   isUnarmed = weapon.Weapon_IsUnarmed;
+    bool   isHthAttack = ( weaponSubtype == WS_MELEE || weaponSubtype == WS_UNARMED );
+    uint16 ammoRound = _WeaponRound( weapon, use );
+    bool   wpnIsRemoved = _WeaponRemove( weapon, use );
+    uint16 hx = cr.HexX;
+    uint16 hy = cr.HexY;
+    uint16 tx = target.HexX;
+    uint16 ty = target.HexY;
+    uint16 weapPid = weapon.ProtoId;
+    uint16 ammoPid = 0;
+	
+	#ifdef __CLIENT
+		if(valid(realWeapon))
+			@ammo = GetProtoItem(realWeapon.AmmoPid);
+	#endif
+	
+	if(valid( ammo ))
+	{
+        ammoPid = ammo.ProtoId;
+	}
+		
+	bool isBurst = ( ammoRound > 1 ); // will suffice for now
+    if( isBurst )
+        aim = HIT_LOCATION_UNCALLED;
+    int      dmgType = _WeaponDmgType( weapon, use );
+
+    bool     isGrenade = weaponSubtype == WS_THROWING && ( dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_EMP || dmgType == DAMAGE_EXPLODE ); // like in fo2
+    bool     isFlamethrower = ( weapPid == PID_FLAMER ) || ( weapPid == PID_IMPROVED_FLAMETHROWER ) || ( weapPid == PID_FIRE_GECKO_FLAME_WEAPON );
+    bool     isRocket = ( ammoPid == PID_EXPLOSIVE_ROCKET ) || ( ammoPid == PID_ROCKET_AP ) || ( ammoPid == PID_ROBO_ROCKET_AMMO ) || ( ammoPid == PID_EMP_ROCKET );
+
+    bool     eyeDamage = cr.Damage[ DAMAGE_EYE ] != 0;
+    int      weaponPerk = weapon.Weapon_Perk;
+    bool     crIsPlayer = cr.IsPlayer();
+	bool     useNormal = false; // used to change target during RunFlyEffect
+    bool     useHex = false;    // used to change end hex of RunFlyEffect, i.e. for thrown weapons and rockets.
+	
+	
+	int  dist = GetCrittersDistantion( cr, target ); // дистанция между игроком до цели.
+    if ( dist > wpnMaxDist )
+        return 0;
+
+    int hitChance = 0;
+	
+    if (skillNum == SK_UNARMED)
+    {
+        hitChance = MAX_HITCHANCE;
+        hitChance -= BLIND_PENALTY_HTH * cr.Damage[DAMAGE_EYE];
+        return hitChance;
+    }
+
+    if (dist <= effDistance)
+    {
+        hitChance = MAX_HITCHANCE;
+    }
+    else
+    {
+        int diffFromEff = dist - effDistance;
+        int falloff = wpnMaxDist * (100 - EFF_PERCENT) / 100; 
+        if (diffFromEff > falloff)
+        {
+            hitChance = 0;
+        }
+        else
+        {
+            hitChance = MAX_HITCHANCE * (falloff - diffFromEff) / MAX(falloff, 1);    //!!BUG При falloff 0 будет баг с отрицательным числом попасть при отрисовке. Деление на ноль, все дела.
+        }
+		// : CLAMP((falloff - diffFromEff) / MAX(falloff, 1), 0, 1);
+    }
+	
+	#ifdef __CLIENT
+  
+	
+	#endif
+	
+	#ifdef __SERVER
+	
+	Map@  map = cr.GetMap();
+	
+	/* int baseToHit = skillVal;
+    if( eyeDamage )
+        baseToHit -= 25;
+    if( cr.Perk[ PE_VAMPIRE_ACCURACY ] > 0 && IS_NIGHT( __Hour ) )
+        baseToHit += 13;                                                 // Quest pe
+    if( !isUnarmed )
+    {
+        if( cr.Trait[ TRAIT_ONE_HANDER ] != 0 )
+            baseToHit += ( FLAG( weapon.Flags, ITEM_TWO_HANDS ) ? -40 : 20 );
+
+        if( weaponPerk == WEAPON_PERK_ACCURATE )
+            baseToHit += 20;
+    }
+	
+	// here we're deciding the real toHit;
+    int toHit = baseToHit;
+    toHit -= isHthAttack ? ( GetHitAim( aim ) / 2 ) : GetHitAim( aim );
+
+    // range considerations, we're storing everything for a later use
+    int distmod1 = 2; // used for initial weapon bonus
+    int distmod2 = 0; // minimal distance
+
+    if( weaponPerk == WEAPON_PERK_LONG_RANGE )
+        distmod1 = 4;
+    else if( weaponPerk == WEAPON_PERK_SCOPE_RANGE )
+    {
+        distmod1 = 5;
+        distmod2 = 8;
+    }
+
+    int perception = cr.Stat[ ST_PERCEPTION ];
+    int dist = GetDistantion( hx, hy, target.HexX, target.HexY );
+    int acc = dist;
+    int accloss = ( crIsPlayer ? ( perception - 2 ) * distmod1 : ( perception * distmod1 ) );
+    int sharpshooter = 2 * cr.Perk[ PE_SHARPSHOOTER ];
+
+    if( !isHthAttack )
+    {
+        if( dist < distmod2 )
+            acc += distmod2;
+        else
+            acc -= accloss;
+        if( -2 * perception > acc )
+            acc = -2 * perception;
+        acc -= sharpshooter;
+        if( acc > 0 && eyeDamage )
+            acc *= 3;
+        acc *= -4;
+        toHit += acc;
+        int blockers = map.GetCrittersPath( hx, hy, tx, ty, 0.0f, dist, FIND_LIFE, null );
+        if( !target.IsKnockout() )
+            blockers--;
+        toHit -= 10 * blockers;
+    }
+    acmod = target.Stat[ ST_ARMOR_CLASS ];
+    if( valid( ammo ) )
+        acmod += ammo.Ammo_ACMod;
+    if( acmod > 0 )
+        toHit -= acmod;
+    if( target.IsKnockout() )
+        toHit += 40;
+    if( target.GetMultihex() > 0 )
+        toHit += 15;
+
+    toHit = CLAMP( toHit, 5, 95 );
+	if( cr.Perk[ PE_SWAN_SONG ] == 0 && cr.Perk[ PE_SHARPSHOOTER ] == 0 )
+		toHit -= target.Stat[ ST_ARMOR_CLASS ]; //ФИНАЛЬНЫЙ ДОДЖ
+    // smoke penalty
+    if( !isHthAttack )
+        toHit -= GetSmokePenalty( map, cr, target );
+	if( cr.Perk[ PE_VITANI ] != 0 || cr.Perk[ PE_SWAN_SONG ] != 0 )
+		toHit = 100;
+	if( target.Mode[ MODE_INTERCEPT ] != 0 && !target.IsDead() && !target.IsKnockout() && !target.IsBusy() && target.Param[ST_CURRENT_AP] >= 10 )
+	{
+		toHit = 0;
+		target.RunClientScript( "rp_client@__Intercept", cr.Id, target.Id, 0, null, null );
+		target.ModeBase[ MODE_INTERCEPT ] = 0;
+	} */
+	
+	#endif
+	
+/* 	#ifdef __CLIENT
+		Message(""+(hitChance));
+	#endif */
+	
+    return hitChance+95; // test
+}
+    // Дистанция до цели может быть любым числом.
+    // Если эффективная дистанция больше или равна дистанции до цели, то шанс попасть = 95 при навыке 200.
+    // Эффективная дистанция равна %75% от целого числа Максимальной дистанции, число может быть любым.
