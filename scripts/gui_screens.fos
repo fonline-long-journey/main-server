@@ -1,6 +1,4 @@
 ﻿// GUI scheme name: The Long Journey
-// Custom gui created by VVish.
-// Current GUI version - 0.6b
 
 #include "_macros.fos"
 #include "_client_defines.fos"
@@ -256,12 +254,12 @@ namespace Register_TLJ
     import void player_data_generate( int[]& params ) from "client_main";
     import bool player_data_check( int[]& params ) from "client_main";
     
-        int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
-        int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
-        int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_NORMAL_RESIST, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
-        int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
-        int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
-        int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
+            int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
+            int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
+            int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_NORMAL_RESIST, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
+            int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
+            int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
+            int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
     
     int[] Params( PARAMS_COUNT );
     
@@ -296,13 +294,15 @@ namespace Register_TLJ
         void OnConstruct() override
         {
             SetModal( true );
-            SetSize( 800, 600 );
+            SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
+            SetBackgroundImage( "art/intrface/background.png" );
         }
 
         void OnInit() override
         {
             GenParams();
+            SetSize( __ScreenHeight, __ScreenWidth );
         }
     }
 
@@ -310,9 +310,13 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 158, 1 );
-            SetSize( 640, 597 );
+            SetSize( 640, 539 );
             SetBackgroundImage( "art/intrface/register_tlj.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetPosition( __ScreenHeight/2 - 640/2, __ScreenWidth/2 - 538/2);
         }
     }
 
@@ -320,7 +324,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -79, 55 );
+            SetPosition( -79, 57 );
         }
     }
 
@@ -328,7 +332,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 95, 13 );
+            SetPosition( 97, 12 );
             SetCellPrototype( "BaseStat" );
             SetGridSize( ShowBaseStats.length() );
         }
@@ -353,11 +357,11 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -10, 4 );
-            SetSize( 40, 20 );
+            SetPosition( -8, 3 );
+            SetSize( 35, 20 );
             SetText( "TXT" );
             SetTextFont( FONT_BIG );
-            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextFlags( FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
 
@@ -371,7 +375,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 44, 3 );
+            SetPosition( 40, 2 );
             SetSize( 30, 24 );
             SetTextFont( FONT_BIG_NUM );
             SetTextColor( COLOR_IFACE );
@@ -442,7 +446,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 97, 219 );
+            SetPosition( 97, 218 );
         }
     }
 
@@ -450,7 +454,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -4, 4 );
+            SetPosition( -4, 3 );
             SetSize( 110, 30 );
             SetText( MSG_GAME( STR_REG_SPECIAL_SUM ) );
             SetTextFont( FONT_FAT );
@@ -576,7 +580,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 98, 0 );
+            SetPosition( 102, 0 );
             SetSize( 25, 13 );
             SetTextFlags( FT_CENTERY );
         }
@@ -599,7 +603,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 423, 140 );
+            SetPosition( 423, 138 );
         }
     }
 
@@ -633,7 +637,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 0, 1 );
+            SetPosition( 0, 2 );
             SetSize( 17, 11 );
             SetPressedImage( "art/intrface/TGSKLON.png" );
         }
@@ -665,7 +669,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 22, 0 );
+            SetPosition( 19, 0 );
             SetSize( 115, 14 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
@@ -739,7 +743,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 16, 0 );
+            SetPosition( 19, 0 );
             SetSize( 105, 14 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
@@ -835,7 +839,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 244, -1 );
+            SetPosition( 240, -1 );
             SetSize( 40, 13 );
             SetTextFlags( FT_CENTERY );
         }
@@ -863,7 +867,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 433, 90 );
+            SetPosition( 434, 88 );
         }
     }
 
@@ -884,7 +888,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 171, 1 );
+            SetPosition( 170, 1 );
             SetSize( 30, 25 );
             SetTextFont( FONT_BIG_NUM );
             SetTextColor( COLOR_IFACE );
@@ -901,7 +905,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 416, 264 );
+            SetPosition( 417, 263 );
         }
 
         void OnDraw() override
@@ -936,7 +940,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -329, 171 );
+            SetPosition( -141, -258 );
         }
     }
 
@@ -944,8 +948,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 10, 10 );
-            SetSize( 270, 31 );
+            SetPosition( 8, 10 );
+            SetSize( 270, 30 );
             SetTextFont( FONT_THIN );
             SetTextColor( COLOR_BLACK );
         }
@@ -955,7 +959,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 10, 42 );
+            SetPosition( 9, 42 );
             SetSize( 280, 138 );
             SetTextColor( COLOR_BLACK );
         }
@@ -981,7 +985,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -22, 6 );
+            SetPosition( -23, 5 );
             SetSize( 15, 16 );
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
@@ -1010,7 +1014,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -22, 7 );
+            SetPosition( -23, 6 );
             SetSize( 15, 16 );
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
@@ -1044,7 +1048,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -20, 7 );
+            SetPosition( -22, 6 );
             SetSize( 15, 16 );
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
@@ -1158,14 +1162,9 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -126, 44 );
+            SetPosition( -115, 7 );
             SetSize( 24, 24 );
             SetPressedImage( "art/intrface/blank_sort.png" );
-        }
-
-        void OnLMouseClick() override
-        {
-            Screen.FindPanel( "CharacterGenderPopUp" ).SetActive( true );
         }
     }
 
@@ -1173,7 +1172,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 33, 17 );
+            SetPosition( 32, 13 );
             SetNotHittable( true );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -1190,8 +1189,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 75, 5 );
-            SetSize( 34, 32 );
+            SetPosition( 75, 3 );
+            SetSize( 31, 29 );
             SetPressedImage( "art/intrface/male_button_dn.png" );
         }
 
@@ -1214,7 +1213,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 114, 5 );
+            SetPosition( 114, 3 );
             SetSize( 33, 31 );
             SetPressedImage( "art/intrface/female_button_dn.png" );
         }
@@ -1407,7 +1406,7 @@ namespace Register_TLJ
         void OnConstruct() override
         {
             SetActive( false );
-            SetPosition( -1, 19 );
+            SetPosition( 136, -45 );
             SetSize( 24, 24 );
             SetBackgroundImage( "art/intrface/blank_sort.png" );
         }
@@ -1437,7 +1436,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -12, -12 );
+            SetPosition( -12, -13 );
             SetSize( 26, 26 );
             SetPressedImage( "art/intrface/MENUDOWN.png" );
         }
@@ -1452,7 +1451,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 79, 257 );
+            SetActive( false );
+            SetPosition( 79, 255 );
             SetSize( 135, 175 );
             SetBackgroundImage( "art/intrface/character_select_main.png" );
         }
@@ -1509,8 +1509,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 135, 335 );
-            SetSize( 202, 115 );
+            SetPosition( 132, 337 );
+            SetSize( 205, 115 );
             SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
         }
     }
