@@ -16,6 +16,20 @@ void InitializeScreens()
 
 namespace Login_TLJ
 {
+    uint currentLogStrNum = STR_UPDATE_LOG_LATEST;
+    void NextLog()
+        {
+        	if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
+        		currentLogStrNum++;
+        }
+        		
+    void PreviousLog()
+        {
+            if   (currentLogStrNum-1 >= STR_UPDATE_LOG_BEGIN)
+        		currentLogStrNum--;
+        }
+    
+
     class Login : GUIScreen
     {
         void OnConstruct() override
@@ -210,10 +224,45 @@ namespace Login_TLJ
         void OnConstruct() override
         {
             SetPosition( 25, 25 );
-            SetSize( 330, 340 );
+            SetSize( 335, 345 );
             SetAnchor( ANCHOR_TOP );
-            SetText( ( MSG_GAME( STR_UPDATE_LOG_INFO ) ) );
-            SetTextFlags( FT_BORDERED );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetText( ( MSG_GAME( STR_UPDATE_LOG_LATEST ) ) );
+        }
+    }
+
+    class UpdateLogButtonUp : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -7, 405 );
+            SetSize( 35, 34 );
+            SetPressedImage( "art/intrface/bigkey_up.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            NextLog();
+            Parent.FindText("UpdateLogText").SetText ( ( MSG_GAME( currentLogStrNum ) ) );
+        }
+    }
+
+    class UpdateLogButtonDown : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 30, 405 );
+            SetSize( 35, 34 );
+            SetPressedImage( "art/intrface/bigkey_down.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            PreviousLog();
+            Parent.FindText("UpdateLogText").SetText ( ( MSG_GAME( currentLogStrNum ) ) );
         }
     }
 
@@ -245,6 +294,10 @@ namespace Login_TLJ
         _UpdateLogPanel.Init( _Login );
         UpdateLogText _UpdateLogText();
         _UpdateLogText.Init( _UpdateLogPanel );
+        UpdateLogButtonUp _UpdateLogButtonUp();
+        _UpdateLogButtonUp.Init( _UpdateLogText );
+        UpdateLogButtonDown _UpdateLogButtonDown();
+        _UpdateLogButtonDown.Init( _UpdateLogText );
         GUI_RegisterScreen( screenIndex, _Login );
     }
 }

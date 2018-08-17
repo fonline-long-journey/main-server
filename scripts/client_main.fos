@@ -202,8 +202,8 @@ void        render_iface( uint layer )
         {
             // About
             string aboutText =
-                "FOnline " + ( __Singleplayer ? "Singleplayer" : "" ) + "\n" +
-                "by Gamers for Gamers\n" +
+                "FOnline:" + ( __Singleplayer ? "Singleplayer" : "" ) + " The Long Journey" + "\n" +
+                "by Team of Nolifers for Gamers\n" +
                 "version " + CustomCall( "Version" ) + "\n" +
                 "\n" +
                 "Traffic, bytes:\n" +
