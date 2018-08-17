@@ -1,13 +1,9 @@
-###############################################################
-# 	13.08.2018, by VVish									  #
-#	3.1.8 	Added new file structure for The Long Journey.    #
-###############################################################
-#	16.08.2018, by VVish  									  # 											
-#	3.1.9 	Added two new proto files.   					  #
-###############################################################
-#	16.08.2018, by Gasai 									  # 											
-#	3.2.0 	Restored PID indexes    					      #
-###############################################################
+#############################################################################
+#   18.08.2018, current version 3.2.0                                       #
+#   To add new miscs, go to the end of the file.                            #
+#   Чтобы добавить новые файлы сценери (дженериков) идите в конец файла.    #
+#   Видеоинструкция: https://youtu.be/m4yWbPWXNgI                           #
+#############################################################################
 
 [Proto] # PID_BOTTLE_CAPS {Деньги}
 ProtoId=41
@@ -24,7 +20,7 @@ Material=1
 [Proto] # PID_FIRST_AID_KIT {Аптечка парамедика}
 ProtoId=47
 Type=5
-PicMap=art\items\bpack2.frm
+PicMap=art\items\new\drugs\fmedkit.png
 PicInv=art\inven\1staid.frm
 Flags=150994974
 DisableEgg=1
@@ -66,7 +62,7 @@ StartValue_2=220
 [Proto] # PID_STEALTH_BOY {Невидимка}
 ProtoId=54
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\new\misc\stealthboy.png
 PicInv=art\inven\stlthboy.frm
 Flags=402653214
 DisableEgg=1
@@ -96,7 +92,7 @@ ProtoId=56
 Type=5
 ScriptModule=item
 ScriptFunc=_BirkaInit
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\talisman.png
 PicInv=art\inven\tag.frm
 Flags=402653214
 DisableEgg=1
@@ -123,7 +119,7 @@ Material=1
 [Proto] # PID_HOLODISK {Пленка}
 ProtoId=58
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=402653214
 DisableEgg=1
@@ -205,7 +201,7 @@ Material=1
 [Proto] # PID_LOCKPICKS {Отмычки}
 ProtoId=84
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\lockpicks.png
 PicInv=art\inven\lockpic2.frm
 Flags=150994974
 DisableEgg=1
@@ -274,7 +270,7 @@ Material=7
 [Proto] # PID_GOLD_LOCKET {Золотой кулон}
 ProtoId=99
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\locket.png
 PicInv=art\inven\locket.frm
 Flags=134217758
 DisableEgg=1
@@ -288,7 +284,7 @@ Material=1
 [Proto] # PID_RADIO {Рация}
 ProtoId=100
 Type=5
-PicMap=art\items\bigbox2.frm
+PicMap=art\items\new\misc\radio.png
 PicInv=art\inven\radio3.frm
 Flags=1476395038
 DisableEgg=1
@@ -301,7 +297,7 @@ Material=1
 [Proto] # PID_TAPE_RECORDER {Магнитофон}
 ProtoId=104
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\new\misc\tapedriver.png
 PicInv=art\inven\tape_ply.frm
 Flags=402653214
 DisableEgg=1
@@ -383,7 +379,7 @@ Material=1
 [Proto] # PID_WATER_FLASK {Фляга}
 ProtoId=126
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\flask.png
 PicInv=art\inven\flask.frm
 Flags=150994974
 DisableEgg=1
@@ -507,7 +503,7 @@ Material=3
 [Proto] # PID_BROTHERHOOD_TAPE {Пленка Братства}
 ProtoId=164
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -521,7 +517,7 @@ Material=1
 [Proto] # PID_DISK_FEV {Диск ВРЭ}
 ProtoId=190
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -535,7 +531,7 @@ Material=1
 [Proto] # PID_DISK_SECURITY {Диск охраны}
 ProtoId=191
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -549,7 +545,7 @@ Material=1
 [Proto] # PID_DISK_ALPHA_EXPERIMENT {Диск эксперимента "Альфа"}
 ProtoId=192
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -563,7 +559,7 @@ Material=1
 [Proto] # PID_DISK_DELTA_EXPERIMENT {Диск эксперимента "Дельта"}
 ProtoId=193
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -577,7 +573,7 @@ Material=1
 [Proto] # PID_DISK_VREES_EXPERIMENT {Диск эксперимента Ври}
 ProtoId=194
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -605,7 +601,7 @@ Material=1
 [Proto] # PID_DISK_MUTANT_TRANSMISSIONS {Радиосообщения мутантов}
 ProtoId=196
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -673,7 +669,7 @@ Material=1
 [Proto] # PID_ACTIVE_STEALTH_BOY {Невидимка}
 ProtoId=210
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\new\misc\stealthboy.png
 PicInv=art\inven\stlthon.frm
 Flags=402653214
 DisableEgg=1
@@ -701,7 +697,7 @@ Material=7
 [Proto] # PID_DISK_BROTHERHOOD_HISTORY {История Братства}
 ProtoId=215
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -715,7 +711,7 @@ Material=1
 [Proto] # PID_DISK_MAXSON_HISTORY {История Максона}
 ProtoId=216
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -729,7 +725,7 @@ Material=1
 [Proto] # PID_DISK_MAXSON_JOURNAL {Дневник Максона}
 ProtoId=217
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -795,7 +791,7 @@ Material=1
 [Proto] # PID_TOGGLE_SWITCH {Полевой переключатель}
 ProtoId=222
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\toggle.png
 PicInv=art\inven\toggle.frm
 Flags=402653214
 DisableEgg=1
@@ -877,7 +873,7 @@ Material=1
 [Proto] # PID_DISK_VAULT_RECORDS {Архивы Убежища}
 ProtoId=230
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=402653214
 DisableEgg=1
@@ -891,7 +887,7 @@ Material=1
 [Proto] # PID_DISK_MILITARY_BASE_SEC_CODE {Код доступа к военной базе}
 ProtoId=231
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -904,7 +900,7 @@ Material=1
 [Proto] # PID_DISK_REGULATOR_TRANSMISSIONS {Радиосообщения регулятора}
 ProtoId=238
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -931,7 +927,7 @@ Material=5
 [Proto] # PID_ANNA_GOLD_LOCKET {Золотой кулон Анны}
 ProtoId=252
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\locket.png
 PicInv=art\inven\annalock.frm
 Flags=134217758
 DisableEgg=1
@@ -944,7 +940,7 @@ Material=1
 [Proto] # PID_CAR_FUEL_CELL_CONTROLLER {Топливный контроллер}
 ProtoId=253
 Type=5
-PicMap=art\items\bigbox2.frm
+PicMap=art\items\new\misc\carbatry.png
 PicInv=art\inven\carbatry.frm
 Flags=150994974
 DisableEgg=1
@@ -957,7 +953,7 @@ Material=1
 [Proto] # PID_CAR_FUEL_INJECTION {Топливный регулятор}
 ProtoId=254
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\new\misc\carturbo.png
 PicInv=art\inven\carturbo.frm
 Flags=150994974
 DisableEgg=1
@@ -970,7 +966,7 @@ Material=1
 [Proto] # PID_DAY_PASS {Дневной пропуск}
 ProtoId=255
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=PicMap=art\items\new\misc\daypass.png
 PicInv=art\inven\daypass.frm
 Flags=134217758
 DisableEgg=1
@@ -983,7 +979,7 @@ Material=7
 [Proto] # PID_FAKE_CITIZENSHIP {Фальшивое удостоверение Гражданина}
 ProtoId=256
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=PicMap=art\items\new\misc\fakecitz.png
 PicInv=art\inven\fakecitz.frm
 Flags=134217758
 DisableEgg=1
@@ -996,7 +992,7 @@ Material=1
 [Proto] # PID_CORNELIUS_GOLD_WATCH {Золотые часы Корнелиуса}
 ProtoId=257
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=PicMap=art\items\new\misc\goldwatc.png
 PicInv=art\inven\goldwatc.frm
 Flags=134217758
 DisableEgg=1
@@ -1009,7 +1005,7 @@ Material=1
 [Proto] # PID_HY_MAG_PART {Гидроэлектрический прибор}
 ProtoId=258
 Type=5
-PicMap=art\items\box2.frm
+PicMap=PicMap=art\items\new\misc\hymgpart.png
 PicInv=art\inven\hymgpart.frm
 Flags=150994974
 DisableEgg=1
@@ -1022,7 +1018,7 @@ Material=1
 [Proto] # PID_RUBBER_BOOTS {Резиновые сапоги}
 ProtoId=262
 Type=5
-PicMap=art\items\bigbox2.frm
+PicMap=art\items\new\misc\RUBRBOOT.png
 PicInv=art\inven\rubrboot.frm
 Flags=134217758
 DisableEgg=1
@@ -1035,7 +1031,7 @@ Material=2
 [Proto] # PID_SLAG_MESSAGE {Послание ушельцев}
 ProtoId=263
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\slagmess.png
 PicInv=art\inven\slagmess.frm
 Flags=134217758
 DisableEgg=1
@@ -1061,7 +1057,7 @@ Material=1
 [Proto] # PID_VIC_RADIO {Рация Вика}
 ProtoId=266
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\new\misc\radio.png
 PicInv=art\inven\vicradio.frm
 Flags=134217758
 DisableEgg=1
@@ -1074,7 +1070,7 @@ Material=1
 [Proto] # PID_VIC_WATER_FLASK {Фляга Вика}
 ProtoId=267
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\flask.png
 PicInv=art\inven\vicwatrf.frm
 Flags=134217758
 DisableEgg=1
@@ -1087,7 +1083,7 @@ Material=1
 [Proto] # PID_ROBOT_PARTS {Детали робота}
 ProtoId=269
 Type=5
-PicMap=art\items\bigbox2.frm
+PicMap=art\items\new\craft\robotprt.png
 PicInv=art\inven\robotprt.frm
 Flags=134217758
 DisableEgg=1
@@ -1138,7 +1134,7 @@ Material=1
 [Proto] # PID_FLINT {Кремень}
 ProtoId=278
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\craft\flint.png
 PicInv=art\inven\flint.frm
 Flags=134217758
 DisableEgg=1
@@ -1152,7 +1148,7 @@ Material=5
 [Proto] # PID_NEURAL_INTERFACE {Нейрошлем}
 ProtoId=279
 Type=5
-PicMap=art\items\bigbox2.frm
+PicMap=art\items\new\misc\psynull.png
 PicInv=art\inven\psynull.frm
 Flags=134217758
 DisableEgg=1
@@ -1217,7 +1213,7 @@ Material=1
 [Proto] # PID_HOLODISK_FAKE_V13 {Диск Убежища 13}
 ProtoId=294
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -1256,7 +1252,7 @@ Material=1
 [Proto] # PID_GECKO_DATA_DISK {Диск из Гекко}
 ProtoId=302
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -1270,7 +1266,7 @@ Material=1
 [Proto] # PID_REACTOR_DATA_DISK {Диск реактора}
 ProtoId=303
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -1584,7 +1580,7 @@ Material=7
 [Proto] # PID_LYNETTE_HOLO {Голодиск Линетт}
 ProtoId=337
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -1598,7 +1594,7 @@ Material=1
 [Proto] # PID_WESTIN_HOLO {Диск Вестина}
 ProtoId=338
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -1612,7 +1608,7 @@ Material=1
 [Proto] # PID_SPY_HOLO {Диск шпиона НКР}
 ProtoId=339
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2047,7 +2043,7 @@ Material=1
 [Proto] # PID_BISHOPS_HOLODISK {Диск Бишопа}
 ProtoId=447
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2148,7 +2144,7 @@ Material=3
 [Proto] # PID_ENCLAVE_HOLODISK_5 {Диск ВБ №5}
 ProtoId=458
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2162,7 +2158,7 @@ Material=1
 [Proto] # PID_ENCLAVE_HOLODISK_1 {Диск ВБ №1}
 ProtoId=459
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2176,7 +2172,7 @@ Material=1
 [Proto] # PID_ENCLAVE_HOLODISK_2 {Диск ВБ №2}
 ProtoId=460
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2190,7 +2186,7 @@ Material=1
 [Proto] # PID_ENCLAVE_HOLODISK_3 {Диск ВБ №3}
 ProtoId=461
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2204,7 +2200,7 @@ Material=1
 [Proto] # PID_ENCLAVE_HOLODISK_4 {Диск ВБ №4}
 ProtoId=462
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2218,7 +2214,7 @@ Material=1
 [Proto] # PID_EVACUATION_HOLODISK {Диск эвакуации}
 ProtoId=463
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2232,7 +2228,7 @@ Material=1
 [Proto] # PID_EXPERIMENT_HOLODISK {Диск эксперимента}
 ProtoId=464
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2246,7 +2242,7 @@ Material=1
 [Proto] # PID_MEDICAL_HOLODISK {Медицинский диск}
 ProtoId=465
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2340,7 +2336,7 @@ Material=1
 [Proto] # PID_BROADCAST_HOLODISK {Диск с сообщением}
 ProtoId=477
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2354,7 +2350,7 @@ Material=1
 [Proto] # PID_SIERRA_MISSION_HOLODISK {Диск с заданием Сьерра}
 ProtoId=478
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2446,7 +2442,7 @@ Material=1
 [Proto] # PID_NCR_HISTORY_HOLODISK {Диск истории НКР}
 ProtoId=490
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2484,7 +2480,7 @@ Material=1
 [Proto] # PID_ELRON_TEACH_HOLO {Обучающий диск}
 ProtoId=493
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=419430430
 DisableEgg=1
@@ -2665,7 +2661,7 @@ StartValue_3=168652658
 [Proto] # PID_PART_OF_ROPE {Кусок веревки}
 ProtoId=534
 Type=5
-PicMap=art\items\pump.frm
+PicMap=art\items\new\misc\ROPE.FRM
 PicInv=art\inven\rope_part.frm
 Flags=150994974
 DisableEgg=1
@@ -2743,7 +2739,7 @@ Material=7
 [Proto] # PID_CHOSEN_HOLO {Голодиск Избранного}
 ProtoId=549
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=134283294
 DisableEgg=1
@@ -2756,7 +2752,7 @@ StartValue_1=99999
 [Proto] # PID_CHOSEN_HOLO_DECODED {Голодиск Избранного}
 ProtoId=550
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=134283294
 DisableEgg=1
@@ -2769,7 +2765,7 @@ StartValue_1=99999
 [Proto] # PID_LETTER_TO_LIN {Послание Линнет}
 ProtoId=551
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=134217758
 DisableEgg=1
@@ -2783,7 +2779,7 @@ StartValue_1=99999
 [Proto] # PID_LETTER_TO_TODD {Послание Тодду Стьюарду}
 ProtoId=552
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=134217758
 DisableEgg=1
@@ -2858,7 +2854,7 @@ Material=7
 [Proto] # PID_DEATH_STAR_PLANS {Голодиск со схемами}
 ProtoId=561
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=134217758
 DisableEgg=1
@@ -2872,7 +2868,7 @@ Material=1
 [Proto] # PID_FALLOUT_3_HOLO {Голодиск с игрой}
 ProtoId=562
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\tape_gr.frm
 PicInv=art\inven\tape3.frm
 Flags=134217758
 DisableEgg=1
@@ -3809,7 +3805,7 @@ ProtoId=10004
 Type=5
 ScriptModule=handcuffs
 ScriptFunc=_InitUsedHandcuffs
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\new\misc\ROPE.FRM
 PicInv=art\inven\rope.frm
 Flags=167772188
 DisableEgg=1
