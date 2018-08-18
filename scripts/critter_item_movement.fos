@@ -1,7 +1,6 @@
 // Author: cvet
 #include "_macros.fos"
 #include "wait_time_h.fos"
-#include "apcost_h.fos"
 
 #ifdef __CLIENT
 # define Critter    CritterCl
@@ -73,9 +72,8 @@ void critter_move_item( Critter& cr, Item& item, uint8 fromSlot )
 {
     uint8 toSlot = item.CritSlot;
     cr.Wait(GetActionTime(ACTION_MOVE_ITEM, cr));
-	cr.StatBase[ST_CURRENT_AP] -= GetActionApCost(ACTION_MOVE_ITEM, cr);
-	// string message = GetActionApCost(ACTION_MOVE_ITEM, cr);
-	// cr.Say(SAY_NETMSG, message);
+	
+	
     // Armor changing
     if( item.GetType() == ITEM_TYPE_ARMOR && ( fromSlot == SLOT_ARMOR || toSlot == SLOT_ARMOR ) )
     {

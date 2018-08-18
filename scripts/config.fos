@@ -44,7 +44,7 @@ void InitializeGame()                    // Export
     __RtApCostDropItem          = 0;
     __RtApCostReloadWeapon      = 0;
     __RtApCostPickCritter       = 0;
-    __RtApCostUseItem           = 0;
+    __RtApCostUseItem           = 1;
     __RtApCostUseSkill          = 0;
     __RtAlwaysRun               = false;
     __TbApCostCritterMove       = 0;

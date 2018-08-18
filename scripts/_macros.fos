@@ -81,6 +81,7 @@
 #define _WeaponApCost                # ( proto, use )( (use == 0 ? proto.Weapon_ApCost_0 == 0 ? DEFAULT_AP_USE  : proto.Weapon_ApCost_0  \
                                                      : use == 1 ? proto.Weapon_ApCost_1 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_1 \
                                                      : use == 2 ? proto.Weapon_ApCost_2 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_2 \
+													 : use == 3 ? proto.Weapon_ReloadAp == 0 ? DEFAULT_AP_RELOAD : proto.Weapon_ReloadAp \
                                                      : DEFAULT_AP_USE) )
 #define _WeaponSoundId               # ( proto, use )( ( use ) == 0 ? proto.Weapon_SoundId_0 : ( ( use ) == 1 ? proto.Weapon_SoundId_1 : ( ( use ) == 2 ? proto.Weapon_SoundId_2 : 0 ) ) )
 #define _WeaponRemove                # ( proto, use )( ( use ) == 0 ? proto.Weapon_Remove_0 : ( ( use ) == 1 ? proto.Weapon_Remove_1 : ( ( use ) == 2 ? proto.Weapon_Remove_2 : false ) ) )

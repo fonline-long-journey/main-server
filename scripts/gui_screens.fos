@@ -69,7 +69,7 @@ namespace Login_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 249, 128 );
+            SetPosition( 247, 131 );
             SetSize( 82, 46 );
             SetPressedImage( "art/intrface/done.png" );
         }
@@ -208,6 +208,7 @@ namespace Login_TLJ
     {
         void OnConstruct() override
         {
+            SetActive( false );
             SetSize( 377, 477 );
             SetDock( DOCK_RIGHT );
             SetBackgroundImage( "art/intrface/log_tlj.png" );

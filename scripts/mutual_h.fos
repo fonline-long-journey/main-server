@@ -13,6 +13,15 @@
 		#ifndef ItemMutual
 			#define ItemMutual  Item
 		#endif
+	
+		#ifndef CritterCl
+			#define CritterCl Critter
+		#endif
+
+
+		#ifndef ItemCl
+			#define ItemCl  Item
+		#endif
 
 	#endif
 
@@ -26,7 +35,18 @@
 		#ifndef ItemMutual
 			#define ItemMutual  ItemCl
 		#endif
+		
+		#ifndef Critter
+			#define Critter CritterCl
+		#endif
+
+
+		#ifndef Item
+			#define Item ItemCl
+		#endif
 
 	#endif
+	
+
 
 #endif
