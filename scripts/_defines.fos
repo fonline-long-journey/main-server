@@ -5,7 +5,6 @@
 // #define PLAYERS_3D             // Enable 3d players
 // #define PLAYERS_3D_NO_HEAD     // No head slot
 // #define PLAYERS_3D_VAULT_SUITE // Vault suite by default, not naked
-//Ты Петушок
 
 
 // logger
@@ -1431,6 +1430,7 @@
 #define DEFAULT_AP_SKILL						 ( 2 )
 #define DEFAULT_AP_USE							 ( 3 )
 #define DEFAULT_AP_ACTION						 ( 2 )
+#define DEFAULT_AP_RELOAD						 ( 2 )
 // client side cached sprites to work with ( non-dynamically loaded ones )
 #define CACHED_SPRITES_COUNT                     (500) // just for now
 #define CACHED_MAIN_MENU_SPRITE                  (0)
@@ -1548,10 +1548,10 @@
 # pragma bindfield "const int    ProtoItem::Weapon_UnarmedCriticalBonus -> 264"
 # pragma bindfield "const uint   ProtoItem::Weapon_CriticalFailture     -> 268"
 # pragma bindfield "const bool   ProtoItem::Weapon_UnarmedArmorPiercing -> 272"
-# pragma bindfield "const bool   ProtoItem::Weapon_Sniper -> 273"
+# pragma bindfield "const bool   ProtoItem::Weapon_Sniper 	  -> 273"
 # pragma bindfield "const int    ProtoItem::Weapon_HearRadius -> 277"
 # pragma bindfield "const int	 ProtoItem::Weapon_MinRadius -> 281"
-# pragma bindfield "const uint   ProtoItem::Weapon_Type -> 285"
+# pragma bindfield "const uint   ProtoItem::Weapon_Type 	 -> 285"
 // Ammo
 # pragma bindfield "const int    ProtoItem::Ammo_ACMod   -> 300"
 # pragma bindfield "const int    ProtoItem::Ammo_DrMod   -> 304"

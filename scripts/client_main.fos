@@ -8,6 +8,7 @@
 #include "wait_time_h.fos"
 #include "client_drawing_h.fos"
 #include "hitchance_h.fos"
+#include "mutual_h.fos"
 
 import void InitializeGame() from "config";
 import void InitTestScreen() from "client_screen_test";
@@ -16,6 +17,7 @@ import bool PerkCheck( CritterCl& cr, uint perk ) from "perks";
 import void CritterGenerate( int[]& data ) from "parameters";
 import bool CritterGenerateCheck( const int[]& data ) from "parameters";
 import uint get_attack_distantion( CritterCl& cr, ItemCl& item, uint8 mode ) from "parameters";
+import uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode ) from "parameters";
 import uint CheckPlayerName( const string& name ) from "parameters";
 import void InitNameColorizing() from "name_colorizing";
 import bool TryColorizeCritter( CritterCl& cr ) from "name_colorizing";
@@ -1285,7 +1287,7 @@ string item_description( ItemCl& item, int lookType )
 
         if( lookType != ITEM_LOOK_MAP )
         {
-			//  Strength Requirement, PibBoss ti rak
+			//  Strength Requirement, PigBoss ti rak
 			if( item.GetType() == ITEM_TYPE_WEAPON || item.GetType() == ITEM_TYPE_ARMOR )
 			{
 				result += "\n";
@@ -1305,6 +1307,17 @@ string item_description( ItemCl& item, int lookType )
 				string str;
 				str = GetMsgStr( TEXTMSG_GAME, STR_WAIT_TIME );
 				str = ReplaceText( str, "VALUE", GetProtoTime (item.Proto, item.Mode, chosen));
+				result += str;
+			}
+			
+			//  Custom AP cost
+			if( FLAG(item.Flags, ITEM_CAN_USE) || FLAG(item.Flags, ITEM_CAN_USE_ON_SMTH) || item.GetType() == ITEM_TYPE_WEAPON )
+			{
+				result += "\n";
+				string str;
+				str = GetMsgStr( TEXTMSG_GAME, STR_ITEM_AP_COST );
+				str = ReplaceText( str, "VALUE", get_use_ap_cost ( chosen, item, item.Mode));
+				Message("" + str);
 				result += str;
 			}
 			
@@ -1353,7 +1366,7 @@ string item_description( ItemCl& item, int lookType )
                     result += "\n" + GetMsgStr( TEXTMSG_GAME, STR_DETERIORATION_SERVICE_EXT );
 
                 // Broken count
-                CritterCl@ chosen = GetChosen();
+                // CritterCl@ chosen = GetChosen();
                 if( valid( chosen ) ) //&& chosen.Perk[ PE_MR_FIXIT ] != 0 
                     result += "\n" + ReplaceText( GetMsgStr( TEXTMSG_GAME, STR_DETERIORATION_BROKEN_COUNT ), "VALUE", brokenCount );
             }
