@@ -352,7 +352,7 @@ void TryThrow()
     if( !IsThrowingActive() )
         return;
     CritterCl@ chosen = GetChosen();
-    if( !valid( chosen ) )
+    if( !valid( chosen ) || chosen.IsBusy() )
         return;
 
     uint16 hx = 0, hy = 0;
@@ -364,6 +364,7 @@ void TryThrow()
         return;
 
     // throw
+	chosen.Wait(DEFAULT_WAIT_TIME);
     RunServerScriptUnsafe( "throwing@unsafe_Throw", hx, hy, 0, null, null );
 }
 #endif
