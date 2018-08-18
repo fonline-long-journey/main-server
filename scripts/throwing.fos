@@ -330,12 +330,18 @@ void RenderThrowing() // export
     uint tohit = ::ThrowingToHit( chosen, hx, hy, item.Proto );
     int  ap = ::ActionPointsCost( item );
     bool hasAp = ap <= chosen.Stat[ ST_CURRENT_AP ];
+	
 
-    // todo: adjust offsets
-    uint sprite = LoadSprite( item.Proto.PicInv );
-	uint hex = LoadSprite( "fallout_hex2.png", PT_ART_INTRFACE );
-    ::DrawSprite( sprite, -1, x - 50, y - 15, 30, 30, false, COLOR_WHITE, false );
-	::DrawSprite( hex, -1, x - 16, y - 10, 32, 16, true, COLOR_WHITE, true);
+	int hexSprite = LoadSprite( "fallout_hex2.png", PT_ART_INTRFACE);
+	int hexWidth = int( GetSpriteWidth(hexSprite, -1) / __SpritesZoom );
+	int hexHeight = int( GetSpriteHeight(hexSprite, -1) / __SpritesZoom );
+		
+	DrawSprite( hexSprite, -1, x - ( hexWidth / 2), y - ( hexHeight / 2 ), hexWidth, hexHeight, false, 0, false );
+
+	int sprite = LoadSprite( item.Proto.PicInv );
+
+	DrawSprite( sprite, -1, x - 50, y - 15, 60, 30, true, 0, false );
+	
     DrawText( tohit + "%", x + 20, y - 10, 40, 20, COLOR_LGRAY, FONT_FALLOUT, FT_BORDERED );
     DrawText( ap + " AP", x + 20, y, 40, 20, hasAp ? COLOR_LGRAY : COLOR_RED, FONT_FALLOUT, FT_BORDERED );
 }
