@@ -192,7 +192,6 @@ void unsafe_Throw( Critter& player, int px, int py, int p2, string@ param3, arra
     {
         uint dist = GetDistantion( player.HexX, player.HexY, tx, ty ) + 1;
         map.MoveHexByDir( tx, ty, Random( 0, 5 ), Random( 1, dist / 2 ) );
-        // map.GetHexCoordWall(player.HexX,player.HexY,tx,ty,0,0);
         map.GetCrittersPath( player.HexX, player.HexY, tx, ty, 0.0f, 0, FIND_LIFE_AND_KO, null, pbx, pby, bx, by );
         tx = pbx;
         ty = pby;
@@ -220,7 +219,7 @@ void CommenceThrowing( Critter& cr, Map& map, Item& item, uint16 tx, uint16 ty )
         if( !cr.IsPlayer() || cr.GetAccess() == ACCESS_CLIENT )
             cr.ModeBase[ MODE_HIDE ] = 0;
     }
-    cr.Wait( __Breaktime );
+    cr.Wait( DEFAULT_WAIT_TIME );
     cr.StatBase[ ST_CURRENT_AP ] -= 100 * ActionPointsCost( item );
     map.RunFlyEffect( item.GetProtoId(), cr, null, cr.HexX, cr.HexY, tx, ty );
     uint16 pid = item.GetProtoId();
