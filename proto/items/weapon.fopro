@@ -1,6 +1,11 @@
-# 3.1.8
+#############################################################################
+#   18.08.2018, current version 3.2.0                                       #
+#   To add new weapons, go to the end of the file.                          #
+#   Чтобы добавить новые файлы сценери (дженериков) идите в конец файла.    #
+#   Видеоинструкция: https://youtu.be/m4yWbPWXNgI                           #
+#############################################################################
 
-[Proto] # PID_KNIFE {∆елезный нож}
+[Proto] # PID_KNIFE {Железный нож}
 ProtoId=4
 Type=3
 PicMap=art\items\knife.frm
@@ -41,7 +46,7 @@ Weapon_SoundId_0=51
 Weapon_SoundId_1=51
 Weapon_Type=10
 
-[Proto] # PID_CLUB {дубинка}
+[Proto] # PID_CLUB {Дубинка}
 ProtoId=5
 Type=3
 PicMap=art\items\club.frm
@@ -402,7 +407,7 @@ Weapon_HearRadius=70
 [Proto] # PID_PLASMA_RIFLE {Winchester P94}
 ProtoId=15
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\energy\plasma.png
 PicInv=art\inven\plasma.frm
 Flags=134217886
 DisableEgg=1
@@ -442,7 +447,7 @@ Weapon_Type=5
 [Proto] # PID_LASER_PISTOL {LP-1000W}
 ProtoId=16
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\lasergun.png
 PicInv=art\inven\lasergun.frm
 Flags=134217758
 DisableEgg=1
@@ -481,7 +486,7 @@ Weapon_Type=1
 [Proto] # PID_DESERT_EAGLE {Desert Eagle}
 ProtoId=18
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\deagle2.png
 PicInv=art\inven\magnum.frm
 Flags=134217758
 DisableEgg=1
@@ -562,7 +567,7 @@ Weapon_Type=12
 [Proto] # PID_CROWBAR {Монтировка}
 ProtoId=20
 Type=3
-PicMap=art\items\club.frm
+PicMap=art\items\new\weapons\melee\crowbar.png
 PicInv=art\inven\crowbar.frm
 Flags=134217758
 DisableEgg=1
@@ -595,7 +600,7 @@ Weapon_Type=12
 [Proto] # PID_BRASS_KNUCKLES {Железный кастет}
 ProtoId=21
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\brsnuck.png
 PicInv=art\inven\brsnuck.frm
 Flags=134217758
 DisableEgg=1
@@ -627,7 +632,7 @@ Weapon_Type=12
 [Proto] # PID_14MM_PISTOL {SIG Sauer 260A}
 ProtoId=22
 Type=3
-PicMap=art\items\uzi.frm
+PicMap=art\items\new\weapons\small\smgpstle.png
 PicInv=art\inven\smgpstle.frm
 Flags=134217758
 DisableEgg=1
@@ -666,7 +671,7 @@ Weapon_Type=1
 [Proto] # PID_ASSAULT_RIFLE {AK112}
 ProtoId=23
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\grifle.png
 PicInv=art\inven\grifle.frm
 Flags=134217886
 DisableEgg=1
@@ -713,7 +718,7 @@ Weapon_Type=6
 [Proto] # PID_PLASMA_PISTOL {Glock 86}
 ProtoId=24
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\glock.png
 PicInv=art\inven\glock.frm
 Flags=134217758
 DisableEgg=1
@@ -785,7 +790,7 @@ Weapon_SoundId_0=79
 [Proto] # PID_PLASMA_GRENADE {Плазменная граната}
 ProtoId=26
 Type=3
-PicMap=art\items\gernade.frm
+PicMap=art\items\new\weapons\throwing\grenadep.png
 PicInv=art\inven\grenadep.frm
 Flags=134217758
 DisableEgg=1
@@ -818,7 +823,7 @@ Weapon_SoundId_0=80
 [Proto] # PID_PULSE_GRENADE {Импульсная граната}
 ProtoId=27
 Type=3
-PicMap=art\items\gernade.frm
+PicMap=art\items\new\weapons\throwing\grenadeq.png
 PicInv=art\inven\grenadeq.frm
 Flags=134217758
 DisableEgg=1
@@ -851,7 +856,7 @@ Weapon_SoundId_0=81
 [Proto] # PID_GATLING_LASER {H&K L30}
 ProtoId=28
 Type=3
-PicMap=art\items\minigun.frm
+PicMap=art\items\new\weapons\energy\minilazr.png
 PicInv=art\inven\minilazr.frm
 Flags=134217886
 DisableEgg=1
@@ -889,7 +894,7 @@ Weapon_Type=8
 [Proto] # PID_THROWING_KNIFE {Метательный нож}
 ProtoId=45
 Type=3
-PicMap=art\items\knife.frm
+PicMap=art\items\new\weapons\throwing\knife_thmk2.png
 PicInv=art\inven\knife2.frm
 Flags=134217758
 DisableEgg=1
@@ -966,7 +971,7 @@ Weapon_Type=12
 [Proto] # PID_SHOTGUN {Winchester Widowmaker}
 ProtoId=94
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\shotgun6.png
 PicInv=art\inven\shotgun6.frm
 Flags=134217886
 DisableEgg=1
@@ -1015,7 +1020,7 @@ ProtoId=115
 Type=3
 ScriptModule=resources
 ScriptFunc=_ToolInit
-PicMap=art\items\sledge.frm
+PicMap=art\items\new\weapons\melee\ssledge2.png
 PicInv=art\inven\ssledge2.frm
 Flags=150995102
 DisableEgg=1
@@ -1100,7 +1105,7 @@ Weapon_Type=10
 [Proto] # PID_LASER_RIFLE {ALR-1000W}
 ProtoId=118
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\energy\laser_rifle_auto.png
 PicInv=art\inven\LRIFLELOW.png
 Flags=134217886
 DisableEgg=1
@@ -1149,7 +1154,7 @@ Weapon_Type=6
 [Proto] # PID_ALIEN_LASER_PISTOL {LPP Cobus}
 ProtoId=120
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\ufogun.png
 PicInv=art\inven\plamaLow1.png
 Flags=134217758
 DisableEgg=1
@@ -1189,7 +1194,7 @@ Weapon_Type=1
 [Proto] # PID_9MM_MAUSER {Mauser M/96}
 ProtoId=122
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\mausersmg.png
 PicInv=art\inven\gizgun1.frm
 Flags=134217758
 DisableEgg=1
@@ -1228,7 +1233,7 @@ Weapon_Type=1
 [Proto] # PID_SNIPER_RIFLE {DKS-501}
 ProtoId=143
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\sniper.png
 PicInv=art\inven\sniper.frm
 Flags=134217886
 DisableEgg=1
@@ -1267,7 +1272,7 @@ Weapon_Type=4
 [Proto] # PID_MOLOTOV_COCKTAIL {Взрывчатая смесь}
 ProtoId=159
 Type=3
-PicMap=art\items\beer.frm
+PicMap=art\items\new\weapons\throwing\mola.png
 PicInv=art\inven\mola.frm
 Flags=134217758
 DisableEgg=1
@@ -1300,7 +1305,7 @@ Weapon_SoundId_0=79
 [Proto] # PID_CATTLE_PROD {Электрокнут}
 ProtoId=160
 Type=3
-PicMap=art\items\club.frm
+PicMap=art\items\new\weapons\melee\cprod3.png
 PicInv=art\inven\cprod3.frm
 Flags=134217758
 DisableEgg=1
@@ -1382,7 +1387,7 @@ Weapon_Type=5
 [Proto] # PID_RED_RYDER_LE_BB_GUN {Эксклюзивное пневморужье Ред Райдер}
 ProtoId=162
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\rrspec.png
 PicInv=art\inven\rrspec.frm
 Flags=134217886
 DisableEgg=1
@@ -1420,7 +1425,7 @@ Weapon_Type=5
 [Proto] # PID_ACTIVE_FLARE {Фонарик}
 ProtoId=205
 Type=3
-PicMap=art\items\flare.frm
+PicMap=art\items\new\weapons\throwing\flareon.png
 PicInv=art\inven\flareon.frm
 Flags=402685982
 DisableEgg=1
@@ -1456,7 +1461,7 @@ Weapon_SoundId_0=52
 [Proto] # PID_TURBO_PLASMA_RIFLE {Winchester P94 (+)}
 ProtoId=233
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\energy\plas2.png
 PicInv=art\inven\plas2.frm
 Flags=134217886
 DisableEgg=1
@@ -1496,7 +1501,7 @@ Weapon_Type=5
 [Proto] # PID_SPIKED_KNUCKLES {Стальной кастет}
 ProtoId=234
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\brsknkls.png
 PicInv=art\inven\brsknkls.frm
 Flags=134217758
 DisableEgg=1
@@ -1528,7 +1533,7 @@ Weapon_Type=12
 [Proto] # PID_POWER_FIST {PF "Ram"}
 ProtoId=235
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\gaunt.png
 PicInv=art\inven\gaunt.frm
 Flags=134217758
 DisableEgg=1
@@ -1603,7 +1608,7 @@ Weapon_Type=10
 [Proto] # PID_223_PISTOL {Steyr M2019}
 ProtoId=241
 Type=3
-PicMap=art\items\uzi.frm
+PicMap=art\items\new\weapons\small\decker.png
 PicInv=art\inven\decker.frm
 Flags=134217758
 DisableEgg=1
@@ -1650,7 +1655,7 @@ Weapon_Type=1
 [Proto] # PID_COMBAT_SHOTGUN {Winchester 12G City-Killer}
 ProtoId=242
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\assshot.png
 PicInv=art\inven\assshot.frm
 Flags=134217886
 DisableEgg=1
@@ -1734,7 +1739,7 @@ Weapon_Type=5
 [Proto] # PID_HK_CAWS {H&K CAWS}
 ProtoId=268
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\hkcaws.png
 PicInv=art\inven\hkcaws.frm
 Flags=134217886
 DisableEgg=1
@@ -1858,7 +1863,7 @@ Weapon_Type=11
 [Proto] # PID_TOMMY_GUN {Thompson M1928}
 ProtoId=283
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\tommygun.png
 PicInv=art\inven\tommygun.frm
 Flags=134217886
 DisableEgg=1
@@ -1904,7 +1909,7 @@ Weapon_Type=6
 [Proto] # PID_SCOPED_HUNTING_RIFLE {Colt Rangemaster (+)}
 ProtoId=287
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\hrifle2.png
 PicInv=art\inven\hrifle2.frm
 Flags=134217886
 DisableEgg=1
@@ -2001,7 +2006,7 @@ Weapon_Aim_0=1
 [Proto] # PID_BOXING_GLOVES {Боксерские перчатки}
 ProtoId=292
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\boxglove.png
 PicInv=art\inven\boxglove.frm
 Flags=134217758
 DisableEgg=1
@@ -2031,7 +2036,7 @@ Weapon_SoundId_0=49
 [Proto] # PID_PLATED_BOXING_GLOVES {Перчатки с утяжелителем}
 ProtoId=293
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\boxglove.png
 PicInv=art\inven\boxglov2.frm
 Flags=134217758
 DisableEgg=1
@@ -2062,7 +2067,7 @@ Weapon_SoundId_0=49
 [Proto] # PID_HK_P90C {FN P90}
 ProtoId=296
 Type=3
-PicMap=art\items\uzi.frm
+PicMap=art\items\new\weapons\small\hkp90c.png
 PicInv=art\inven\hkp90c.frm
 Flags=134217758
 DisableEgg=1
@@ -2108,7 +2113,7 @@ Weapon_HearRadius=40
 [Proto] # PID_SPRINGER_RIFLE {Самодельная винтовка}
 ProtoId=299
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\springun.png
 PicInv=art\inven\Rifle.png
 Flags=134217886
 DisableEgg=1
@@ -2147,7 +2152,7 @@ Weapon_Type=5
 [Proto] # PID_ZIP_GUN {Самодельный пистолет}
 ProtoId=300
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\ZIPGUN.png
 PicInv=art\inven\custrevolv_low.png
 Flags=134217758
 DisableEgg=1
@@ -2187,7 +2192,7 @@ Weapon_Type=1
 [Proto] # PID_44_MAGNUM_REVOLVER {S&W M29}
 ProtoId=313
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\magnum2.png
 PicInv=art\inven\magnum2.frm
 Flags=134217758
 DisableEgg=1
@@ -2264,7 +2269,7 @@ Weapon_Type=10
 [Proto] # PID_SHARPENED_POLE {Кол}
 ProtoId=320
 Type=3
-PicMap=art\items\spear.frm
+PicMap=art\items\new\weapons\melee\spear3.png
 PicInv=art\inven\spear3.frm
 Flags=134217758
 DisableEgg=1
@@ -2308,7 +2313,7 @@ Weapon_Type=11
 [Proto] # PID_GREASE_GUN {M3A1 Grease Gun}
 ProtoId=332
 Type=3
-PicMap=art\items\weapons\greasegn.fofrm
+PicMap=art\items\new\weapons\small\greasegn.png
 PicInv=art\inven\greasegn.frm
 Flags=134217758
 DisableEgg=1
@@ -2354,7 +2359,7 @@ Weapon_Type=3
 [Proto] # PID_BOZAR {Bozar}
 ProtoId=350
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\heavy\bozar.png
 PicInv=art\inven\bozar.frm
 Flags=134218142
 DisableEgg=1
@@ -2399,7 +2404,7 @@ Weapon_Type=7
 [Proto] # PID_FN_FAL {FN FAL}
 ProtoId=351
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\fnfal.png
 PicInv=art\inven\fnfal.frm
 Flags=134217886
 DisableEgg=1
@@ -2446,7 +2451,7 @@ Weapon_Type=6
 [Proto] # PID_HK_G11 {H&K G11}
 ProtoId=352
 Type=3
-PicMap=art\items\uzi.frm
+PicMap=art\items\new\weapons\small\hkg11.png
 PicInv=art\inven\hkg11.frm
 Flags=134217758
 DisableEgg=1
@@ -2492,7 +2497,7 @@ Weapon_Type=3
 [Proto] # PID_INDEPENDENT {XL70E3}
 ProtoId=353
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\indweap.png
 PicInv=art\inven\indweap.frm
 Flags=134217886
 DisableEgg=1
@@ -2539,7 +2544,7 @@ Weapon_Type=6
 [Proto] # PID_PANCOR_JACKHAMMER {Pancor Jackhammer}
 ProtoId=354
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\jackhamr.png
 PicInv=art\inven\jackhamr.frm
 Flags=134217886
 DisableEgg=1
@@ -2586,7 +2591,7 @@ Weapon_Type=2
 [Proto] # PID_LIGHT_SUPPORT_WEAPON {LSW "Cityscape"}
 ProtoId=355
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\heavy\lightsup.png
 PicInv=art\inven\lightsup.frm
 Flags=134217886
 DisableEgg=1
@@ -2808,7 +2813,7 @@ Weapon_Type=12
 [Proto] # PID_SAWED_OFF_SHOTGUN {Winchester Widowmaker (+)}
 ProtoId=385
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\soshotgn.png
 PicInv=art\inven\soshotgn.frm
 Flags=134217758
 DisableEgg=1
@@ -2889,7 +2894,7 @@ Weapon_Type=12
 [Proto] # PID_M60 {М60}
 ProtoId=387
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\heavy\m60.png
 PicInv=art\inven\m60.frm
 Flags=134218142
 DisableEgg=1
@@ -2933,7 +2938,7 @@ Weapon_Type=7
 [Proto] # PID_NEEDLER_PISTOL {Bringham Needler}
 ProtoId=388
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\needler.png
 PicInv=art\inven\needler.frm
 Flags=134217758
 DisableEgg=1
@@ -2971,7 +2976,7 @@ Weapon_Type=1
 [Proto] # PID_AVENGER_MINIGUN {CZ53 "Avenger"}
 ProtoId=389
 Type=3
-PicMap=art\items\minigun.frm
+PicMap=art\items\new\weapons\heavy\aminigun.png
 PicInv=art\inven\aminigun.frm
 Flags=134218142
 DisableEgg=1
@@ -3010,7 +3015,7 @@ Weapon_MinRadius=2
 [Proto] # PID_SOLAR_SCORCHER {Scorcher}
 ProtoId=390
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\solarscr.png
 PicInv=art\inven\solarscr.frm
 Flags=134217758
 DisableEgg=1
@@ -3047,7 +3052,7 @@ Weapon_Type=1
 [Proto] # PID_HK_G11E {H&K G11E}
 ProtoId=391
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\hkg11e.png
 PicInv=art\inven\hkg11e.frm
 Flags=134217886
 DisableEgg=1
@@ -3093,7 +3098,7 @@ Weapon_Type=6
 [Proto] # PID_M72_GAUSS_RIFLE {M72}
 ProtoId=392
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\m72gauss.png
 PicInv=art\inven\m72gauss.frm
 Flags=134217886
 DisableEgg=1
@@ -3132,7 +3137,7 @@ Weapon_Type=5
 [Proto] # PID_PHAZER {Tazer}
 ProtoId=393
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\phazer.frm
 PicInv=art\inven\phazer.frm
 Flags=134217758
 DisableEgg=1
@@ -3167,7 +3172,7 @@ Weapon_SoundId_0=67
 [Proto] # PID_PK12_GAUSS_PISTOL {PPK12}
 ProtoId=394
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\gaussptl.png
 PicInv=art\inven\gaussptl.frm
 Flags=134217758
 DisableEgg=1
@@ -3206,7 +3211,7 @@ Weapon_Type=1
 [Proto] # PID_VINDICATOR_MINIGUN {"Vindicator"}
 ProtoId=395
 Type=3
-PicMap=art\items\minigun.frm
+PicMap=art\items\new\weapons\heavy\vminigun.png
 PicInv=art\inven\vminigun.frm
 Flags=134218142
 DisableEgg=1
@@ -3245,7 +3250,7 @@ Weapon_HearRadius=65
 [Proto] # PID_YK32_PULSE_PISTOL {YK32}
 ProtoId=396
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\pulsepst.png
 PicInv=art\inven\pulsepst.frm
 Flags=134217758
 DisableEgg=1
@@ -3284,7 +3289,7 @@ Weapon_Type=1
 [Proto] # PID_YK42B_PULSE_RIFLE {YK42B}
 ProtoId=397
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\energy\pulserif.png
 PicInv=art\inven\pulserif.frm
 Flags=134217886
 DisableEgg=1
@@ -3323,7 +3328,7 @@ Weapon_Type=5
 [Proto] # PID_44_MAGNUM_SPEEDLOADER {S&W M29 (+)}
 ProtoId=398
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\44mspeed.png
 PicInv=art\inven\44mspeed.frm
 Flags=134217758
 DisableEgg=1
@@ -3362,7 +3367,7 @@ Weapon_Type=1
 [Proto] # PID_SUPER_CATTLE_PROD {Электрокнут (+)}
 ProtoId=399
 Type=3
-PicMap=art\items\club.frm
+PicMap=art\items\new\weapons\melee\catprod2.png
 PicInv=art\inven\catprod2.frm
 Flags=134217758
 DisableEgg=1
@@ -3409,7 +3414,7 @@ Weapon_Type=12
 [Proto] # PID_IMPROVED_FLAMETHROWER {FT Freepunk Mk.II}
 ProtoId=400
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\heavy\iflameth.png
 PicInv=art\inven\iflameth.frm
 Flags=134218142
 DisableEgg=1
@@ -3447,7 +3452,7 @@ Weapon_Type=9
 [Proto] # PID_LASER_RIFLE_EXT_CAP {HLR-2000W}
 ProtoId=401
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\energy\lrifle.png
 PicInv=art\inven\lrifle.frm
 Flags=134217886
 DisableEgg=1
@@ -3487,7 +3492,7 @@ Weapon_Type=5
 [Proto] # PID_MAGNETO_LASER_PISTOL {MLP-1000W}
 ProtoId=402
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\mlaspist.png
 PicInv=art\inven\mlaspist.frm
 Flags=134217758
 DisableEgg=1
@@ -3527,7 +3532,7 @@ Weapon_Type=1
 [Proto] # PID_FN_FAL_NIGHT_SCOPE {FN FAL (+)}
 ProtoId=403
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\fnfallow.png
 PicInv=art\inven\fnfallow.frm
 Flags=134217886
 DisableEgg=1
@@ -3574,7 +3579,7 @@ Weapon_Type=6
 [Proto] # PID_DESERT_EAGLE_EXT_MAG {Desert Eagle (+)}
 ProtoId=404
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\deagle2.png
 PicInv=art\inven\deagle2.frm
 Flags=134217758
 DisableEgg=1
@@ -3613,7 +3618,7 @@ Weapon_Type=1
 [Proto] # PID_ASSAULT_RIFLE_EXT_MAG {AK112 (+)}
 ProtoId=405
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\small\assrifl2.png
 PicInv=art\inven\assrifl2.frm
 Flags=134217886
 DisableEgg=1
@@ -3660,7 +3665,7 @@ Weapon_Type=6
 [Proto] # PID_PLASMA_PISTOL_EXT_CART {Glock 86 (+)}
 ProtoId=406
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\energy\plaspst2.png
 PicInv=art\inven\plaspst2.frm
 Flags=134217758
 DisableEgg=1
@@ -3700,7 +3705,7 @@ Weapon_Type=1
 [Proto] # PID_MEGA_POWER_FIST {APF "Charger"}
 ProtoId=407
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\mpwrfist.png
 PicInv=art\inven\mpwrfist.frm
 Flags=134217758
 DisableEgg=1
@@ -3734,7 +3739,7 @@ Weapon_Type=12
 [Proto] # PID_HOLY_HAND_GRENADE {Святая граната}
 ProtoId=421
 Type=3
-PicMap=art\items\gernade.frm
+PicMap=art\items\new\weapons\throwing\holygren.png
 PicInv=art\inven\holygren.frm
 Flags=134250526
 DisableEgg=1
@@ -3771,7 +3776,7 @@ Weapon_SoundId_0=80
 [Proto] # PID_GOLD_NUGGET {Золотой самородок}
 ProtoId=423
 Type=3
-PicMap=art\items\rock2.frm
+PicMap=art\items\new\weapons\throwing\rock2.png
 PicInv=art\inven\rock2.frm
 Flags=134217758
 DisableEgg=1
@@ -3813,7 +3818,7 @@ Weapon_SoundId_1=50
 [Proto] # PID_URANIUM_ORE {Урановая руда}
 ProtoId=426
 Type=3
-PicMap=art\items\rock2.frm
+PicMap=art\items\new\weapons\throwing\rock3.png
 PicInv=art\inven\rock4.frm
 Flags=134217758
 DisableEgg=1
@@ -3886,7 +3891,7 @@ Weapon_SoundId_0=73
 [Proto] # PID_REFINED_ORE {Обогащенная урановая руда}
 ProtoId=486
 Type=3
-PicMap=art\items\rock2.frm
+PicMap=art\items\new\weapons\throwing\rock4.png
 PicInv=art\inven\rock4.frm
 Flags=134217758
 DisableEgg=1
@@ -3928,7 +3933,7 @@ Weapon_SoundId_1=50
 [Proto] # PID_SPECIAL_BOXER_WEAPON {Особое оружие боксера}
 ProtoId=489
 Type=3
-PicMap=art\items\boxweap1.frm
+PicMap=art\items\new\weapons\melee\boxglove.png
 PicInv=art\inven\boxweap1.frm
 Flags=134217758
 DisableEgg=1
@@ -3964,7 +3969,7 @@ Weapon_SoundId_1=49
 [Proto] # PID_RING_BOXING_GLOVES {Боксерские перчатки}
 ProtoId=496
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\boxglove.png
 PicInv=art\inven\boxglove.frm
 Flags=134217758
 DisableEgg=1
@@ -3993,7 +3998,7 @@ Weapon_SoundId_0=49
 [Proto] # PID_RING_PLATED_BOXING_GLOVES {Перчатки с утяжелителем}
 ProtoId=497
 Type=3
-PicMap=art\items\wepnbox.frm
+PicMap=art\items\new\weapons\melee\boxglove.png
 PicInv=art\inven\boxglov2.frm
 Flags=134217758
 DisableEgg=1
@@ -4056,7 +4061,7 @@ Weapon_SoundId_0=75
 [Proto] # PID_FN_FAL_HPFA {M80}
 ProtoId=500
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\heavy\scorpion.png
 PicInv=art\inven\sawgun_low.png
 Flags=134217886
 DisableEgg=1
@@ -4381,7 +4386,7 @@ Weapon_SoundId_0=76
 [Proto] # PID_MAUSER_SMG {Mauser M/96 (+)}
 ProtoId=578
 Type=3
-PicMap=art\items\pistol.frm
+PicMap=art\items\new\weapons\small\mausersmg.png
 PicInv=art\inven\mausersmg.frm
 Flags=134217758
 DisableEgg=1
@@ -4427,7 +4432,7 @@ Weapon_Type=1
 [Proto] # PID_ELEPHANT_GUN {Слонобой}
 ProtoId=592
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\heavy\tube2.png
 PicInv=art\inven\nitroexpress.png
 Flags=134217886
 DisableEgg=1
@@ -4627,7 +4632,7 @@ Weapon_Type=8
 [Proto] # PID_SMOKE_GRENADE {Дымовая граната}
 ProtoId=608
 Type=3
-PicMap=art\items\gernade.frm
+PicMap=art\items\new\weapons\throwing\grenade_smoke.png
 PicInv=art\inven\grenade_smoke.png
 Flags=134217758
 DisableEgg=1
@@ -4660,7 +4665,7 @@ Weapon_SoundId_0=80
 [Proto] # PID_MUSTARD_GAS_GRENADE {Граната с горчичным газом}
 ProtoId=609
 Type=3
-PicMap=art\items\gernade.frm
+PicMap=art\items\new\weapons\throwing\grenade_gas.png
 PicInv=art\inven\grenade_gas.png
 Flags=134217758
 DisableEgg=1
@@ -5415,7 +5420,7 @@ Weapon_SoundId_0=88
 [Proto] # PID_LASER_RIFLE_UPGRADE {HLR-2000W (+)}
 ProtoId=10028
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\energy\lrifle2.png
 PicInv=art\inven\lrifle2.frm
 Flags=134217886
 DisableEgg=1
@@ -5682,7 +5687,7 @@ Weapon_Type=5
 [Proto] # PID_STRIKER {M3 E.M. Striker}
 ProtoId=10049
 Type=3
-PicMap=art\items\rifle.frm
+PicMap=art\items\new\weapons\engineer\ce_frag_shotgun.png
 PicInv=art\inven\autoshotgun.png
 Flags=134217886
 DisableEgg=1
@@ -5776,7 +5781,7 @@ Weapon_Type=5
 [Proto] # PID_SHITCANNON {Самодельная пушка}
 ProtoId=10051
 Type=3
-PicMap=art\items\flamethr.frm
+PicMap=art\items\new\weapons\engineer\shaitan.png
 PicInv=art\inven\HeavyRifle.png
 Flags=134218142
 DisableEgg=1
