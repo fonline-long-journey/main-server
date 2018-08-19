@@ -1844,13 +1844,13 @@ void player_data_generate( int[]& params )
         @__RegParams = regParams;
         __RegParams.resize( PARAMS_COUNT );
 
-        __RegParams[ ST_STRENGTH ] = 5;
-        __RegParams[ ST_PERCEPTION ] = 5;
-        __RegParams[ ST_ENDURANCE ] = 5;
-        __RegParams[ ST_CHARISMA ] = 5;
-        __RegParams[ ST_INTELLECT ] = 5;
-        __RegParams[ ST_AGILITY ] = 5;
-        __RegParams[ ST_LUCK ] = 5;
+        __RegParams[ ST_STRENGTH ] = 0;
+        __RegParams[ ST_PERCEPTION ] = 0;
+        __RegParams[ ST_ENDURANCE ] = 0;
+        __RegParams[ ST_CHARISMA ] = 0;
+        __RegParams[ ST_INTELLECT ] = 0;
+        __RegParams[ ST_AGILITY ] = 0;
+        //__RegParams[ ST_LUCK ] = 0;
         __RegParams[ ST_AGE ] = Random( AGE_MIN, AGE_MAX );
         __RegParams[ ST_GENDER ] = GENDER_MALE;
     }
