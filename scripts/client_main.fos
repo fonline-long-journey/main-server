@@ -71,7 +71,7 @@ bool start()
     // SetDefaultFont(FONT_COURIER_NEW_SMALL, COLOR_TEXT);
 
     GUI_EngineCallback_Start();
-	
+	GUI_AddDragAndDropHandler( ItemsDragAndDropHandler );
     InitNameColorizing();
     InitIgnoreList();
     // InitTestScreen();
@@ -149,6 +149,9 @@ void get_active_screens( int[]& result )
 // Show/hide screen behaviour.
 void screen_change( bool show, int screen, dictionary@ params )
 {
+    if( IS_CLIENT_MAIN_SCREEN( screen ) )
+        __ConsoleActive = false;
+
     if( show )
         GUI_EngineCallback_ShowScreen( screen, params );
     else
@@ -175,9 +178,9 @@ void        render_iface( uint layer )
 
     if( layer == 3 )
     {
-        GUI_EngineCallback_Render( true );
+        GUI_EngineCallback_Draw( true );
         DrawChosenTabs();
-        GUI_EngineCallback_Render( false );
+        GUI_EngineCallback_Draw( false );
         if( __isHexAttack )
         {
             int tohit = to_hit_hex();
@@ -188,9 +191,9 @@ void        render_iface( uint layer )
     }
 	if( layer == 2 )
     {
-		GUI_EngineCallback_Render( true );
+		GUI_EngineCallback_Draw( true );
         DrawChosenTabs();
-        GUI_EngineCallback_Render( false );
+        GUI_EngineCallback_Draw( false );
 		
 		if (__ConfigDrawMuzzles)
 		{
@@ -236,8 +239,20 @@ void        render_iface( uint layer )
 			renderBars();
 			DrawWepRadius(GetChosen());
 		}
+
+        // Zoom text
+        if( __MapZooming && __SpritesZoomMin != __SpritesZoomMax )
+        {
+            string@ zoomText = MSG_GAME( STR_ZOOM );
+            @zoomText = ReplaceText( zoomText, "%d", "" + int(1.0 / __SpritesZoom * 100.0) );
+            @zoomText = ReplaceText( zoomText, "%%", "%" );
+            DrawText( zoomText, 0, 0, __ScreenWidth, __ScreenHeight, COLOR_SAND, FONT_BIG, FT_CENTERX | FT_CENTERY );
+        }
     }
-		
+	else if( layer == 4 )
+    {
+        GUI_EngineCallback_DrawCursor();
+    }	
     else if( layer == 100 && __GmapActive )
     {
         // Here you can draw on global map
@@ -450,29 +465,29 @@ void critter_out( CritterCl& cr )
 // Called on something item in/changed/out map.
 void item_map_in( ItemCl& item )
 {
-    //
+    GUI_EngineCallback_ItemChanged( true );
 }
 
 void item_map_changed( ItemCl& itemNow, ItemCl& itemBefore )
 {
-    //
+    GUI_EngineCallback_ItemChanged( true );
 }
 
 void item_map_out( ItemCl& item )
 {
-    //
+    GUI_EngineCallback_ItemChanged( true );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Called on something critter in/out chosen inventory.
 void item_inv_in( ItemCl& item )
 {
-    //
+     GUI_EngineCallback_ItemChanged( false );
 }
 
 void item_inv_out( ItemCl& item )
 {
-    //
+    GUI_EngineCallback_ItemChanged( false );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2820,6 +2835,7 @@ void filename_screenshot( string& filename )
     filename = "screenshots\\" + filename;
 }
 
+// //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on message added to message box.
 // Parameters messageText and messageType can be changed for engine handler.
 void message_box( string& messageText, int messageType, bool scriptCall )
@@ -2828,6 +2844,87 @@ void message_box( string& messageText, int messageType, bool scriptCall )
     GUI_CollectMessageBoxes( messageBoxes );
     for( uint i = 0; i < messageBoxes.length(); i++ )
         messageBoxes[ i ].AddMessage( messageText, messageType );
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Called to check interface hit.
+bool check_interface_hit( int x, int y )
+{
+    return GUI_EngineCallback_CheckInterfaceHit( x, y );
+}
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Called to check current container item under mouse.
+bool get_cont_item( uint& itemId, bool& isEnemy )
+{
+    GUIScreen@ screen = GUI_GetActiveScreen();
+    if( screen is null || screen.IsHardcoded || screen.Index != CLIENT_SCREEN_INVENTORY )
+        return false;
+    if( GetCurrentCursor() == CURSOR_DEFAULT )
+    {
+        GUIObject@ hitObj = screen.FindMouseHit();
+        if( hitObj !is null && hitObj.Grid !is null )
+        {
+            GUIItemView@ itemView = cast< GUIItemView >( hitObj.Grid );
+            if( itemView !is null )
+            {
+                ItemCl@ item = itemView.GetItem( hitObj.CellIndex );
+                if( item !is null )
+                {
+                    itemId = item.Id;
+                    isEnemy = ( itemView.CritterId != 0 );
+                }
+            }
+        }
+    }
+    return true;
+}
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Items and drop handler.
+bool ItemsDragAndDropHandler( GUIObject& obj, GUIObject@ target )
+{
+    if( obj.Grid is null )
+        return false;
+    if( target !is null && target.Grid is null )
+        return false;
+    GUIItemView@ objItemView = cast< GUIItemView >( obj.Grid );
+    GUIItemView@ targetItemView = ( target !is null ? cast< GUIItemView >( target.Grid ) : null );
+    if( objItemView is null )
+        return false;
+    ItemCl@ objItem = objItemView.GetItem( obj.CellIndex );
+    ItemCl@ targetItem = ( targetItemView !is null ? targetItemView.GetItem( target.CellIndex ) : null );
+    if( objItem is null )
+        return false;
+    int objSlot = objItemView.UserData;
+    int targetSlot = ( targetItemView !is null ? targetItemView.UserData : SLOT_GROUND );
+    if( objSlot == targetSlot )
+        return false;
+    if( targetSlot != SLOT_INV && objItem !is null && targetItem !is null && objItem.GetType() == ITEM_TYPE_AMMO && targetItem.GetType() == ITEM_TYPE_WEAPON )
+    {
+        if( objItem.Proto.Ammo_Caliber == targetItem.Proto.Weapon_Caliber &&
+            ( targetItem.AmmoCount < targetItem.Proto.Weapon_MaxAmmoCount || targetItem.AmmoPid != objItem.GetProtoId() ) )
+        {
+            uint[] actions;
+            GetChosenActions( actions );
+            uint[] useItemAction = { CHOSEN_USE_ITEM, targetItem.Id, 0, TARGET_SELF_ITEM, objItem.Id, USE_RELOAD, 0 };
+            for( uint i = 0; i < useItemAction.length(); i++ )
+                actions.insertLast( useItemAction[ i ] );
+            SetChosenActions( actions );
+        }
+    }
+    else if( targetSlot == SLOT_GROUND && objItem.IsStackable() && objItem.GetCount() > 1 )
+    {
+        CustomCall( "SplitDrop " + objItem.Id );
+    }
+    else
+    {
+        uint[] actions;
+        GetChosenActions( actions );
+        uint[] useItemAction = { CHOSEN_MOVE_ITEM, objItem.Id, objItem.GetCount(), targetSlot, 0, 0, 0 };
+        for( uint i = 0; i < useItemAction.length(); i++ )
+            actions.insertLast( useItemAction[ i ] );
+        SetChosenActions( actions );
+    }
+    return true;
 }
 
 void __DrawBustMuzzle(int param0, int param1, int param2, string@ param3, int[]@ drawData)

@@ -18,16 +18,16 @@ string getName( CritterCl& cr )
         f.setPos( 0 );
         while( !f.isEndOfFile() )
         {
-            f.readLine(word);
+            word = f.readLine();
 			if(word == "") break;
 			fix(word);
             StrToInt( word, intword );
             if( uint( intword ) == cr.Id )
             {
-                f.readLine(word);
+                word = f.readLine();
                 name = fix( word );
             }else
-            f.readLine( word );
+            word = f.readLine( );
         }
 		f.close();
 		if(name != "")

@@ -179,6 +179,12 @@ void InitializeGame()                    // Export
     __Anim2CombatEnd        = ANIM2_END_COMBAT;
     __ConsoleHistorySize    = 20;
 
+    // Chosen lighting
+    __ChosenLightColor      = 0xFFFFFF;
+    __ChosenLightDistance   = 4;
+    __ChosenLightIntensity  = MAX_LIGHT_VALUE / 4;
+    __ChosenLightFlags      = 0; // LIGHT_* in _defines.fos
+
     // 3d rendering
     __Enable3dRendering     = false;
     #   ifdef PLAYERS_3D

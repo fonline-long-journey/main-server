@@ -56,7 +56,7 @@ import void CountEmpRocketTests( Critter& player, Critter& target ) from "navarr
 import void OnCritterKilled( Critter& cr, Critter@ killer ) from "q_hunter";
 import bool BarterAllowed( int crId, Item@[]& buyItems,  Item@[]& saleItems ) from "limited_barter";
 import uint CheckPlayerName( const string& name ) from "parameters";
-import bool Item_Weapon_IsHtHAttack( Item& item, uint8 mode ) from "parameters";
+import bool ProtoItem_Weapon_IsHtHAttack( ProtoItem& proto, uint8 mode ) from "parameters";
 import bool UseItemOnLocker( Critter& cr, Item& locker, Item& item ) from "lockers";
 import void SetHair( Critter& cr ) from "hair";
 import void RestartHair( Critter& cr ) from "hair";
@@ -1815,8 +1815,8 @@ void turn_based_process( Map& map, Critter& cr, bool beginTurn )
             // In hands only HtH weapons
             Item@ hand1 = cr.GetItem( 0, SLOT_HAND1 );
             Item@ hand2 = cr.GetItem( 0, SLOT_HAND2 );
-            if( ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not Item_Weapon_IsHtHAttack( hand1, 0 ) ) &&
-                ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not Item_Weapon_IsHtHAttack( hand1, 0 ) ) )
+            if( ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not ProtoItem_Weapon_IsHtHAttack( hand1.Proto, 0 ) ) &&
+                ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not ProtoItem_Weapon_IsHtHAttack( hand1.Proto, 0 ) ) )
             {
                 hthEvade = true;
             }

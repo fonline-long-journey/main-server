@@ -23,9 +23,10 @@
 
 // Messages types in message boxes
 #define FOMB_GAME                          int(0) // Default
-#define FOMB_TALK                          int(1)
-#define FOMB_COMBAT_RESULT                 int(2)
-#define FOMB_VIEW                          int(3)
+#define FOMB_TALK                          int(1) 
+#define FOMB_COMBAT_RESULT                 int(2) 
+#define FOMB_VIEW                          int(3) 
+#define FOMB_ALL						   int(10)
 
 // Generic descriptions types
 #define DESC_INVENTORY_MAIN                ( 0 )
@@ -78,6 +79,7 @@
 
 // Client screen types
 #define CLIENT_SCREEN_NONE                 ( 0 ) // Used in primary, secondary and additional screen types
+#define CLIENT_SCREEN_CURSOR               ( -1 ) // Cursor screen
 // Primary screens, hardcoded
 #define CLIENT_MAIN_SCREEN_LOGIN           ( 1 )
 #define CLIENT_MAIN_SCREEN_REGISTRATION    ( 2 )
@@ -121,7 +123,7 @@
 // Cursors
 #define CURSOR_DEFAULT                     ( 0 )
 #define CURSOR_MOVE                        ( 1 )
-#define CURSOR_USE_OBJECT                  ( 2 )
+#define CURSOR_USE_ITEM                    ( 2 )
 #define CURSOR_USE_WEAPON                  ( 3 )
 #define CURSOR_USE_SKILL                   ( 4 )
 #define CURSOR_WAIT                        ( 5 )

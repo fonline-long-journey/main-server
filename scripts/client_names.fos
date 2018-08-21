@@ -367,7 +367,7 @@ void LoadNames()
 
     string s_count;
 
-    f.readLine( s_version );
+    s_version = f.readLine();
 
     delN( s_version );
 
@@ -383,7 +383,7 @@ void LoadNames()
     }
     else
     {
-        f.readLine( s_count );
+        s_count = f.readLine();
 
         delN( s_count );
 
@@ -423,7 +423,7 @@ void LoadNames()
 
         if( version < VERSION_SAVE_NO_ID )
         {
-            f.readLine( s_id );
+            s_id = f.readLine();
             delN( s_id );
             if( !StrToInt( s_id, id ) || id < 1 )
             {
@@ -433,7 +433,7 @@ void LoadNames()
         }
         if( version >= VERSION_SAVE_FIRST )
         {
-            f.readLine( s_hash );
+            s_hash = f.readLine();
             delN( s_hash );
             i_hash = 0;
             if( !StrToInt( s_hash, i_hash ) || i_hash == 0 )
@@ -443,7 +443,7 @@ void LoadNames()
             }
             hash = uint( i_hash );
         }
-        f.readLine( s_name );
+        s_name = f.readLine( );
         if( s_name.length() < 2 )
         {
             Message( "Файл с сохранением поврежден.3" );

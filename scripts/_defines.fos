@@ -1425,6 +1425,25 @@
 #define COMMAND_CHANGE_PASSWORD                  ( 35 )
 #define COMMAND_DROP_UID                         ( 36 )
 #define COMMAND_LOG                              ( 37 )
+
+// Item uses
+#define USE_PRIMARY                              ( 0 )
+#define USE_SECONDARY                            ( 1 )
+#define USE_THIRD                                ( 2 )
+#define USE_RELOAD                               ( 3 )
+#define USE_USE                                  ( 4 )
+#define MAX_USES                                 ( 3 )
+
+// Client lighting
+#define MAX_LIGHT_VALUE                          ( 10000 )
+#define MAX_LIGHT_HEX                            ( 200 )
+#define MAX_LIGHT_ALPHA                          ( 100 )
+
+// Flags
+#define LIGHT_DISABLE_DIR                        # (dir)               ( 1 << CLAMP( dir, 0, 5 ) )
+#define LIGHT_GLOBAL                             ( 0x40 )
+#define LIGHT_INVERSE                            ( 0x80 )
+
 // New defaults of war! Without registration and SMS.
 #define DEFAULT_WAIT_TIME						 ( 1200 )
 #define DEFAULT_AP_SKILL						 ( 2 )
