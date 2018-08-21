@@ -135,6 +135,7 @@ void finish()
 uint loop()
 {
     GUI_EngineCallback_Loop();
+	GUI_EngineCallback_ItemChanged(false);
     return 1;
 }
 
