@@ -17,7 +17,7 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
     int   wpnMaxDist		= _WeaponMaxDist( weapon, use );  //Definition of weapon's max distance, macros.fos
     uint skillNum			= _WeaponSkill   ( weapon, weaponMode ); //can be any number - skill that affects your Maximum Distance and Effective Distance
     int  skillVal			= int(cr.Skill[skillNum]);                 // 
-    uint8 effDistance		= wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100; //your Effective Distance, linear buildup
+    int effDistance		= wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100; //your Effective Distance, linear buildup
 	uint8 weaponSubtype		=
         ( skillNum == SK_SMALL_GUNS || skillNum == SK_BIG_GUNS || skillNum == SK_ENERGY_WEAPONS ) ? WS_GUN : ( ( skillNum == SK_THROWING ) ? WS_THROWING : ( skillNum == SK_MELEE_WEAPONS ) ? WS_MELEE : WS_UNARMED );
 	bool   isRanged = ( weaponSubtype == WS_THROWING || weaponSubtype == WS_GUN );
@@ -85,9 +85,8 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
         }
         else
         {
-            hitChance = MAX_HITCHANCE * (falloff - diffFromEff) / MAX(falloff, 1);    //!!BUG При falloff 0 будет баг с отрицательным числом попасть при отрисовке. Деление на ноль, все дела.
+            hitChance = MAX_HITCHANCE * CLAMP( (falloff - diffFromEff) / MAX(falloff, 1), 0, 1);
         }
-		// : CLAMP((falloff - diffFromEff) / MAX(falloff, 1), 0, 1);
     }
 	
 	#ifdef __CLIENT
@@ -184,7 +183,7 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
 		Message(""+(hitChance));
 	#endif */
 	
-    return CLAMP(hitChance, 0, 95); // test
+    return CLAMP(hitChance, 0, MAX_HITCHANCE); // test
 }
 
 #ifdef __CLIENT
