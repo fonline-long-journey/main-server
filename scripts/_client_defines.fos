@@ -1,7 +1,6 @@
 #ifndef __CLIENT_DEFINES__
 #define __CLIENT_DEFINES__
 
-#pragma globalvar "bool __isHexAttack 					 = false"
 #pragma globalvar "bool __IsCtrlHot						 = false"
 #pragma globalvar "bool __waiting 					  	 = false"
 #pragma globalvar "bool __mobhotkeys					 = false"

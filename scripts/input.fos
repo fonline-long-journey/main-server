@@ -8,7 +8,6 @@ import void ThrowingKeyDown( uint8 key ) from "throwing";
 import void ThrowingKeyUp( uint8 key ) from "throwing";
 import void ThrowingInputLost() from "throwing";
 import bool ThrowingMouseDown( int click ) from "throwing";
-import int to_hit_hex() from "bin_hex_attack_client";
 
 bool[] KeyPressed;
 bool[] MousePressed;
@@ -427,12 +426,6 @@ bool HandleHotkeys( uint8 key )
                 return false;
             }
 //ErlKing gm menu
-    }
-    if( key == MOUSE_BUTTON_LEFT && __isHexAttack && to_hit_hex() > 0 )
-    {
-        uint16 hexX = 0, hexY = 0;
-        GetMonitorHex( __MouseX, __MouseY, hexX, hexY );
-        RunServerScriptUnsafe( "bin_hex_attack_server@unsafe_hex_attack", hexX, hexY, 0, null, null );
     }
     if( key == DIK_N && KeyPressed[ DIK_LCONTROL ] )
     {

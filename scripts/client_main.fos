@@ -34,7 +34,6 @@ import void Fill3DRegistrationParameters( int[]& params ) from "client_3d_cha_re
 import void PlayAnimSound( uint crType, int gender, uint anim1, uint anim2 ) from "animation";
 
 import void RenderThrowing() from "throwing";
-import int to_hit_hex() from "bin_hex_attack_client";
 
 #ifdef __CLIENT_DRAWING_H__
 import distCalcFunc@ GetCalcFunc() from "hitchance";
@@ -173,23 +172,6 @@ void screen_change( bool show, int screen, dictionary@ params )
 //    100 (over map), 101 (over all)
 void        render_iface( uint layer )
 {
-	// if( layer == 1 )
-    // {
-	// }
-
-    if( layer == 3 )
-    {
-        GUI_EngineCallback_Draw( true );
-        DrawChosenTabs();
-        GUI_EngineCallback_Draw( false );
-        if( __isHexAttack )
-        {
-            int tohit = to_hit_hex();
-            if( tohit > 0 )
-                DrawText( tohit + "%", __MouseX, __MouseY,
-                          ( ( tohit / 10 >= 1 ? 2 : 1 ) + 2 ) * 10, 10, COLOR_RED, FONT_FALLOUT, 0 );
-        }
-    }
 	if( layer == 2 )
     {
 		GUI_EngineCallback_Draw( true );
@@ -2936,7 +2918,6 @@ bool ItemsDragAndDropHandler( GUIObject& obj, GUIObject@ target )
 void __DrawBustMuzzle(int param0, int param1, int param2, string@ param3, int[]@ drawData)
 {
 	CreateBurstMuzzle( drawData );
-	// Message("Privet mame pyromancera!");
 	for (uint i = 0; i < drawData.length(); i++ )
 		Message("" + drawData[i]);
 }
