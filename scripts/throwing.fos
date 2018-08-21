@@ -240,6 +240,8 @@ void CommenceThrowing( Critter& cr, Map& map, Item& item, uint16 tx, uint16 ty )
         item.EventDrop( cr );
         cr.EventDropItem( item );
     }
+	
+	item.Update();
 }
 import void CommenceExplosionEx( Critter@ attacker, Map@ map, uint16 tx, uint16 ty, Critter@ target, uint weapPid, bool isCritical, uint intentionallyId, bool isRocket ) from "combat";
 import void Explode( Map@ map, uint16 hexX, uint16 hexY, Critter@ cr, uint16 explodePid, uint ownerId, int bonusDamage, int bonusRadius ) from "explode";
