@@ -485,6 +485,11 @@ void item_inv_in( ItemCl& item )
      GUI_EngineCallback_ItemChanged( false );
 }
 
+void item_inv_changed( ItemCl& itemNow, ItemCl& itemBefore )
+{
+    GUI_EngineCallback_ItemChanged( false );
+}
+
 void item_inv_out( ItemCl& item )
 {
     GUI_EngineCallback_ItemChanged( false );
