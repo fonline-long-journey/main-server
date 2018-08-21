@@ -63,20 +63,17 @@ void mouse_down( int button ) // Engine callback
                     ItemCl    @it = GetMonitorItem( x, y );
                     if( @cr != null )
                     {
-                        if( cr.IsPlayer() )
-                            RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );                     // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РёРіСЂРѕРєРѕРј
-                        else
-                            RunServerScript( "gm@GM_PANNEL_CRITTER_NPC", cr.Id, 0, 0, null, null );                        // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РЅРїС†
+                        RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );             // панель действий с криттером
                     }
                     else if( @it != null )
                     {
-                        RunServerScript( "gm@GM_PANNEL_ITEM", it.Id, 0, 0, null, null );                       // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РёС‚РµРјРѕРј
+                        RunServerScript( "gm@GM_PANNEL_ITEM", it.Id, 0, 0, null, null );                       // панель действий с итемом
                     }
                     else
                     {
                         uint16 hexX = 0, hexY = 0;
                         GetMonitorHex( x, y, hexX, hexY );
-                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                       // РїР°РЅРµР»СЊ РґРµР№СЃС‚РІРёР№ СЃ РіРµРєСЃРѕРј
+                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                       // панель действий с гексом
                     }
                 }
             }
@@ -520,8 +517,8 @@ bool HandleHotkeys( uint8 key )
         if( !inputFocused )
         {
             GUIScreen@ screen = GUI_GetActiveScreen();
-            if( ( key == DIK_TAB && screen.Index == CLIENT_SCREEN_CHARACTER_TLJ ) ||
-                ( key == DIK_C && screen.Index == CLIENT_SCREEN_CHARACTER_TLJ ) ||
+            if( ( key == DIK_TAB && screen.Index == CLIENT_SCREEN_CHARACTER ) ||
+                ( key == DIK_C && screen.Index == CLIENT_SCREEN_CHARACTER ) ||
                 ( key == DIK_P && screen.Index == CLIENT_SCREEN_PIP_BOY ) ||
                 ( key == DIK_F && screen.Index == CLIENT_SCREEN_FIX_BOY ) ||
                 ( key == DIK_I && screen.Index == CLIENT_SCREEN_INVENTORY ) )
