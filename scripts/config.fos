@@ -119,7 +119,7 @@ void InitializeGame()                    // Export
     // Range of values for client engine
     __AbsoluteOffsets = true;
     __SkillBegin      = 200;
-    __SkillEnd        = 209;
+    __SkillEnd        = 217;
     __TimeoutBegin    = 230;
     __TimeoutEnd      = 249;
     __KillBegin       = 260;
