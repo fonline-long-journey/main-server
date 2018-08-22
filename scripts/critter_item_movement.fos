@@ -15,6 +15,9 @@ bool critter_check_move_item( Critter& cr, Item& item, uint8 toSlot, Item@ itemS
 {
     uint8 fromSlot = item.CritSlot;
 
+    // Quickbar item movement @erandelax 22/08/2018
+    if(toSlot >= SLOT_QUICK_1 && toSlot <= SLOT_QUICK_12) return true;
+
     // Drop
     if( toSlot == SLOT_GROUND )
         return true;
@@ -66,6 +69,36 @@ if ( cr.Perk[PE_KARMA_BEACON] != 0 )
 }
 
 #ifdef __SERVER
+// Quickbar item movement @erandelax 22/08/2018
+void unsafe_MoveItem(Critter& player, int slot_src, int slot_dst, int param1, string@ param2, int[]@ param3){
+    // Receive items from source slot
+    Item@[] srcItems;
+    int srcItemsCount = player.GetItems( slot_src, srcItems );
+    // Receive items from destination slot
+    Item@[] dstItems;
+    int dstItemsCount = player.GetItems( slot_dst, dstItems );
+
+    if(srcItemsCount > 0){
+        // Move items from destination slot to inventory if exist
+        if(dstItemsCount > 0){
+            player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(SLOT_INV));
+        }
+        // Move items from source to destination slot
+        player.MoveItem(srcItems[0].Id,uint(srcItemsCount),uint(slot_dst));
+        // Move items from inventory to source slot if moved before
+        if(dstItemsCount > 0){
+            player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(slot_src));
+        }
+    } else {
+        // Just fill the source slot with destination items if there is no source
+        if(dstItemsCount > 0){
+            player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(slot_src));
+        }
+    }
+    if(srcItemsCount > 0 || dstItemsCount > 0) player.Animate( 0, ANIM2_SWITCH_ITEMS, null, true, true );
+}
+
+
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on critter item moved.
 void critter_move_item( Critter& cr, Item& item, uint8 fromSlot )

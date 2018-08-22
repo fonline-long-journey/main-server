@@ -298,6 +298,21 @@
 #  define SLOT_HEAD                              ( 4 )   // Head slot
 # endif
 #endif
+
+// Quickbar @erandelax 22/08/18
+#define SLOT_QUICK_1							 ( 5 )
+#define SLOT_QUICK_2							 ( 6 )
+#define SLOT_QUICK_3							 ( 7 )
+#define SLOT_QUICK_4							 ( 8 )
+#define SLOT_QUICK_5							 ( 9 )
+#define SLOT_QUICK_6							 ( 10 )
+#define SLOT_QUICK_7							 ( 11 )
+#define SLOT_QUICK_8							 ( 12 )
+#define SLOT_QUICK_9							 ( 13 )
+#define SLOT_QUICK_10							 ( 14 )
+#define SLOT_QUICK_11							 ( 15 )
+#define SLOT_QUICK_12							 ( 16 )
+
 #define SLOT_GROUND                              ( 255 ) // Ground slot, used when critter drop/pick item
 
 // Critter timeevents identifiers
