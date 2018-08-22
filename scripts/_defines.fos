@@ -1513,6 +1513,13 @@
 #define CACHED_MAIN_MENU_SPRITE                  (0)
 #define CACHED_REG_SPRITE                        (1)
 
+
+//Drawing types
+#define DRAW_RAYS				( 0 )
+#define DRAW_BURST_RAYS			( 1 )
+#define DRAW_MUZZLE_FLASHES		( 2 )
+#define DRAW_BURST_MUZZLES		( 3 )
+
 #ifndef SKIP_PRAGMAS
 
 // /

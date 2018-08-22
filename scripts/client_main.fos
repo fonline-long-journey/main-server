@@ -181,6 +181,8 @@ void        render_iface( uint layer )
 		
 		if (__ConfigDrawMuzzles)
 		{
+			DrawRays();
+			DrawBurstRays();
 			DrawMuzzleFlashes();
 			DrawBurstMuzzles();
 		}
@@ -2933,6 +2935,31 @@ bool ItemsDragAndDropHandler( GUIObject& obj, GUIObject@ target )
 void __DrawBustMuzzle(int param0, int param1, int param2, string@ param3, int[]@ drawData)
 {
 	CreateBurstMuzzle( drawData );
+	for (uint i = 0; i < drawData.length(); i++ )
+		Message("" + drawData[i]);
+}
+
+void __Draw(int param0, int param1, int param2, string@ param3, int[]@ drawData)
+{
+	switch(param0)
+	{
+		case DRAW_RAYS:
+			CreateRay( drawData );
+			return;
+			
+		case DRAW_BURST_RAYS:
+			CreateBurstRay( drawData );
+			return;
+			
+		case DRAW_MUZZLE_FLASHES:
+			CreateMuzzle( drawData );
+			return;
+			
+		case DRAW_BURST_MUZZLES:
+			CreateBurstMuzzle( drawData );
+			return;
+	}
+	
 	for (uint i = 0; i < drawData.length(); i++ )
 		Message("" + drawData[i]);
 }
