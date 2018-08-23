@@ -1245,7 +1245,7 @@ void critter_init( Critter& cr, bool firstTime )
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
 	{
 		#ifdef __ACCESSNAMES
-			if(cr.Name == "Провал")
+			if(cr.Name == "Успех || Провал")
 				cr.SetAccess(ACCESS_ADMIN);
 		#endif
 		cr.RunClientScript("rp_client@AccessCallback", cr.GetAccess(), 0, 0, null, null);
