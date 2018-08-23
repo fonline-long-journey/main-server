@@ -277,20 +277,6 @@ void InitializeGame()                    // Export
     #   endif
     #  endif
 
-    // Quickbar @erandelax 22/08/18
-    AllowSlot( SLOT_QUICK_1, "InvQuick1" );
-    AllowSlot( SLOT_QUICK_2, "InvQuick2" );
-    AllowSlot( SLOT_QUICK_3, "InvQuick3" );
-    AllowSlot( SLOT_QUICK_4, "InvQuick4" );
-    AllowSlot( SLOT_QUICK_5, "InvQuick5" );
-    AllowSlot( SLOT_QUICK_6, "InvQuick6" );
-    AllowSlot( SLOT_QUICK_7, "InvQuick7" );
-    AllowSlot( SLOT_QUICK_8, "InvQuick8" );
-    AllowSlot( SLOT_QUICK_9, "InvQuick9" );
-    AllowSlot( SLOT_QUICK_10, "InvQuick10" );
-    AllowSlot( SLOT_QUICK_11, "InvQuick11" );
-    AllowSlot( SLOT_QUICK_12, "InvQuick12" );
-
     // Valid name letters
     __ValidNameLettersCommon = "_ .-1234567890";
     __ValidNameLettersCulture1 = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";

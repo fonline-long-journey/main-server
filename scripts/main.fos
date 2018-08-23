@@ -110,19 +110,6 @@ bool start()
     // Item slots, passed with -
     SetSendParameter( -SLOT_HAND1, true, "fonline_tla.dll@allowSlot_Hand1" );
     SetSendParameter( -SLOT_ARMOR, true );
-    // Quickbar @erandelax 22/08/18 (хз действительно ли надо)
-    SetSendParameter( -SLOT_QUICK_1, true );
-    SetSendParameter( -SLOT_QUICK_2, true );
-    SetSendParameter( -SLOT_QUICK_3, true );
-    SetSendParameter( -SLOT_QUICK_4, true );
-    SetSendParameter( -SLOT_QUICK_5, true );
-    SetSendParameter( -SLOT_QUICK_6, true );
-    SetSendParameter( -SLOT_QUICK_7, true );
-    SetSendParameter( -SLOT_QUICK_8, true );
-    SetSendParameter( -SLOT_QUICK_9, true );
-    SetSendParameter( -SLOT_QUICK_10, true );
-    SetSendParameter( -SLOT_QUICK_11, true );
-    SetSendParameter( -SLOT_QUICK_12, true );
     // Some flags for correct client working
     SetSendParameter( MODE_NO_BARTER, true );
     SetSendParameter( MODE_NO_STEAL, true );

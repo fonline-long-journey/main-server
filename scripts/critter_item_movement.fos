@@ -15,9 +15,6 @@ bool critter_check_move_item( Critter& cr, Item& item, uint8 toSlot, Item@ itemS
 {
     uint8 fromSlot = item.CritSlot;
 
-    // Quickbar item movement @erandelax 22/08/2018
-    if(toSlot >= SLOT_QUICK_1 && toSlot <= SLOT_QUICK_12) return true;
-
     // Drop
     if( toSlot == SLOT_GROUND )
         return true;
@@ -110,7 +107,7 @@ void unsafe_MoveItem(Critter& player, int slot_src, int slot_dst, int mode, stri
                 player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(slot_src));
             }
             // If mode 2 is used and object can be used on someone, turn on USE ON mode
-            if( (srcItems[0].Flags & ITEM_CAN_USE_ON_SMTH) > 0 ){
+            if( 2 == mode && (srcItems[0].Flags & ITEM_CAN_USE_ON_SMTH) > 0 ){
                 player.RunClientScript("client_main@__ChangeCursor",CURSOR_USE_ITEM,0,0,"",null);
             }
         }

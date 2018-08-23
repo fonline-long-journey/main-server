@@ -2899,7 +2899,12 @@ namespace Game_TLJ
     string@ FormatXXX( int value )
     {
         string@ result = "";
-        int offs = 0;
+        result = "" + ABS(value);
+        if(result.length() < 2) result = "0" + result;
+        if(result.length() < 3) result = "0" + result;
+        if( value < 0 ) result = "-" + result;
+        return result;
+        /*int offs  = 0;
         if( value >= 0 )
         {
             result += EncodeUTF8( '9' + 4 );
@@ -2917,8 +2922,9 @@ namespace Game_TLJ
         result += EncodeUTF8( '0' + offs + value / 10 % 10 );
         result += EncodeUTF8( '0' + offs + value % 10 );
     
-        return result;
+        return result;*/
     }
+    
 
     class Screen : GUIScreen
     {
@@ -2979,7 +2985,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -1, 313 );
+            SetPosition( -1, 314 );
             SetSize( 1024, 101 );
             SetCheckTransparentOnHit( true );
             SetBackgroundImage( "art/intrface/iface_tlj_main.png" );
@@ -3031,9 +3037,10 @@ namespace Game_TLJ
         void OnConstruct() override
         {
             SetActive( false );
-            SetPosition( 2, -111 );
-            SetSize( 292, 123 );
-            SetBackgroundImage( "art/intrface/iface_add_msg.png" );
+            SetPosition( -1, -16 );
+            SetSize( 300, 102 );
+            SetAnchor( ANCHOR_BOTTOM );
+            SetBackgroundImage( "art/intrface/chat_short.png", IMAGE_LAYOUT_STRETCH );
         }
     }
 
@@ -3055,9 +3062,9 @@ namespace Game_TLJ
 
         void OnConstruct() override
         {
-            SetPosition( 11, 12 );
-            SetSize( 275, 56 );
-            SetAnchor( ANCHOR_TOP );
+            SetPosition( 10, 12 );
+            SetSize( 280, 60 );
+            SetAnchor( ANCHOR_LEFT| ANCHOR_RIGHT| ANCHOR_TOP| ANCHOR_BOTTOM );
         }
     }
 
@@ -3065,16 +3072,16 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 254, 80 );
+            SetPosition( 252, 88 );
             SetSize( 16, 12 );
             SetPressedImage( "art/intrface/yellowDot.png" );
         }
 
         void OnCheckedChanged() override
         {
-            GUIObject@ messageBoxText = Parent.Find( "MessageBoxText" );
-            GUIObject@ messageBoxExtended = Parent.Find( "MessageBoxExtended" );
             GUIObject@ console = Parent.Find( "Console" );
+            GUIObject@ messageBoxExtended = Parent.Find( "MessageBoxExtended" );
+            GUIObject@ messageBoxText = Parent.Find( "MessageBoxText" );
             
             messageBoxText.SetSize( messageBoxText.Width, IsChecked ? 170 : 54 );
             messageBoxText.SetPosition( messageBoxText.PosX, IsChecked ? -104 : 12 );
@@ -3087,9 +3094,9 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 12, 79 );
-            SetSize( 11, 6 );
-            SetPressedImage( "art/intrface/iface_small_btn.png" );
+            SetPosition( 252, 100 );
+            SetSize( 16, 12 );
+            SetPressedImage( "art/intrface/greenDot.png" );
         }
 
         void OnCheckedChanged() override
@@ -3102,9 +3109,9 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 12, 87 );
-            SetSize( 11, 6 );
-            SetPressedImage( "art/intrface/iface_small_btn.png" );
+            SetPosition( 271, 100 );
+            SetSize( 16, 12 );
+            SetPressedImage( "art/intrface/redDot.png" );
         }
 
         void OnCheckedChanged() override
@@ -3117,7 +3124,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 742, 71 );
+            SetPosition( 712, 81 );
             SetSize( 19, 28 );
             SetPressedImage( "art/intrface/menu.png" );
         }
@@ -3132,7 +3139,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 210, 79 );
+            SetPosition( 210, 92 );
             SetSize( 36, 15 );
             SetPressedImage( "art/intrface/inv.png" );
         }
@@ -3147,7 +3154,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 921, 6 );
+            SetPosition( 721, 6 );
             SetSize( 20, 20 );
             SetPressedImage( "art/intrface/btn_skill.png" );
         }
@@ -3162,7 +3169,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 956, 6 );
+            SetPosition( 898, 16 );
             SetSize( 20, 20 );
             SetPressedImage( "art/intrface/btn_skill.png" );
         }
@@ -3177,7 +3184,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 163, 78 );
+            SetPosition( 163, 91 );
             SetSize( 38, 17 );
             SetPressedImage( "art/intrface/map.png" );
         }
@@ -3192,7 +3199,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 25, 79 );
+            SetPosition( 25, 90 );
             SetSize( 38, 17 );
             SetPressedImage( "art/intrface/cha.png" );
         }
@@ -3210,7 +3217,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 118, 78 );
+            SetPosition( 118, 91 );
             SetSize( 38, 17 );
             SetPressedImage( "art/intrface/pip.png" );
         }
@@ -3225,7 +3232,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 72, 78 );
+            SetPosition( 72, 91 );
             SetSize( 38, 17 );
             SetPressedImage( "art/intrface/fix.png" );
         }
@@ -3242,7 +3249,7 @@ namespace Game_TLJ
 
         void OnConstruct() override
         {
-            SetPosition( 963, 41 );
+            SetPosition( 891, 49 );
             SetBackgroundImage( "art/intrface/combat.fofrm" );
         }
 
@@ -3305,105 +3312,15 @@ namespace Game_TLJ
         }
     }
 
-    class ActionPoints : GUIGrid
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 475, 40 );
-            SetCellPrototype( "Led" );
-            SetGridSize( 10 );
-            SetColumns( 10 );
-            SetPadding( 9, 0 );
-        }
-
-        void OnDraw() override
-        {
-            CritterCl@ chosen = GetChosen();
-            int ap = ( chosen !is null ? chosen.Param[ ST_CURRENT_AP ] : 0 );
-            uint moveAp = ( IsTurnBased() && chosen !is null ? chosen.Param[ ST_MOVE_AP ] : 0 );
-            for( uint i = 0; i < Cells.length(); i++ )
-            {
-                uint absAp = uint( ABS( ap ) );
-                bool active = ( i < absAp + moveAp );
-                Cells[ i ].SetActive( active );
-                if( active )
-                {
-                    Cells[ i ].GetChild( 0 ).SetActive( ap >= 0 && i < absAp ); // Green
-                    Cells[ i ].GetChild( 1 ).SetActive( ap < 0 && i < absAp ); // Red
-                    Cells[ i ].GetChild( 2 ).SetActive( i >= absAp ); // Yellow
-                }
-            }
-        }
-    }
-
-    class Led : GUIPanel
-    {
-        void OnConstruct() override
-        {
-        }
-    }
-
-    class LedGreen : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( -167, 39 );
-            SetSize( 16, 12 );
-            SetBackgroundImage( "art/intrface/greenDot.png" );
-        }
-    }
-
-    class LedRed : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( -167, 15 );
-            SetSize( 16, 12 );
-            SetBackgroundImage( "art/intrface/redDot.png" );
-        }
-    }
-
-    class LedYellow : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( -167, 27 );
-            SetSize( 16, 12 );
-            SetBackgroundImage( "art/intrface/yellowDot.png" );
-        }
-    }
-
-    class BreakTime : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 571, 40 );
-        }
-
-        void OnDraw() override
-        {
-            CritterCl@ chosen = GetChosen();
-            GetChild( 0 ).SetActive( chosen !is null && chosen.IsBusy() );
-        }
-    }
-
-    class BreakTimeLed : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 32, 38 );
-            SetSize( 16, 12 );
-            SetBackgroundImage( "art/intrface/redDot.png" );
-        }
-    }
-
     class HitPoints : GUIText
     {
         void OnConstruct() override
         {
-            SetPosition( 614, 14 );
+            SetPosition( 577, 12 );
+            SetSize( 110, 50 );
             SetTextFont( FONT_NUM );
-            SetTextColor( COLOR_IFACE );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor(  COLOR_RGB( 0xFF, 0xFF, 0xFF ) );
         }
 
         string@ get_Text() override
@@ -3420,9 +3337,11 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 301, 14 );
+            SetPosition( 317, 10 );
+            SetSize( 110, 50 );
             SetTextFont( FONT_NUM );
-            SetTextColor( COLOR_GRAY );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_LGRAY );
         }
 
         string@ get_Text() override
@@ -3439,15 +3358,15 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 765, 34 );
-            SetSize( 184, 67 );
-            SetPressedImage( "art/intrface/iface_hand.png" );
+            SetPosition( 735, 45 );
+            SetSize( 143, 66 );
+            SetPressedImage( "art/intrface/gunslot_down.png", IMAGE_LAYOUT_STRETCH );
         }
 
         void OnMouseDown( int button ) override
         {
-            if( button == MOUSE_BUTTON_LEFT || button == MOUSE_BUTTON_RIGHT )
-                GetChild( 0 ).SetPosition( 0, -2 );
+            //if( button == MOUSE_BUTTON_LEFT || button == MOUSE_BUTTON_RIGHT )
+            //    GetChild( 0 ).SetPosition( 0, -2 );
         }
 
         void OnMouseUp( int button, bool lost ) override
@@ -3457,6 +3376,8 @@ namespace Game_TLJ
 
         void OnMouseClick( int button ) override
         {
+            Message("click plate");
+            
             if( button == MOUSE_BUTTON_LEFT )
                 CustomCall( "UseMainItem" );
             else if( button == MOUSE_BUTTON_RIGHT )
@@ -3487,7 +3408,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetSize( 188, 67 );
+            SetSize( 140, 67 );
             SetNotHittable( true );
         }
 
@@ -3497,6 +3418,7 @@ namespace Game_TLJ
             if( item !is null )
                 picInv = ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv );
             SetBackgroundImage( picInv, IMAGE_LAYOUT_ZOOM );
+            SetSize(140,67);
         }
     }
 
@@ -3534,7 +3456,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 159, 4 );
+            SetPosition( 106, 9 );
             SetSize( 17, 12 );
             SetAnchor( ANCHOR_RIGHT| ANCHOR_TOP );
             SetNotHittable( true );
@@ -3623,7 +3545,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -13, 115 );
+            SetPosition( -7, 115 );
             SetSize( 17, 12 );
             SetBackgroundImage( "art/intrface/ap_pic.png" );
         }
@@ -3633,7 +3555,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -22, 120 );
+            SetPosition( -22, 114 );
             SetTextFont( FONT_SAND_NUM );
             SetTextColor( COLOR_IFACE );
         }
@@ -3643,7 +3565,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 161, 46 );
+            SetPosition( 120, 45 );
             SetSize( 18, 18 );
             SetNotHittable( true );
             SetBackgroundImage( "art/intrface/aim_pic.png" );
@@ -3725,7 +3647,7 @@ namespace Game_TLJ
 
         void OnConstruct() override
         {
-            SetPosition( 177, -7 );
+            SetPosition( 142, -7 );
         }
     }
 
@@ -3797,11 +3719,287 @@ namespace Game_TLJ
         }
     }
 
+    class AmmoBar : GUIPanel
+    {
+        uint sprite      = 0;
+        uint spriteWidth = 0;
+
+        void OnConstruct() override
+        {
+            SetPosition( 3, -9 );
+            SetSize( 140, 8 );
+            SetNotHittable( true );
+        }
+
+        void OnInit() override
+        {
+            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            spriteWidth = GetSpriteWidth(sprite, -1);
+        }
+
+        void OnDrawItem( ItemCl@ item, GUIObject@ cell, uint cellIndex ) override
+        {
+            uint max  = 0;
+            uint curr = 0;
+            if( item !is null )
+            {
+                if( item.GetType() == ITEM_TYPE_WEAPON && item.Proto.Weapon_MaxAmmoCount > 0 )
+                {
+                    max  = item.Proto.Weapon_MaxAmmoCount;
+                    curr = item.AmmoCount;
+                }
+                else
+                {
+                    max  = item.Proto.IndicatorMax;
+                    curr = item.Indicator;
+                }
+                if(max > 0 && curr <= max && curr >= 0){
+                    uint barWidth     = floor( get_Width() * curr / max );
+                    uint colorOffsetG = (144-64) * curr / max;
+                    uint colorOffsetB = (144-18) * curr / max;
+                    uint colorOffsetA = 128 * curr / max;
+                    DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,12,0,0,COLOR_ARGB(128+colorOffsetA,144,144-colorOffsetG,144-colorOffsetB));
+                }
+            }
+        }
+    }
+
+    class ActionBar : GUIPanel
+    {
+        uint sprite       = 0;
+        uint spriteWidth  = 0;
+        uint spriteHeight = 0;
+
+        void OnConstruct() override
+        {
+            SetPosition( 324, 83 );
+            SetSize( 304, 26 );
+            SetNotHittable( true );
+        }
+
+        void OnInit() override
+        {
+            sprite       = LoadSprite( "ap_bar_seg.png", PT_ART_INTRFACE );
+            spriteWidth  = GetSpriteWidth(sprite, -1);
+            spriteHeight = GetSpriteHeight(sprite, -1);
+        }
+
+        void OnDraw() override
+        {
+            CritterCl@ chosen = GetChosen();
+            if(valid(chosen))
+            {
+                int ap           = ( chosen !is null ? CLAMP(chosen.Param[ ST_CURRENT_AP ],-100,100) : 0 );
+                uint barWidth    = floor(get_Width() * ABS( ap ) / 100);
+                uint colorOffset = (ap >= 0) ? floor((255 * ABS(ap)) / 100) : 0;
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,spriteHeight,0,0,COLOR_ARGB(120, 255 - colorOffset, colorOffset, 0));
+            }
+        }
+    }
+
+    class ActionBarValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 314, -1 );
+            SetSize( 45, 26 );
+            SetNotHittable( true );
+            SetTextFont( FONT_THIN );
+            SetTextFlags( FT_CENTERX | FT_CENTERY | FT_BORDERED );
+        }
+
+        string@ get_Text() override
+        {
+            CritterCl@ chosen = GetChosen();
+            uint colorOffset = (chosen.Param[ ST_CURRENT_AP ] >= 0) ? floor((255 * ABS(chosen.Param[ ST_CURRENT_AP ])) / 100) : 0;
+            SetTextColor( COLOR_ARGB(255, 255 - colorOffset, colorOffset, 0) );
+            return "" + chosen.Param[ ST_CURRENT_AP ];
+        }
+    }
+
+    class BreakTime : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 239, 50 );
+        }
+
+        void OnDraw() override
+        {
+            CritterCl@ chosen = GetChosen();
+            GetChild( 0 ).SetActive( chosen !is null && chosen.IsBusy() );
+        }
+    }
+
+    class BreakTimeLed : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 32, 38 );
+            SetSize( 16, 12 );
+            SetBackgroundImage( "art/intrface/redDot.png" );
+        }
+    }
+
+    class HungerBar : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 443, 50 );
+            SetSize( 120, 17 );
+            SetBackgroundImage( "art/intrface/bar-4b.png" );
+        }
+    }
+
+    class HungerFill : GUIPanel
+    {
+        uint sprite;
+        uint spriteWidth;
+
+        void OnConstruct() override
+        {
+            SetPosition( 8, 1 );
+            SetSize( 102, 15 );
+        }
+
+        void OnInit() override
+        {
+            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            spriteWidth = GetSpriteWidth(sprite, -1) ;
+        }
+
+        void OnDraw() override
+        {
+            CritterCl@ chosen = GetChosen();
+            if(valid(chosen))
+            {
+                uint barWidth    = get_Width() - get_Width() * ABS( chosen.Param[ST_HUNGER] ) / 2500; // Hunger counter is inverted
+                uint colorOffset = 255 * ABS( chosen.Param[ST_HUNGER] ) / 2500;
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(200,255-colorOffset,colorOffset,0));
+                
+            }
+        }
+    }
+
+    class HungerIcon : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 85, -1 );
+            SetSize( 17, 17 );
+            SetBackgroundImage( "art/intrface/icon_hunger.png" );
+        }
+    }
+
+    class ThirstBar : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 443, 29 );
+            SetSize( 120, 17 );
+            SetBackgroundImage( "art/intrface/bar-4b.png" );
+        }
+    }
+
+    class ThirstFill : GUIPanel
+    {
+        uint sprite;
+        uint spriteWidth;
+
+        void OnConstruct() override
+        {
+            SetPosition( 9, 1 );
+            SetSize( 102, 15 );
+        }
+
+        void OnInit() override
+        {
+            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            spriteWidth = GetSpriteWidth(sprite, -1) ;
+        }
+
+        void OnDraw() override
+        {
+            CritterCl@ chosen = GetChosen();
+            if(valid(chosen))
+            {
+                uint barWidth    = get_Width() - get_Width() * ABS( chosen.Param[ST_THIRST] ) / 2500; // Thirst counter is inverted
+                uint colorOffset = 255 * ABS( chosen.Param[ST_THIRST] ) / 2500;
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(200,255-colorOffset,colorOffset,0));
+                
+            }
+        }
+    }
+
+    class ThirstIcon : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 89, 1 );
+            SetSize( 9, 13 );
+            SetBackgroundImage( "art/intrface/icon_thirst.png" );
+        }
+    }
+
+    class FatigueBar : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 443, 8 );
+            SetSize( 120, 17 );
+            SetBackgroundImage( "art/intrface/bar-4b.png" );
+        }
+    }
+
+    class FatigueFill : GUIPanel
+    {
+        uint sprite;
+        uint spriteWidth;
+
+        void OnConstruct() override
+        {
+            SetPosition( 9, 1 );
+            SetSize( 102, 15 );
+        }
+
+        void OnInit() override
+        {
+            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            spriteWidth = GetSpriteWidth(sprite, -1) ;
+        }
+
+        void OnDraw() override
+        {
+            CritterCl@ chosen = GetChosen();
+            if(valid(chosen))
+            {
+                uint barWidth    = get_Width() * ABS( chosen.Param[ST_FATIGUE] ) / 2500;
+                uint colorOffset = 255 * ABS( chosen.Param[ST_FATIGUE] ) / 2500;
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(200,255-colorOffset,colorOffset,0));
+                
+            }
+        }
+    }
+
+    class FatigueIcon : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 87, 0 );
+            SetSize( 15, 15 );
+            SetBackgroundImage( "art/intrface/icon_fatigue.png" );
+        }
+    }
+
+    import uint quickItemAddCurrent(uint quick_slot) from "client_quickbar";
+    import void quickItemUse(uint quick_slot) from "client_quickbar";
+    import ItemCl@ quickItem(uint quick_slot) from "client_quickbar";
+
     class Quickbar : GUIPanel
     {
         void OnConstruct() override
         {
-            SetPosition( 396, 363 );
+            SetPosition( 119, 431 );
             SetSize( 50, 387 );
             SetBackgroundImage( "art/intrface/quickbar_vertical.png" );
         }
@@ -3813,315 +4011,47 @@ namespace Game_TLJ
         }
     }
 
-    class QuickSlotRH : GUIItemView
+    class QuickbarGrid : GUIGrid
     {
-        uint SLOT = SLOT_HAND2;
-
         void OnConstruct() override
         {
-            SetPosition( 9, 6 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            Message(" "+button);
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
+            SetPosition( 9, 5 );
+            SetCellPrototype( "QuickbarItem" );
+            SetGridSize( 11 );
         }
     }
 
-    class QuickSlot1 : GUIItemView
+    class QuickbarItem : GUIButton
     {
-        uint SLOT = SLOT_QUICK_1;
+        uint slot_id = 0;
+        uint item_id = 0;
 
         void OnConstruct() override
         {
-            SetPosition( 9, 40 );
+            SetPosition( 0, 1 );
             SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
         }
 
-        void OnMouseDown( int button ) override
+        void OnDraw() override
         {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
+            //Message("SLOT"+slot_id);
+            //ItemCl@ item = quickItem(slot_id);
+            //BackgroundImage.Load( item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0 );
         }
 
-        int OnCheckItem( ItemCl@ item ) override
+        void OnLMousePressed() override
         {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot2 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_2;
-
-        void OnConstruct() override
-        {
-            SetPosition( 9, 74 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
+            //quickItemUse(slot_id);
         }
 
-        void OnMouseDown( int button ) override
+        void OnRMousePressed() override
         {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot3 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_3;
-
-        void OnConstruct() override
-        {
-            SetPosition( 9, 74 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot4 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_4;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 107 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot5 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_5;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 142 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot6 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_6;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 175 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot7 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_7;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 210 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot8 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_8;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 244 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot9 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_9;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 278 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot10 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_10;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 312 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class QuickSlot11 : GUIItemView
-    {
-        uint SLOT = SLOT_QUICK_11;
-
-        void OnConstruct() override
-        {
-            SetPosition( 8, 346 );
-            SetSize( 30, 30 );
-            SetCellPrototype( ".SlotItem" );
-            SetGridSize( 1 );
-            SetUserData( SLOT );
-        }
-
-        void OnMouseDown( int button ) override
-        {
-            RunServerScriptUnsafe( "critter_item_movement@unsafe_MoveItem", int(SLOT), int(SLOT_HAND1), button, "", null );
-        }
-
-        int OnCheckItem( ItemCl@ item ) override
-        {
-            return item.CritSlot == SLOT ? 0 : -1;
-        }
-    }
-
-    class SlotItem : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 9, 6 );
-            SetSize( 30, 30 );
-            SetDraggable( true );
-            SetNotHittable( true );
-            SetBackgroundImage( "art/items/mine.png", IMAGE_LAYOUT_ZOOM );
+            //quickItemAddCurrent(slot_id);
         }
 
         void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
         {
-            SetPosition( 0, 0 );
-        }
-
-        void OnDrawItem( ItemCl@ item, GUIObject@ cell, uint cellIndex ) override
-        {
-            SetDraggable( item !is null );
-            BackgroundImage.Load( item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0 );
+            slot_id = uint(cellIndex);
         }
     }
 
@@ -4169,20 +4099,6 @@ namespace Game_TLJ
         _EndTurn.Init( _Combat );
         EndCombat _EndCombat();
         _EndCombat.Init( _Combat );
-        ActionPoints _ActionPoints();
-        _ActionPoints.Init( _Main );
-        Led _Led();
-        _Led.Init( _ActionPoints );
-        LedGreen _LedGreen();
-        _LedGreen.Init( _Led );
-        LedRed _LedRed();
-        _LedRed.Init( _Led );
-        LedYellow _LedYellow();
-        _LedYellow.Init( _Led );
-        BreakTime _BreakTime();
-        _BreakTime.Init( _Main );
-        BreakTimeLed _BreakTimeLed();
-        _BreakTimeLed.Init( _BreakTime );
         HitPoints _HitPoints();
         _HitPoints.Init( _Main );
         ArmorClass _ArmorClass();
@@ -4213,34 +4129,40 @@ namespace Game_TLJ
         _AmmoLine.Init( _Indicators );
         DeteriorationLine _DeteriorationLine();
         _DeteriorationLine.Init( _Indicators );
+        AmmoBar _AmmoBar();
+        _AmmoBar.Init( _MainItemSlotCell );
+        ActionBar _ActionBar();
+        _ActionBar.Init( _Main );
+        ActionBarValue _ActionBarValue();
+        _ActionBarValue.Init( _ActionBar );
+        BreakTime _BreakTime();
+        _BreakTime.Init( _Main );
+        BreakTimeLed _BreakTimeLed();
+        _BreakTimeLed.Init( _BreakTime );
+        HungerBar _HungerBar();
+        _HungerBar.Init( _Main );
+        HungerFill _HungerFill();
+        _HungerFill.Init( _HungerBar );
+        HungerIcon _HungerIcon();
+        _HungerIcon.Init( _HungerFill );
+        ThirstBar _ThirstBar();
+        _ThirstBar.Init( _Main );
+        ThirstFill _ThirstFill();
+        _ThirstFill.Init( _ThirstBar );
+        ThirstIcon _ThirstIcon();
+        _ThirstIcon.Init( _ThirstFill );
+        FatigueBar _FatigueBar();
+        _FatigueBar.Init( _Main );
+        FatigueFill _FatigueFill();
+        _FatigueFill.Init( _FatigueBar );
+        FatigueIcon _FatigueIcon();
+        _FatigueIcon.Init( _FatigueFill );
         Quickbar _Quickbar();
         _Quickbar.Init( _Screen );
-        QuickSlotRH _QuickSlotRH();
-        _QuickSlotRH.Init( _Quickbar );
-        QuickSlot1 _QuickSlot1();
-        _QuickSlot1.Init( _Quickbar );
-        QuickSlot2 _QuickSlot2();
-        _QuickSlot2.Init( _Quickbar );
-        QuickSlot3 _QuickSlot3();
-        _QuickSlot3.Init( _Quickbar );
-        QuickSlot4 _QuickSlot4();
-        _QuickSlot4.Init( _Quickbar );
-        QuickSlot5 _QuickSlot5();
-        _QuickSlot5.Init( _Quickbar );
-        QuickSlot6 _QuickSlot6();
-        _QuickSlot6.Init( _Quickbar );
-        QuickSlot7 _QuickSlot7();
-        _QuickSlot7.Init( _Quickbar );
-        QuickSlot8 _QuickSlot8();
-        _QuickSlot8.Init( _Quickbar );
-        QuickSlot9 _QuickSlot9();
-        _QuickSlot9.Init( _Quickbar );
-        QuickSlot10 _QuickSlot10();
-        _QuickSlot10.Init( _Quickbar );
-        QuickSlot11 _QuickSlot11();
-        _QuickSlot11.Init( _Quickbar );
-        SlotItem _SlotItem();
-        _SlotItem.Init( _Quickbar );
+        QuickbarGrid _QuickbarGrid();
+        _QuickbarGrid.Init( _Quickbar );
+        QuickbarItem _QuickbarItem();
+        _QuickbarItem.Init( _QuickbarGrid );
         GUI_RegisterScreen( screenIndex, _Screen );
     }
 }
@@ -4265,7 +4187,7 @@ namespace Inventory_TLJ
         {
             SetPosition( 14, 20 );
             SetCellPrototype( "InvItem" );
-            SetGridSize( 10 );
+            SetGridSize( 18 );
             SetColumns( 1 );
             SetUserData( SLOT_INV );
             SetUseSorting( true );
