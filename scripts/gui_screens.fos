@@ -3376,8 +3376,6 @@ namespace Game_TLJ
 
         void OnMouseClick( int button ) override
         {
-            Message("click plate");
-            
             if( button == MOUSE_BUTTON_LEFT )
                 CustomCall( "UseMainItem" );
             else if( button == MOUSE_BUTTON_RIGHT )
@@ -3995,7 +3993,7 @@ namespace Game_TLJ
     }
 
     import uint quickItemAddCurrent(uint quick_slot) from "client_quickbar";
-    import void quickItemUse(uint quick_slot) from "client_quickbar";
+    import void quickItemUse(uint quick_slot, bool forced = false) from "client_quickbar";
     import ItemCl@ quickItem(uint quick_slot) from "client_quickbar";
 
     class Quickbar : GUIPanel
@@ -4083,6 +4081,15 @@ namespace Game_TLJ
             uint icon = item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0;
             SetBackgroundImage(icon > 0 ? icon : -1,IMAGE_LAYOUT_ZOOM);
             
+            QuickbarLabel@ label = cast<QuickbarLabel> (Find("QuickbarLabel"));
+            if(label !is null){
+                if(item !is null){
+                    int count = item.GetCount();
+                    label.SetText(count>1?""+count:"");
+                }else{
+                    label.SetText("");
+                }
+            }
         }
 
         void OnMouseDown( int button ) override
@@ -4099,23 +4106,44 @@ namespace Game_TLJ
                         parent.scroll_position += 1;
                     }
                 }
-                Message("Scroll:"+parent.scroll_position);
             }
         }
 
-        void OnLMousePressed() override
+        void OnMousePressed( int button ) override
         {
-            quickItemUse(slot_id + id_offset());
-        }
-
-        void OnRMousePressed() override
-        {
-            quickItemAddCurrent(slot_id + id_offset());
+            switch(button){
+              case 0: // Left click 
+                if(IsCtrlDown()){
+                    quickItemUse(slot_id + id_offset(),true);
+                }else{
+                    quickItemUse(slot_id + id_offset());
+                }
+                break;
+              case 1: // Right click
+                quickItemAddCurrent(slot_id + id_offset());
+                break;
+              case 2: // Middle mouse button
+                quickItemUse(slot_id + id_offset(),true);
+                break;
+            }
         }
 
         void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
         {
             slot_id = uint(cellIndex);
+        }
+    }
+
+    class QuickbarLabel : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 2, 13 );
+            SetSize( 32, 18 );
+            SetNotHittable( true );
+            SetTextFont( FONT_FALLOUT );
+            SetTextFlags( FT_BOTTOM | FT_BORDERED );
+            SetTextColor( COLOR_ARGB(200,255,255,255) );
         }
     }
 
@@ -4251,6 +4279,8 @@ namespace Game_TLJ
         _QuickbarGrid.Init( _Quickbar );
         QuickbarItem _QuickbarItem();
         _QuickbarItem.Init( _QuickbarGrid );
+        QuickbarLabel _QuickbarLabel();
+        _QuickbarLabel.Init( _QuickbarItem );
         QuickbarRotate _QuickbarRotate();
         _QuickbarRotate.Init( _Quickbar );
         GUI_RegisterScreen( screenIndex, _Screen );

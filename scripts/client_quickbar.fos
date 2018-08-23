@@ -29,7 +29,6 @@ uint[] quickbar = {0};
 		}
 		f.close();
 	}
-	for(uint pos = 0; pos < quickbar.length;pos++) Message(pos+"# "+quickbar[pos]);
 }
 
 void SaveQuickbar(){
@@ -55,7 +54,12 @@ void ResizeQuickbar(uint quick_slot){
 	if(chosen is null) return 0;
 	ItemCl@ item = chosen.GetItem(0,SLOT_HAND1);
 	if(item is null) return 0;
-	quickbar[quick_slot] = item.Id;
+	// Удалить айтем если он и так в руках
+	if(quickbar[quick_slot] == item.Id){
+		quickbar[quick_slot] = 0;
+	} else {
+		quickbar[quick_slot] = item.Id;
+	}
 	SaveQuickbar();
 	return item.Id;
 }
@@ -65,19 +69,44 @@ void ResizeQuickbar(uint quick_slot){
 	ResizeQuickbar(quick_slot);
 	CritterCl@ chosen = GetChosen();
 	if(chosen is null) return null;
-	Message(quick_slot+": "+quickbar[quick_slot]);
 	return chosen.GetItemById(quickbar[quick_slot]);
 }
 
 // Применить айтем из избранного
-/*EXPORT*/ void quickItemUse(uint quick_slot){
+/*EXPORT*/ void quickItemUse(uint quick_slot, bool forced = false){
 	ResizeQuickbar(quick_slot);
-	// @@todo юз айтемов прямо с бара
-	uint[] use = {CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0};
-	SetChosenActions(use);
+	CritterCl@ chosen = GetChosen(); 
+	if(chosen !is null){
+		ItemCl@ item = chosen.GetItemById(quickbar[quick_slot]);
+		ItemCl@ equippedItem = chosen.GetItem(0,SLOT_HAND1);
+		if(item !is null){
+			if(equippedItem is item){ // Если в слоте и в руках один и тот же предмет
+				if(ITEM_TYPE_WEAPON == item.GetType()){ // Для пушек - перейти к выбору цели
+					ChangeCursor( CURSOR_USE_WEAPON );
+				} else {  // Для айтемов - попробовать использовать на ком-то
+					ChangeCursor( CURSOR_USE_ITEM );
+				}
+			}else{ // В слоте другой предмет
+				if( forced ) { // Срочная активация
+					if(ITEM_TYPE_WEAPON == item.GetType()){ // Для пушек - бросить что бы ни было в руках и взять в руки пушку
+						RunServerScriptUnsafe("critter_item_movement@unsafe_DropCurrentItem",item.Id,0,0,"",null);
+						ChangeCursor( CURSOR_USE_WEAPON );
+					} else { 
+						uint[] use = {CHOSEN_USE_ITEM, item.Id, 0, 0, 0, ITEM_MODE_USE, 0};
+						SetChosenActions(use);
+					}
+				} else { // Обычная активация
+					if(ITEM_TYPE_WEAPON == item.GetType()){ // Взять оружие со слота
+						uint[] use = {CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0};
+						SetChosenActions(use);
+					} else { // Взять предмет со слота
+						uint[] use = {CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0};
+						SetChosenActions(use);
+					}
+				}
+			}
+		}
+	}
 }
 
-//#define CHOSEN_USE_ITEM                    ( 6 )  // Item id, Item pid, Target type (see below), Target id, Item mode (see below), Some param (timer)
-//#define CHOSEN_MOVE_ITEM                   ( 7 )  // Item id, Item count, To slot, Is barter container, Is second try
-// //int[] use = {CHOSEN_USE_ITEM, quickbar[quick_slot], 0, 0, 0, ITEM_MODE_USE, 0};
 #endif
