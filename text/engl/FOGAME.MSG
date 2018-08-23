@@ -114,47 +114,20 @@
 #
 ####################################################################################################################################
 
-{150}{}{Parameters:}
-{151}{}{Tools:}
-{152}{}{Items:}
-{155}{}{pc.}
-{156}{}{you have }
-{160}{}{You have successfully created an item(s).}
-{161}{}{You did not manage to create an item(s).}
-{162}{}{You are too tired, try again later.}
+{200}{}{Parameters:}
+{201}{}{Tools:}
+{202}{}{Items:}
+{205}{}{pc.}
+{206}{}{you have }
+{210}{}{You have successfully created an item(s).}
+{211}{}{You did not manage to create an item(s).}
+{212}{}{You are too tired, try again later.}
 
 ####################################################################################################################################
 #
 #		Interface text
 #
 ####################################################################################################################################
-
-# Options
-{200}{}{Language}
-{201}{}{Русский}
-{202}{}{English}
-{210}{}{Screen resolution}
-{211}{}{Full screen}
-{212}{}{Always on top}
-{213}{}{Music volume}
-{214}{}{Sound volume}
-{215}{}{Alwaya run}
-{216}{}{Combat mode}
-{217}{}{Both}
-{218}{}{Real-time}
-{219}{}{Turn-based}
-{220}{}{Battle messages}
-{221}{}{Verbose}
-{222}{}{Brief}
-{223}{}{Game server}
-{224}{}{Proxy type}
-{225}{}{None}
-{226}{}{Socks4}
-{227}{}{Socks5}
-{228}{}{HTTP}
-{229}{}{Proxy server}
-{230}{}{Proxy access}
-{249}{}{Back}
 
 {251}{}{Screenshot saved.}
 {252}{}{Screenshot not saved.}
@@ -379,6 +352,8 @@
 {560}{}{Car number CAR_ID.}
 {561}{}{Fuel: VALUE/MAX_VALUE.}
 {562}{}{Damage: VALUE%.}
+{563}{}{Мин. Сила: |0xF2E519 VALUE|0x3CF800 .}
+{564}{}{Скорость: |0xF2E519 VALUE|0x3CF800 .}
 
 ####################################################################################################################################
 #
@@ -496,6 +471,7 @@
 {1047}{}{|4291317840 Ban by: @lex banby@, Duration: @lex time@ hours, Comment: @lex reason@.}
 {1048}{}{|4291317840 Script error, please contact server administration.}
 {1049}{}{|4291317840 Your hero is finally dead, you can't use this account for further play.}
+{1050}{}{|4291317840 Отсутствует файл конфигурации интерфейса thelongjourney.ini! Обновите клиент по ссылке: D&$&!^@##736123636critical error....}
 
 # Singleplayer messages
 {1070}{}{|4291317840 Game saved.}
@@ -504,6 +480,33 @@
 {1073}{}{|4291317840 Error loading game.}
 {1074}{}{|4291317840 New game begined.}
 {1075}{}{|4291317840 Failed to start a new game.}
+
+# Options
+{1100}{}{Language}
+{1101}{}{Русский}
+{1102}{}{English}
+{1110}{}{Screen resolution}
+{1111}{}{Full screen}
+{1112}{}{Always on top}
+{1113}{}{Music volume}
+{1114}{}{Sound volume}
+{1115}{}{Always run}
+{1116}{}{Combat mode}
+{1117}{}{Both}
+{1118}{}{Real-time}
+{1119}{}{Turn-based}
+{1120}{}{Battle messages}
+{1121}{}{Verbose}
+{1122}{}{Brief}
+{1123}{}{Game server}
+{1124}{}{Proxy type}
+{1125}{}{None}
+{1126}{}{Socks4}
+{1127}{}{Socks5}
+{1128}{}{HTTP}
+{1129}{}{Proxy server}
+{1130}{}{Proxy access}
+{1149}{}{Back}
 
 ####################################################################################################################################
 #

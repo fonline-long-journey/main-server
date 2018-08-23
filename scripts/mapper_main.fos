@@ -339,6 +339,7 @@ void InitializeTabs()
     pids.insertLast( PID_KITTY_SEX_DRUG_STRENGTH );
     pids.insertLast( PID_HYPO );
     pids.insertLast( PID_BOX_OF_DOUGHNUTS );
+	pids.insertLast( PID_DETOXIN);
     TabSetItemPids( TAB_CUSTOM1, "001 - Drugs", pids );
     TabSetName( TAB_CUSTOM1, "Drg" );
 
@@ -1122,6 +1123,11 @@ void InitializeTabs()
     for( uint i = 2003; i <= 2007; i++ )
         pids.insertLast( i );
     TabSetItemPids( TAB_CUSTOM8, "000 - City Jink 1", pids );
+	
+        pids.resize( 0 );
+    for( uint i = 16201; i <= 16999; i++ )
+        pids.insertLast( i );
+    TabSetItemPids( TAB_CUSTOM8, "000 - TLJ", pids );
 
     pids.resize( 0 );
     for( uint i = 2009; i <= 2017; i++ )
@@ -1520,6 +1526,11 @@ void InitializeTabs()
     for( uint i = 5000; i <= 9999; i++ )
         pids.insertLast( i );
     TabSetItemPids( TAB_CUSTOM9, "001 - Vault 13", pids );
+	    pids.resize( 0 );
+    for( uint i = 16000; i <= 16200; i++ )
+        pids.insertLast( i );
+    TabSetItemPids( TAB_CUSTOM9, "002 - TLJ", pids );
+
     TabSetName( TAB_CUSTOM9, "Wall" );
 
     // Tactics tiles, tiles_0.bos

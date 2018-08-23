@@ -8,19 +8,19 @@ funcdef uint PROCESS( Critter@, int&, int&, int& );
 #ifndef __LTP_MAIN__
 
 # define LTP_TEST         ( 0 )
-// 1..9 reserved для навыков и базовых действий
-// 12..19 reserved для новой механики и интерактивных объектов
+// 1..9 reserved РґР»СЏ РЅР°РІС‹РєРѕРІ Рё Р±Р°Р·РѕРІС‹С… РґРµР№СЃС‚РІРёР№
+// 12..19 reserved РґР»СЏ РЅРѕРІРѕР№ РјРµС…Р°РЅРёРєРё Рё РёРЅС‚РµСЂР°РєС‚РёРІРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
 # define LTP_DEFIB        ( 31 ) // pm add
 # define LTP_ROPECUFFS    ( 34 ) // pm add
 # define LTP_SHARP        ( 36 )
 # define LTP_AIM          ( 37 ) // PigBoss aim
-// 37..255 для предметов, квестов, сценок и т.д.
+// 37..255 РґР»СЏ РїСЂРµРґРјРµС‚РѕРІ, РєРІРµСЃС‚РѕРІ, СЃС†РµРЅРѕРє Рё С‚.Рґ.
 
 import bool RegisterProcess( uint8 type, any func ) from "ltp";
 
 import bool StartProcess( Critter& cr, uint8 type, int param0, int param1, int param2, uint time ) from "ltp";
-import bool StartProcess( Critter& cr, uint8 type, int param0, uint time ) from "ltp";            // param1 и param2 затираются в 0
-import bool StartProcess( Critter& cr, uint8 type, uint time ) from "ltp";                        // param0 и param1 и param2 затираются только если type совпадает с type прошлого вызова какой то процедуры
+import bool StartProcess( Critter& cr, uint8 type, int param0, uint time ) from "ltp";            // param1 Рё param2 Р·Р°С‚РёСЂР°СЋС‚СЃСЏ РІ 0
+import bool StartProcess( Critter& cr, uint8 type, uint time ) from "ltp";                        // param0 Рё param1 Рё param2 Р·Р°С‚РёСЂР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РµСЃР»Рё type СЃРѕРІРїР°РґР°РµС‚ СЃ type РїСЂРѕС€Р»РѕРіРѕ РІС‹Р·РѕРІР° РєР°РєРѕР№ С‚Рѕ РїСЂРѕС†РµРґСѓСЂС‹
 
 import bool StopProcess( Critter& cr ) from "ltp";
 

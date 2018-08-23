@@ -1,0 +1,51 @@
+// Generic and helper functions for wait time calculation override.
+// Both client and server.
+
+// You need to add this to defines.fos
+// # pragma bindfield "const uint16 ProtoItem::Wait_Time_0               -> 333"
+// # pragma bindfield "const uint16 ProtoItem::Wait_Time_1               -> 335"
+// # pragma bindfield "const uint16 ProtoItem::Wait_Time_2               -> 337"
+
+// You need to add this to _macros.fos
+// #define _GetProtoTime                 # (prot, use)   (use == 0 ? prot.Wait_Time_0 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_0  \
+                                                     // : use == 1 ? prot.Wait_Time_1 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_1 \
+                                                     // : use == 2 ? prot.Wait_Time_2 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_2 \
+                                                     // : DEFAULT_WAIT_TIME)
+													 
+// #define _GetProtoWaitTime             # (prot, use)   (_GetProtoTime(prot, use))
+
+// #define _GetSkillWaitTime             # (sk)        (DEFAULT_WAIT_TIME) // for future needs
+// #define _GetActionWaitTime             # (action) (DEFAULT_WAIT_TIME)
+
+
+
+
+#ifndef WAIT_TIME_MODULE
+#define WAIT_TIME_MODULE
+
+#include "wait_time_h.fos"
+
+
+// the mode is actual mode, means 4 high bits are aim, 4 low bits are use mode (to use it for both weapons and other items)
+uint GetProtoTime(ProtoItem& prot, uint8 mode, CritterMutual@ crit)
+{
+	uint time = _GetProtoWaitTime(prot, mode&0x0F); // 16 uses limit, more than enough
+	
+	return time;
+}
+
+uint GetSkillTime(int sk, CritterMutual@ crit)
+{
+	uint time = _GetSkillWaitTime(sk);
+
+	return time;
+}
+
+uint GetActionTime(int action, CritterMutual@ crit)
+{
+	uint time = _GetActionWaitTime(action);
+
+	return time;
+}
+
+#endif

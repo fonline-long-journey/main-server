@@ -1,0 +1,140 @@
+// Where: Initialized upon server start. Go to main.fos, function "Init".
+// What: Parses critter types and allows you to access to WalkTime and RunTime.
+// Куда: Инициализировать на момент старта сервера. Ползем в main.fos, в "Init"ы.
+// Что: Кастомный парсер криттертайпов, позволяет получить доступ к WalkTime и RunTime.
+
+// Функция-пример, обновляет скорость передвижения криттера.
+// Апдейт должен вызываться каждый раз при логине, каждый раз когда происходит смена облика и прочие моменты, в которых меняется скорость перемещения.
+//
+// void UpdateMovementSpeed(Critter& cr)
+// {
+    // ICritterType@ crType = GetCrType(cr.CrType); // script engine access
+
+    // cr.StatBase[ST_RUN_TIME]  = crType.getRunTime();
+    // cr.StatBase[ST_WALK_TIME] = crType.getWalkTime();
+    
+     // if(cr.Trait[TRAIT_KAMIKAZE] != 0) // faster, 0 value will make engine to use CRTYPE table instead, but we need to know which values are we working with to predict the code
+    // {
+        // cr.StatBase[ST_RUN_TIME]  -= (cr.StatBase[ST_RUN_TIME]*15)/100;  //15%
+        // cr.StatBase[ST_WALK_TIME] -= (cr.StatBase[ST_WALK_TIME]*15)/100;
+    // }
+    
+    // if(cr.Perk[PE_BONUS_MOVE] != 0)
+    // {
+        // cr.StatBase[ST_RUN_TIME]  -= (cr.StatBase[ST_RUN_TIME]*15*cr.Perk[PE_BONUS_MOVE])/100;  //15% for each stage
+        // cr.StatBase[ST_WALK_TIME] -= (cr.StatBase[ST_WALK_TIME]*15*cr.Perk[PE_BONUS_MOVE])/100;
+    // } 
+
+// }
+
+
+
+#define _CRITTER_TYPES_MODULE_
+
+#include "critter_types_h.fos"
+
+class CCritterType : ICritterType
+{
+	uint16 id;
+	
+	uint16 walkTime = 0;
+	uint16 runTime  = 0;
+	
+	CCritterType(uint16 id, uint16 walkTime, uint16 runTime)
+	{
+		this.id = id;
+		this.walkTime = walkTime;
+		this.runTime = runTime;
+	}
+	
+	uint16 getWalkTime()
+	{
+		return this.walkTime;
+	}
+	
+	uint16 getRunTime()
+	{
+		return this.runTime;
+	}
+}
+
+
+// engine limitation ? 1k.
+array<CCritterType@> critTypes(1000, null);
+
+
+
+void InitCritterTypes()
+{
+
+	file configuration;
+	
+	if(configuration.open("./data/CritterTypes.cfg", "r" )==0)
+	{
+	 
+		while(!configuration.isEndOfFile())
+        {
+            if(configuration.readWord() == "@") // best code best code best code best code i hate myself best code best code best code
+            {
+				// check CritterTypes.cfg file for reference
+				uint16 id = 0;
+				uint16 runTime = 0;
+				uint16 walkTime = 0;
+				StrToInt(configuration.readWord(), id);
+				string word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				word = configuration.readWord();
+				
+				// all stuff above is still worth someting, but it just skips for now
+				word = configuration.readWord();
+				StrToInt(word, walkTime);
+				word = configuration.readWord();
+				StrToInt(word, runTime);
+				
+				
+				@critTypes[id] = CCritterType(id, walkTime, runTime);
+				
+            }
+        }
+		configuration.close();
+		Log("CritterTypes Initialized.");
+	}
+	
+}
+
+ICritterType@ GetCrType(uint16 crtype)
+{
+	return critTypes[crtype];
+}

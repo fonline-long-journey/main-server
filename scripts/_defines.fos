@@ -5,7 +5,6 @@
 // #define PLAYERS_3D             // Enable 3d players
 // #define PLAYERS_3D_NO_HEAD     // No head slot
 // #define PLAYERS_3D_VAULT_SUITE // Vault suite by default, not naked
-//Ты Петушок
 
 
 // logger
@@ -258,6 +257,49 @@
 #define MESSAGE_TO_I_SEE                         ( 1 )    // Отослать сообщения всем кого видит криттер.
 #define MESSAGE_TO_ALL_ON_MAP                    ( 2 )    // Отослать всем на карте.
 
+// Chosen actions
+// 6 uint parameters, separated by commas
+#define CHOSEN_NONE                        ( 0 )  //
+#define CHOSEN_MOVE                        ( 1 )  // HexX, HexY, Is run, Cut path, Wait double click, Double click tick
+#define CHOSEN_MOVE_TO_CRIT                ( 2 )  // Critter id, None, Is run, Cut path, Wait double click, Double click tick
+#define CHOSEN_DIR                         ( 3 )  // 0 (CW) or 1 (CCW)
+#define CHOSEN_SHOW_ITEM                   ( 4 )  // Item id
+#define CHOSEN_HIDE_ITEM                   ( 5 )  // Item id
+#define CHOSEN_USE_ITEM                    ( 6 )  // Item id, Item pid, Target type (see below), Target id, Item mode (see below), Some param (timer)
+#define CHOSEN_MOVE_ITEM                   ( 7 )  // Item id, Item count, To slot, Is barter container, Is second try
+#define CHOSEN_MOVE_ITEM_CONT              ( 8 )  // From container, Item id, Count
+#define CHOSEN_TAKE_ALL                    ( 9 )  //
+#define CHOSEN_USE_SKL_ON_CRITTER          ( 10 ) // Skill, Critter id
+#define CHOSEN_USE_SKL_ON_ITEM             ( 11 ) // Is inventory, Skill index (SK_*), Item id
+#define CHOSEN_USE_SKL_ON_SCEN             ( 12 ) // Skill, Pid, HexX, HexY
+#define CHOSEN_TALK_NPC                    ( 13 ) // Critter id
+#define CHOSEN_PICK_ITEM                   ( 14 ) // Pid, HexX, HexY
+#define CHOSEN_PICK_CRIT                   ( 15 ) // Critter id, (loot - 0, push - 1)
+#define CHOSEN_WRITE_HOLO                  ( 16 ) // Holodisk id
+
+// Item modes
+#define ITEM_MODE_PRIMARY                  ( 0 )
+#define ITEM_MODE_SECONDARY                ( 1 )
+#define ITEM_MODE_THIRD                    ( 2 )
+#define ITEM_MODE_RELOAD                   ( 3 )
+#define ITEM_MODE_USE                      ( 4 )
+
+// Target types
+#define TARGET_SELF                        ( 0 )
+#define TARGET_SELF_ITEM                   ( 1 )
+#define TARGET_CRITTER                     ( 2 )
+#define TARGET_ITEM                        ( 3 )
+#define TARGET_SCENERY                     ( 4 )
+
+// Cursors
+#define CURSOR_DEFAULT                     ( 0 )
+#define CURSOR_MOVE                        ( 1 )
+#define CURSOR_USE_ITEM                    ( 2 )
+#define CURSOR_USE_WEAPON                  ( 3 )
+#define CURSOR_USE_SKILL                   ( 4 )
+#define CURSOR_WAIT                        ( 5 )
+#define CURSOR_HAND                        ( 6 )
+
 // Critter actions
 // Flags for chosen:
 // l - hardcoded local call
@@ -299,6 +341,21 @@
 #  define SLOT_HEAD                              ( 4 )   // Head slot
 # endif
 #endif
+
+// Quickbar @erandelax 22/08/18
+#define SLOT_QUICK_1							 ( 5 )
+#define SLOT_QUICK_2							 ( 6 )
+#define SLOT_QUICK_3							 ( 7 )
+#define SLOT_QUICK_4							 ( 8 )
+#define SLOT_QUICK_5							 ( 9 )
+#define SLOT_QUICK_6							 ( 10 )
+#define SLOT_QUICK_7							 ( 11 )
+#define SLOT_QUICK_8							 ( 12 )
+#define SLOT_QUICK_9							 ( 13 )
+#define SLOT_QUICK_10							 ( 14 )
+#define SLOT_QUICK_11							 ( 15 )
+#define SLOT_QUICK_12							 ( 16 )
+
 #define SLOT_GROUND                              ( 255 ) // Ground slot, used when critter drop/pick item
 
 // Critter timeevents identifiers
@@ -473,24 +530,24 @@
 #define SKILL_END                                ( __SkillEnd )
 #define SKILL_COUNT                              ( SKILL_END - SKILL_BEGIN + 1 )
 #define MAX_SKILL_VAL                            ( __SkillMaxValue )
-#define SK_SMALL_GUNS                            ( 200 )
-#define SK_BIG_GUNS                              ( 201 )
-#define SK_ENERGY_WEAPONS                        ( 202 )
-#define SK_UNARMED                               ( 203 ) // Hardcoded
-#define SK_MELEE_WEAPONS                         ( 204 )
-#define SK_THROWING                              ( 205 )
-#define SK_FIRST_AID                             ( 206 ) // Hardcoded
-#define SK_DOCTOR                                ( 207 ) // Hardcoded
-#define SK_SNEAK                                 ( 208 ) // Hardcoded
-#define SK_LOCKPICK                              ( 209 ) // Hardcoded
-#define SK_STEAL                                 ( 210 ) // Hardcoded
-#define SK_TRAPS                                 ( 211 ) // Hardcoded
-#define SK_SCIENCE                               ( 212 ) // Hardcoded
-#define SK_REPAIR                                ( 213 ) // Hardcoded
-#define SK_SPEECH                                ( 214 ) // Hardcoded
-#define SK_BARTER                                ( 215 ) // Hardcoded
-#define SK_GAMBLING                              ( 216 )
-#define SK_OUTDOORSMAN                           ( 217 )
+#define SK_SMALL_GUNS                            ( 200 ) // Огнестрельное оружие
+#define SK_BIG_GUNS                              ( 201 ) //(Merge with small guns)
+#define SK_ENERGY_WEAPONS                        ( 202 ) // Энергетическое оружие
+#define SK_UNARMED                               ( 203 ) // Ближний бой
+#define SK_MELEE_WEAPONS                         ( 204 ) //( Merge with Unarmed )
+#define SK_THROWING                              ( 205 ) // Тактическое оружие
+#define SK_FIRST_AID                             ( 206 ) //( Merge with doctor )
+#define SK_DOCTOR                                ( 207 ) // Медицина
+#define SK_SNEAK                                 ( 208 ) // Скрытность
+#define SK_LOCKPICK                              ( 209 ) //( Merge with Sneak on specs )
+#define SK_STEAL                                 ( 210 ) //( Merge with Sneak on specs )
+#define SK_TRAPS                                 ( 211 ) //( Merge with Throwing )
+#define SK_SCIENCE                               ( 212 ) // Наука
+#define SK_REPAIR                                ( 213 ) // Механика
+#define SK_SPEECH                                ( 214 ) //(Merge with barter)
+#define SK_BARTER                                ( 215 ) // Убеждение
+#define SK_GAMBLING                              ( 216 ) //(Don't use at all)
+#define SK_OUTDOORSMAN                           ( 217 ) // Выживание
 // 218..225
 
 // / Tag skills
@@ -1427,6 +1484,41 @@
 #define COMMAND_DROP_UID                         ( 36 )
 #define COMMAND_LOG                              ( 37 )
 
+// Item uses
+#define USE_PRIMARY                              ( 0 )
+#define USE_SECONDARY                            ( 1 )
+#define USE_THIRD                                ( 2 )
+#define USE_RELOAD                               ( 3 )
+#define USE_USE                                  ( 4 )
+#define MAX_USES                                 ( 3 )
+
+// Client lighting
+#define MAX_LIGHT_VALUE                          ( 10000 )
+#define MAX_LIGHT_HEX                            ( 200 )
+#define MAX_LIGHT_ALPHA                          ( 100 )
+
+// Flags
+#define LIGHT_DISABLE_DIR                        # (dir)               ( 1 << CLAMP( dir, 0, 5 ) )
+#define LIGHT_GLOBAL                             ( 0x40 )
+#define LIGHT_INVERSE                            ( 0x80 )
+
+// New defaults of war! Without registration and SMS.
+#define DEFAULT_WAIT_TIME						 ( 1200 )
+#define DEFAULT_AP_SKILL						 ( 2 )
+#define DEFAULT_AP_USE							 ( 3 )
+#define DEFAULT_AP_ACTION						 ( 2 )
+#define DEFAULT_AP_RELOAD						 ( 2 )
+// client side cached sprites to work with ( non-dynamically loaded ones )
+#define CACHED_SPRITES_COUNT                     (500) // just for now
+#define CACHED_MAIN_MENU_SPRITE                  (0)
+#define CACHED_REG_SPRITE                        (1)
+
+
+//Drawing types
+#define DRAW_RAYS				( 0 )
+#define DRAW_BURST_RAYS			( 1 )
+#define DRAW_MUZZLE_FLASHES		( 2 )
+#define DRAW_BURST_MUZZLES		( 3 )
 
 #ifndef SKIP_PRAGMAS
 
@@ -1467,7 +1559,7 @@
 // /
 
 # pragma crdata "Stat           0 199"
-# pragma crdata "Skill        200 217"
+# pragma crdata "Skill        200 210"
 # pragma crdata "TagSkill     226 229"
 # pragma crdata "Timeout      230 249"
 # pragma crdata "Kill         260 280"
@@ -1515,8 +1607,8 @@
 # pragma bindfield "const int    ProtoItem::Armor_DTElectr     -> 160"
 # pragma bindfield "const int    ProtoItem::Armor_DTEmp        -> 164"
 # pragma bindfield "const int    ProtoItem::Armor_DTExplode    -> 168"
-# pragma bindfield "const int    ProtoItem::Armor_MinStrength  -> 172"
-# pragma bindfield "const bool   ProtoItem::Armor_Flexible     -> 176"
+// # pragma bindfield "const int    ProtoItem::Armor_MinStrength  -> 172"
+# pragma bindfield "const bool   ProtoItem::Armor_Flexible     -> 172"
 // Weapon
 # pragma bindfield "const int    ProtoItem::Weapon_DmgType_0 -> 200"
 # pragma bindfield "const int    ProtoItem::Weapon_DmgType_1 -> 204"
@@ -1540,15 +1632,19 @@
 # pragma bindfield "const int    ProtoItem::Weapon_UnarmedCriticalBonus -> 264"
 # pragma bindfield "const uint   ProtoItem::Weapon_CriticalFailture     -> 268"
 # pragma bindfield "const bool   ProtoItem::Weapon_UnarmedArmorPiercing -> 272"
-# pragma bindfield "const bool   ProtoItem::Weapon_Sniper -> 273"
+# pragma bindfield "const bool   ProtoItem::Weapon_Sniper 	  -> 273"
 # pragma bindfield "const int    ProtoItem::Weapon_HearRadius -> 277"
 # pragma bindfield "const int	 ProtoItem::Weapon_MinRadius -> 281"
-# pragma bindfield "const uint   ProtoItem::Weapon_Type -> 285"
+# pragma bindfield "const uint   ProtoItem::Weapon_Type 	 -> 285"
 // Ammo
 # pragma bindfield "const int    ProtoItem::Ammo_ACMod   -> 300"
 # pragma bindfield "const int    ProtoItem::Ammo_DrMod   -> 304"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgMult -> 308"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgDiv  -> 312"
+// Time is running...
+# pragma bindfield "const uint16 ProtoItem::Wait_Time_0      -> 400"
+# pragma bindfield "const uint16 ProtoItem::Wait_Time_1      -> 402"
+# pragma bindfield "const uint16 ProtoItem::Wait_Time_2      -> 404"
 
 // Test function
 # ifdef __SERVER

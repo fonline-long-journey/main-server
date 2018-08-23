@@ -1,0 +1,2794 @@
+﻿// GUI scheme name: The Long Journey
+// RESERVED GUI SCHEME, DON'T TOUCH SUKA
+// Version 0.5b
+
+#include "_macros.fos"
+#include "_client_defines.fos"
+#include "_colors.fos"
+#include "_msgstr.fos"
+#include "gui_h.fos"
+#include "gui_screens_stuff.fos"
+
+void InitializeScreens()
+{
+    Login_TLJ::Init( CLIENT_MAIN_SCREEN_LOGIN );
+    Register_TLJ::Init( CLIENT_MAIN_SCREEN_REGISTRATION );
+    Options::Init( CLIENT_MAIN_SCREEN_OPTIONS );
+}
+
+int alpha = __ScreenHeight;
+int omega = __ScreenWidth;
+
+namespace Login_TLJ 
+{
+
+
+    class Login : GUIScreen
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, 0 );
+            SetSize( alpha, omega );
+            SetDock( DOCK_FILL );
+			SetBackgroundImage ( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class Menu : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( alpha/2 - 640/2, omega/2 - 480/2 );
+            SetSize( 360, 273 );
+            SetBackgroundImage( "art/intrface/login_tlj.png" );
+			// SetCanMove( true, false );
+        }
+    }
+
+    class Play : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 249, 128 );
+            SetSize( 82, 46 );
+            SetPressedImage( "art/intrface/done.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            if( !__Singleplayer )
+                CustomCall( "Login\n" + Screen.FindText("InputLogin").Text + "\n" + Screen.FindText("InputPassword").Text, "\n" );
+            else
+                ShowScreen( CLIENT_MAIN_SCREEN_REGISTRATION );
+        }
+    }
+
+    class Registration : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 12, 186 );
+            SetSize( 26, 26 );
+            SetPressedImage( "art/intrface/MENUDOWN.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            if( !__Singleplayer )
+                ShowScreen( CLIENT_MAIN_SCREEN_REGISTRATION );
+            else
+                ShowScreen( CLIENT_SCREEN_SAVE_LOAD );
+        }
+    }
+
+    class Options : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 128, 186 );
+            SetSize( 26, 26 );
+            SetPressedImage( "art/intrface/MENUDOWN.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            ShowScreen( CLIENT_MAIN_SCREEN_OPTIONS );
+        }
+    }
+
+    class About : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 243, 186 );
+            SetSize( 26, 26 );
+            SetPressedImage( "art/intrface/MENUDOWN.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            ShowScreen( CLIENT_MAIN_SCREEN_CREDITS );
+        }
+    }
+
+    class Exit : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 210, 232 );
+            SetSize( 49, 25 );
+            SetPressedImage( "art/intrface2/ok2.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            TryExit();
+        }
+    }
+
+    class InputLogin : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 62, 130 );
+            SetSize( 156, 18 );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetInputLength( __MaxNameLength );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetText( __Name );
+        }
+    }
+
+    class InputPassword : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, 18 );
+            SetSize( 156, 18 );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetInputLength( __MaxNameLength );
+            SetInputPassword( "#" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetText( CustomCall( "GetPassword" ) );
+        }
+    }
+
+    class MessageBox : GUIMessageBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 13, 9 );
+            SetSize( 323, 95 );
+            SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
+        }
+    }
+
+    class Version : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 10, 5 );
+            SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
+            SetText( MSG_GAME( STR_VERSION_INFO ) );
+            SetTextFlags( FT_BORDERED );
+            SetTextColor( COLOR_WHITE );
+        }
+    }
+
+    void Init( int screenIndex )
+    {
+        Login _Login();
+        _Login.Init( null );
+        Menu _Menu();
+        _Menu.Init( _Login );
+        Play _Play();
+        _Play.Init( _Menu );
+        Registration _Registration();
+        _Registration.Init( _Menu );
+        Options _Options();
+        _Options.Init( _Menu );
+        About _About();
+        _About.Init( _Menu );
+        Exit _Exit();
+        _Exit.Init( _Menu );
+        InputLogin _InputLogin();
+        _InputLogin.Init( _Menu );
+        InputPassword _InputPassword();
+        _InputPassword.Init( _InputLogin );
+        MessageBox _MessageBox();
+        _MessageBox.Init( _Menu );
+        Version _Version();
+        _Version.Init( _Login );
+        GUI_RegisterScreen( screenIndex, _Login );
+    }
+}
+
+namespace Register_TLJ
+{
+    import void player_data_generate( int[]& params ) from "client_main";
+    import bool player_data_check( int[]& params ) from "client_main";
+    
+    int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
+    int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
+    int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_NORMAL_RESIST, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
+    int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
+    int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
+    int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
+    
+    int[] Params( PARAMS_COUNT );
+    
+    int CurTip = -1;
+    
+    int GetParam( int param )
+    {
+        return Params[ param ];
+    }
+    
+    void GenParams()
+    {
+        player_data_generate( Params );
+    }
+    
+    int GetUnspentStatPoints()
+    {
+        int unspent = __StartSpecialPoints;
+        for( uint i = 0; i < ShowBaseStats.length(); i++ )
+            unspent -= __RegParams[ ShowBaseStats[ i ] ];
+        return unspent;
+    }
+    
+    string@ FormatXX( int value )
+    {
+        value = CLAMP( value, 0, 99 );
+        return value < 10 ? "0" + value : "" + value;
+    }
+
+    class Character : GUIScreen
+    {
+        void OnConstruct() override
+        {
+            SetModal( true );
+            SetSize( 800, 600 );
+            SetDock( DOCK_FILL );
+        }
+
+        void OnInit() override
+        {
+            GenParams();
+        }
+    }
+
+    class Main : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 158, 1 );
+            SetSize( 640, 597 );
+            SetBackgroundImage( "art/intrface/register_tlj.png" );
+        }
+    }
+
+    class TLJRegister : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -79, 55 );
+        }
+    }
+
+    class BaseStats : GUIGrid
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 95, 13 );
+            SetCellPrototype( "BaseStat" );
+            SetGridSize( ShowBaseStats.length() );
+        }
+    }
+
+    class BaseStat : GUIPanel
+    {
+        int Param;
+
+        void OnConstruct() override
+        {
+            SetSize( 155, 33 );
+        }
+
+        void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
+        {
+            Param = ShowBaseStats[ cellIndex ];
+        }
+    }
+
+    class StatName : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -10, 4 );
+            SetSize( 40, 20 );
+            SetText( "TXT" );
+            SetTextFont( FONT_BIG );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+
+        void OnInit() override
+        {
+            Text = MSG_GAME( STR_INV_SHORT_SPECIAL( cast< BaseStat >( Parent ).Param ) );
+        }
+    }
+
+    class StatValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 44, 2 );
+            SetSize( 30, 24 );
+            SetTextFont( FONT_BIG_NUM );
+            SetTextColor( COLOR_IFACE );
+        }
+
+        string@ get_Text() override
+        {
+            return FormatXX( GetParam( cast< BaseStat >( Parent ).Param ) );
+        }
+    }
+
+    class StatValueDesc : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 85, 4 );
+            SetSize( 55, 20 );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+        }
+
+        string@ get_Text() override
+        {
+            return MSG_GAME( STR_STAT_LEVEL_ABB( GetParam( cast< BaseStat >( Parent ).Param ) ) );
+        }
+    }
+
+    class StatInc : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 147, 4 );
+            SetSize( 16, 12 );
+            SetPressedImage( "art/intrface/plus_button_dn.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            int param = cast< BaseStat >( Parent ).Param;
+            if( Params[ param ] < 10 && GetUnspentStatPoints() > 0 )
+            {
+                __RegParams[ param ]++;
+                GenParams();
+            }
+        }
+    }
+
+    class StatDec : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 147, 15 );
+            SetSize( 16, 12 );
+            SetPressedImage( "art/intrface/minus_button_dn.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            int param = cast< BaseStat >( Parent ).Param;
+            if( Params[ param ] > 1 )
+            {
+                __RegParams[ param ]--;
+                GenParams();
+            }
+        }
+    }
+
+    class BaseStatPoints : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 97, 219 );
+        }
+    }
+
+    class Title1 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -4, 4 );
+            SetSize( 110, 30 );
+            SetText( MSG_GAME( STR_REG_SPECIAL_SUM ) );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class StatPointsValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 106, 4 );
+            SetSize( 34, 30 );
+            SetTextFont( FONT_BIG_NUM );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_IFACE );
+        }
+
+        string@ get_Text() override
+        {
+            return FormatXX( GetUnspentStatPoints() );
+        }
+    }
+
+    class HealthStats : GUIGrid
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 272, -16 );
+            SetCellPrototype( "HealthStat" );
+            SetGridSize( ShowHealthStats.length() );
+        }
+    }
+
+    class HealthStat : GUIPanel
+    {
+        int Param;
+
+        void OnConstruct() override
+        {
+            SetSize( 122, 14 );
+        }
+
+        void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
+        {
+            Param = ShowHealthStats[ cellIndex ];
+        }
+    }
+
+    class StatDesc : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetSize( 122, 13 );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        void OnDraw() override
+        {
+            int param = cast< HealthStat >( Parent ).Param;
+            uint color;
+            if( param == DAMAGE_RADIATED )
+                color = ( GetParam( ST_RADIATION_LEVEL ) != 0 ? 0 : COLOR_DARK );
+            else if( param == DAMAGE_POISONED )
+                color = ( GetParam( ST_POISONING_LEVEL ) != 0 ? 0 : COLOR_DARK );
+            else
+                color = ( GetParam( param ) != 0 ? 0: COLOR_DARK );
+            SetTextColor( color );
+        }
+
+        string@ get_Text() override
+        {
+            int param = cast< HealthStat >( Parent ).Param;
+            if( param == ST_MAX_LIFE )
+                return MSG_GAME( STR_INV_HP ) + "  " + GetParam( ST_CURRENT_HP ) + " / " + GetParam( ST_MAX_LIFE );
+            return MSG_GAME( STR_PARAM_NAME( param ) );
+        }
+    }
+
+    class ExtendedStats : GUIGrid
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 272, 117 );
+            SetCellPrototype( "ExtendedStat" );
+            SetGridSize( ShowExtendedStats.length() );
+        }
+    }
+
+    class ExtendedStat : GUIPanel
+    {
+        int Param;
+
+        void OnConstruct() override
+        {
+            SetSize( 122, 13 );
+        }
+
+        void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
+        {
+            Param = ShowExtendedStats[ cellIndex ];
+        }
+    }
+
+    class StatName2 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetSize( 100, 13 );
+            SetText( "TXT" );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        void OnInit() override
+        {
+            int param = cast< ExtendedStat >( Parent ).Param;
+            Text = MSG_GAME( STR_PARAM_NAME_SHORT( param ) );
+        }
+    }
+
+    class StatValue2 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 98, 0 );
+            SetSize( 25, 13 );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        string@ get_Text() override
+        {
+            int param = cast< ExtendedStat >( Parent ).Param;
+            string text;
+            if( param == ST_CARRY_WEIGHT )
+                text = "" + ( GetParam( param ) / 1000 );
+            else if( param == ST_NORMAL_RESIST || param == ST_NORMAL_RESIST )
+                text = "" + GetParam( param ) + "%";
+            else
+                text = "" + GetParam( param );
+            return text;
+        }
+    }
+
+    class Traits : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 423, 140 );
+        }
+    }
+
+    class TraitsLeft : GUIGrid
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 4, 6 );
+            SetCellPrototype( "TraitLeft" );
+            SetGridSize( ShowTraitsLeft.length() );
+        }
+    }
+
+    class TraitLeft : GUIPanel
+    {
+        int Param;
+
+        void OnConstruct() override
+        {
+            SetPosition( -1, 0 );
+            SetSize( 150, 13 );
+        }
+
+        void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
+        {
+            Param = ShowTraitsLeft[ cellIndex ];
+        }
+    }
+
+    class Switcher1 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, 1 );
+            SetSize( 17, 11 );
+            SetPressedImage( "art/intrface/TGSKLON.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            int param = cast< TraitLeft >( Parent ).Param;
+            if( __RegParams[ param ] == 0 )
+            {
+                int count = 0;
+                for( uint i = TRAIT_BEGIN; i <= TRAIT_END; i++ )
+                    if( __RegParams[ i ] != 0 )
+                        count++;
+                 if( count < 2 )
+                     __RegParams[ param ] = 1;
+            }
+            else
+            {
+                __RegParams[ param ] = 0;
+            }
+            
+            Parent.FindText( "TraitName1" ).SetTextColor( __RegParams[ param ] != 0 ? COLOR_LGRAY : 0 );
+            
+            GenParams();
+        }
+    }
+
+    class TraitName1 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 22, 0 );
+            SetSize( 120, 14 );
+            SetText( "TXT" );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        void OnInit() override
+        {
+            Text = MSG_GAME( STR_PARAM_NAME( cast< TraitLeft >( Parent ).Param ) );
+        }
+    }
+
+    class TraitsRight : GUIGrid
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 126, 6 );
+            SetCellPrototype( "TraitRight" );
+            SetGridSize( ShowTraitsRight.length() );
+        }
+    }
+
+    class TraitRight : GUIPanel
+    {
+        int Param;
+
+        void OnConstruct() override
+        {
+            SetPosition( -1, 0 );
+            SetSize( 148, 13 );
+        }
+
+        void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
+        {
+            Param = ShowTraitsRight[ cellIndex ];
+        }
+    }
+
+    class Switcher2 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 125, 1 );
+            SetSize( 17, 11 );
+            SetPressedImage( "art/intrface/TGSKLON.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            int param = cast< TraitRight >( Parent ).Param;
+            if( __RegParams[ param ] == 0 )
+            {
+                int count = 0;
+                for( uint i = TRAIT_BEGIN; i <= TRAIT_END; i++ )
+                    if( __RegParams[ i ] != 0 )
+                        count++;
+                 if( count < 2 )
+                     __RegParams[ param ] = 1;
+            }
+            else
+            {
+                __RegParams[ param ] = 0;
+            }
+            
+            Parent.FindText( "TraitName2" ).SetTextColor( __RegParams[ param ] != 0 ? COLOR_LGRAY : 0 );
+            
+            GenParams();
+        }
+    }
+
+    class TraitName2 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 5, 0 );
+            SetSize( 120, 14 );
+            SetText( "TXT" );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        void OnInit() override
+        {
+            Text = MSG_GAME( STR_PARAM_NAME( cast< TraitRight >( Parent ).Param ) );
+        }
+    }
+
+    class Skills : GUIGrid
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 420, -30 );
+            SetCellPrototype( "Skill" );
+            SetGridSize( ShowSkills.length() );
+        }
+    }
+
+    class Skill : GUIPanel
+    {
+        int Param;
+
+        void OnConstruct() override
+        {
+            SetSize( 280, 11 );
+        }
+
+        void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
+        {
+            Param = ShowSkills[ cellIndex ];
+        }
+    }
+
+    class TagSkill : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -1, 0 );
+            SetSize( 17, 11 );
+            SetPressedImage( "art/intrface/tag_button_dn.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            int param = cast< Skill >( Parent ).Param;
+            int freeTagSkills = __StartTagSkillPoints - ( __RegParams[ TAG_SKILL1 ] != 0 ? 1 : 0 ) - ( __RegParams[ TAG_SKILL2 ] != 0 ? 1 : 0 ) - ( __RegParams[ TAG_SKILL3 ] != 0 ? 1 : 0 ) - ( __RegParams[ TAG_SKILL4 ] != 0 ? 1 : 0 );
+            
+            if( __RegParams[ TAG_SKILL1 ] == param )
+                __RegParams[ TAG_SKILL1 ] = 0;
+            else if( __RegParams[ TAG_SKILL2 ] == param )
+                __RegParams[ TAG_SKILL2 ] = 0;
+            else if( __RegParams[ TAG_SKILL3 ] == param )
+                __RegParams[ TAG_SKILL3 ] = 0;
+            else if( __RegParams[ TAG_SKILL4 ] == param )
+                __RegParams[ TAG_SKILL4 ] = 0;
+            else if( __RegParams[ TAG_SKILL1 ] == 0 && freeTagSkills > 0 )
+                __RegParams[ TAG_SKILL1 ] = param;
+            else if( __RegParams[ TAG_SKILL2 ] == 0 && freeTagSkills > 0 )
+                __RegParams[ TAG_SKILL2 ] = param;
+            else if( __RegParams[ TAG_SKILL3 ] == 0 && freeTagSkills > 0 )
+                __RegParams[ TAG_SKILL3 ] = param;
+            else if( __RegParams[ TAG_SKILL4 ] == 0 && freeTagSkills > 0 )
+                __RegParams[ TAG_SKILL4 ] = param;
+            
+            bool tagged = ( __RegParams[ TAG_SKILL1 ] == param || __RegParams[ TAG_SKILL2 ] == param || __RegParams[ TAG_SKILL3 ] == param || __RegParams[ TAG_SKILL4 ] == param );
+            Parent.FindText( "SkillName" ).SetTextColor( tagged ? COLOR_LGRAY : 0 );
+            Parent.FindText( "SkillValue" ).SetTextColor( tagged ? COLOR_LGRAY : 0 );
+            
+            GenParams();
+        }
+    }
+
+    class SkillName : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, -1 );
+            SetSize( 200, 13 );
+            SetText( "TXT" );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        void OnInit() override
+        {
+            Text = MSG_GAME( STR_PARAM_NAME( cast< Skill >( Parent ).Param ) );
+        }
+    }
+
+    class SkillValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 237, -1 );
+            SetSize( 40, 13 );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        string@ get_Text() override
+        {
+            return GetParam( cast< Skill >( Parent ).Param ) + "%";
+        }
+    }
+
+    class Title3 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 28, -28 );
+            SetSize( 150, 24 );
+            SetText( MSG_GAME( STR_CHA_SKILLS ) );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class UnspentSkillPoints : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 433, 90 );
+        }
+    }
+
+    class Title2 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 1 );
+            SetSize( 120, 26 );
+            SetText( MSG_GAME( STR_REG_UNSPENT_TAGS ) );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class UnspentValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 171, 1 );
+            SetSize( 30, 25 );
+            SetTextFont( FONT_BIG_NUM );
+            SetTextColor( COLOR_IFACE );
+        }
+
+        string@ get_Text() override
+        {
+            int freeTagSkills = __StartTagSkillPoints - ( __RegParams[ TAG_SKILL1 ] != 0 ? 1 : 0 ) - ( __RegParams[ TAG_SKILL2 ] != 0 ? 1 : 0 ) - ( __RegParams[ TAG_SKILL3 ] != 0 ? 1 : 0 ) - ( __RegParams[ TAG_SKILL4 ] != 0 ? 1 : 0 );
+            return FormatXX( freeTagSkills );
+        }
+    }
+
+    class Tip : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 416, 264 );
+        }
+
+        void OnDraw() override
+        {
+            GUIObject@ obj = GUI_GetFocusedObject();
+            if( obj is null )
+                return;
+            
+            int param = -1;
+            
+            #define CHECK_PARAM_PARENT #( className ) if( param == -1 && cast< className >( obj.Parent ) !is null ) param = cast< className >( obj.Parent ).Param
+            //#define CHECK_PARENT #( className, p ) if( param == -1 && cast< className >( obj.Parent ) !is null ) param = p
+            
+            CHECK_PARAM_PARENT( BaseStat );
+            CHECK_PARAM_PARENT( HealthStat );
+            CHECK_PARAM_PARENT( ExtendedStat );
+            CHECK_PARAM_PARENT( TraitLeft );
+            CHECK_PARAM_PARENT( TraitRight );
+            CHECK_PARAM_PARENT( Skill );
+            
+            if( param != -1 && CurTip != param )
+            {
+                CurTip = param;
+                FindText( "Name" ).Text = MSG_GAME( STR_PARAM_NAME( param ) );
+                FindText( "Desc" ).Text = MSG_GAME( STR_PARAM_DESC( param ) );
+                FindPanel( "Image" ).SetBackgroundImage( GetConstantName( CONSTANTS_PICTURE, param ) );
+            }
+        }
+    }
+
+    class Image : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -329, 171 );
+        }
+    }
+
+    class Name : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 10, 10 );
+            SetSize( 270, 31 );
+            SetTextFont( FONT_THIN );
+            SetTextColor( COLOR_BLACK );
+        }
+    }
+
+    class Desc : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 10, 42 );
+            SetSize( 280, 138 );
+            SetTextColor( COLOR_BLACK );
+        }
+    }
+
+    class Buttons : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 418, 451 );
+        }
+    }
+
+    class Print : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 31, 0 );
+        }
+    }
+
+    class Button1 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -22, 6 );
+            SetSize( 15, 16 );
+            SetPressedImage( "art/intrface/smallbutton_on.png" );
+        }
+    }
+
+    class Text7 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -2, 5 );
+            SetText( MSG_GAME( STR_CHA_PRINT ) );
+            SetTextFont( FONT_FAT );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class Done : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 141, 0 );
+        }
+    }
+
+    class Button2 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -22, 7 );
+            SetSize( 15, 16 );
+            SetPressedImage( "art/intrface/smallbutton_on.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "Register" );
+        }
+    }
+
+    class Text8 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -2, 5 );
+            SetText( MSG_GAME( STR_CHA_OK ) );
+            SetTextFont( FONT_FAT );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class Back : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 237, 0 );
+        }
+    }
+
+    class Button3 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -20, 7 );
+            SetSize( 15, 16 );
+            SetPressedImage( "art/intrface/smallbutton_on.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            TryExit();
+        }
+    }
+
+    class Text9 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -1, 5 );
+            SetText( MSG_GAME( STR_CHA_CANCEL ) );
+            SetTextFont( FONT_FAT );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class CharacterName : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 97, 60 );
+        }
+    }
+
+    class Button4 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -13, -115 );
+            SetSize( 259, 28 );
+            SetPressedImage( "art/intrface/NAMEON.PNG" );
+        }
+
+        void OnLMouseClick() override
+        {
+            Screen.FindPanel( "CharacterNamePopUp" ).SetActive( true );
+        }
+    }
+
+    class CharacterText : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 118, -102 );
+            SetNotHittable( true );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+
+        string@ get_Text() override
+        {
+            return __RegName;
+        }
+    }
+
+    class CharacterAge : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 349, -57 );
+        }
+    }
+
+    class Button5 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -3, 2 );
+            SetSize( 40, 28 );
+            SetPressedImage( "art/intrface/AGEON.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            Screen.FindPanel( "CharacterAgePopUp" ).SetActive( true );
+        }
+    }
+
+    class AgeText : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 17, 14 );
+            SetNotHittable( true );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+
+        string@ get_Text() override
+        {
+            return "" + GetParam( ST_AGE );
+        }
+    }
+
+    class CharacterGender : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 96, -25 );
+        }
+    }
+
+    class Button6 : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -126, 44 );
+            SetSize( 24, 24 );
+            SetPressedImage( "art/intrface/blank_sort.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            Screen.FindPanel( "CharacterGenderPopUp" ).SetActive( true );
+        }
+    }
+
+    class GenderText : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 33, 17 );
+            SetNotHittable( true );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+
+        string@ get_Text() override
+        {
+            return GetParam( ST_GENDER ) == GENDER_MALE ? MSG_GAME( STR_MALE_NAME ) : MSG_GAME( STR_FEMALE_NAME );
+        }
+    }
+
+    class Male : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 75, 6 );
+            SetSize( 31, 29 );
+            SetPressedImage( "art/intrface/male_button_dn.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            __RegParams[ ST_GENDER ] = GENDER_MALE;
+            GenParams();
+            SetSwitch( true );
+            Parent.FindButton( "Female" ).SetSwitch( false );
+        }
+
+        void OnActiveChanged() override
+        {
+            if( Active )
+                SetSwitch( __RegParams[ ST_GENDER ] == GENDER_MALE );
+        }
+    }
+
+    class Female : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 113, 4 );
+            SetSize( 33, 31 );
+            SetPressedImage( "art/intrface/female_button_dn.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            __RegParams[ ST_GENDER ] = GENDER_FEMALE;
+            GenParams();
+            SetSwitch( true );
+            Parent.FindButton( "Male" ).SetSwitch( false );
+        }
+
+        void OnActiveChanged() override
+        {
+            if( Active )
+                SetSwitch( __RegParams[ ST_GENDER ] == GENDER_FEMALE );
+        }
+    }
+
+    class CharacterNamePopUp : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetActive( false );
+            SetPosition( 84, -26 );
+            SetSize( 238, 117 );
+            SetBackgroundImage( "art/intrface/cha_name_tlj.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            if( ActiveSelf )
+                SetActive( false );
+        }
+
+        void OnGlobalMouseDown( int button ) override
+        {
+            if( Active && !IsMouseHit() )
+                SetActive( false );
+        }
+
+        void OnActiveChanged() override
+        {
+            if( Active )
+                GUI_SetFocusedObject( FindTextInput( "ChaName" ) );
+        }
+    }
+
+    class ChaName : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 27, 32 );
+            SetSize( 180, 14 );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetInputLength( __MaxNameLength );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetText( __RegName );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __RegName = Text;
+            
+            if( key == DIK_RETURN || key == DIK_NUMPADENTER )
+                Parent.SetActive( false );
+        }
+    }
+
+    class ChaPassword : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 27, 64 );
+            SetSize( 180, 14 );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetInputLength( __MaxNameLength );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetText( __RegPassword );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __RegPassword = Text;
+            
+            if( key == DIK_RETURN || key == DIK_NUMPADENTER )
+                Parent.SetActive( false );
+        }
+    }
+
+    class ChaTrollButton : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 40, 91 );
+            SetSize( 49, 25 );
+            SetPressedImage( "art/intrface/ok2.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            Screen.FindPanel( "CharacterNamePopUp" ).SetActive( false );
+            PlaySound ("pyromother.wav");
+        }
+    }
+
+    class CharacterAgePopUp : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetActive( false );
+            SetPosition( 270, -25 );
+            SetSize( 139, 43 );
+            SetBackgroundImage( "art/intrface/cha_age.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            if( ActiveSelf )
+                SetActive( false );
+        }
+
+        void OnGlobalMouseDown( int button ) override
+        {
+            if( Active && !IsMouseHit() )
+                SetActive( false );
+        }
+    }
+
+    class IncAge : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 101, 11 );
+            SetSize( 20, 18 );
+            SetPressedImage( "art/intrface/age_inc_button_dn.png" );
+        }
+
+        void OnLMousePressed() override
+        {
+            __RegParams[ ST_AGE ]++;
+            if( __RegParams[ ST_AGE ] > AGE_MAX )
+                __RegParams[ ST_AGE ] = AGE_MIN;
+            GenParams();
+        }
+    }
+
+    class DecAge : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 17, 11 );
+            SetSize( 20, 18 );
+            SetPressedImage( "art/intrface/age_dec_button_dn.png" );
+        }
+
+        void OnLMousePressed() override
+        {
+            __RegParams[ ST_AGE ]--;
+            if( __RegParams[ ST_AGE ] < AGE_MIN )
+                __RegParams[ ST_AGE ] = AGE_MAX;
+            GenParams();
+        }
+    }
+
+    class AgeValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 54, 8 );
+            SetSize( 30, 24 );
+            SetTextFont( FONT_BIG_NUM );
+            SetTextColor( COLOR_IFACE );
+        }
+
+        string@ get_Text() override
+        {
+            return FormatXX( GetParam( ST_AGE ) );
+        }
+    }
+
+    class CharacterGenderPopUp : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetActive( false );
+            SetPosition( -1, 19 );
+            SetSize( 24, 24 );
+            SetBackgroundImage( "art/intrface/blank_sort.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            if( ActiveSelf )
+                SetActive( false );
+        }
+
+        void OnGlobalMouseDown( int button ) override
+        {
+            if( Active && !IsMouseHit() )
+                SetActive( false );
+        }
+    }
+
+    class CharacterSelect : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 166, 407 );
+        }
+    }
+
+    class CharSelButton : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( -12, -12 );
+            SetSize( 26, 26 );
+            SetPressedImage( "art/intrface/MENUDOWN.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            Screen.FindPanel( "CharacterSelectPopUp" ).SetActive( true );
+        }
+    }
+
+    class CharacterSelectPopUp : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetActive( false );
+            SetPosition( 79, 257 );
+            SetSize( 135, 175 );
+            SetBackgroundImage( "art/intrface/character_select_main.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            if( ActiveSelf )
+                SetActive( false );
+        }
+
+        void OnGlobalMouseDown( int button ) override
+        {
+            if( Active && !IsMouseHit() )
+                SetActive( false );
+        }
+    }
+
+    class ChaButtonUp : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 101, 30 );
+            SetSize( 22, 23 );
+            SetPressedImage( "art/intrface/character_select_up2.png" );
+        }
+    }
+
+    class ChaButtonDown : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 101, 53 );
+            SetSize( 22, 23 );
+            SetPressedImage( "art/intrface/character_select_dn2.png" );
+        }
+    }
+
+    class ChaSelClose : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 75, 139 );
+            SetSize( 26, 26 );
+            SetPressedImage( "art/intrface/MENUDOWN.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            Screen.FindPanel( "CharacterSelectPopUp" ).SetActive( false );
+        }
+    }
+
+    class MessageBox : GUIMessageBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 135, 335 );
+            SetSize( 202, 115 );
+            SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
+        }
+    }
+
+    void Init( int screenIndex )
+    {
+        Character _Character();
+        _Character.Init( null );
+        Main _Main();
+        _Main.Init( _Character );
+        TLJRegister _TLJRegister();
+        _TLJRegister.Init( _Main );
+        BaseStats _BaseStats();
+        _BaseStats.Init( _TLJRegister );
+        BaseStat _BaseStat();
+        _BaseStat.Init( _BaseStats );
+        StatName _StatName();
+        _StatName.Init( _BaseStat );
+        StatValue _StatValue();
+        _StatValue.Init( _BaseStat );
+        StatValueDesc _StatValueDesc();
+        _StatValueDesc.Init( _BaseStat );
+        StatInc _StatInc();
+        _StatInc.Init( _BaseStat );
+        StatDec _StatDec();
+        _StatDec.Init( _BaseStat );
+        BaseStatPoints _BaseStatPoints();
+        _BaseStatPoints.Init( _TLJRegister );
+        Title1 _Title1();
+        _Title1.Init( _BaseStatPoints );
+        StatPointsValue _StatPointsValue();
+        _StatPointsValue.Init( _BaseStatPoints );
+        HealthStats _HealthStats();
+        _HealthStats.Init( _TLJRegister );
+        HealthStat _HealthStat();
+        _HealthStat.Init( _HealthStats );
+        StatDesc _StatDesc();
+        _StatDesc.Init( _HealthStat );
+        ExtendedStats _ExtendedStats();
+        _ExtendedStats.Init( _TLJRegister );
+        ExtendedStat _ExtendedStat();
+        _ExtendedStat.Init( _ExtendedStats );
+        StatName2 _StatName2();
+        _StatName2.Init( _ExtendedStat );
+        StatValue2 _StatValue2();
+        _StatValue2.Init( _ExtendedStat );
+        Traits _Traits();
+        _Traits.Init( _TLJRegister );
+        TraitsLeft _TraitsLeft();
+        _TraitsLeft.Init( _Traits );
+        TraitLeft _TraitLeft();
+        _TraitLeft.Init( _TraitsLeft );
+        Switcher1 _Switcher1();
+        _Switcher1.Init( _TraitLeft );
+        TraitName1 _TraitName1();
+        _TraitName1.Init( _TraitLeft );
+        TraitsRight _TraitsRight();
+        _TraitsRight.Init( _Traits );
+        TraitRight _TraitRight();
+        _TraitRight.Init( _TraitsRight );
+        Switcher2 _Switcher2();
+        _Switcher2.Init( _TraitRight );
+        TraitName2 _TraitName2();
+        _TraitName2.Init( _TraitRight );
+        Skills _Skills();
+        _Skills.Init( _TLJRegister );
+        Skill _Skill();
+        _Skill.Init( _Skills );
+        TagSkill _TagSkill();
+        _TagSkill.Init( _Skill );
+        SkillName _SkillName();
+        _SkillName.Init( _Skill );
+        SkillValue _SkillValue();
+        _SkillValue.Init( _Skill );
+        Title3 _Title3();
+        _Title3.Init( _Skills );
+        UnspentSkillPoints _UnspentSkillPoints();
+        _UnspentSkillPoints.Init( _TLJRegister );
+        Title2 _Title2();
+        _Title2.Init( _UnspentSkillPoints );
+        UnspentValue _UnspentValue();
+        _UnspentValue.Init( _UnspentSkillPoints );
+        Tip _Tip();
+        _Tip.Init( _TLJRegister );
+        Image _Image();
+        _Image.Init( _Tip );
+        Name _Name();
+        _Name.Init( _Tip );
+        Desc _Desc();
+        _Desc.Init( _Tip );
+        Buttons _Buttons();
+        _Buttons.Init( _TLJRegister );
+        Print _Print();
+        _Print.Init( _Buttons );
+        Button1 _Button1();
+        _Button1.Init( _Print );
+        Text7 _Text7();
+        _Text7.Init( _Print );
+        Done _Done();
+        _Done.Init( _Buttons );
+        Button2 _Button2();
+        _Button2.Init( _Done );
+        Text8 _Text8();
+        _Text8.Init( _Done );
+        Back _Back();
+        _Back.Init( _Buttons );
+        Button3 _Button3();
+        _Button3.Init( _Back );
+        Text9 _Text9();
+        _Text9.Init( _Back );
+        CharacterName _CharacterName();
+        _CharacterName.Init( _TLJRegister );
+        Button4 _Button4();
+        _Button4.Init( _CharacterName );
+        CharacterText _CharacterText();
+        _CharacterText.Init( _CharacterName );
+        CharacterAge _CharacterAge();
+        _CharacterAge.Init( _TLJRegister );
+        Button5 _Button5();
+        _Button5.Init( _CharacterAge );
+        AgeText _AgeText();
+        _AgeText.Init( _CharacterAge );
+        CharacterGender _CharacterGender();
+        _CharacterGender.Init( _TLJRegister );
+        Button6 _Button6();
+        _Button6.Init( _CharacterGender );
+        GenderText _GenderText();
+        _GenderText.Init( _CharacterGender );
+        Male _Male();
+        _Male.Init( _CharacterGender );
+        Female _Female();
+        _Female.Init( _CharacterGender );
+        CharacterNamePopUp _CharacterNamePopUp();
+        _CharacterNamePopUp.Init( _TLJRegister );
+        ChaName _ChaName();
+        _ChaName.Init( _CharacterNamePopUp );
+        ChaPassword _ChaPassword();
+        _ChaPassword.Init( _CharacterNamePopUp );
+        ChaTrollButton _ChaTrollButton();
+        _ChaTrollButton.Init( _CharacterNamePopUp );
+        CharacterAgePopUp _CharacterAgePopUp();
+        _CharacterAgePopUp.Init( _TLJRegister );
+        IncAge _IncAge();
+        _IncAge.Init( _CharacterAgePopUp );
+        DecAge _DecAge();
+        _DecAge.Init( _CharacterAgePopUp );
+        AgeValue _AgeValue();
+        _AgeValue.Init( _CharacterAgePopUp );
+        CharacterGenderPopUp _CharacterGenderPopUp();
+        _CharacterGenderPopUp.Init( _TLJRegister );
+        CharacterSelect _CharacterSelect();
+        _CharacterSelect.Init( _TLJRegister );
+        CharSelButton _CharSelButton();
+        _CharSelButton.Init( _CharacterSelect );
+        CharacterSelectPopUp _CharacterSelectPopUp();
+        _CharacterSelectPopUp.Init( _TLJRegister );
+        ChaButtonUp _ChaButtonUp();
+        _ChaButtonUp.Init( _CharacterSelectPopUp );
+        ChaButtonDown _ChaButtonDown();
+        _ChaButtonDown.Init( _CharacterSelectPopUp );
+        ChaSelClose _ChaSelClose();
+        _ChaSelClose.Init( _CharacterSelectPopUp );
+        MessageBox _MessageBox();
+        _MessageBox.Init( _Main );
+        GUI_RegisterScreen( screenIndex, _Character );
+    }
+}
+
+namespace Options
+{
+    void SaveOptions()
+    {
+        string[] savedOptions =
+        {
+            "Language", "" + CustomCall( "GetLanguage" ),
+            "ScreenWidth", "" + __ScreenWidth,
+            "ScreenHeight", "" + __ScreenHeight,
+            "FullScreen", "" + __FullScr,
+            "AlwaysOnTop", "" + __AlwaysOnTop,
+            "MusicVolume", "" + __MusicVolume,
+            "SoundVolume", "" + __SoundVolume,
+            "AlwaysRun", "" + __AlwaysRun,
+            "DefaultCombatMode", "" + __DefaultCombatMode,
+            "RemoteHost", "" + __Host,
+            "RemotePort", "" + __Port,
+            "ProxyType", "" + __ProxyType,
+            "ProxyHost", "" + __ProxyHost,
+            "ProxyPort", "" + __ProxyPort,
+            "ProxyUser", "" + __ProxyUser,
+            "ProxyPass", "" + __ProxyPass
+        };
+        SetUserConfig( savedOptions );
+    }
+
+    class Screen : GUIScreen
+    {
+        void OnConstruct() override
+        {
+            SetModal( true );
+            SetSize( 800, 600 );
+            SetDock( DOCK_FILL );
+            SetCanMove( true, false );
+        }
+    }
+
+    class Main : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 80, 60 );
+            SetSize( 640, 480 );
+            SetBackgroundImage( "art/intrface/main_menu_options.png" );
+        }
+    }
+
+    class Options : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetSize( 640, 440 );
+        }
+    }
+
+    class Game : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, 20 );
+        }
+    }
+
+    class Language : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 10 );
+            SetText( MSG_GAME( STR_OPTIONS_LANGUAGE ) );
+        }
+    }
+
+    class Russian : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( CustomCall( "GetLanguage" ) == "russ" );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetLanguage russ" );
+            GUI_Callback_OnLanguageChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text1 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_LANGUAGE_RUSSIAN ) );
+        }
+    }
+
+    class English : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 330, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( CustomCall( "GetLanguage" ) == "engl" );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetLanguage engl" );
+            GUI_Callback_OnLanguageChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text2 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_LANGUAGE_ENGLISH ) );
+        }
+    }
+
+    int[] ScreenWidthOpt = { 800, 1024, 1280, 1280, 1366, 1920 };
+    int[] ScreenHeightOpt = { 600, 768, 800, 1024, 768, 1080 };
+
+    class Resolution : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 40 );
+            SetText( MSG_GAME( STR_OPTIONS_RESOLUTION ) );
+        }
+    }
+
+    class Resolution1 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, -8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ScreenWidth == ScreenWidthOpt[ 0 ] && __ScreenHeight == ScreenHeightOpt[ 0 ] );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetResolution " + ScreenWidthOpt[ 0 ] + " " + ScreenHeightOpt[ 0 ] );
+            GUI_Callback_OnResolutionChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text14 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( ScreenWidthOpt[ 0 ] + "x" + ScreenHeightOpt[ 0 ] );
+        }
+    }
+
+    class Resolution2 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 240, 8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ScreenWidth == ScreenWidthOpt[ 1 ] && __ScreenHeight == ScreenHeightOpt[ 1 ] );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetResolution " + ScreenWidthOpt[ 1 ] + " " + ScreenHeightOpt[ 1 ] );
+            GUI_Callback_OnResolutionChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text15 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( ScreenWidthOpt[ 1 ] + "x" + ScreenHeightOpt[ 1 ] );
+        }
+    }
+
+    class Resolution3 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 300, -8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ScreenWidth == ScreenWidthOpt[ 2 ] && __ScreenHeight == ScreenHeightOpt[ 2 ] );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetResolution " + ScreenWidthOpt[ 2 ] + " " + ScreenHeightOpt[ 2 ] );
+            GUI_Callback_OnResolutionChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text16 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( ScreenWidthOpt[ 2 ] + "x" + ScreenHeightOpt[ 2 ] );
+        }
+    }
+
+    class Resolution4 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 360, 8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ScreenWidth == ScreenWidthOpt[ 3 ] && __ScreenHeight == ScreenHeightOpt[ 3 ] );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetResolution " + ScreenWidthOpt[ 3 ] + " " + ScreenHeightOpt[ 3 ] );
+            GUI_Callback_OnResolutionChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text17 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( ScreenWidthOpt[ 3 ] + "x" + ScreenHeightOpt[ 3 ] );
+        }
+    }
+
+    class Resolution5 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 420, -8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ScreenWidth == ScreenWidthOpt[ 4 ] && __ScreenHeight == ScreenHeightOpt[ 4 ] );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetResolution " + ScreenWidthOpt[ 4 ] + " " + ScreenHeightOpt[ 4 ] );
+            GUI_Callback_OnResolutionChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text18 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( ScreenWidthOpt[ 4 ] + "x" + ScreenHeightOpt[ 4 ] );
+        }
+    }
+
+    class Resolution6 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 480, 8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ScreenWidth == ScreenWidthOpt[ 5 ] && __ScreenHeight == ScreenHeightOpt[ 5 ] );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SetResolution " + ScreenWidthOpt[ 5 ] + " " + ScreenHeightOpt[ 5 ] );
+            GUI_Callback_OnResolutionChanged();
+            SaveOptions();
+        }
+    }
+
+    class Text19 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( ScreenWidthOpt[ 5 ] + "x" + ScreenHeightOpt[ 5 ] );
+        }
+    }
+
+    class FullScreen : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 70 );
+            SetText( MSG_GAME( STR_OPTIONS_FULL_SCREEN ) );
+        }
+    }
+
+    class CheckBox1 : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __FullScr );
+        }
+
+        void OnLMouseClick() override
+        {
+            CustomCall( "SwitchFullscreen" );
+            SaveOptions();
+        }
+    }
+
+    class AlwaysOnTop : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 100 );
+            SetText( MSG_GAME( STR_OPTIONS_ALWAYS_ON_TOP ) );
+        }
+    }
+
+    class CheckBox2 : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __AlwaysOnTop );
+        }
+
+        void OnLMouseClick() override
+        {
+            __AlwaysOnTop = IsChecked;
+            SaveOptions();
+        }
+    }
+
+    class Music : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 130 );
+            SetText( MSG_GAME( STR_OPTIONS_MUSIC ) );
+        }
+    }
+
+    class MusicDec : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+        }
+
+        void OnLMousePressed() override
+        {
+            if( __MusicVolume > 0 )
+            {
+                __MusicVolume--;
+                 SaveOptions();
+            }
+        }
+    }
+
+    class MusicInc : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 280, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+        }
+
+        void OnLMousePressed() override
+        {
+            if( __MusicVolume < 100 )
+            {
+                __MusicVolume++;
+                SaveOptions();
+            }
+        }
+    }
+
+    class MusicValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 235, 0 );
+        }
+
+        string@ get_Text() override
+        {
+            return "" + __MusicVolume;
+        }
+    }
+
+    class Sound : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 160 );
+            SetText( MSG_GAME( STR_OPTIONS_SOUND ) );
+        }
+    }
+
+    class SoundDec : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+        }
+
+        void OnLMousePressed() override
+        {
+            if( __SoundVolume > 0 )
+            {
+                __SoundVolume--;
+                SaveOptions();
+            }
+        }
+    }
+
+    class SoundInc : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 280, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+        }
+
+        void OnLMousePressed() override
+        {
+            if( __SoundVolume < 100 )
+            {
+                __SoundVolume++;
+                SaveOptions();
+            }
+        }
+    }
+
+    class SoundValue : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 235, 0 );
+        }
+
+        string@ get_Text() override
+        {
+            return "" + __SoundVolume;
+        }
+    }
+
+    class AlwaysRun : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 190 );
+            SetText( MSG_GAME( STR_OPTIONS_ALWAYS_RUN ) );
+        }
+    }
+
+    class CheckBox3 : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __AlwaysRun );
+        }
+
+        void OnLMouseClick() override
+        {
+            __AlwaysRun = IsChecked;
+            SaveOptions();
+        }
+    }
+
+    class CombatMode : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 220 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MODE ) );
+        }
+    }
+
+    class Both : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, -8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __DefaultCombatMode == COMBAT_MODE_ANY );
+        }
+
+        void OnLMouseClick() override
+        {
+            __DefaultCombatMode = COMBAT_MODE_ANY;
+            SaveOptions();
+        }
+    }
+
+    class Text5 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MODE_BOTH ) );
+        }
+    }
+
+    class RealTime : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 280, 8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __DefaultCombatMode == COMBAT_MODE_REAL_TIME );
+        }
+
+        void OnLMouseClick() override
+        {
+            __DefaultCombatMode = COMBAT_MODE_REAL_TIME;
+            SaveOptions();
+        }
+    }
+
+    class Text6 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MODE_RT ) );
+        }
+    }
+
+    class TurnBased : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 380, -8 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __DefaultCombatMode == COMBAT_MODE_TURN_BASED );
+        }
+
+        void OnLMouseClick() override
+        {
+            __DefaultCombatMode = COMBAT_MODE_TURN_BASED;
+            SaveOptions();
+        }
+    }
+
+    class Text7 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MODE_TB ) );
+        }
+    }
+
+    class CombatMessages : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 250 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MESSAGES ) );
+        }
+    }
+
+    class Verbose : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __CombatMessagesType == 0 );
+        }
+
+        void OnLMouseClick() override
+        {
+            __CombatMessagesType = 0;
+            SaveOptions();
+        }
+    }
+
+    class Text8 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MESSAGES_FULL ) );
+        }
+    }
+
+    class Brief : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 330, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __CombatMessagesType != 0 );
+        }
+
+        void OnLMouseClick() override
+        {
+            __CombatMessagesType = 1;
+            SaveOptions();
+        }
+    }
+
+    class Text9 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_COMBAT_MESSAGES_SHORT ) );
+        }
+    }
+
+    class GameServer : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 280 );
+            SetText( MSG_GAME( STR_OPTIONS_GAME_SERVER ) );
+        }
+    }
+
+    class Panel1 : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, -2 );
+            SetSize( 250, 12 );
+            SetBackgroundImage( "art/intrface/black_pixel.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class Panel2 : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 450, -2 );
+            SetSize( 50, 12 );
+            SetBackgroundImage( "art/intrface/black_pixel.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class Host : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 250, 12 );
+            SetText( __Host );
+            SetTextFlags( FT_CENTERX );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __Host = Text;
+            SaveOptions();
+        }
+    }
+
+    class Port : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 450, 0 );
+            SetSize( 50, 12 );
+            SetText( "" + __Port );
+            SetTextFlags( FT_CENTERX );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __Port = Text.toInt( __Port );
+            Text = "" + __Port;
+            SaveOptions();
+        }
+    }
+
+    class ProxyType : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 310 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_TYPE ) );
+        }
+    }
+
+    class ProxyNone : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ProxyType == 0 );
+        }
+
+        void OnLMouseClick() override
+        {
+            __ProxyType = 0;
+            SaveOptions();
+        }
+    }
+
+    class Text10 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_TYPE_NONE ) );
+        }
+    }
+
+    class ProxySocks4 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 280, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ProxyType == 1 );
+        }
+
+        void OnLMouseClick() override
+        {
+            __ProxyType = 1;
+            SaveOptions();
+        }
+    }
+
+    class Text11 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_TYPE_SOCKS4 ) );
+        }
+    }
+
+    class ProxySocks5 : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 380, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ProxyType == 2 );
+        }
+
+        void OnLMouseClick() override
+        {
+            __ProxyType = 2;
+            SaveOptions();
+        }
+    }
+
+    class Text12 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_TYPE_SOCKS5 ) );
+        }
+    }
+
+    class ProxyHttp : GUIRadioButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 480, 0 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+            SetChecked( __ProxyType == 3 );
+        }
+
+        void OnLMouseClick() override
+        {
+            __ProxyType = 3;
+            SaveOptions();
+        }
+    }
+
+    class Text13 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_TYPE_HTTP ) );
+        }
+    }
+
+    class ProxyServer : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 340 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_SERVER ) );
+        }
+    }
+
+    class Panel3 : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, -2 );
+            SetSize( 250, 12 );
+            SetBackgroundImage( "art/intrface/black_pixel.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class Panel4 : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 450, -2 );
+            SetSize( 50, 12 );
+            SetBackgroundImage( "art/intrface/black_pixel.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class ProxyHost : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 250, 12 );
+            SetText( __ProxyHost );
+            SetTextFlags( FT_CENTERX );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __Host = Text;
+            SaveOptions();
+        }
+    }
+
+    class ProxyPort : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 450, 0 );
+            SetSize( 50, 12 );
+            SetText( "" + __ProxyPort );
+            SetTextFlags( FT_CENTERX );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __ProxyPort = Text.toInt( __ProxyPort );
+            Text = "" + __ProxyPort;
+            SaveOptions();
+        }
+    }
+
+    class ProxyAccess : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 50, 370 );
+            SetText( MSG_GAME( STR_OPTIONS_PROXY_ACCESS ) );
+        }
+    }
+
+    class Panel5 : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, -2 );
+            SetSize( 150, 12 );
+            SetBackgroundImage( "art/intrface/black_pixel.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class Panel6 : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 350, -2 );
+            SetSize( 150, 12 );
+            SetBackgroundImage( "art/intrface/black_pixel.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class ProxyLogin : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 180, 0 );
+            SetSize( 150, 12 );
+            SetText( __ProxyUser );
+            SetTextFlags( FT_CENTERX );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __ProxyUser = Text;
+            SaveOptions();
+        }
+    }
+
+    class ProxyPassword : GUITextInput
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 350, 0 );
+            SetSize( 150, 12 );
+            SetText( __ProxyPass );
+            SetTextFlags( FT_CENTERX );
+            SetInputPassword( "#" );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            __ProxyPass = Text;
+            SaveOptions();
+        }
+    }
+
+    class Back : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 460, 450 );
+            SetSize( 17, 11 );
+            SetBackgroundImage( "art/intrface/opt_button_up.png" );
+            SetPressedImage( "art/intrface/opt_button_dn.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            ShowScreen( CLIENT_MAIN_SCREEN_LOGIN );
+        }
+    }
+
+    class Text3 : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 25, 0 );
+            SetText( MSG_GAME( STR_OPTIONS_BACK ) );
+            SetTextFont( FONT_FAT );
+        }
+    }
+
+    void Init( int screenIndex )
+    {
+        Screen _Screen();
+        _Screen.Init( null );
+        Main _Main();
+        _Main.Init( _Screen );
+        Options _Options();
+        _Options.Init( _Main );
+        Game _Game();
+        _Game.Init( _Options );
+        Language _Language();
+        _Language.Init( _Game );
+        Russian _Russian();
+        _Russian.Init( _Language );
+        Text1 _Text1();
+        _Text1.Init( _Russian );
+        English _English();
+        _English.Init( _Language );
+        Text2 _Text2();
+        _Text2.Init( _English );
+        Resolution _Resolution();
+        _Resolution.Init( _Game );
+        Resolution1 _Resolution1();
+        _Resolution1.Init( _Resolution );
+        Text14 _Text14();
+        _Text14.Init( _Resolution1 );
+        Resolution2 _Resolution2();
+        _Resolution2.Init( _Resolution );
+        Text15 _Text15();
+        _Text15.Init( _Resolution2 );
+        Resolution3 _Resolution3();
+        _Resolution3.Init( _Resolution );
+        Text16 _Text16();
+        _Text16.Init( _Resolution3 );
+        Resolution4 _Resolution4();
+        _Resolution4.Init( _Resolution );
+        Text17 _Text17();
+        _Text17.Init( _Resolution4 );
+        Resolution5 _Resolution5();
+        _Resolution5.Init( _Resolution );
+        Text18 _Text18();
+        _Text18.Init( _Resolution5 );
+        Resolution6 _Resolution6();
+        _Resolution6.Init( _Resolution );
+        Text19 _Text19();
+        _Text19.Init( _Resolution6 );
+        FullScreen _FullScreen();
+        _FullScreen.Init( _Game );
+        CheckBox1 _CheckBox1();
+        _CheckBox1.Init( _FullScreen );
+        AlwaysOnTop _AlwaysOnTop();
+        _AlwaysOnTop.Init( _Game );
+        CheckBox2 _CheckBox2();
+        _CheckBox2.Init( _AlwaysOnTop );
+        Music _Music();
+        _Music.Init( _Game );
+        MusicDec _MusicDec();
+        _MusicDec.Init( _Music );
+        MusicInc _MusicInc();
+        _MusicInc.Init( _Music );
+        MusicValue _MusicValue();
+        _MusicValue.Init( _Music );
+        Sound _Sound();
+        _Sound.Init( _Game );
+        SoundDec _SoundDec();
+        _SoundDec.Init( _Sound );
+        SoundInc _SoundInc();
+        _SoundInc.Init( _Sound );
+        SoundValue _SoundValue();
+        _SoundValue.Init( _Sound );
+        AlwaysRun _AlwaysRun();
+        _AlwaysRun.Init( _Game );
+        CheckBox3 _CheckBox3();
+        _CheckBox3.Init( _AlwaysRun );
+        CombatMode _CombatMode();
+        _CombatMode.Init( _Game );
+        Both _Both();
+        _Both.Init( _CombatMode );
+        Text5 _Text5();
+        _Text5.Init( _Both );
+        RealTime _RealTime();
+        _RealTime.Init( _CombatMode );
+        Text6 _Text6();
+        _Text6.Init( _RealTime );
+        TurnBased _TurnBased();
+        _TurnBased.Init( _CombatMode );
+        Text7 _Text7();
+        _Text7.Init( _TurnBased );
+        CombatMessages _CombatMessages();
+        _CombatMessages.Init( _Game );
+        Verbose _Verbose();
+        _Verbose.Init( _CombatMessages );
+        Text8 _Text8();
+        _Text8.Init( _Verbose );
+        Brief _Brief();
+        _Brief.Init( _CombatMessages );
+        Text9 _Text9();
+        _Text9.Init( _Brief );
+        GameServer _GameServer();
+        _GameServer.Init( _Game );
+        Panel1 _Panel1();
+        _Panel1.Init( _GameServer );
+        Panel2 _Panel2();
+        _Panel2.Init( _GameServer );
+        Host _Host();
+        _Host.Init( _GameServer );
+        Port _Port();
+        _Port.Init( _GameServer );
+        ProxyType _ProxyType();
+        _ProxyType.Init( _Game );
+        ProxyNone _ProxyNone();
+        _ProxyNone.Init( _ProxyType );
+        Text10 _Text10();
+        _Text10.Init( _ProxyNone );
+        ProxySocks4 _ProxySocks4();
+        _ProxySocks4.Init( _ProxyType );
+        Text11 _Text11();
+        _Text11.Init( _ProxySocks4 );
+        ProxySocks5 _ProxySocks5();
+        _ProxySocks5.Init( _ProxyType );
+        Text12 _Text12();
+        _Text12.Init( _ProxySocks5 );
+        ProxyHttp _ProxyHttp();
+        _ProxyHttp.Init( _ProxyType );
+        Text13 _Text13();
+        _Text13.Init( _ProxyHttp );
+        ProxyServer _ProxyServer();
+        _ProxyServer.Init( _Game );
+        Panel3 _Panel3();
+        _Panel3.Init( _ProxyServer );
+        Panel4 _Panel4();
+        _Panel4.Init( _ProxyServer );
+        ProxyHost _ProxyHost();
+        _ProxyHost.Init( _ProxyServer );
+        ProxyPort _ProxyPort();
+        _ProxyPort.Init( _ProxyServer );
+        ProxyAccess _ProxyAccess();
+        _ProxyAccess.Init( _Game );
+        Panel5 _Panel5();
+        _Panel5.Init( _ProxyAccess );
+        Panel6 _Panel6();
+        _Panel6.Init( _ProxyAccess );
+        ProxyLogin _ProxyLogin();
+        _ProxyLogin.Init( _ProxyAccess );
+        ProxyPassword _ProxyPassword();
+        _ProxyPassword.Init( _ProxyAccess );
+        Back _Back();
+        _Back.Init( _Main );
+        Text3 _Text3();
+        _Text3.Init( _Back );
+        GUI_RegisterScreen( screenIndex, _Screen );
+    }
+}

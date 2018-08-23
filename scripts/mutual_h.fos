@@ -1,0 +1,51 @@
+
+#ifndef MUTUAL_H
+
+#define MUTUAL_H
+
+	#ifdef __SERVER
+
+		#ifndef CritterMutual
+			#define CritterMutual Critter
+		#endif
+
+
+		#ifndef ItemMutual
+			#define ItemMutual  Item
+		#endif
+	
+		#ifndef CritterCl
+			#define CritterCl Critter
+		#endif
+
+
+		#ifndef ItemCl
+			#define ItemCl  Item
+		#endif
+
+	#endif
+
+	#ifdef __CLIENT
+
+		#ifndef CritterMutual
+			#define CritterMutual CritterCl
+		#endif
+
+
+		#ifndef ItemMutual
+			#define ItemMutual  ItemCl
+		#endif
+		
+		#ifndef Critter
+			#define Critter CritterCl
+		#endif
+
+
+		#ifndef Item
+			#define Item ItemCl
+		#endif
+
+	#endif
+	
+
+#endif

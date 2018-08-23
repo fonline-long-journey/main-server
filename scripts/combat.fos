@@ -8,6 +8,9 @@
 #include "npc_ai.fos"
 #include "combat_h.fos"
 #include "critical_failures.fos"
+#include "wait_time_h.fos"
+#include "hitchance_h.fos"
+#include "_colors.fos"
 
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
@@ -174,7 +177,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     // essential start
 
     // baseToHit used for all targets, adjusted for distance and other target-dependent qualities every time it is necessary
-    int baseToHit = skillVal;
+     int baseToHit = skillVal;
     if( eyeDamage )
         baseToHit -= 25;
     if( cr.Perk[ PE_VAMPIRE_ACCURACY ] > 0 && IS_NIGHT( __Hour ) )
@@ -183,30 +186,11 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     {
         if( cr.Trait[ TRAIT_ONE_HANDER ] != 0 )
             baseToHit += ( FLAG( weapon.Flags, ITEM_TWO_HANDS ) ? -40 : 20 );
-		/*
-        int handlingStrength = cr.Stat[ ST_STRENGTH ];
-        int reqStrength = weapon.Weapon_MinStrength;
-        if( cr.Perk[ PE_WEAPON_HANDLING ] != 0 )
-            handlingStrength += 3;
-		if ( cr.Perk[ PE_ONE_HANDER ] != 0 )
-			handlingStrength += ( FLAG( weapon.Flags, ITEM_TWO_HANDS ) ? 10 : 0 );
-		if ( cr.Perk[ PE_SWAN_SONG ] != 0 )
-			handlingStrength += 10;
-        if( handlingStrength < reqStrength )
-        {
-            // baseToHit -= ( reqStrength - handlingStrength ) * 20; //vanilla
-            int failchance = reqStrength - handlingStrength;
-            if( Random( 0, 10 ) >= failchance )
-                if( cr.ParamBase[ DAMAGE_RIGHT_ARM ] == 0 )
-                    cr.ParamBase[ DAMAGE_RIGHT_ARM ] = 1;
-                else
-                    cr.ParamBase[ DAMAGE_LEFT_ARM ] = 1;
-        }
-		*/
+
 
         if( weaponPerk == WEAPON_PERK_ACCURATE )
             baseToHit += 20;
-    }
+    } 
 
     // main attack structure
     AttackStruct attack;
@@ -311,7 +295,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 
     // here we're deciding the real toHit;
     int toHit = baseToHit;
-    toHit -= isHthAttack ? ( GetHitAim( aim ) / 2 ) : GetHitAim( aim );
+    toHit -= isHthAttack ? ( GetHitAim( aim ) / 2 ) : GetHitAim( aim ); 
 
     // range considerations, we're storing everything for a later use
     int distmod1 = 2; // used for initial weapon bonus
@@ -331,7 +315,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     int accloss = ( crIsPlayer ? ( perception - 2 ) * distmod1 : ( perception * distmod1 ) );
     int sharpshooter = 2 * cr.Perk[ PE_SHARPSHOOTER ];
 
-    if( !isHthAttack )
+     if( !isHthAttack )
     {
         if( dist < distmod2 )
             acc += distmod2;
@@ -348,8 +332,8 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         if( !target.IsKnockout() )
             blockers--;
         toHit -= 10 * blockers;
-    }
-    acmod = target.Stat[ ST_ARMOR_CLASS ];
+    } 
+     acmod = target.Stat[ ST_ARMOR_CLASS ];
     if( valid( ammo ) )
         acmod += ammo.Ammo_ACMod;
     if( acmod > 0 )
@@ -357,17 +341,9 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     if( target.IsKnockout() )
         toHit += 40;
     if( target.GetMultihex() > 0 )
-        toHit += 15;
-    /*if( valid( realWeapon ) )
-    {
-	
-        if ( realWeapon.Proto.Weapon_Sniper == true &&  isSneak == false && cr.ModeBase[ MODE_SNIPERPOS ] == 0  )  //&& cr.IsPlayer() cr.ModeBase[ MODE_SNIPERPOS ] != 0
-			{
-				toHit -= 100500;
-			}
+        toHit += 15; 
 
-    }*/
-    toHit = CLAMP( toHit, 5, 95 );
+     toHit = CLAMP( toHit, 5, 95 );
 	if( cr.Perk[ PE_SWAN_SONG ] == 0 && cr.Perk[ PE_SHARPSHOOTER ] == 0 )
 		toHit -= target.Stat[ ST_ARMOR_CLASS ]; //ФИНАЛЬНЫЙ ДОДЖ
     // smoke penalty
@@ -380,9 +356,10 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		toHit = 0;
 		target.RunClientScript( "rp_client@__Intercept", cr.Id, target.Id, 0, null, null );
 		target.ModeBase[ MODE_INTERCEPT ] = 0;
-		}
+		} 
     // main roll
-    int margin = toHit - Random( 1, 100 );
+    int margin = to_hit(cr, target, weapon, weaponMode, ammo) - Random( 1, 100 );
+	//Log("margin for hit is " + margin );
 
     if( margin < 0 ) // if missed
     {
@@ -1320,13 +1297,14 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     // stuff like animations, effects
 
     // Shoot
+	/*
     if( _WeaponEffect( weapon, use ) != 0 )
     {
         if( useHex )
             map.RunFlyEffect( _WeaponEffect( weapon, use ), cr, null, hx, hy, tx, ty );  // yeah, the target can be null (see: grenades, rocket launcher)
         else
             map.RunFlyEffect( _WeaponEffect( weapon, use ), cr, ( useNormal ? normalTarget : realTarget ), hx, hy, tx, ty );
-    }
+    }*/
 
     if( ammoRound > 0 && valid( realWeapon ) && cr.Mode[ MODE_UNLIMITED_AMMO ] == 0 )
     {
@@ -1376,6 +1354,32 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
             //    MoveItem( realWeapon, 0, map, tx, ty );
             // }
         }
+		
+		
+		
+		if( weaponSubtype == WS_GUN && !isRocket && !isFlamethrower )
+		{
+			int tracerType = -1;
+			
+			if( dmgType == DAMAGE_NORMAL )
+			{
+				tracerType = TRACER_DEFAULT;
+			}
+			
+			if( dmgType == DAMAGE_LASER )
+			{
+				tracerType = TRACER_LASER;
+			}
+			
+			if( dmgType == DAMAGE_PLASMA )
+			{
+				//tracerType = TRACER_PLASMA;
+			}
+			
+			drawTracers(map, hx, hy, tx, ty, ammoRound, tracerType);
+		}
+		
+
     }
 
     // Npc miss text
@@ -1387,7 +1391,53 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     }
 
     return;
+}
 
+void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int roundsCount, int type)
+{
+	if( type < 0)
+	{
+		Log("Некорректный тип трассера.");
+		return;
+	}
+	// void CombatAttack( Critter& cr, Critter@ target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo, uint16 hexX, uint16 hexY ) // Export
+	// Muzzle Data Array Translation
+	// Перевод на человеческий ячеек drawdata								// ENG						// RU
+	// muzzleData[0]=hx; 													// attacker.X				// атакующий.X
+       // muzzleData[1]=hy; 													// attacker.Y				// атакующий.Y
+       // muzzleData[2]=0xFFFFFF66; 											// color					// цвет
+       
+       // muzzleData[3]=tx; 													// target.X					// цель.X
+       // muzzleData[4]=ty; 													// target.Y					// цель.Y
+       // muzzleData[5]=0xFFCC6600; 											//color						// цвет
+       
+       // muzzleData[6]=3000; 													// Random(1500,3000); 		// Скорость самой отрисовки трассеров.
+       // muzzleData[7]=GetProtoTime(weapon.Proto, weapon.Mode, null)/rounds;  // delay between muzzles	// Задержка между отрисовками, в идеале зависит от Wait_Speed если она есть.
+       // muzzleData[8]=rounds;	 											// amount of muzzles		// Количество отрисовок, нужно привязать к 'rounds'.
+	   
+	array<Critter@> critters;
+	map.GetCrittersWhoViewPath ( hexX, hexY, tx, ty, FIND_LIFE | FIND_ONLY_PLAYERS, critters);
+
+	if( type == TRACER_DEFAULT)
+	{
+		array<int> drawdata = {hexX, hexY, 0xFFFF0000, tx, ty, 0xFF00FF00, 1500, 1200/roundsCount, roundsCount};
+		for(uint i = 0, j = critters.length(); i<j; i++)
+		{
+			critters[i].RunClientScript ("client_main@__Draw", DRAW_BURST_MUZZLES, 0, 0, null, drawdata );
+		}
+	}
+	
+	if( type == TRACER_LASER)
+	{
+		array<int> drawdata = {hexX, hexY, COLOR_RED, tx, ty, COLOR_DDRED, roundsCount, 1000/roundsCount};
+		int type = roundsCount == 1 ? DRAW_RAYS : DRAW_BURST_RAYS;
+		for(uint i = 0, j = critters.length(); i<j; i++)
+		{
+			critters[i].RunClientScript ("client_main@__Draw", type, 0, 0, null, drawdata );
+		}
+	}
+	
+	
 }
 
 void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCritical, bool intentionally, CombatRes[]& results )
@@ -2119,12 +2169,19 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
                 {
                     map.GetHexCoordWall( target.HexX, target.HexY, knockHx, knockHy, 180.0f, knockDist );
                     target.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( attackFront ), 0, knockHx, knockHy );
+					target.Wait(GetActionTime(ACTION_KNOCKOUT, target));
                 }
                 else
+				{
                     target.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( attackFront ), 0, target.HexX, target.HexY );
+					target.Wait(GetActionTime(ACTION_KNOCKOUT, target));
+				}
             }
             else
+			{
                 target.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( attackFront ), 0, target.HexX, target.HexY );
+				target.Wait(GetActionTime(ACTION_KNOCKOUT, target));
+			}
         }
         if( targetAp < currentAp )
             target.StatBase[ ST_CURRENT_AP ] = 100 * targetAp;
@@ -2558,8 +2615,11 @@ void CriticalFailure( Critter& cr, ProtoItem& weapon, uint8 weaponUse, ProtoItem
     }
 
     if( FLAG( eff, MF_KNOCKED_DOWN ) && !cr.IsKnockout() && cr.Perk[ PE_SWAN_SONG ] == 0 )
+	{
         cr.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( true ), cr.Perk[ PE_TERMINATOR ] != 0 ? 0 : 3, cr.HexX, cr.HexY );
-
+		cr.Wait(GetActionTime(ACTION_KNOCKOUT, cr));
+	}
+		
     if( FLAG( eff, MF_CRIPPLED_RANDOM_LIMB ) && cr.Mode[ MODE_NO_LOOSE_LIMBS ] == 0 )
     {
         switch( Random( 1, 4 ) )
@@ -2602,7 +2662,10 @@ void CriticalFailure( Critter& cr, ProtoItem& weapon, uint8 weaponUse, ProtoItem
         if( cr.Stat[ ST_CURRENT_HP ] > __DeadHitPoints && cr.Mode[ MODE_NO_KNOCK ] == 0 )
         {
             if( !cr.IsKnockout() )
+			{
                 cr.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( true ), 0, cr.HexX, cr.HexY );
+				cr.Wait(GetActionTime(ACTION_KNOCKOUT, cr));
+			}
         }
         else
         {

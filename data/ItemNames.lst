@@ -161,6 +161,7 @@
 161    PID_RED_RYDER_BB_GUN
 162    PID_RED_RYDER_LE_BB_GUN
 163    PID_BBS
+164    PID_BROTHERHOOD_TAPE  
 165    PID_IGUANA_STAND
 166    PID_TABLE_0
 167    PID_TABLE_1
@@ -583,6 +584,9 @@
 585    PID_BLACK_ROBE
 586    PID_CHITIN_ARMOR
 587    PID_SANDBAG_EMPTY
+588    PID_KOTW_BEER  
+589    PID_KOTW_GRAIL 
+590    PID_KOTW_STATUETTE 
 591    PID_700_NITRO_EXPRESS
 592    PID_ELEPHANT_GUN
 593    PID_VACCINE
@@ -596,12 +600,25 @@
 603    PID_MULTI_BARREL_GUN
 604    PID_METAL_STORM
 605    PID_BOTTLE_AMMIAK
-601    PID_POT
+606    PID_SMOKE
+607    PID_MUSTARD_GAS
 608    PID_SMOKE_GRENADE
 609    PID_MUSTARD_GAS_GRENADE
 610    PID_SIGNAL_PISTOL
 611    PID_SIGNAL_ROCKET
 612    PID_EMP_ROCKET
+613    PID_REPLICATOR_TANK
+614    PID_REPLICATOR_TANK_BROKEN 
+615    PID_POSTER_1
+616	   PID_POSTER_2
+617    PID_POSTER_3
+618    PID_POSTER_4
+619    PID_POSTER_5
+620    PID_POSTER_6
+621    PID_POSTER_7
+622    PID_POSTER_8
+623    PID_POSTER_9
+624    PID_POSTER_BUNDLE 
 647    PID_SUPERTOXINE
 648    PID_LOURENCE_FLUTE
 649    PID_INSULATE_TAPE
@@ -613,6 +630,14 @@
 800    PID_HUMMER
 801    PID_HUMMER_BAG
 808    PID_VERTIBIRD
+809    PID_VERTIBIRD_BAG  
+810    PID_STILL_B_BROKEN   
+811    PID_STILL_S_BROKEN
+812    PID_STILL_B
+813    PID_STILL_B_ACTIVE
+814    PID_STILL_S
+815    PID_STILL_S_ACTIVE
+820    PID_UNVISIBLE_BLOCK
 850    PID_EB_LONG_HOR
 851    PID_EB_LONG_VERT
 852    PID_EB_BLOCKER
@@ -636,12 +661,23 @@
 870    PID_EB_EMITTER_VERT2
 871    PID_EB_EMITTER_HOR3
 872    PID_EB_EMITTER_VERT3
+3228   PID_WANTED_SIGN
+10000  PID_HANDCUFFS
+10001  PID_CUFFS_KEY 
+10002  PID_HANDCUFFS_USED
+10003  PID_BROKEN_CUFFS
+10004  PID_ROPE_USED
+10005  PID_DEFIB
 10011  PID_SANDROBE
+10012  PID_BLUE_LEATHER_ARMOR
+10013  PID_BLUE_COMBAT_ARMOR
 10014  PID_GALO
+10017  PID_DESERT_COMBAT_ARMOR  
+10018  PID_BROWN_COMBAT_ARMOR 
 10020  PID_ANACONDA
 10023  PID_TRASH
 10024  PID_BROWNING
-10028  PID_PID_LASER_RIFLE_UPGRADE
+10028  PID_LASER_RIFLE_UPGRADE
 10030  PID_10MM_SPECIAL
 10031  PID_10MM_EX
 10032  PID_HUNTING_SHELLS
@@ -687,6 +723,7 @@
 10078  PID_BOTTLE_GLASS_FULL
 10079  PID_DINNER
 10080  PID_SUPPER
+10082  PID_INJECTOR
 10086  PID_9K_APL
 10087  PID_G219P
 10088  PID_DETOXIN
@@ -697,3 +734,30 @@
 10093  PID_HEAVY_LASER_ASSAULT
 10094  PID_CLOCKWORK_RIFLE
 10096  PID_TURBOTHRUST
+
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Ammo <12000 - 12999>
+#---------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Armors <13000 - 13999>
+#---------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Weapons <14000 - 14999>
+#---------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Misc + Craft <15000 - 15999>
+#---------------------------------------------------------------------------------------------
+
+15000 PID_ACCUMULATOR_HITECH
+15001 PID_RUBBER_GLOVES
+
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Scenery + Tiles + Roofs + Vsya Huinya <16000 - 16999>
+#---------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Containers <17000 - 17999>
+#---------------------------------------------------------------------------------------------

@@ -102,7 +102,7 @@ void getlog( Critter& cr, int type )
         while( !f.isEndOfFile() )
         {
             pos = f.getPos();
-            f.readLine( word );
+            word  = f.readLine();
             cr.Say( SAY_NETMSG, word );
         }
         f.close();

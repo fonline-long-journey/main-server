@@ -12,10 +12,13 @@
 import void InitializeScreens() from "gui_screens";
 
 GUIScreen@[] Screens;
+GUIScreen@ CursorScreen;
 
 GUIObject@ FocusedObject;
 GUIObject@ PressedObject;
 GUIObject@ HoveredObject;
+
+DragAndDropHandler@[] DragAndDropHandlers;
 
 //
 // Public API
@@ -23,8 +26,6 @@ GUIObject@ HoveredObject;
 
 void GUI_RegisterScreen( int screenIndex, GUIScreen& screen )
 {
-    if( screenIndex == 0 )
-        return;
     UnregisterScreen( screenIndex );
     RegisterScreen( screenIndex, screen );
 }
@@ -59,6 +60,11 @@ void GUI_GetActiveScreens( GUIScreen@[]& result )
 
 GUIObject@ GUI_GetFocusedObject()
 {
+    if( FocusedObject !is null && !FocusedObject.Active )
+    {
+        FocusedObject._Unfocus();
+        @FocusedObject = null;
+    }
     return FocusedObject;
 }
 
@@ -66,18 +72,46 @@ void GUI_SetFocusedObject( GUIObject@ obj )
 {
     if( FocusedObject !is null )
         FocusedObject._Unfocus();
-    @FocusedObject = obj;
-    if( FocusedObject !is null )
-        FocusedObject._Focus();
+
+    if( obj !is null && obj.Active )
+    {
+        @FocusedObject = obj;
+        if( FocusedObject !is null )
+            FocusedObject._Focus();
+    }
+    else
+    {
+        @FocusedObject = null;
+    }
 }
 
 GUIObject@ GUI_GetPressedObject()
 {
+    if( PressedObject !is null && !PressedObject.Active )
+    {
+        PressedObject._MouseUp( true );
+        @PressedObject = null;
+    }
     return PressedObject;
+}
+
+GUIObject@ GUI_GetDraggedObject()
+{
+    if( PressedObject !is null && !PressedObject.Active )
+    {
+        PressedObject._MouseUp( true );
+        @PressedObject = null;
+    }
+    return PressedObject !is null && PressedObject._IsDragged ? PressedObject : null;
 }
 
 GUIObject@ GUI_GetHoveredObject()
 {
+    if( HoveredObject !is null && !HoveredObject.Active )
+    {
+        HoveredObject._Unhover();
+        @HoveredObject = null;
+    }
     return HoveredObject;
 }
 
@@ -145,6 +179,30 @@ void CollectMessageBoxes( GUIObject@ obj, GUIMessageBox@[]& messageBoxes )
         CollectMessageBoxes( obj._Children[ i ], messageBoxes );
 }
 
+bool GUI_IsConsoleActive()
+{
+    for( int i = int( Screens.length() ) - 1; i >= 0; i-- )
+        if( IsConsoleActive( Screens[ i ] ) )
+            return true;
+    return false;
+}
+bool IsConsoleActive( GUIObject@ obj )
+{
+    if( !obj.ActiveSelf )
+        return false;
+    GUIConsole@ console = cast< GUIConsole >( obj );
+    if( console !is null )
+        return true;
+    for( uint i = 0; i < obj._Children.length(); i++ )
+        if( IsConsoleActive( obj._Children[ i ] ) )
+            return true;
+    return false;
+}
+void GUI_AddDragAndDropHandler( DragAndDropHandler@ handler )
+{
+    DragAndDropHandlers.insertLast( handler );
+}
+
 //
 // Engine callbacks
 //
@@ -204,7 +262,7 @@ void GUI_EngineCallback_ShowScreen( int screenIndex, dictionary@ params )
         // Move to top created instance
         if( !screen.IsMultiinstance )
         {
-            ShowScreenToTop( i, params );
+            ShowHideScreen( screen, params, true );
             return;
         }
 
@@ -227,25 +285,18 @@ void GUI_EngineCallback_HideScreen( int screenIndex )
     {
         // Find instance
         GUIScreen@ screen = Screens[ i ];
-        if( screen.Index != screenIndex )
+        if( !screen.ActiveSelf || screen.Index != screenIndex )
             continue;
 
         // Hide
         ShowHideScreen( screen, null, false );
-
-        // Remove multiinstance
-        if( screen.IsMultiinstance )
-        {
-            screen._Remove();
-            Screens.removeAt( i );
-        }
 
         // Hide only one screen per call
         break;
     }
 }
 
-void GUI_EngineCallback_Render( bool mainScreen )
+void GUI_EngineCallback_Draw( bool mainScreen )
 {
     for( uint i = 0; i < Screens.length(); i++ )
     {
@@ -257,12 +308,32 @@ void GUI_EngineCallback_Render( bool mainScreen )
                 DrawHardcodedScreen( screen.Index );
                 GetHardcodedScreenPos( screen.Index, screen.AbsolutePosX, screen.AbsolutePosY );
             }
-            screen._Draw();
+            screen._Draw( true );
         }
     }
 }
 
-void GUI_EngineCallback_MouseDown( int button )
+void GUI_EngineCallback_DrawCursor()
+{
+    // Dragged object
+    GUIObject@ draggedObject = GUI_GetDraggedObject();
+    if( draggedObject !is null )
+    {
+        int x = 0, y = 0, w = 0, h = 0;
+        draggedObject.GetWholeSize( x, y, w, h );
+        draggedObject.Draw( __MouseX - w / 2, __MouseY - h / 2 );
+        return;
+    }
+    CustomCall( "LMenuDraw" );
+    if( CursorScreen !is null )
+        CursorScreen._Draw( true );
+    else
+        CustomCall( "CurDraw" );
+}
+
+import bool get_cont_item( uint& itemId, bool& isEnemy ) from "client_main";
+
+void        GUI_EngineCallback_MouseDown( int button )
 {
     // Unfocus current object
     if( button == MOUSE_BUTTON_LEFT && FocusedObject !is null )
@@ -302,6 +373,11 @@ void GUI_EngineCallback_MouseDown( int button )
             {
                 @FocusedObject = hitObj;
                 FocusedObject._Focus();
+
+                uint itemId = 0;
+                bool isEnemy = false;
+                if( get_cont_item( itemId, isEnemy ) && itemId != 0 )
+                    CustomCall( "LMenuTryActivate" );
             }
             return;
         }
@@ -311,17 +387,6 @@ void GUI_EngineCallback_MouseDown( int button )
         {
             HandleHardcodedScreenMouse( screen.Index, button, true, false );
             return;
-        }
-
-        // Close on miss
-        if( button == MOUSE_BUTTON_LEFT && screen.IsCloseOnMiss )
-        {
-            ShowHideScreen( screen, null, false );
-            if( screen.IsMultiinstance )
-            {
-                screen._Remove();
-                Screens.removeAt( i );
-            }
         }
 
         // Switch to another screen
@@ -336,12 +401,22 @@ void GUI_EngineCallback_MouseDown( int button )
                     if( nextHitObj !is null )
                     {
                         // Show screen to top and click on it
-                        ShowScreenToTop( j, null );
+                        if( screen.IsCloseOnMiss )
+                             ShowHideScreen( screen, null, false, nextScreen );
+                         else
+                             ShowHideScreen( nextScreen, null, true );
                         GUI_EngineCallback_MouseDown( button );
                         return;
                     }
                 }
             }
+        }
+
+        // Close on miss
+        if( button == MOUSE_BUTTON_LEFT && screen.IsCloseOnMiss )
+        {
+            ShowHideScreen( screen, null, false );
+            return;
         }
 
         // Stop processing
@@ -359,12 +434,22 @@ void GUI_EngineCallback_MouseUp( int button )
     // Release mouse from current object
     if( PressedObject !is null && button == PressedObject._PressedButton )
     {
+        GUIObject@ obj = PressedObject;
+        bool       isDragged = obj._IsDragged;
         PressedObject._MouseUp( false );
-        if( PressedObject.IsMouseHit() )
+        @PressedObject = null;
+        if( obj.IsMouseHit() )
         {
             if( screen !is null )
                 screen._GlobalMouseClick( button );
-            PressedObject.MouseClick( button );
+            obj.MouseClick( button );
+        }
+        if( isDragged && screen !is null )
+        {
+            GUIObject@ target = screen.FindMouseHit();
+            for( uint i = 0; i < DragAndDropHandlers.length(); i++ )
+                if( DragAndDropHandlers[ i ] ( obj, target ) )
+                    break;
         }
         @PressedObject = null;
         return;
@@ -405,12 +490,13 @@ void GUI_EngineCallback_MouseMove()
 
 void GUI_EngineCallback_KeyDown( uint8 key, string@ text )
 {
-    // Screen input handler
-    GUIScreen@ screen = GetActiveScreen();
-    if( screen !is null )
-        screen._GlobalInput( key, text );
+    // Global input handler
+    for( int i = int( Screens.length() ) - 1; i >= 0; i-- )
+        if( Screens[ i ]._ActiveSelf )
+            Screens[ i ]._GlobalInput( key, text );
 
     // Focused object input
+    GUIScreen@ screen = GetActiveScreen();
     if( FocusedObject !is null && FocusedObject !is screen )
         FocusedObject.Input( key, text );
 
@@ -466,6 +552,39 @@ void GUI_EngineCallback_GetActiveScreens( int[]& result )
             result.insertLast( Screens[ i ].Index );
 }
 
+void GUI_EngineCallback_ItemChanged( bool onMap )
+{
+    if( !onMap )
+    {
+        GUIItemView@[] itemViews;
+        CollectItemView( itemViews );
+        for( uint i = 0; i < itemViews.length(); i++ )
+            itemViews[ i ].Resort();
+    }
+}
+void CollectItemView( GUIItemView@[]& itemViews )
+{
+    for( int i = int( Screens.length() ) - 1; i >= 0; i-- )
+        CollectItemView( Screens[ i ], itemViews );
+}
+void CollectItemView( GUIObject@ obj, GUIItemView@[]& itemViews )
+{
+    GUIItemView@ itemView = cast< GUIItemView >( obj );
+    if( itemView !is null )
+        itemViews.insertLast( itemView );
+    for( uint i = 0; i < obj._Children.length(); i++ )
+        CollectItemView( obj._Children[ i ], itemViews );
+}
+bool GUI_EngineCallback_CheckInterfaceHit( int x, int y )
+{
+    if( GetScreen( CLIENT_MAIN_SCREEN_GAME ).IsHardcoded )
+        return CustomCall( "IsCurInInterface " + x + " " + y ) == "true";
+    for( uint i = 0; i < Screens.length(); i++ )
+        if( Screens[ i ].ActiveSelf && Screens[ i ].FindHit( x, y ) !is null )
+            return true;
+    return false;
+}
+
 //
 // Custom callbacks
 //
@@ -486,6 +605,9 @@ void GUI_Callback_OnLanguageChanged()
 // Internal
 //
 
+import bool[] @ GetKeyPressed() from "input";
+import bool[] @ GetMousePressed() from "input";
+
 void CreateHardcodedScreen( int screenIndex, bool canMove = false )
 {
     GUIScreen screen();
@@ -493,15 +615,31 @@ void CreateHardcodedScreen( int screenIndex, bool canMove = false )
     screen._IsHardcoded = true;
     screen._IsModal = true;
     screen._IsCanMove = canMove;
+
+    if( screenIndex == CLIENT_MAIN_SCREEN_WAIT )
+        screen.SetAvailableCursors( array< int > = { CURSOR_WAIT } );
+    else if( screenIndex == CLIENT_SCREEN_PICKUP || screenIndex == CLIENT_SCREEN_USE )
+        screen.SetAvailableCursors( array< int > = { CURSOR_HAND, CURSOR_DEFAULT } );
 }
 
 void RegisterScreen( int screenIndex, GUIScreen& screen )
 {
+    if( screenIndex == CLIENT_SCREEN_NONE )
+        return;
     screen._Index = screenIndex;
     screen._ActiveSelf = false;
     screen._IsRegistered = true;
+    @screen._InputKeyPressed = GetKeyPressed();
+    @screen._InputMousePressed = GetMousePressed();
     screen._Init();
-    Screens.insertLast( @screen );
+    if( screenIndex > CLIENT_SCREEN_NONE )
+    {
+        Screens.insertLast( @screen );
+    }
+    else if( screenIndex == CLIENT_SCREEN_CURSOR )
+    {
+        @CursorScreen = screen;
+    }
 }
 
 void UnregisterScreen( int screenIndex )
@@ -513,29 +651,19 @@ void UnregisterScreen( int screenIndex )
         {
             if( screen.ActiveSelf )
                 ShowHideScreen( screen, null, false );
+            if( !screen.IsMultiinstance )
+            {
+                screen._Remove();
+                Screens.removeAt( i );
+            }
             screen._IsRegistered = false;
-            screen._Remove();
-            Screens.removeAt( i );
         }
     }
 }
 
-void ShowScreenToTop( uint screenArrayIndex, dictionary@ params )
+void ShowHideScreen( GUIScreen& screen, dictionary@ params, bool show, GUIScreen@ appearScreen = null )
 {
-    // Move to top
-    GUIScreen@ screen = Screens[ screenArrayIndex ];
-    if( screenArrayIndex != Screens.length() - 1 )
-    {
-        Screens.removeAt( screenArrayIndex );
-        Screens.insertLast( @screen );
-    }
-
-    // Show
-    ShowHideScreen( screen, params, true );
-}
-
-void ShowHideScreen( GUIScreen& screen, dictionary@ params, bool show )
-{
+    // Clean hovered/focused/pressed objects
     if( HoveredObject !is null )
     {
         HoveredObject._Unhover();
@@ -554,6 +682,11 @@ void ShowHideScreen( GUIScreen& screen, dictionary@ params, bool show )
 
     if( show )
     {
+        // Hide active screen
+        GUIScreen@ activeScreen = GetActiveScreen();
+        if( activeScreen !is null && activeScreen !is screen )
+            activeScreen._Disappear();
+        // Focus and hover new elements
         @FocusedObject = FindNextTextInput( screen );
         if( FocusedObject !is null )
             FocusedObject._Focus();
@@ -561,11 +694,44 @@ void ShowHideScreen( GUIScreen& screen, dictionary@ params, bool show )
         if( HoveredObject !is null )
             HoveredObject._Hover();
 
-        screen._Show( params );
+        // Move to top
+        if( Screens.last() !is screen )
+        {
+            Screens.removeAt( Screens.findByRef( screen ) );
+            Screens.insertLast( screen );
+        }
+        // Callback
+        if( !screen._ActiveSelf )
+        {
+            screen.SetActive( true );
+            screen._Show( params );
+            screen._Appear( params );
+        }
+        else
+        {
+            screen._Appear( params );
+        }
     }
     else
     {
+        // Ignore redundant hide
+        if( !screen._ActiveSelf )
+            return;
+        // Callbacks
+        screen._Disappear();
         screen._Hide();
+        screen.SetActive( false );
+        // Remove multiinstance
+        if( screen.IsMultiinstance )
+        {
+            screen._Remove();
+            Screens.removeAt( Screens.findByRef( screen ) );
+        }
+        // Appear active screen
+        if( appearScreen is null )
+            @appearScreen = GetActiveScreen();
+        if( appearScreen !is null )
+            appearScreen._Appear( null );
     }
 }
 

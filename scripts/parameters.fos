@@ -233,19 +233,9 @@ void CritterGenerate( int[]& params ) // Export to client_main@player_data_gener
     #ifdef __CLIENT
     // Runtime calculations, only for client registration
 
-    uint APmult = 0;
-	if( _param_[ ST_AGILITY ] < 2 )
-	APmult -= 1;
-    if( _param_[ ST_AGILITY ] > 3 )
-	APmult += 1;
-        if( _param_[ ST_AGILITY ] > 6 )
-            APmult += 1;
-			if( _param_[ ST_AGILITY ] > 9 )
-				APmult += 1;
-
     _param_[ ST_ARMOR_CLASS ] = _param_[ ST_AGILITY ] / 2;
     _param_[ ST_MAX_LIFE ] = 50 + _param_[ ST_ENDURANCE ] * 10;
-    _param_[ ST_ACTION_POINTS ] = 7 + APmult;
+    _param_[ ST_ACTION_POINTS ] = 100;
     _param_[ ST_CARRY_WEIGHT ] = 1000 * ( 10 +  _param_[ ST_STRENGTH ] * 15  );
     _param_[ ST_MELEE_DAMAGE ] = ( _param_[ ST_STRENGTH ] - 1 ) / 3;
     _param_[ ST_NORMAL_RESIST ] = _param_[ ST_ENDURANCE ];
@@ -269,7 +259,7 @@ bool CritterGenerateCheck( const int[]& params ) // Export to client_main@player
     int special = 0;
     for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
     {
-        if( params[ i ] < 1 || params[ i ] > 10 )
+        if( params[ i ] < 0 || params[ i ] > 10 )
         {
             Message( GetMsgStr( TEXTMSG_GAME, STR_NET_WRONG_SPECIAL ) );
             return false;
@@ -354,55 +344,49 @@ uint CheckPlayerName( const string& name )
 #define AP_DIVIDER                 ( 100 )
 #define CONVERT_GRAMM              # (x)               ( ( x ) * 453 )
 #define TB_BATTLE_TIMEOUT_CHECK    # (to)    ( ( to ) > 10000000 )
-#define USE_PRIMARY                ( 0 )
-#define USE_SECONDARY              ( 1 )
-#define USE_THIRD                  ( 2 )
-#define USE_RELOAD                 ( 3 )
-#define USE_USE                    ( 4 )
-#define MAX_USES                   ( 3 )
 
 // Parameters Get behaviors
 
 int getParam_Strength( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_STRENGTH ] + cr.ParamBase[ ST_STRENGTH_EXT ];
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Perception( Critter& cr, uint )
 {
     int val = ( cr.ParamBase[ DAMAGE_EYE ] != 0 ? 1 : cr.ParamBase[ ST_PERCEPTION ] + cr.ParamBase[ ST_PERCEPTION_EXT ] );
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Endurance( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_ENDURANCE ] + cr.ParamBase[ ST_ENDURANCE_EXT ];
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Charisma( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_CHARISMA ] + cr.ParamBase[ ST_CHARISMA_EXT ];
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Intellegence( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_INTELLECT ] + cr.ParamBase[ ST_INTELLECT_EXT ];
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Agility( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_AGILITY ] + cr.ParamBase[ ST_AGILITY_EXT ];
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Luck( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_LUCK ] + cr.ParamBase[ ST_LUCK_EXT ];
-    return CLAMP( val, 1, 10 );
+    return CLAMP( val, 0, 10 );
 }
 
 int getParam_Hp( Critter& cr, uint )
@@ -412,55 +396,16 @@ int getParam_Hp( Critter& cr, uint )
 
 int getParam_MaxLife( Critter& cr, uint )
 {
-	int survhealth = 10;
-	if( cr.PerkBase[ PE_SCOUT ] > 0 )
-		survhealth += 5;
 	
-    int val = cr.ParamBase[ ST_MAX_LIFE ] + cr.ParamBase[ ST_MAX_LIFE_EXT ] + 50 + cr.ParamBase[ ST_ENDURANCE ] * survhealth;
-	
-	if( cr.PerkBase[ PE_TOUGHNESS ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += cr.ParamBase[ ST_ENDURANCE ] * survhealth;
-	if( cr.PerkBase[ PE_CULT_OF_PERSONALITY ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += cr.ParamBase[ ST_CHARISMA ] * survhealth;
-		
-	if( cr.ParamBase[ PE_SCROUNGER ] != 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += 50;
-				
-	if( cr.ParamBase[ PE_BRUISER ] != 0 )
-		val += 50;
-		
-	if( cr.ParamBase[ PE_KILLER_BEE ] != 0 )
-		val += 25;
-		
-	if( cr.ParamBase[ PE_TOUGHNESS ] != 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += 100;
+    int val = cr.ParamBase[ ST_MAX_LIFE ] + cr.ParamBase[ ST_MAX_LIFE_EXT ] + 200 + cr.ParamBase[ ST_ENDURANCE ] * 20;
 		
     return CLAMP( val, 1, 9999 );
 }
 
 int getParam_MaxAp( Critter& cr, uint )
 {
-    uint apmod = 0;
-	if( cr.ParamBase[ ST_AGILITY ] < 2 )
-	apmod -= 1;
-    if( cr.ParamBase[ ST_AGILITY ] > 3 )
-	apmod += 1;
-        if( cr.ParamBase[ ST_AGILITY ] > 6 )
-            apmod += 1;
-			if( cr.ParamBase[ ST_AGILITY ] > 9 )
-				apmod += 1;
-			
         
-    int val = cr.ParamBase[ ST_ACTION_POINTS ] + cr.ParamBase[ ST_ACTION_POINTS_EXT ] + 7 + apmod;
-	
-	if( cr.ParamBase[ PE_WEAPON_HANDLING ] != 0 )
-		val += 1;
-		
-	if( cr.PerkBase[ PE_ACTION_BOY ] > 0 )
-		val += 2;
-		
-	if( cr.PerkBase[ PE_SHARPSHOOTER ] > 0 )
-		val += 2;
+    int val = cr.ParamBase[ ST_ACTION_POINTS ] + cr.ParamBase[ ST_ACTION_POINTS_EXT ] + 100;
 	
     return CLAMP( val, 1, 9999 );
 }
@@ -487,7 +432,7 @@ int getParam_MoveAp( Critter& cr, uint )
 int getParam_MaxWeight( Critter& cr, uint )
 {
     int val = MAX( cr.ParamBase[ ST_CARRY_WEIGHT ] + cr.ParamBase[ ST_CARRY_WEIGHT_EXT ], 0 );
-    val += 1000 * ( 10 + cr.ParamBase[ ST_STRENGTH ] * 15 );
+    val += 1000 * ( 40 + cr.ParamBase[ ST_STRENGTH ] * 15 );
     return CLAMP( val, 0, 2000000000 );
 }
 
@@ -500,45 +445,21 @@ int getParam_Sequence( Critter& cr, uint )
 int getParam_MeleeDmg( Critter& cr, uint )
 {
     int strength = getParam_Strength( cr, 0 );
-    int val = cr.ParamBase[ ST_MELEE_DAMAGE ] + cr.ParamBase[ ST_MELEE_DAMAGE_EXT ] + cr.ParamBase[ ST_STRENGTH ] / ( 2 - CLAMP( cr.PerkBase[ PE_SCOUT ], 0, 1 ) );
+    int val = cr.ParamBase[ ST_MELEE_DAMAGE ] + cr.ParamBase[ ST_MELEE_DAMAGE_EXT ] + cr.ParamBase[ ST_STRENGTH ];
     return CLAMP( val, 1, 9999 );
 }
 
 int getParam_HealingRate( Critter& cr, uint )
 {
     int e = getParam_Endurance( cr, 0 );
-    int val = cr.ParamBase[ ST_HEALING_RATE ] + cr.ParamBase[ ST_HEALING_RATE_EXT ] + cr.ParamBase[ ST_ENDURANCE ] / ( 2 - CLAMP( cr.PerkBase[ PE_SCOUT ], 0, 1 ) );
-	if( cr.PerkBase[ PE_TOUGHNESS ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += cr.ParamBase[ ST_ENDURANCE ];
-	if( cr.PerkBase[ PE_CULT_OF_PERSONALITY ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += cr.ParamBase[ ST_CHARISMA ];
-		
-	if( cr.PerkBase[ PE_SCROUNGER ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += 5;
-		
-	if( cr.PerkBase[ PE_BRUISER ] > 0 )
-		val += 5;
+    int val = cr.ParamBase[ ST_HEALING_RATE ] + cr.ParamBase[ ST_HEALING_RATE_EXT ] + 2 + cr.ParamBase[ ST_ENDURANCE ];
 		
     return CLAMP( val, 0, 9999 );
 }
 
 int getParam_CriticalChance( Critter& cr, uint )
 {
-    int val = cr.ParamBase[ ST_CRITICAL_CHANCE ] + cr.ParamBase[ ST_CRITICAL_CHANCE_EXT ] + cr.ParamBase[ ST_LUCK ] * 2;
-	if( cr.PerkBase[ PE_SCOUT ] > 0 && cr.PerkBase[ PE_SCROUNGER ] > 0 )
-		val += CLAMP( cr.ParamBase[ ST_LUCK ], 0, cr.ParamBase[ ST_ENDURANCE ] ) * 2;
-		
-	if( cr.PerkBase[ PE_WEAPON_HANDLING ] > 0 )
-		val += 20;
-		
-	if( cr.PerkBase[ PE_MORE_CRITICALS ] > 0 )
-		val += 15;
-		
-	if( cr.PerkBase[ PE_PROFESSIONAL ] > 0 )
-		val += 15;
-		
-	if( cr.ParamBase[ PE_KILLER_BEE ] != 0 )
-		val += 5;
+    int val = cr.ParamBase[ ST_CRITICAL_CHANCE ] + cr.ParamBase[ ST_CRITICAL_CHANCE_EXT ];
 		
 	return CLAMP( val, 0, 100 );
 }
@@ -551,18 +472,10 @@ int getParam_MaxCritical( Critter& cr, uint )
 
 int getParam_Ac( Critter& cr, uint )
 {
-    int   val = cr.ParamBase[ ST_ARMOR_CLASS ] + cr.ParamBase[ ST_ARMOR_CLASS_EXT ] + getParam_Agility( cr, 0 ) / ( 2 - CLAMP( cr.PerkBase[ PE_SCOUT ], 0, 1 ) ) + cr.ParamBase[ ST_TURN_BASED_AC ];
+    int   val = cr.ParamBase[ ST_ARMOR_CLASS ] + cr.ParamBase[ ST_ARMOR_CLASS_EXT ];
     Item@ armor = cr.GetItem( 0, SLOT_ARMOR );
-	if( cr.PerkBase[ PE_SCOUT ] > 0 && cr.PerkBase[ PE_EARLIER_SEQUENCE ] > 0 )
-		val += getParam_Agility( cr, 0 );
     if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR )
-        val += armor.Proto.Armor_AC;
-		
-	if( cr.PerkBase[ PE_WEAPON_HANDLING ] > 0 )
-		val += 5;
-
-	if( cr.PerkBase[ PE_ACTION_BOY ] > 0 )
-		val += 5;		
+        val += armor.Proto.Armor_AC + ( armor.Proto.Armor_AC * ( 100 + getParam_Strength( cr, 0 ) * 5 ) / 100 ) ;
 		
     return CLAMP( val, 0, 999 );
 }
@@ -574,37 +487,34 @@ int getParam_DamageResistance( Critter& cr, uint index )
     int        drVal = 0;
     uint8      mode = 0;
     ProtoItem@ protoArmor = cr.GetSlotProto( SLOT_ARMOR, mode );
-    uint       genmod = 0;
-	if( cr.PerkBase[ PE_SCOUT ] > 0 )
-		genmod = cr.ParamBase[ ST_ENDURANCE ] + ( cr.ParamBase[ ST_CHARISMA ] * CLAMP( cr.PerkBase[ PE_CULT_OF_PERSONALITY ], 0, 1 ) );
     switch( dmgType )
     {
     case DAMAGE_NORMAL:
-        val = cr.ParamBase[ ST_NORMAL_RESIST ]  + cr.ParamBase[ ST_NORMAL_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_NORMAL_RESIST ]  + cr.ParamBase[ ST_NORMAL_RESIST_EXT ];
         drVal = protoArmor.Armor_DRNormal;
         break;
     case DAMAGE_LASER:
-        val = cr.ParamBase[ ST_LASER_RESIST ]   + cr.ParamBase[ ST_LASER_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_LASER_RESIST ]   + cr.ParamBase[ ST_LASER_RESIST_EXT ];
         drVal = protoArmor.Armor_DRLaser;
         break;
     case DAMAGE_FIRE:
-        val = cr.ParamBase[ ST_FIRE_RESIST ]    + cr.ParamBase[ ST_FIRE_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_FIRE_RESIST ]    + cr.ParamBase[ ST_FIRE_RESIST_EXT ];
         drVal = protoArmor.Armor_DRFire;
         break;
     case DAMAGE_PLASMA:
-        val = cr.ParamBase[ ST_PLASMA_RESIST ]  + cr.ParamBase[ ST_PLASMA_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_PLASMA_RESIST ]  + cr.ParamBase[ ST_PLASMA_RESIST_EXT ];
         drVal = protoArmor.Armor_DRPlasma;
         break;
     case DAMAGE_ELECTR:
-        val = cr.ParamBase[ ST_ELECTRO_RESIST ] + cr.ParamBase[ ST_ELECTRO_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_ELECTRO_RESIST ] + cr.ParamBase[ ST_ELECTRO_RESIST_EXT ];
         drVal = protoArmor.Armor_DRElectr;
         break;
     case DAMAGE_EMP:
-        val = cr.ParamBase[ ST_EMP_RESIST ]     + cr.ParamBase[ ST_EMP_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_EMP_RESIST ]     + cr.ParamBase[ ST_EMP_RESIST_EXT ];
         drVal = protoArmor.Armor_DRExplode; //protoArmor.Armor_DREmp
         break;
     case DAMAGE_EXPLODE:
-        val = cr.ParamBase[ ST_EXPLODE_RESIST ] + cr.ParamBase[ ST_EXPLODE_RESIST_EXT ] + genmod;
+        val = cr.ParamBase[ ST_EXPLODE_RESIST ] + cr.ParamBase[ ST_EXPLODE_RESIST_EXT ];
         drVal = protoArmor.Armor_DREmp; //protoArmor.Armor_DRExplode
         break;
     case DAMAGE_UNCALLED:
@@ -612,20 +522,11 @@ int getParam_DamageResistance( Critter& cr, uint index )
         break;
     }
 
-    if( cr.ParamBase[ PE_ADRENALINE_RUSH ] != 0 && cr.ParamBase[ ST_CURRENT_HP ] <= getParam_MaxLife( cr, 0 ) / 2 )
-        val += 10;
-		
-	if( cr.ParamBase[ PE_SCROUNGER ] != 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += 10;
-		
-	if( cr.ParamBase[ PE_BRUISER ] != 0 )
-		val += 10;
-		
-	if( cr.ParamBase[ PE_KILLER_BEE ] != 0 )
-		val += 5;
+    /*if( cr.ParamBase[ PE_ADRENALINE_RUSH ] != 0 && cr.ParamBase[ ST_CURRENT_HP ] <= getParam_MaxLife( cr, 0 ) / 2 )
+        val += 10;*/
 
     Item@ armor = cr.GetItem( 0, SLOT_ARMOR );
-    if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR && cr.Perk[ PE_SWAN_SONG ] == 0 )
+    if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR )
         val += drVal - (drVal * ( GetDeteriorationProc( armor ) / 100 ) );
 
     if( dmgType == DAMAGE_EMP )
@@ -639,58 +540,44 @@ int getParam_DamageThreshold( Critter& cr, uint index )
     int        val = 0;
     int        dtVal = 0;
     uint8      mode = 0;
-    uint       genmod = 0;
-	if( cr.PerkBase[ PE_SCOUT ] > 0 )
-		genmod = cr.ParamBase[ ST_ENDURANCE ] /  10 - ( ( cr.ParamBase[ ST_ENDURANCE ] / 10 ) * CLAMP( cr.PerkBase[ PE_CULT_OF_PERSONALITY ], 0, 1 ) );
     ProtoItem@ protoArmor = cr.GetSlotProto( SLOT_ARMOR, mode );
     switch( dmgType )
     {
     case DAMAGE_NORMAL:
-        val = cr.ParamBase[ ST_NORMAL_ABSORB ]  + cr.ParamBase[ ST_NORMAL_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_NORMAL_ABSORB ]  + cr.ParamBase[ ST_NORMAL_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTNormal;
         break;
     case DAMAGE_LASER:
-        val = cr.ParamBase[ ST_LASER_ABSORB ]   + cr.ParamBase[ ST_LASER_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_LASER_ABSORB ]   + cr.ParamBase[ ST_LASER_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTLaser;
         break;
     case DAMAGE_FIRE:
-        val = cr.ParamBase[ ST_FIRE_ABSORB ]    + cr.ParamBase[ ST_FIRE_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_FIRE_ABSORB ]    + cr.ParamBase[ ST_FIRE_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTFire;
         break;
     case DAMAGE_PLASMA:
-        val = cr.ParamBase[ ST_PLASMA_ABSORB ]  + cr.ParamBase[ ST_PLASMA_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_PLASMA_ABSORB ]  + cr.ParamBase[ ST_PLASMA_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTPlasma;
         break;
     case DAMAGE_ELECTR:
-        val = cr.ParamBase[ ST_ELECTRO_ABSORB ] + cr.ParamBase[ ST_ELECTRO_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_ELECTRO_ABSORB ] + cr.ParamBase[ ST_ELECTRO_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTElectr;
         break;
     case DAMAGE_EMP:
-        val = cr.ParamBase[ ST_EMP_ABSORB ]     + cr.ParamBase[ ST_EMP_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_EMP_ABSORB ]     + cr.ParamBase[ ST_EMP_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTEmp;
         break;
     case DAMAGE_EXPLODE:
-        val = cr.ParamBase[ ST_EXPLODE_ABSORB ] + cr.ParamBase[ ST_EXPLODE_ABSORB_EXT ] + genmod;
+        val = cr.ParamBase[ ST_EXPLODE_ABSORB ] + cr.ParamBase[ ST_EXPLODE_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTExplode;
         break;
     case DAMAGE_UNCALLED:
     default:
         break;
     }
-    if( cr.ParamBase[ PE_ADRENALINE_RUSH ] != 0 && cr.ParamBase[ ST_CURRENT_HP ] <= getParam_MaxLife( cr, 0 )  / 2 )
-        val += 1;
-
-	if( cr.ParamBase[ PE_TOUGHNESS ] != 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-		val += 2;
-		
-		if( cr.ParamBase[ PE_BRUISER ] != 0 )
-		val += 1;
-		
-	if( cr.ParamBase[ PE_KILLER_BEE ] != 0 )
-		val += 1;
 
     Item@ armor = cr.GetItem( 0, SLOT_ARMOR );
-    if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR && cr.Perk[ PE_SWAN_SONG ] == 0)
+    if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR )
         val += dtVal - (dtVal * ( GetDeteriorationProc( armor ) / 100) );
 
     return CLAMP( val, 0, 999 );
@@ -782,36 +669,36 @@ bool Critter_IsOverweight( Critter& cr )
     return int( cr.ItemsWeight() ) > getParam_MaxWeight( cr, 0 );
 }
 
-bool Item_Weapon_IsHtHAttack( Item& item, uint8 mode )
+bool ProtoItem_Weapon_IsHtHAttack( ProtoItem& proto, uint8 mode )
 {
     uint8 use = mode & 0xF;
-    if( item.GetType() != ITEM_TYPE_WEAPON || ( ( item.Proto.Weapon_ActiveUses >> use ) & 1 ) == 0 )
+    if( proto.Type != ITEM_TYPE_WEAPON || ( ( proto.Weapon_ActiveUses >> use ) & 1 ) == 0 )
         return false;
-    int skill = _WeaponSkill( item.Proto, use );
+    int skill = _WeaponSkill( proto, use );
     return skill == SK_UNARMED || skill == SK_MELEE_WEAPONS;
 }
 
-bool Item_Weapon_IsGunAttack( Item& item, uint8 mode )
+bool ProtoItem_Weapon_IsGunAttack( ProtoItem& proto, uint8 mode )
 {
     uint8 use = mode & 0xF;
-    if( item.GetType() != ITEM_TYPE_WEAPON || ( ( item.Proto.Weapon_ActiveUses >> use ) & 1 ) == 0 )
+    if( proto.Type != ITEM_TYPE_WEAPON || ( ( proto.Weapon_ActiveUses >> use ) & 1 ) == 0 )
         return false;
-    int skill = _WeaponSkill( item.Proto, use );
+    int skill = _WeaponSkill( proto, use );
     return skill == SK_SMALL_GUNS || skill == SK_BIG_GUNS || skill == SK_ENERGY_WEAPONS;
 }
 
-bool Item_Weapon_IsRangedAttack( Item& item, uint8 mode )
+bool ProtoItem_Weapon_IsRangedAttack( ProtoItem& proto, uint8 mode )
 {
     uint8 use = mode & 0xF;
-    if( item.GetType() != ITEM_TYPE_WEAPON || ( ( item.Proto.Weapon_ActiveUses >> use ) & 1 ) == 0 )
+    if( proto.Type != ITEM_TYPE_WEAPON || ( ( proto.Weapon_ActiveUses >> use ) & 1 ) == 0 )
         return false;
-    int skill = _WeaponSkill( item.Proto, use );
+    int skill = _WeaponSkill( proto, use );
     return skill == SK_SMALL_GUNS || skill == SK_BIG_GUNS || skill == SK_ENERGY_WEAPONS || skill == SK_THROWING;
 }
 
 // Engine callbacks
 
-uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode )
+uint GetProtoItemUseApCost( Critter& cr, ProtoItem& proto, uint8 mode )
 {
     uint8 use = mode & 0xF;
     uint8 aim = mode >> 4;
@@ -819,30 +706,26 @@ uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode )
 
     if( use == USE_USE )
     {
-        if( TB_BATTLE_TIMEOUT_CHECK( getParam_Timeout( cr, TO_BATTLE ) ) )
-            apCost = __TbApCostUseItem;
-        else
-            apCost = __RtApCostUseItem;
+		apCost = _WeaponApCost(proto, 0);
     }
     else if( use == USE_RELOAD )
     {
-        if( TB_BATTLE_TIMEOUT_CHECK( getParam_Timeout( cr, TO_BATTLE ) ) )
-            apCost = __TbApCostReloadWeapon;
-        else
-            apCost = __RtApCostReloadWeapon;
 
-        if( item.GetType() == ITEM_TYPE_WEAPON && ( item.Proto.Weapon_Perk == WEAPON_PERK_FAST_RELOAD || cr.Perk[ PE_WEAPON_HANDLING ] != 0 ) )
-            apCost = 2;
+		apCost = _WeaponApCost(proto, USE_RELOAD);
+		
+        if( proto.Type == ITEM_TYPE_WEAPON && proto.Weapon_Perk == WEAPON_PERK_FAST_RELOAD )
+            apCost -= 1;
     }
-    else if( use >= USE_PRIMARY && use <= USE_THIRD && item.GetType() == ITEM_TYPE_WEAPON )
+    else if( use >= USE_PRIMARY && use <= USE_THIRD && proto.Type == ITEM_TYPE_WEAPON )
     {
-        int  skill = _WeaponSkill( item.Proto, use );
+
+        int  skill = _WeaponSkill( proto, use );
 		int handlingStrength = cr.Stat[ ST_STRENGTH ];
-        int reqStrength = item.Proto.Weapon_MinStrength;
-        bool hthAttack = Item_Weapon_IsHtHAttack( item, use );
-        bool rangedAttack = Item_Weapon_IsRangedAttack( item, use );
+        int reqStrength = proto.Weapon_MinStrength;
+        bool hthAttack = ProtoItem_Weapon_IsHtHAttack( proto, use );
+        bool rangedAttack = ProtoItem_Weapon_IsRangedAttack( proto, use );
 	
-        apCost = _WeaponApCost( item.Proto, use );
+        apCost = _WeaponApCost( proto, use );
         if( aim != 0 )
             apCost += GetAimApCost( aim );
 
@@ -854,16 +737,16 @@ uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode )
 		if( cr.Perk[ PE_KARMA_BEACON ] != 0 )
             handlingStrength += 3;
 		if ( cr.Perk[ PE_ONE_HANDER ] != 0 || cr.Perk[ PE_VITANI ] != 0 )
-			handlingStrength += ( FLAG( item.Proto.Flags, ITEM_TWO_HANDS ) ? 0 : 10 );
+			handlingStrength += ( FLAG( proto.Flags, ITEM_TWO_HANDS ) ? 0 : 10 );
 		if ( cr.Perk[ PE_SWAN_SONG ] != 0 )
 			handlingStrength += 10;
         if( handlingStrength < reqStrength )
 			apCost -= ( handlingStrength - reqStrength ) ;
 
-        if( cr.ParamBase[ PE_BONUS_RATE_OF_FIRE ] != 0  && ( item.Proto.Weapon_Type == WT_PISTOL || item.Proto.Weapon_Type == WT_SMG || item.Proto.Weapon_Type == WT_ASSAULT_RIFLE ) )
+        if( cr.ParamBase[ PE_BONUS_RATE_OF_FIRE ] != 0  && ( proto.Weapon_Type == WT_PISTOL || proto.Weapon_Type == WT_SMG || proto.Weapon_Type == WT_ASSAULT_RIFLE ) )
             apCost--;
 
-        /*if( cr.ParamBase[ PE_YANDERE ] != 0 && ( item.Proto.Weapon_Type == WT_PISTOL || item.Proto.Weapon_Type == WT_SMG ) )
+        /*if( cr.ParamBase[ PE_YANDERE ] != 0 && ( proto.Weapon_Type == WT_PISTOL || proto.Weapon_Type == WT_SMG ) )
             apCost--;*/
 			
         if( cr.Perk[ PE_MAGNETIC_PERSONALITY ] > 0 && skill == SK_THROWING )
@@ -880,15 +763,25 @@ uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode )
     return apCost;
 }
 
-uint get_attack_distantion( Critter& cr, Item& item, uint8 mode )
+uint GetItemUseApCost( Critter& cr, Item& item, uint8 mode )
 {
+    return GetProtoItemUseApCost( cr, item.Proto, mode );
+}
+uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode )
+{
+    return GetItemUseApCost( cr, item, mode );
+}
+uint GetProtoItemAttackDistantion( Critter& cr, ProtoItem& proto, uint8 mode )
+{
+    if( proto.Type != ITEM_TYPE_WEAPON )
+        return 0; 
     uint8 use = mode & 0xF;
-    int   skill = _WeaponSkill( item.Proto, use );
-    int   dist = _WeaponMaxDist( item.Proto, use );
+    int   skill = _WeaponSkill( proto, use );
+    int   dist = _WeaponMaxDist( proto, use );
     int   strength = getParam_Strength( cr, 0 );
     int   tacthr = 0;
 
-    //if( cr.ParamBase[ PE_TACTICAL_THROWING ] > 0 && _WeaponDmgType( item.Proto, use ) != DAMAGE_NORMAL )
+    //if( cr.ParamBase[ PE_TACTICAL_THROWING ] > 0 && _WeaponDmgType( proto, use ) != DAMAGE_NORMAL )
         //tacthr = 2;
     // int   heaveHo = cr.ParamBase[ PE_HEAVE_HO ];
     if( skill == SK_THROWING )
@@ -897,19 +790,19 @@ uint get_attack_distantion( Critter& cr, Item& item, uint8 mode )
             strength = 10;
         dist = MIN( dist, int(3) * MIN( int(10), strength ) ) + tacthr;
     }
-    if( Item_Weapon_IsHtHAttack( item, mode ) && cr.ParamBase[ PE_PRESENCE ] != 0 )
+    if( ProtoItem_Weapon_IsHtHAttack( proto, mode ) && cr.ParamBase[ PE_PRESENCE ] != 0 )
         dist++;
 
-    if( Item_Weapon_IsHtHAttack( item, mode ) && cr.ParamBase[ MODE_RANGE_HTH ] != 0 )
+    if( ProtoItem_Weapon_IsHtHAttack( proto, mode ) && cr.ParamBase[ MODE_RANGE_HTH ] != 0 )
         dist++;
 
     //if( item.Proto.Weapon_Type == WT_PISTOL && cr.ParamBase[ PE_COWBOY ] > 0 )
         //dist += 5;
 
-    if( item.Proto.Weapon_Type == WT_SHOTGUN && cr.ParamBase[ PE_LIBERATOR ] > 0 )
+    if( proto.Weapon_Type == WT_SHOTGUN && cr.ParamBase[ PE_LIBERATOR ] > 0 )
         dist += 2;
 
-    if( ( item.Proto.Weapon_Type == WT_MINIGUN ) && cr.ParamBase[ PE_KILL_ZONE ] > 0 )
+    if( ( proto.Weapon_Type == WT_MINIGUN ) && cr.ParamBase[ PE_KILL_ZONE ] > 0 )
         dist += 6;
 
 
@@ -918,6 +811,26 @@ uint get_attack_distantion( Critter& cr, Item& item, uint8 mode )
     if( dist < 0 )
         dist = 0;
     return dist;
+}
+
+uint GetItemAttackDistantion( Critter& cr, Item& item, uint8 mode )
+{
+    return GetProtoItemAttackDistantion( cr, item.Proto, mode );
+}
+uint GetActiveItemAttackDistantion( Critter& cr )
+{
+    Item@ item = cr.GetItem( 0, SLOT_HAND1 );
+    if( item is null )
+    {
+        uint8      mode = 0;
+        ProtoItem@ proto = cr.GetSlotProto( SLOT_HAND1, mode );
+        return GetProtoItemAttackDistantion( cr, proto, mode );
+    }
+    return GetItemAttackDistantion( cr, item, item.Mode );
+}
+uint get_attack_distantion( Critter& cr, Item& item, uint8 mode )
+{
+    return GetItemAttackDistantion( cr, item, mode );
 }
 
 // Generic stuff

@@ -3,7 +3,7 @@
 
 //
 // FOnline engine structures, for native working
-// Version 460
+// Version 472
 // Binaries built with MSVS 2010, GCC 4.7.2
 // Default calling convention - cdecl
 //
@@ -572,6 +572,10 @@ struct GameOptions
     const ScriptArray*  RegParams;
     const ScriptString& RegName;
     const ScriptString& RegPassword;
+    const uint          ChosenLightColor;
+    const uint8         ChosenLightDistance;
+    const int           ChosenLightIntensity;
+    const uint8         ChosenLightFlags;
 
     // Mapper
     const ScriptString& ClientPath;
@@ -730,7 +734,7 @@ struct ProtoItem
     const int    Armor_DRPlasma;
     const int    Armor_DRElectr;
     const int    Armor_DREmp;
-    const int    Armor_DRExplod;
+    const int    Armor_DRExplode;
     const int    Armor_DTNormal;
     const int    Armor_DTLaser;
     const int    Armor_DTFire;

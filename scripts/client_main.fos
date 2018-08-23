@@ -5,6 +5,10 @@
 #include "_animation.fos"
 #include "sprite.fos"
 #include "gui_h.fos"
+#include "wait_time_h.fos"
+#include "client_drawing_h.fos"
+#include "hitchance_h.fos"
+#include "mutual_h.fos"
 
 import void InitializeGame() from "config";
 import void InitTestScreen() from "client_screen_test";
@@ -13,6 +17,7 @@ import bool PerkCheck( CritterCl& cr, uint perk ) from "perks";
 import void CritterGenerate( int[]& data ) from "parameters";
 import bool CritterGenerateCheck( const int[]& data ) from "parameters";
 import uint get_attack_distantion( CritterCl& cr, ItemCl& item, uint8 mode ) from "parameters";
+import uint get_use_ap_cost( Critter& cr, Item& item, uint8 mode ) from "parameters";
 import uint CheckPlayerName( const string& name ) from "parameters";
 import void InitNameColorizing() from "name_colorizing";
 import bool TryColorizeCritter( CritterCl& cr ) from "name_colorizing";
@@ -29,14 +34,17 @@ import void Fill3DRegistrationParameters( int[]& params ) from "client_3d_cha_re
 import void PlayAnimSound( uint crType, int gender, uint anim1, uint anim2 ) from "animation";
 
 import void RenderThrowing() from "throwing";
-import int to_hit_hex() from "bin_hex_attack_client";
+
+#ifdef __CLIENT_DRAWING_H__
+import distCalcFunc@ GetCalcFunc() from "hitchance";
+#endif
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on client loaded or new client_main.fos script received.
 bool start()
 {
     InitializeGame();
-    if( __ScreenWidth < 800 || __ScreenWidth > 1280 || __ScreenHeight < 600 || __ScreenHeight > 1024 )
+    if( __ScreenWidth < 800 || __ScreenWidth > 1920 || __ScreenHeight < 600 || __ScreenHeight > 1080 )
     {
         // Recomendation message
         Message( GetMsgStr( TEXTMSG_GAME, STR_INVALID_RESOLUTION ) );
@@ -48,12 +56,21 @@ bool start()
     AppendIfaceIni( "players3d_headinv.ini" );
     # endif
     #endif
+	if( !AppendIfaceIni( "thelj.ini" ) )
+	{
+	// Message( "К нашему глубокому сожалению, у вас отсутствует файл настроек интерфейса - thelongjourhey.ini. Мама Пиромансера скорбит вместе с нами." );
+		Message( GetMsgStr (TEXTMSG_GAME, STR_INVALID_INI) );
+	}
+	else
+	{
 
+    Message( GetMsgStr (TEXTMSG_GAME, STR_WELCOME_TO_TLJ) ); //"Файлы, возможно, даже и успешно загружены, а карта мира и интерфейс - изменены для игры на сервере не Вашей мечты - The Long Journey." + "\n" + "Команда разработки и просто нормальные ребята желают Вам приятного дня!" );
+	}
     LoadFont( FONT_COURIER_NEW_SMALL, "CourierNewSmall" );
     // SetDefaultFont(FONT_COURIER_NEW_SMALL, COLOR_TEXT);
 
     GUI_EngineCallback_Start();
-	
+	GUI_AddDragAndDropHandler( ItemsDragAndDropHandler );
     InitNameColorizing();
     InitIgnoreList();
     // InitTestScreen();
@@ -98,7 +115,9 @@ bool start()
         "VbMaleSkeleton.fo3d"
     };
     Preload3dFiles( preload3dFiles, PT_ART_CRITTERS );
+
     #endif
+	CreateWeaponRadius(0xFFFFFFFF).SetDistFunc(GetCalcFunc());
 
     return true;
 }
@@ -115,6 +134,8 @@ void finish()
 uint loop()
 {
     GUI_EngineCallback_Loop();
+	GUI_EngineCallback_ItemChanged(false);
+	__ConsoleActive = GUI_IsConsoleActive();
     return 1;
 }
 
@@ -129,6 +150,9 @@ void get_active_screens( int[]& result )
 // Show/hide screen behaviour.
 void screen_change( bool show, int screen, dictionary@ params )
 {
+    if( IS_CLIENT_MAIN_SCREEN( screen ) )
+        __ConsoleActive = false;
+
     if( show )
         GUI_EngineCallback_ShowScreen( screen, params );
     else
@@ -149,40 +173,28 @@ void screen_change( bool show, int screen, dictionary@ params )
 //    100 (over map), 101 (over all)
 void        render_iface( uint layer )
 {
-    if( layer == 3 )
-    {
-        GUI_EngineCallback_Render( true );
-        DrawChosenTabs();
-        GUI_EngineCallback_Render( false );
-        if( __isHexAttack )
-        {
-            int tohit = to_hit_hex();
-            if( tohit > 0 )
-                DrawText( tohit + "%", __MouseX, __MouseY,
-                          ( ( tohit / 10 >= 1 ? 2 : 1 ) + 2 ) * 10, 10, COLOR_RED, FONT_FALLOUT, 0 );
-        }
-    }
 	if( layer == 2 )
     {
-		GUI_EngineCallback_Render( true );
+		GUI_EngineCallback_Draw( true );
         DrawChosenTabs();
-        GUI_EngineCallback_Render( false );
+        GUI_EngineCallback_Draw( false );
+		
+		if (__ConfigDrawMuzzles)
+		{
+			DrawRays();
+			DrawBurstRays();
+			DrawMuzzleFlashes();
+			DrawBurstMuzzles();
+		}
 		
         RenderThrowing();
-    }
-    if( layer == 2 )
-    {
-        GUI_EngineCallback_Render( true );
-        DrawChosenTabs();
-        GUI_EngineCallback_Render( false );
-
         // Help info
         if( __HelpInfo )
         {
             // About
             string aboutText =
-                "FOnline " + ( __Singleplayer ? "Singleplayer" : "" ) + "\n" +
-                "by Gamers for Gamers\n" +
+                "FOnline:" + ( __Singleplayer ? "Singleplayer" : "" ) + " The Long Journey" + "\n" +
+                "by Team of Nolifers for Gamers\n" +
                 "version " + CustomCall( "Version" ) + "\n" +
                 "\n" +
                 "Traffic, bytes:\n" +
@@ -207,56 +219,26 @@ void        render_iface( uint layer )
             // Help
             DrawText( MSG_GAME( STR_GAME_HELP ), 0, 0, __ScreenWidth, __ScreenHeight, COLOR_WHITE, FONT_DEFAULT, FT_CENTERX | FT_CENTERY );
         }
-		//***********
-		//DrawText("\n\n   Голод \n\n   Жажда", 0, 10, __ScreenWidth, __ScreenHeight, COLOR_GREEN, FONT_DEFAULT, 0 );
 		
-		uint8 hungerProc = ( GetChosen().StatBase[ST_FUD] / 25 ) ,
-		thristProc = ( GetChosen().StatBase[ST_WATAH] / 25 ) ,
-		overdoseProc = ( GetChosen().StatBase[ST_DRUGS] / 3 ) ;
 		if( valid( GetChosen() ) )
 		{
-			int[] data(600);
-			int i = 0;
-			for(int j = 0; j < hungerProc; ++j){
-			data[i] = 20 + (j * 3);
-			data[i + 1] = 40;
-			data[i + 2] = COLOR_GREEN;
-			data[i + 3] = 30 + (j * 3);
-			data[i + 4] = 45;
-			data[i + 5] = COLOR_GREEN;
-			i += 6;
-			}
-			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, data);
-			
-			int[] drawData(600);
-			i = 0;
-			for(int j = 0; j < thristProc; ++j){
-			drawData[i] = 30 + (j * 3);
-			drawData[i + 1] = 50;
-			drawData[i + 2] = COLOR_BLUE;
-			drawData[i + 3] = 20 + (j * 3);
-			drawData[i + 4] = 55;
-			drawData[i + 5] = COLOR_BLUE;
-			i += 6;
-			}
-			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
-			
-			int[] moarData(600);
-			i = 0;
-			for(int j = 0; j < overdoseProc; ++j){
-			drawData[i] = 30 + (j * 2);
-			drawData[i + 1] = 45;
-			drawData[i + 2] = COLOR_RED;
-			drawData[i + 3] = 30 + (j * 2);
-			drawData[i + 4] = 50;
-			drawData[i + 5] = COLOR_RED;
-			i += 6;
-			}
-			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, drawData);
-			
+			renderBars();
+			DrawWepRadius(GetChosen());
 		}
-		//***********
+
+        // Zoom text
+        if( __MapZooming && __SpritesZoomMin != __SpritesZoomMax )
+        {
+            string@ zoomText = MSG_GAME( STR_ZOOM );
+            @zoomText = ReplaceText( zoomText, "%d", "" + int(1.0 / __SpritesZoom * 100.0) );
+            @zoomText = ReplaceText( zoomText, "%%", "%" );
+            DrawText( zoomText, 0, 0, __ScreenWidth, __ScreenHeight, COLOR_SAND, FONT_BIG, FT_CENTERX | FT_CENTERY );
+        }
     }
+	else if( layer == 4 )
+    {
+        GUI_EngineCallback_DrawCursor();
+    }	
     else if( layer == 100 && __GmapActive )
     {
         // Here you can draw on global map
@@ -271,6 +253,148 @@ void        render_iface( uint layer )
         // Для примера, расчет текущего пикселя группы:
         // x = __GmapGroupX / __GmapZoom + __GmapOffsetX, y = __GmapGroupY / __GmapZoom + __GmapOffsetY.
     }
+}
+
+void renderBars()
+{
+	renderNewStyleApBar();
+	renderRandaruFud();
+	renderRandaruWatah();
+	renderRandaruDrugs();
+}
+
+void renderApBar()
+{
+	uint sprite = LoadSprite( "test_bar.png", PT_ART_INTRFACE );
+	uint xPos = 200;
+    uint yPos = 300;
+    float widthBase = 400.0;
+	
+	CritterCl@ chosen = GetChosen();
+	
+	uint width = uint( widthBase * getProc(chosen.Param[ST_CURRENT_AP], chosen.Param[ST_ACTION_POINTS]) );
+	
+    uint heigth = 30;
+    DrawSprite( sprite, -1, xPos, yPos, width, heigth, false, 0, false );
+}
+
+#define MAX_BULBS (76)
+void renderNewStyleApBar()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 650;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = chosen.Param[ST_ACTION_POINTS] / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_CURRENT_AP] ) / bulbValue );
+		uint color = chosen.Param[ST_CURRENT_AP] > 0 ? getBulbColor(bulbCount) : COLOR_DDRED;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+void renderRandaruFud()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 600;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = 100 / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_FUD] ) / bulbValue );
+		uint color = COLOR_GREEN;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+void renderRandaruWatah()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 550;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = 100 / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_WATAH] ) / bulbValue );
+		uint color = COLOR_BLUE;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+void renderRandaruDrugs()
+{
+	uint bulb = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+	uint bulbWidth = GetSpriteWidth(bulb, -1) + 1;
+	
+	uint xPos = 400;
+    uint yPos = 500;
+
+	CritterCl@ chosen = GetChosen();
+	if(valid(chosen))
+	{
+		float bulbValue = 100 / float( MAX_BULBS );
+		uint bulbCount = uint( ABS( chosen.Param[ST_DRUGS] ) / bulbValue );
+		uint color = COLOR_GRAY;
+		
+		for(uint i = 0; i <= bulbCount; i++)
+		{
+			DrawSprite( bulb, -1, xPos + (bulbWidth * i), yPos, color );
+		}
+		
+	}
+}
+
+
+uint getBulbColor(uint bulbCount)
+{
+	uint percentage = uint( getProc(bulbCount, MAX_BULBS) * 100.0 );
+	
+	if( percentage > 70)
+	{
+		return COLOR_GREEN;
+	}
+	
+	if( percentage > 40)
+	{
+		return COLOR_SAND;
+	}
+
+	return COLOR_RED;
+}
+
+float getProc(int first, int second)
+{
+	float firstNum = float(first);
+	float secondNum = float(second);
+
+	return firstNum / secondNum;
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,29 +451,34 @@ void critter_out( CritterCl& cr )
 // Called on something item in/changed/out map.
 void item_map_in( ItemCl& item )
 {
-    //
+    GUI_EngineCallback_ItemChanged( true );
 }
 
 void item_map_changed( ItemCl& itemNow, ItemCl& itemBefore )
 {
-    //
+    GUI_EngineCallback_ItemChanged( true );
 }
 
 void item_map_out( ItemCl& item )
 {
-    //
+    GUI_EngineCallback_ItemChanged( true );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Called on something critter in/out chosen inventory.
 void item_inv_in( ItemCl& item )
 {
-    //
+     GUI_EngineCallback_ItemChanged( false );
+}
+
+void item_inv_changed( ItemCl& itemNow, ItemCl& itemBefore )
+{
+    GUI_EngineCallback_ItemChanged( false );
 }
 
 void item_inv_out( ItemCl& item )
 {
-    //
+    GUI_EngineCallback_ItemChanged( false );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -524,7 +653,7 @@ bool out_message( string& message, int& sayType )
 // To-hit chance.
 int to_hit( CritterCl& chosen, CritterCl& target, ProtoItem& weapon, uint8 weaponMode )
 {
-    int use         = _WeaponModeUse( weaponMode );
+/*     int use         = _WeaponModeUse( weaponMode );
     int hitLocation = _WeaponModeAim( weaponMode );
     if( use > 2 )
         return 0;
@@ -641,8 +770,8 @@ int to_hit( CritterCl& chosen, CritterCl& target, ProtoItem& weapon, uint8 weapo
     toHit -= hitMod;
     toHit = CLAMP( toHit, 5, 95 );
 	if ( chosen.Perk[ PE_VITANI ] != 0 || chosen.Perk[ PE_SWAN_SONG ] != 0 )
-	toHit = 100;
-    return toHit;
+	toHit = 100; */
+    return client_to_hit(chosen, target, weapon, weaponMode);
 }
 
 uint GetHitAim( int hitLocation )
@@ -964,7 +1093,8 @@ string generic_description( int descType, int& offsX, int& offsY )
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_CHARISMA ) )   + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_INTELLECT ) )  + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_AGILITY ) )    + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_LUCK ) )       + "\n";
+        // result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_LUCK ) )       + "\n";
+		result += "\n";
         result += "---------------------\n";
 
         ItemCl@ weaponMain = chosen.GetItem( 0, SLOT_HAND1 );
@@ -1089,7 +1219,7 @@ string generic_description( int descType, int& offsX, int& offsY )
         result += chosen.Stat[ ST_CHARISMA ]   + "\n";
         result += chosen.Stat[ ST_INTELLECT ]  + "\n";
         result += chosen.Stat[ ST_AGILITY ]    + "\n";
-        result += chosen.Stat[ ST_LUCK ];
+        // result += chosen.Stat[ ST_LUCK ];
     }
     else if( descType == DESC_INVENTORY_STATS )
     {
@@ -1123,6 +1253,7 @@ string generic_description( int descType, int& offsX, int& offsY )
 // Item description. Look types look in _client_defines.fos, Item look types.
 string item_description( ItemCl& item, int lookType )
 {
+	CritterCl@ chosen = GetChosen();
     // Default error text
     if( not IsMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) + ( lookType != ITEM_LOOK_ONLY_NAME ? 1 : 0 ) ) )
         return GetMsgStr( TEXTMSG_GAME, STR_ITEM_LOOK_NOTHING );
@@ -1162,18 +1293,54 @@ string item_description( ItemCl& item, int lookType )
 
         if( lookType != ITEM_LOOK_MAP )
         {
+			//  Strength Requirement, PigBoss ti rak
+			if( item.GetType() == ITEM_TYPE_WEAPON || item.GetType() == ITEM_TYPE_ARMOR )
+			{
+				result += "\n";
+				string str;
+				str = GetMsgStr( TEXTMSG_GAME, STR_INV_STR_REQ );
+				str = ReplaceText( str, "VALUE", item.Proto.Weapon_MinStrength);
+				result += str;
+			}
+			
             // Weight
             result += "\n" + ReplaceText( GetMsgStr( TEXTMSG_GAME, STR_ITEM_WEIGHT_GRAMM ), "VALUE", item.Proto.Weight * item.GetCount() );
-
+			
+			//  Custom object speed
+			if( FLAG(item.Flags, ITEM_CAN_USE) || FLAG(item.Flags, ITEM_CAN_USE_ON_SMTH) || item.GetType() == ITEM_TYPE_WEAPON )
+			{
+				result += "\n";
+				string str;
+				str = GetMsgStr( TEXTMSG_GAME, STR_WAIT_TIME );
+				str = ReplaceText( str, "VALUE", GetProtoTime (item.Proto, item.Mode, chosen));
+				result += str;
+			}
+			
+			//  Custom AP cost
+			if( FLAG(item.Flags, ITEM_CAN_USE) || FLAG(item.Flags, ITEM_CAN_USE_ON_SMTH) || item.GetType() == ITEM_TYPE_WEAPON )
+			{
+				result += "\n";
+				string str;
+				str = GetMsgStr( TEXTMSG_GAME, STR_ITEM_AP_COST );
+				str = ReplaceText( str, "VALUE", get_use_ap_cost ( chosen, item, item.Mode));
+				Message("" + str);
+				result += str;
+			}
+			
             // Ammo load
-            if( item.GetType() == ITEM_TYPE_WEAPON && item.Proto.Weapon_MaxAmmoCount > 0 )
+            if( item.GetType() == ITEM_TYPE_WEAPON )
             {
-                result += "\n";
-                string str = GetMsgStr( TEXTMSG_GAME, STR_INV_HAS_SHOTS );
-                str = ReplaceText( str, "VALUE",     item.AmmoCount );
-                str = ReplaceText( str, "MAX_VALUE", item.Proto.Weapon_MaxAmmoCount );
-                str = ReplaceText( str, "AMMO",      GetMsgStr( TEXTMSG_GAME, STR_CALIBER( item.Proto.Weapon_Caliber ) ) );
-                result += str;
+				string str;
+				if  ( item.Proto.Weapon_MaxAmmoCount > 0)
+				{
+					result += "\n";
+					str = GetMsgStr( TEXTMSG_GAME, STR_INV_HAS_SHOTS );
+					str = ReplaceText( str, "VALUE",     item.AmmoCount );
+					str = ReplaceText( str, "MAX_VALUE", item.Proto.Weapon_MaxAmmoCount );
+					str = ReplaceText( str, "AMMO",      GetMsgStr( TEXTMSG_GAME, STR_CALIBER( item.Proto.Weapon_Caliber ) ) );
+					result += str;
+				}
+				
             }
 
             // Deterioration
@@ -1205,7 +1372,7 @@ string item_description( ItemCl& item, int lookType )
                     result += "\n" + GetMsgStr( TEXTMSG_GAME, STR_DETERIORATION_SERVICE_EXT );
 
                 // Broken count
-                CritterCl@ chosen = GetChosen();
+                // CritterCl@ chosen = GetChosen();
                 if( valid( chosen ) ) //&& chosen.Perk[ PE_MR_FIXIT ] != 0 
                     result += "\n" + ReplaceText( GetMsgStr( TEXTMSG_GAME, STR_DETERIORATION_BROKEN_COUNT ), "VALUE", brokenCount );
             }
@@ -1683,13 +1850,13 @@ void player_data_generate( int[]& params )
         @__RegParams = regParams;
         __RegParams.resize( PARAMS_COUNT );
 
-        __RegParams[ ST_STRENGTH ] = 5;
-        __RegParams[ ST_PERCEPTION ] = 5;
-        __RegParams[ ST_ENDURANCE ] = 5;
-        __RegParams[ ST_CHARISMA ] = 5;
-        __RegParams[ ST_INTELLECT ] = 5;
-        __RegParams[ ST_AGILITY ] = 5;
-        __RegParams[ ST_LUCK ] = 5;
+        __RegParams[ ST_STRENGTH ] = 0;
+        __RegParams[ ST_PERCEPTION ] = 0;
+        __RegParams[ ST_ENDURANCE ] = 0;
+        __RegParams[ ST_CHARISMA ] = 0;
+        __RegParams[ ST_INTELLECT ] = 0;
+        __RegParams[ ST_AGILITY ] = 0;
+        //__RegParams[ ST_LUCK ] = 0;
         __RegParams[ ST_AGE ] = Random( AGE_MIN, AGE_MAX );
         __RegParams[ ST_GENDER ] = GENDER_MALE;
     }
@@ -1718,6 +1885,20 @@ bool player_data_check( int[]& params )
     }
 
     return CritterGenerateCheck( params );
+}
+
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Forces chosen to do something @erandelax 22/08/18
+void __MakeChosenDo(int param1, int param2, int param3, string@ param4, int[]@ action){
+    uint[] _action = {0,0,0,0,0,0,0};
+    for(uint pos = 0; pos < 7; pos++) if(action[pos] > 0) _action[pos] = action[pos];
+    SetChosenActions(_action);
+}
+// Forces chosen cursor to change mode
+void __ChangeCursor(int cursor_type, int cursor_arg, int param3, string@ param4, int[]@ param5){
+    if(cursor_arg > 0) ChangeCursor(cursor_type,cursor_arg);
+    else ChangeCursor(cursor_type);
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1764,6 +1945,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_MOVE_ITEM:
         if( cr.IsLife() )
         {
+			cr.Wait(GetActionTime(ACTION_MOVE_ITEM, cr));
             uint8 fromSlot = actionExt;
             uint8 toSlot = item.CritSlot;
 
@@ -1778,10 +1960,12 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
         }
         break;
     case ACTION_MOVE_ITEM_SWAP:
+		cr.Wait(GetActionTime(ACTION_MOVE_ITEM_SWAP, cr));
         break;
     case ACTION_USE_ITEM:
         if( cr.IsLife() && valid( proto ) )
         {
+			cr.Wait(GetActionTime(ACTION_USE_ITEM, cr));
             cr.ClearAnim();
 
             if( proto.Type == ITEM_TYPE_WEAPON && FLAG( proto.Flags, ITEM_CAN_USE_ON_SMTH ) && cr.IsAnimAviable( proto.Weapon_Anim1, proto.Weapon_Anim2_0 ) )
@@ -1793,6 +1977,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_DROP_ITEM:
         if( cr.IsLife() )
         {
+			cr.Wait(GetActionTime(ACTION_DROP_ITEM, cr));
             cr.ClearAnim();
             cr.Animate( 0, ANIM2_PICKUP );
         }
@@ -1800,13 +1985,14 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_USE_WEAPON:
         if( cr.IsLife() && valid( proto ) )
         {
+			cr.Wait(GetActionTime(ACTION_USE_WEAPON, cr));
             int  use   = ( actionExt & 0xF );
             int  aim   = ( ( actionExt >> 4 ) & 0xF );
             bool fail = ( ( ( actionExt >> 8 ) & 1 ) != 0 );
 
             cr.ClearAnim();
 
-            cr.Animate( 0, ANIM2_PREPARE_WEAPON );
+            // cr.Animate( 0, ANIM2_PREPARE_WEAPON );
             PlaySound( 'W', SOUND_WEAPON_USE, _WeaponSoundId( proto, use ), use != 1 ? '1' : '2' );
             cr.Animate( 0, _WeaponAnim2( proto, use ), item );
 
@@ -1819,6 +2005,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_RELOAD_WEAPON:
         if( cr.IsLife() && valid( proto ) )
         {
+			cr.Wait(GetActionTime(ACTION_RELOAD_WEAPON, cr));
             cr.ClearAnim();
             PlaySound( 'W', SOUND_WEAPON_RELOAD, proto.Weapon_SoundId_0, '1' );
             cr.Animate( item.Proto.Weapon_Anim1, ANIM2_RELOAD, item );
@@ -1827,6 +2014,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_USE_SKILL:
         if( cr.IsLife() && actionExt != SK_SNEAK )
         {
+			cr.Wait(GetActionTime(ACTION_USE_SKILL, cr));
 			if( actionExt == SK_STEAL && cr.Perk[ PE_HARMLESS ] != 0 )
 				break;
 			else
@@ -1837,8 +2025,10 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
         }
         break;
     case ACTION_PICK_ITEM:
+		
         if( cr.IsLife() && valid( proto ) )
         {
+			cr.Wait(GetActionTime(ACTION_PICK_ITEM, cr));
             cr.ClearAnim();
             cr.Animate( 0, proto.GroundLevel ? ANIM2_PICKUP : ANIM2_USE );
         }
@@ -1846,6 +2036,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_PICK_CRITTER:
         if( cr.IsLife() )
         {
+			cr.Wait(GetActionTime(ACTION_PICK_CRITTER, cr));
             cr.ClearAnim();
 
             switch( actionExt )           // 0 - loot, 1 - steal, 2 - push
@@ -1867,6 +2058,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_OPERATE_CONTAINER:
         if( cr.IsLife() )
         {
+			cr.Wait(GetActionTime(ACTION_OPERATE_CONTAINER, cr));
             cr.ClearAnim();
             int transferType  = actionExt / 10;
             int directionType = actionExt % 10;
@@ -1917,6 +2109,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_KNOCKOUT:
         if( not cr.IsKnockout() )
         {
+			cr.Wait(GetActionTime(ACTION_KNOCKOUT, cr));
             cr.ClearAnim();
             cr.Animate( 0, actionExt );
         }
@@ -1924,6 +2117,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_STANDUP:
         if( cr.IsKnockout() )
         {
+			cr.Wait(GetActionTime(ACTION_STANDUP, cr));
             cr.ClearAnim();
             cr.Animate( 0, actionExt );
         }
@@ -1946,6 +2140,7 @@ void critter_action( bool localCall, CritterCl& cr, int action, int actionExt, I
     case ACTION_DISCONNECT:
         break;
     case ACTION_RESPAWN:
+		cr.Wait(GetActionTime(ACTION_RESPAWN, cr));
         break;
     case ACTION_REFRESH:
         break;
@@ -2645,6 +2840,7 @@ void filename_screenshot( string& filename )
     filename = "screenshots\\" + filename;
 }
 
+// //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on message added to message box.
 // Parameters messageText and messageType can be changed for engine handler.
 void message_box( string& messageText, int messageType, bool scriptCall )
@@ -2653,4 +2849,117 @@ void message_box( string& messageText, int messageType, bool scriptCall )
     GUI_CollectMessageBoxes( messageBoxes );
     for( uint i = 0; i < messageBoxes.length(); i++ )
         messageBoxes[ i ].AddMessage( messageText, messageType );
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Called to check interface hit.
+bool check_interface_hit( int x, int y )
+{
+    return GUI_EngineCallback_CheckInterfaceHit( x, y );
+}
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Called to check current container item under mouse.
+bool get_cont_item( uint& itemId, bool& isEnemy )
+{
+    GUIScreen@ screen = GUI_GetActiveScreen();
+    if( screen is null || screen.IsHardcoded || screen.Index != CLIENT_SCREEN_INVENTORY )
+        return false;
+    if( GetCurrentCursor() == CURSOR_DEFAULT )
+    {
+        GUIObject@ hitObj = screen.FindMouseHit();
+        if( hitObj !is null && hitObj.Grid !is null )
+        {
+            GUIItemView@ itemView = cast< GUIItemView >( hitObj.Grid );
+            if( itemView !is null )
+            {
+                ItemCl@ item = itemView.GetItem( hitObj.CellIndex );
+                if( item !is null )
+                {
+                    itemId = item.Id;
+                    isEnemy = ( itemView.CritterId != 0 );
+                }
+            }
+        }
+    }
+    return true;
+}
+// //////////////////////////////////////////////////////////////////////////////////////////////////
+// Items and drop handler.
+bool ItemsDragAndDropHandler( GUIObject& obj, GUIObject@ target )
+{
+    if( obj.Grid is null )
+        return false;
+    if( target !is null && target.Grid is null )
+        return false;
+    GUIItemView@ objItemView = cast< GUIItemView >( obj.Grid );
+    GUIItemView@ targetItemView = ( target !is null ? cast< GUIItemView >( target.Grid ) : null );
+    if( objItemView is null )
+        return false;
+    ItemCl@ objItem = objItemView.GetItem( obj.CellIndex );
+    ItemCl@ targetItem = ( targetItemView !is null ? targetItemView.GetItem( target.CellIndex ) : null );
+    if( objItem is null )
+        return false;
+    int objSlot = objItemView.UserData;
+    int targetSlot = ( targetItemView !is null ? targetItemView.UserData : SLOT_GROUND );
+    if( objSlot == targetSlot )
+        return false;
+    if( targetSlot != SLOT_INV && objItem !is null && targetItem !is null && objItem.GetType() == ITEM_TYPE_AMMO && targetItem.GetType() == ITEM_TYPE_WEAPON )
+    {
+        if( objItem.Proto.Ammo_Caliber == targetItem.Proto.Weapon_Caliber &&
+            ( targetItem.AmmoCount < targetItem.Proto.Weapon_MaxAmmoCount || targetItem.AmmoPid != objItem.GetProtoId() ) )
+        {
+            uint[] actions;
+            GetChosenActions( actions );
+            uint[] useItemAction = { CHOSEN_USE_ITEM, targetItem.Id, 0, TARGET_SELF_ITEM, objItem.Id, USE_RELOAD, 0 };
+            for( uint i = 0; i < useItemAction.length(); i++ )
+                actions.insertLast( useItemAction[ i ] );
+            SetChosenActions( actions );
+        }
+    }
+    else if( targetSlot == SLOT_GROUND && objItem.IsStackable() && objItem.GetCount() > 1 )
+    {
+        CustomCall( "SplitDrop " + objItem.Id );
+    }
+    else
+    {
+        uint[] actions;
+        GetChosenActions( actions );
+        uint[] useItemAction = { CHOSEN_MOVE_ITEM, objItem.Id, objItem.GetCount(), targetSlot, 0, 0, 0 };
+        for( uint i = 0; i < useItemAction.length(); i++ )
+            actions.insertLast( useItemAction[ i ] );
+        SetChosenActions( actions );
+    }
+    return true;
+}
+
+void __DrawBustMuzzle(int param0, int param1, int param2, string@ param3, int[]@ drawData)
+{
+	CreateBurstMuzzle( drawData );
+	for (uint i = 0; i < drawData.length(); i++ )
+		Message("" + drawData[i]);
+}
+
+void __Draw(int param0, int param1, int param2, string@ param3, int[]@ drawData)
+{
+	switch(param0)
+	{
+		case DRAW_RAYS:
+			CreateRay( drawData );
+			return;
+			
+		case DRAW_BURST_RAYS:
+			CreateBurstRay( drawData );
+			return;
+			
+		case DRAW_MUZZLE_FLASHES:
+			CreateMuzzle( drawData );
+			return;
+			
+		case DRAW_BURST_MUZZLES:
+			CreateBurstMuzzle( drawData );
+			return;
+	}
+	
+	for (uint i = 0; i < drawData.length(); i++ )
+		Message("" + drawData[i]);
 }

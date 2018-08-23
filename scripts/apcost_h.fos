@@ -1,0 +1,18 @@
+// apcost.fos
+
+#ifndef APCOST_H
+#define APCOST_H
+
+#include "mutual_h.fos"
+
+	#ifndef APCOST_MODULE
+	import int GetProtoApCost(ProtoItem& prot, uint8 mode, CritterMutual@ crit) from "apcost";
+	import int GetSkillApCost( int sk, CritterMutual@ crit ) from "apcost";
+	import int GetActionApCost( int action, CritterMutual@ crit ) from "apcost";
+	#endif
+
+	#ifdef APCOST_MODULE
+	#include "_macros.fos"
+	#endif
+
+#endif

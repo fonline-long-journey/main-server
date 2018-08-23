@@ -1,0 +1,62 @@
+// Generic and helper functions for ap cost calculation override.
+// Both client and server.
+// You can even pragma this shit into Proto and then draw in client main:
+
+// Что: Оверрайд для калькуляции ОД. Здесь можно с блекджеком и шлюхами создавать свои незабываемые миром функции по привязке стоимости ОД к отдельным навыкам, перкам, трейтам и прочем, чего бы не взбрело в вашу голову.
+// Работает как для сервера, так и для клиента.
+// Можно запрагмить в _macros.fos *пример ниже и вывести затем в клиент для отображения в
+
+// Client draw, by default means that it's used inside inventory, in item VALUE stats description.
+// Отрисовка внутри клиента, по умолчанию имеется ввиду расположение в инвентаре в описании значений предмета.
+// CODE:
+		/* if( whatever_is_your_parameter )
+		{
+			result += "\n";
+			string str;
+			str = GetMsgStr( TEXTMSG_GAME, STR_YOUR_STR );
+			str = ReplaceText( str, "VALUE", item.Proto.YourPragmaField);
+			result += str;
+		} */
+		
+
+// ApCost Spice must flow in "_macros.fos"
+// #define _WeaponApCost                # ( proto, use )( (use == 0 ? proto.Weapon_ApCost_0 == 0 ? DEFAULT_AP_USE  : proto.Weapon_ApCost_0  \
+                                                     // : use == 1 ? proto.Weapon_ApCost_1 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_1 \
+                                                     // : use == 2 ? proto.Weapon_ApCost_2 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_2 \
+                                                     // : DEFAULT_AP_USE) )
+// #define _GetProtoAp                   # (prot, use)      ((_WeaponApCost (prot, use) -1) * 100)
+// #define _GetSkillAp            		  # (sk)     		 ((DEFAULT_AP_SKILL -1)  * 100) // for future needs
+// #define _GetActionAp            	  # (action)  		 ((DEFAULT_AP_ACTION -1)* 100)   
+
+// Lines for "defines.fos"!
+// #define DEFAULT_AP_SKILL						     ( 2 )
+// #define DEFAULT_AP_USE							 ( 3 )
+// #define DEFAULT_AP_ACTION						 ( 2 )
+
+#ifndef APCOST_MODULE
+#define APCOST_MODULE
+
+#include "apcost_h.fos"
+// #define _GetProtoAp 
+// #define _GetSkillAp 
+// #define _GetActionAp
+
+int GetProtoApCost(ProtoItem& prot, uint8 mode, CritterMutual@ crit)
+{
+	int apcost = _GetProtoAp ( prot, mode&0x0F );
+	return apcost;
+}
+
+int GetSkillApCost( int sk, CritterMutual@ crit )
+{
+	int apcost = _GetSkillAp ( sk );
+	return apcost;
+}
+
+int GetActionApCost( int action, CritterMutual@ crit )
+{
+	int apcost = _GetActionAp ( action );
+	return apcost;
+}
+
+#endif

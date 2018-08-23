@@ -52,5 +52,8 @@
 #define WT_PENETRATION             ( 11 )
 #define WT_BLUNT                   ( 12 )
 
+#define TRACER_DEFAULT             ( 0 )
+#define TRACER_LASER               ( 1 )
+#define TRACER_PLASMA              ( 2 )
 
 #endif // _COMBAT_H_

@@ -393,7 +393,6 @@ void InitRadioScreen() // Export
     ScreenMain screen();
     screen.SetBackgroundImage( GetIfaceIniStr( "RadioMainPic" ) );
     screen.SetCloseOnMiss( true );
-    screen.SetAutoCursor( true, CURSOR_DEFAULT );
 
     GUIText mainText();
     mainText.Init( screen );

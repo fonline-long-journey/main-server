@@ -5,7 +5,7 @@
 #			added PID_NAME & {OBJECT NAME} to proto headlines #
 ###############################################################
 
-[Proto]
+[Proto] # PID_LEATHER_ARMOR {Кожаная броня}
 ProtoId=1
 Type=1
 PicMap=art\items\ltharmor.frm
@@ -29,7 +29,7 @@ Armor_DRExplode=0
 Armor_DREmp=30
 Armor_DTNormal=0
 Armor_Perk=8
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=55
 Armor_DTLaser=0
 Armor_DTFire=1
@@ -37,7 +37,7 @@ Armor_DTElectro=2
 Armor_DTExplode=2
 Armor_DTPlasma=0
 
-[Proto]
+[Proto] # PID_METAL_ARMOR {Металлическая броня}
 ProtoId=2
 Type=1
 PicMap=art\items\mtlarmor.frm
@@ -65,9 +65,9 @@ Armor_DTFire=0
 Armor_DTPlasma=0
 Armor_DTExplode=3
 Armor_Perk=9
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
-[Proto]
+[Proto] # PID_POWERED_ARMOR {Силовая броня}
 ProtoId=3
 Type=1
 PicMap=art\items\pwrarmor.frm
@@ -95,9 +95,9 @@ Armor_DTFire=15
 Armor_DTPlasma=7
 Armor_DTExplode=20
 Armor_Perk=1
-Armor_MinStrength=1
+Weapon_MinStrength=1
 
-[Proto]
+[Proto] # PID_COMBAT_ARMOR {Боевая броня}
 ProtoId=17
 Type=1
 PicMap=art\items\cmbtflx.frm
@@ -125,12 +125,12 @@ Armor_DTFire=1
 Armor_DTPlasma=1
 Armor_DTExplode=3
 Armor_Perk=8
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=15
 Armor_DTElectro=1
 Armor_DTEmp=0
 
-[Proto]
+[Proto] # PID_LEATHER_JACKET {Кожаная куртка}
 ProtoId=74
 Type=1
 PicMap=art\items\maxflr.frm
@@ -153,14 +153,14 @@ Armor_DRPlasma=0
 Armor_DRExplode=0
 Armor_DREmp=15
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTNormal=0
 Armor_DTPlasma=0
 Armor_DTFire=1
 Armor_DRElectro=40
 Armor_DTElectro=1
 
-[Proto]
+[Proto] # PID_PURPLE_ROBE {Мантия}
 ProtoId=113
 Type=1
 PicMap=art\items\robe.frm
@@ -183,9 +183,9 @@ Armor_DRPlasma=0
 Armor_DRExplode=0
 Armor_DREmp=10
 Armor_DTPlasma=0
-Armor_MinStrength=1
+Weapon_MinStrength=1
 
-[Proto]
+[Proto] # PID_HARDENED_POWER_ARMOR {Закаленная силовая броня}
 ProtoId=232
 Type=1
 PicMap=art\items\pwrarmor.frm
@@ -213,9 +213,9 @@ Armor_DTFire=15
 Armor_DTPlasma=8
 Armor_DTExplode=20
 Armor_Perk=1
-Armor_MinStrength=3
+Weapon_MinStrength=3
 
-[Proto]
+[Proto] # PID_BROTHERHOOD_COMBAT_ARMOR {Броня Братства}
 ProtoId=239
 Type=1
 PicMap=art\items\cmbtflx.frm
@@ -245,9 +245,9 @@ Armor_Perk=9
 Armor_DRElectro=35
 Armor_DTElectro=1
 Armor_DTEmp=0
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
-[Proto]
+[Proto] # PID_TESLA_ARMOR {Броня Тесла}
 ProtoId=240
 Type=1
 PicMap=art\items\mtlarmor.frm
@@ -278,9 +278,9 @@ Armor_Perk=7
 Armor_DRElectro=150
 Armor_DTElectro=5
 Armor_DTEmp=0
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
-[Proto]
+[Proto] # PID_CURED_LEATHER_ARMOR {Боевая кожаная куртка}
 ProtoId=265
 Type=1
 PicMap=art\items\maxflr.frm
@@ -306,12 +306,12 @@ Armor_DTNormal=0
 Armor_DTFire=0
 Armor_DTLaser=0
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTPlasma=0
 Armor_DRElectro=50
 Armor_DTElectro=2
 
-[Proto]
+[Proto] # PID_ADVANCED_POWER_ARMOR {Улучш. силовая броня}
 ProtoId=348
 Type=1
 PicMap=art\items\parmor2.frm
@@ -341,9 +341,9 @@ Armor_DTExplode=20
 Armor_Perk=3
 Armor_DTElectro=5
 Armor_DRElectro=10
-Armor_MinStrength=3
+Weapon_MinStrength=3
 
-[Proto]
+[Proto] # PID_ADVANCED_POWER_ARMOR_MK2 {Улучш. силовая броня мод. II}
 ProtoId=349
 Type=1
 PicMap=art\items\parmor2.frm
@@ -371,11 +371,11 @@ Armor_DTFire=21
 Armor_DTPlasma=21
 Armor_DTExplode=21
 Armor_Perk=4
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=40
 Armor_DTElectro=10
 
-[Proto]
+[Proto] # PID_LEATHER_ARMOR_MK_II {Кожаная броня МК2}
 ProtoId=379
 Type=1
 PicMap=art\items\ltharmor.frm
@@ -403,12 +403,12 @@ Armor_DTFire=1
 Armor_DTPlasma=0
 Armor_DTExplode=1
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DRElectro=60
 Armor_DTElectro=2
 Armor_DTEmp=0
 
-[Proto]
+[Proto] # PID_METAL_ARMOR_MK_II {Металлическая броня МК2}
 ProtoId=380
 Type=1
 PicMap=art\items\mtlarmor.frm
@@ -441,9 +441,9 @@ Armor_DTFire=0
 Armor_DTPlasma=0
 Armor_DTExplode=4
 Armor_Perk=9
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
-[Proto]
+[Proto] # PID_COMBAT_ARMOR_MK_II {Боевая броня МК2}
 ProtoId=381
 Type=1
 PicMap=art\items\cmbtflx.frm
@@ -471,12 +471,12 @@ Armor_DTFire=1
 Armor_DTPlasma=2
 Armor_DTExplode=4
 Armor_Perk=9
-Armor_MinStrength=5
+Weapon_MinStrength=5
 Armor_DTEmp=1
 Armor_DRElectro=20
 Armor_DTElectro=1
 
-[Proto]
+[Proto] # PID_KEEPBRIGE_ROBE {Мантия Стража моста}
 ProtoId=524
 Type=1
 PicMap=art\items\robe.frm
@@ -507,7 +507,7 @@ Armor_DRElectro=100
 Armor_DTElectro=100
 Armor_DTEmp=100
 
-[Proto]
+[Proto] # PID_BLACK_COMBAT_ARMOR {Черная боевая броня}
 ProtoId=547
 Type=1
 PicMap=art\items\CMBTFLXB.FRM
@@ -535,12 +535,12 @@ Armor_DTFire=1
 Armor_DTPlasma=2
 Armor_DTExplode=3
 Armor_Perk=8
-Armor_MinStrength=8
+Weapon_MinStrength=8
 Armor_DTEmp=0
 Armor_DRElectro=20
 Armor_DTElectro=1
 
-[Proto]
+[Proto] # PID_JUMPSUIT {Костюм Убежища}
 ProtoId=558
 Type=1
 PicMap=art\items\box2.frm
@@ -558,7 +558,7 @@ Armor_DRExplode=0
 Armor_AC=35
 Armor_Perk=5
 
-[Proto]
+[Proto] # PID_FAKE_JUMPSUIT {Поддельный Костюм Убежища}
 ProtoId=559
 Type=1
 PicMap=art\items\box2.frm
@@ -574,7 +574,7 @@ Armor_CrTypeFemale=4
 Armor_DRExplode=0
 Armor_AC=35
 
-[Proto]
+[Proto] # PID_BLACK_ROBE {Серая роба}
 ProtoId=585
 Type=1
 PicMap=art\items\ROBEB.FRM
@@ -598,7 +598,7 @@ Armor_DRExplode=0
 Armor_DREmp=20
 Armor_DTPlasma=0
 
-[Proto]
+[Proto] # PID_CHITIN_ARMOR  {Хитиновая броня}
 ProtoId=586
 Type=1
 PicMap=art\items\CMBTFLXB.FRM
@@ -626,9 +626,9 @@ Armor_DTFire=2
 Armor_DTPlasma=0
 Armor_DTExplode=1
 Armor_Perk=8
-Armor_MinStrength=4
+Weapon_MinStrength=4
 
-[Proto]
+[Proto] # PID_CHITIN_ARMOR_MK_II {Тяжелая хитиновая броня}
 ProtoId=596
 Type=1
 PicMap=art\items\CMBTFLXB.FRM
@@ -656,9 +656,9 @@ Armor_DTFire=2
 Armor_DTPlasma=0
 Armor_DTExplode=2
 Armor_Perk=9
-Armor_MinStrength=6
+Weapon_MinStrength=6
 
-[Proto]
+[Proto] # ПУСТОЙ СЛОТ БРОНИ
 ProtoId=1100
 Type=1
 PicMap=art\items\boss02.frm
@@ -673,7 +673,7 @@ Armor_DRExplode=0
 Armor_DRPlasma=0
 Armor_DTPlasma=0
 
-[Proto]
+[Proto] # PID_SANDROBE {Песочная Роба}
 ProtoId=10011
 Type=1
 PicMap=art\items\SROB.FRM
@@ -694,7 +694,7 @@ Armor_DRPlasma=0
 Armor_DREmp=20
 Armor_DTPlasma=0
 
-[Proto]
+[Proto] # PID_BLUE_LEATHER_ARMOR {Униформа специалиста}
 ProtoId=10012
 Type=1
 PicMap=art\items\leatherblue.frm
@@ -716,7 +716,7 @@ Armor_DRFire=55
 Armor_DRPlasma=40
 Armor_DREmp=35
 Armor_DTFire=3
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTLaser=1
 Armor_DTElectro=1
 Armor_DTExplode=1
@@ -724,7 +724,7 @@ Armor_Perk=6
 Armor_DRElectro=20
 Armor_DTPlasma=2
 
-[Proto]
+[Proto] # PID_BLUE_COMBAT_ARMOR {Парадная боевая броня}
 ProtoId=10013
 Type=1
 PicMap=art\items\BLUCAITM.FRM
@@ -751,12 +751,12 @@ Armor_DTLaser=1
 Armor_DTFire=1
 Armor_DTPlasma=1
 Armor_DTElectro=1
-Armor_MinStrength=4
+Weapon_MinStrength=4
 Armor_DTEmp=0
 Armor_DTExplode=3
 Armor_DRElectro=15
 
-[Proto]
+[Proto] # PID_DESERT_COMBAT_ARMOR   {Боевая броня разведчика}
 ProtoId=10017
 Type=1
 PicMap=art\items\DSRTCA.FRM
@@ -782,13 +782,13 @@ Armor_DTNormal=1
 Armor_DTLaser=1
 Armor_DTFire=1
 Armor_DTPlasma=2
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DTEmp=1
 Armor_DTExplode=4
 Armor_DRElectro=20
 Armor_DTElectro=1
 
-[Proto]
+[Proto] # PID_BROWN_COMBAT_ARMOR  {Штурмовая боевая броня}
 ProtoId=10018
 Type=1
 PicMap=art\items\CMBDR.FRM
@@ -815,11 +815,11 @@ Armor_DTLaser=2
 Armor_DTFire=2
 Armor_DTPlasma=2
 Armor_DTElectro=2
-Armor_MinStrength=6
+Weapon_MinStrength=6
 Armor_DTExplode=2
 Armor_DRElectro=45
 
-[Proto]
+[Proto] # PID_KEVLAR_JACKET {Кевларовый костюм}
 ProtoId=10072
 Type=1
 PicMap=art\items\maxflr.frm
@@ -842,7 +842,7 @@ Armor_DRPlasma=40
 Armor_DRExplode=0
 Armor_DREmp=40
 Armor_Perk=6
-Armor_MinStrength=1
+Weapon_MinStrength=1
 Armor_DTNormal=1
 Armor_DTPlasma=1
 Armor_DTFire=1
@@ -851,7 +851,7 @@ Armor_DTLaser=1
 Armor_DTElectro=1
 Armor_DTExplode=2
 
-[Proto]
+[Proto]  # PID_CHITIN_VEST {Кираса-карапакс}
 ProtoId=10073
 Type=1
 PicMap=art\items\ltharmor.frm
@@ -875,7 +875,7 @@ Armor_DRExplode=0
 Armor_DREmp=30
 Armor_DTNormal=1
 Armor_Perk=8
-Armor_MinStrength=3
+Weapon_MinStrength=3
 Armor_DRElectro=10
 Armor_DTLaser=0
 Armor_DTFire=1
@@ -883,3 +883,6 @@ Armor_DTElectro=1
 Armor_DTExplode=2
 Armor_DTPlasma=2
 
+#---------------------------------------------------------------------------------------------
+# The Long Journey - Armors <13000 - 13999>
+#---------------------------------------------------------------------------------------------

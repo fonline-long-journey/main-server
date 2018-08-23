@@ -192,7 +192,6 @@ void unsafe_Throw( Critter& player, int px, int py, int p2, string@ param3, arra
     {
         uint dist = GetDistantion( player.HexX, player.HexY, tx, ty ) + 1;
         map.MoveHexByDir( tx, ty, Random( 0, 5 ), Random( 1, dist / 2 ) );
-        // map.GetHexCoordWall(player.HexX,player.HexY,tx,ty,0,0);
         map.GetCrittersPath( player.HexX, player.HexY, tx, ty, 0.0f, 0, FIND_LIFE_AND_KO, null, pbx, pby, bx, by );
         tx = pbx;
         ty = pby;
@@ -220,7 +219,7 @@ void CommenceThrowing( Critter& cr, Map& map, Item& item, uint16 tx, uint16 ty )
         if( !cr.IsPlayer() || cr.GetAccess() == ACCESS_CLIENT )
             cr.ModeBase[ MODE_HIDE ] = 0;
     }
-    cr.Wait( __Breaktime );
+    cr.Wait( DEFAULT_WAIT_TIME );
     cr.StatBase[ ST_CURRENT_AP ] -= 100 * ActionPointsCost( item );
     map.RunFlyEffect( item.GetProtoId(), cr, null, cr.HexX, cr.HexY, tx, ty );
     uint16 pid = item.GetProtoId();
@@ -241,6 +240,8 @@ void CommenceThrowing( Critter& cr, Map& map, Item& item, uint16 tx, uint16 ty )
         item.EventDrop( cr );
         cr.EventDropItem( item );
     }
+	
+	item.Update();
 }
 import void CommenceExplosionEx( Critter@ attacker, Map@ map, uint16 tx, uint16 ty, Critter@ target, uint weapPid, bool isCritical, uint intentionallyId, bool isRocket ) from "combat";
 import void Explode( Map@ map, uint16 hexX, uint16 hexY, Critter@ cr, uint16 explodePid, uint ownerId, int bonusDamage, int bonusRadius ) from "explode";
@@ -331,12 +332,18 @@ void RenderThrowing() // export
     uint tohit = ::ThrowingToHit( chosen, hx, hy, item.Proto );
     int  ap = ::ActionPointsCost( item );
     bool hasAp = ap <= chosen.Stat[ ST_CURRENT_AP ];
+	
 
-    // todo: adjust offsets
-    uint sprite = LoadSprite( item.Proto.PicInv );
-	uint hex = LoadSprite( "fallout_hex2.png", PT_ART_INTRFACE );
-    ::DrawSprite( sprite, -1, x - 50, y - 15, 30, 30, false, COLOR_WHITE, false );
-	::DrawSprite( hex, -1, x - 16, y - 10, 32, 16, true, COLOR_WHITE, true);
+	int hexSprite = LoadSprite( "fallout_hex2.png", PT_ART_INTRFACE);
+	int hexWidth = int( GetSpriteWidth(hexSprite, -1) / __SpritesZoom );
+	int hexHeight = int( GetSpriteHeight(hexSprite, -1) / __SpritesZoom );
+		
+	DrawSprite( hexSprite, -1, x - ( hexWidth / 2), y - ( hexHeight / 2 ), hexWidth, hexHeight, false, 0, false );
+
+	int sprite = LoadSprite( item.Proto.PicInv );
+
+	DrawSprite( sprite, -1, x - 50, y - 15, 60, 30, true, 0, false );
+	
     DrawText( tohit + "%", x + 20, y - 10, 40, 20, COLOR_LGRAY, FONT_FALLOUT, FT_BORDERED );
     DrawText( ap + " AP", x + 20, y, 40, 20, hasAp ? COLOR_LGRAY : COLOR_RED, FONT_FALLOUT, FT_BORDERED );
 }
@@ -347,7 +354,7 @@ void TryThrow()
     if( !IsThrowingActive() )
         return;
     CritterCl@ chosen = GetChosen();
-    if( !valid( chosen ) )
+    if( !valid( chosen ) || chosen.IsBusy() )
         return;
 
     uint16 hx = 0, hy = 0;
@@ -359,6 +366,7 @@ void TryThrow()
         return;
 
     // throw
+	chosen.Wait(DEFAULT_WAIT_TIME);
     RunServerScriptUnsafe( "throwing@unsafe_Throw", hx, hy, 0, null, null );
 }
 #endif
