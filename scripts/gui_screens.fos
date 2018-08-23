@@ -3104,7 +3104,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 0, -37 );
+            SetPosition( 305, -52 );
         }
     }
 
@@ -3112,9 +3112,41 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetActive( false );
-            SetSize( 760, 38 );
-            SetBackgroundImage( "art/intrface/console.png" );
+            SetPosition( 1, 7 );
+            SetSize( 655, 38 );
+            SetNotHittable( true );
+        }
+    }
+
+    class ConsoleImageTop : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetSize( 655, 18 );
+            SetNotHittable( true );
+            SetBackgroundImage( "art/intrface/console_top.png", IMAGE_LAYOUT_STRETCH );
+        }
+    }
+
+    class ConsoleImageMiddle : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, 18 );
+            SetSize( 655, 1 );
+            SetNotHittable( true );
+            SetBackgroundImage( "art/intrface/console_middle_655.png", IMAGE_LAYOUT_TILE );
+        }
+    }
+
+    class ConsoleImageBottom : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, 19 );
+            SetSize( 655, 18 );
+            SetNotHittable( true );
+            SetBackgroundImage( "art/intrface/console_bottom.png", IMAGE_LAYOUT_STRETCH );
         }
     }
 
@@ -3122,9 +3154,48 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetActive( false );
-            SetPosition( 13, 14 );
-            SetNotHittable( true );
+            SetPosition( 13, 13 );
+            SetSize( 630, 25 );
+            SetTextFlags( FT_CENTERY );
+        }
+
+        void OnInput( uint8 key, string@ text ) override
+        {
+            uint rowHeight      = 13;
+            uint requiredHeight = floor(_Text.length() / 78)*rowHeight+26;
+            uint height         = get_Height();
+            
+            ConsoleImage@ image = cast<ConsoleImage>(Parent.Find("ConsoleImage"));
+            
+            // Выше 233 - сообщение будет выглядеть обрезано над головой персонажа, хотя полностью видно в чате
+            /*if(_Text.length() == 200){
+                Message("Вам хочется перевести дыхание.");
+            }*/
+            
+            // В районе 400х - сервак забанит клиент за превышение лимита данных
+            // (кириллица - юникод, для нее - лимит в районе 224)
+            // Ограничение на ввод
+            /*if(_Text.length() > 225){
+                _Text        = substring(_Text,0,390);
+                _CarriagePos = 390;
+            }*/
+            // Авторазделение сообщений 
+            if(_Text.length() > 210){ // @@todo проблемы с эмоутами-криком-шепотом
+                _Text += "..."; //@@todo понять почему не работает
+                _CarriagePos += 3;
+                SendText();
+                _Text        = "...";
+                _CarriagePos = 3;
+            }
+            
+            // Автосайз окна ввода
+            if(requiredHeight != height ) {
+                SetSize(get_Width(),requiredHeight);
+                image.SetSize(image.get_Width(),requiredHeight + 10);
+                image.Find("ConsoleImageBottom").SetPosition(0,image.get_Height()-18);
+                image.Find("ConsoleImageMiddle").SetSize(image.get_Width(),image.get_Height()-36);
+                Parent.SetPosition(Parent.get_PosX(), -49+16+rowHeight-requiredHeight);
+            }
         }
 
         void OnActiveChanged() override
@@ -4091,6 +4162,12 @@ namespace Game_TLJ
         _Console.Init( _Main );
         ConsoleImage _ConsoleImage();
         _ConsoleImage.Init( _Console );
+        ConsoleImageTop _ConsoleImageTop();
+        _ConsoleImageTop.Init( _ConsoleImage );
+        ConsoleImageMiddle _ConsoleImageMiddle();
+        _ConsoleImageMiddle.Init( _ConsoleImage );
+        ConsoleImageBottom _ConsoleImageBottom();
+        _ConsoleImageBottom.Init( _ConsoleImage );
         ConsoleText _ConsoleText();
         _ConsoleText.Init( _Console );
         Filter1 _Filter1();
