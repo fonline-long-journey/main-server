@@ -3752,6 +3752,7 @@ namespace Game_TLJ
                     curr = item.Indicator;
                 }
                 if(max > 0 && curr <= max && curr >= 0){
+                    max += 1;
                     uint barWidth     = floor( get_Width() * curr / max );
                     uint colorOffsetG = (144-64) * curr / max;
                     uint colorOffsetB = (144-18) * curr / max;

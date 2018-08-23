@@ -74,8 +74,12 @@ void unsafe_DropCurrentItem(Critter& player, int equipItemId, int param1, int pa
     uint count = player.GetItems( SLOT_HAND1, items);
     if(count > 0){
         // Pack carried items to inventory and "drop" part of them in hurry
-        player.MoveItem(items[0].Id,0,SLOT_INV);
-        player.MoveItem(items[0].Id,Random(1,items[0].GetCount()),SLOT_GROUND);
+        if(items[0].GetCount() < 3){
+            player.MoveItem(items[0].Id,0,SLOT_GROUND);
+        }else{
+            player.MoveItem(items[0].Id,0,SLOT_INV);
+            player.MoveItem(items[0].Id,Random(1,items[0].GetCount()),SLOT_GROUND);
+        }
     }
     if(equipItemId > 0){ // "Equip instead" callback if present
         Item@ item = player.GetItemById(equipItemId);
@@ -86,9 +90,11 @@ void unsafe_DropCurrentItem(Critter& player, int equipItemId, int param1, int pa
             } else {
                 player.Animate( 0, ANIM2_USE, item, true, true );
             }
+            item.Update();
         }
     }
-    for(uint pos = 0; pos < count; pos++) items[pos].Update();
+    // Update info about thrown out items
+    if(count > 0) for(uint pos = 0; pos < count; pos++) items[pos].Update();
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
