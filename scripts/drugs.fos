@@ -34,7 +34,7 @@ const int[] DrugEffects =
     -1,      0,             0,      0,          0,     0,
     -2,        10,      0,      0,          0,     0,
     ST_CURRENT_HP,        20,      0,      0,          0,     0,
-    ST_DRUGS,         5,      0,      0,          0,     0,
+    ST_FATIGUE,         5,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_RADAWAY
     ADDICTION_RADAWAY,     10,           120,    120,      14160, 10080,
@@ -58,13 +58,13 @@ const int[] DrugEffects =
     -1,      0,           120,    360,          0,     0,
     ST_RADIATION_LEVEL,         5,      0,      0,          0,     0,
     ST_CURRENT_HP,         1,      0,      0,          0,     0,
-    ST_FUD,         150,      0,      0,          0,     0,
-    ST_WATAH,         200,      0,      0,          0,     0,
+    ST_HUNGER,         150,      0,      0,          0,     0,
+    ST_THIRST,         200,      0,      0,          0,     0,
 // PID_IGUANA_ON_A_STICK
     -1,      0,             0,      0,          0,     0,
     ST_CURRENT_HP,         4,      0,      0,          0,     0,
-    ST_FUD,         350,      0,      0,          0,     0,
-    ST_WATAH,         25,      0,      0,          0,     0,
+    ST_HUNGER,         350,      0,      0,          0,     0,
+    ST_THIRST,         25,      0,      0,          0,     0,
     ST_RADIATION_LEVEL,         3,      0,      0,          0,     0,
 // PID_BUFFOUT
     ADDICTION_BUFFOUT,     0,           240,    0,       240, 2400,
@@ -75,14 +75,14 @@ const int[] DrugEffects =
 // PID_MEAT_ON_A_STICK
     -1,      0,             0,      0,          0,     0,
     ST_CURRENT_HP,      2,             0,      0,          0,     0,
-    ST_FUD,         300,      0,      0,          0,     0,
-    ST_WATAH,         25,      0,      0,          0,     0,
+    ST_HUNGER,         300,      0,      0,          0,     0,
+    ST_THIRST,         25,      0,      0,          0,     0,
     ST_RADIATION_LEVEL,         4,      0,      0,          0,     0,
 // PID_NUKA_COLA
     ADDICTION_NUKA_COLA,     10,       1,      1,         10, 600,
     ST_CURRENT_HP,       1,      1,      1,          0,     0,
-    ST_FUD,         50,      0,      0,          0,     0,
-    ST_WATAH,         150,      0,      0,          0,     0,
+    ST_HUNGER,         50,      0,      0,          0,     0,
+    ST_THIRST,         150,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_RAD_X
     -1,      0,          240,   0,          0,     0,
@@ -94,12 +94,12 @@ const int[] DrugEffects =
     ADDICTION_PSYCHO,     10,           240,    0,       240, 2400,
     ST_MAX_LIFE,         6,     -6,      0,          -2,     2,
     ST_HEALING_RATE,        2,      -2,      0,         -1,     1,
-    ST_DRUGS,        15,    0,     0,          0,     0,
+    ST_FATIGUE,        15,    0,     0,          0,     0,
     ST_CURRENT_HP,         12,      -6,      0,          0,     0,
 // PID_BEER
     -1,      0,            30,      0,          0,     0,
     ST_PERCEPTION,        -1,      1,      0,          0,     0,
-    ST_WATAH,         50,      0,      0,          0,     0,
+    ST_THIRST,         50,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_BOOZE
@@ -111,14 +111,14 @@ const int[] DrugEffects =
 // PID_SUPER_STIMPAK
     -1,      0,            1,     1,          0,     0,
     ST_CURRENT_HP,        30,     15,     10,          0,     0,
-    ST_DRUGS,         20,      0,      0,          0,     0,
+    ST_FATIGUE,         20,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_JET
     ADDICTION_JET,     25,     240,    0,       240,     2,      // Only after Jet Antidote was used
     ST_ACTION_POINTS,         1,     -1,     0,         -1,     1,
     ST_ARMOR_CLASS,         4,     -4,      0,         -2,     2,
-    ST_DRUGS,         15,      0,      0,          0,     0,
+    ST_FATIGUE,         15,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_JET_ANTIDOTE
     -1,      0,             0,      0,          0,     0,
@@ -135,7 +135,7 @@ const int[] DrugEffects =
 // PID_GAMMA_GULP_BEER
     -1,      0,            30,      0,          0,     0,
     ST_PERCEPTION,        -1,      1,      0,          0,     0,
-    ST_WATAH,         50,      0,      0,          0,     0,
+    ST_THIRST,         50,      0,      0,          0,     0,
     ST_RADIATION_RESISTANCE,         -5,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_ROENTGEN_RUM
@@ -196,7 +196,7 @@ const int[] DrugEffects =
     -1,      0,             0,      0,          0,     0,
     -2,        75,      0,      0,          0,     0,
     ST_CURRENT_HP,       500,      0,      0,          0,     0,
-    ST_FUD,         100,      0,      0,          0,     0,
+    ST_HUNGER,         100,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_BOX_OF_DOUGHNUTS
     -1,         0,      0,      0,          0,     0,
@@ -208,48 +208,48 @@ const int[] DrugEffects =
     -1,      0,            0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     ST_CURRENT_HP,       2,      0,      0,          0,     0,
-    ST_FUD,         500,      0,      0,          0,     0,
+    ST_HUNGER,         500,      0,      0,          0,     0,
     ST_RADIATION_LEVEL,         2,      0,      0,          0,     0,
 // PID_CHEEZY_POOFS
     -1,      0,            0,      0,          0,     0,
     ST_CURRENT_HP,       2,      0,      0,          0,     0,
-    ST_FUD,         50,      0,      0,          0,     0,
+    ST_HUNGER,         50,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_SMITTY_MEAL
     -1,      0,            0,      0,          0,     0,
     ST_CURRENT_HP,       2,      0,      0,          0,     0,
-    ST_FUD,         325,      0,      0,          0,     0,
-    ST_WATAH,         50,      0,      0,          0,     0,
+    ST_HUNGER,         325,      0,      0,          0,     0,
+    ST_THIRST,         50,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_FRIED_MEAT
     -1,      0,            0,      0,          0,     0,
     -1,       0,      0,      0,          0,     0,
-    ST_FUD,         500,      0,      0,          0,     0,
+    ST_HUNGER,         500,      0,      0,          0,     0,
     ST_RADIATION_LEVEL,         5,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_BOTTLE_FULL
     -1,      0,            0,      0,          0,     0,
     -1,       0,      0,      0,          0,     0,
-    ST_WATAH,         750,      0,      0,          0,     0,
+    ST_THIRST,         750,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_BOTTLE_GLASS_FULL
     -1,      0,            0,      0,          0,     0,
     -1,       0,      0,      0,          0,     0,
-    ST_WATAH,         325,      0,      0,          0,     0,
+    ST_THIRST,         325,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_DINNER
     -1,      0,            0,      0,          0,     0,
-    ST_FUD,       425,      0,      0,          0,     0,
-    ST_WATAH,         50,      0,      0,          0,     0,
+    ST_HUNGER,       425,      0,      0,          0,     0,
+    ST_THIRST,         50,      0,      0,          0,     0,
     ST_CURRENT_HP,         4,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_SUPPER
     -1,      0,            0,      0,          0,     0,
-    ST_FUD,       300,      0,      0,          0,     0,
-    ST_WATAH,         125,      0,      0,          0,     0,
+    ST_HUNGER,       300,      0,      0,          0,     0,
+    ST_THIRST,         125,      0,      0,          0,     0,
     ST_CURRENT_HP,         3,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 // PID_SUNSHINE_INJECTOR
@@ -257,11 +257,11 @@ const int[] DrugEffects =
     ST_BONUS_LOOK,       5,      -5,      0,          0,     0,
     ST_PERCEPTION,         2,      -2,      0,          -1,     1,
     ST_CRITICAL_CHANCE,         5,      -5,      0,          -1,     1,
-    ST_DRUGS,         15,      0,      0,          0,     0,
+    ST_FATIGUE,         15,      0,      0,          0,     0,
 // PID_DETOXIN
     -1,      0,            10,      10,          0,     0,
     -1,       0,      0,      0,          0,     0,
-    ST_DRUGS,         -2,      -2,      -2,          0,     0,
+    ST_FATIGUE,         -2,      -2,      -2,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
 	
@@ -601,12 +601,12 @@ uint ProcessDrug( Critter& cr, uint16 drugPid, uint& rate )
                 AffectPoison( cr, amount );                                        // cr.SetStat(ST_POISONING_LEVEL,CLAMP(statVal+amount,0,2000));
             else if( stat == ST_RADIATION_LEVEL )
                 AffectRadiation( cr, amount - radres / 10 );                                     // cr.SetStat(ST_RADIATION_LEVEL,CLAMP(statVal+amount,0,2000));
-			else if( stat == ST_FUD || stat == ST_WATAH )
+			else if( stat == ST_HUNGER || stat == ST_THIRST )
 				{
 				cr.StatBase[ stat ] += amount;
 				cr.StatBase[ stat ] = CLAMP( cr.StatBase[ stat ], 0, 2500 );
 				}
-			else if( stat == ST_DRUGS && cr.IsPlayer() )
+			else if( stat == ST_FATIGUE && cr.IsPlayer() )
 					{
 					cr.StatBase[ stat ] += amount;
 					cr.StatBase[ stat ] = CLAMP( cr.StatBase[ stat ], 0, maxdrug );
@@ -619,9 +619,9 @@ uint ProcessDrug( Critter& cr, uint16 drugPid, uint& rate )
                 continue;
 
             statVal = cr.Stat[ stat ] - statVal;
-            if( statVal > 0 && stat != ST_FUD && stat != ST_WATAH && stat != ST_DRUGS )
+            if( statVal > 0 && stat != ST_HUNGER && stat != ST_THIRST && stat != ST_FATIGUE )
                 cr.SayMsg( SAY_NETMSG, TEXTMSG_GAME, STR_DRUG_STAT_GAIN, "$name @msg game " + STR_PARAM_NAME( stat ) + "@$value" + statVal );
-            else if( statVal < 0 && stat != ST_FUD && stat != ST_WATAH && stat != ST_DRUGS )
+            else if( statVal < 0 && stat != ST_HUNGER && stat != ST_THIRST && stat != ST_FATIGUE )
                 cr.SayMsg( SAY_NETMSG, TEXTMSG_GAME, STR_DRUG_STAT_LOSE, "$name @msg game " + STR_PARAM_NAME( stat ) + "@$value" + ( -statVal ) );
         }
 

@@ -170,7 +170,7 @@ void unsafe_wabil( Critter& player, int param0, int param1, int param2, string@ 
 uint cte_Thirst( Critter& cr, int identifier, uint& rate )
 {
 	if( !cr.IsDead() && cr.StatBase[ ST_BODY_TYPE ] != BT_ROBOT ) 
-		cr.StatBase[ ST_WATAH ] -= 1;
+		cr.StatBase[ ST_THIRST ] -= 1;
 	return 50 * __TimeMultiplier;;
 }
 

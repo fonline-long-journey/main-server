@@ -15,9 +15,6 @@ bool critter_check_move_item( Critter& cr, Item& item, uint8 toSlot, Item@ itemS
 {
     uint8 fromSlot = item.CritSlot;
 
-    // Quickbar item movement @erandelax 22/08/2018
-    if(toSlot >= SLOT_QUICK_1 && toSlot <= SLOT_QUICK_12) return true;
-
     // Drop
     if( toSlot == SLOT_GROUND )
         return true;
@@ -69,60 +66,36 @@ if ( cr.Perk[PE_KARMA_BEACON] != 0 )
 }
 
 #ifdef __SERVER
+
 // Quickbar item movement @erandelax 22/08/2018
-void unsafe_MoveItem(Critter& player, int slot_src, int slot_dst, int mode, string@ param2, int[]@ param3){
-    // mode: 0 - LMB, 1 - RMB, 2 - MMB
-    // Receive items from source slot
-    Item@[] srcItems;
-    int srcItemsCount = player.GetItems( slot_src, srcItems );
-    // Receive items from destination slot
-    Item@[] dstItems;
-    int dstItemsCount = player.GetItems( slot_dst, dstItems );
-    // If there is actually item you are trying to use
-    if(srcItemsCount > 0){       
-        if(0 == mode){
-            if( (srcItems[0].Flags & ITEM_CAN_USE) > 0 ){
-                // Run client script to use item
-                int[] use = {CHOSEN_USE_ITEM, srcItems[0].Id, 0, 0, 0, ITEM_MODE_USE, 0};
-                player.RunClientScript("client_main@__MakeChosenDo",0,0,0,"",use);
-            }else{
-                // Drop to the ground item in destination slot
-                if( dstItemsCount > 0 ){
-                    player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(SLOT_GROUND));
-                }
-                // Equip item from quick slot
-                player.MoveItem(srcItems[0].Id,uint(srcItemsCount),uint(slot_dst));
-                // If it was fast-equipped weapon, turn on ATTACK mode
-                if( dstItems[0].GetType() == ITEM_TYPE_WEAPON ){ 
-                    player.RunClientScript("client_main@__ChangeCursor",CURSOR_USE_WEAPON,0,0,"",null);
-                }
-            }
+// Instantly drops equipped item to ground (no cost, no animation)
+void unsafe_DropCurrentItem(Critter& player, int equipItemId, int param1, int param2, string@ param3, int[]@ param4){
+    Item@[] items;
+    uint count = player.GetItems( SLOT_HAND1, items);
+    if(count > 0){
+        // Pack carried items to inventory and "drop" part of them in hurry
+        if(items[0].GetCount() < 3){
+            player.MoveItem(items[0].Id,0,SLOT_GROUND);
         }else{
-            // Move equipped item to inventory
-            if(dstItemsCount > 0){
-                player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(SLOT_INV));
-            }
-            // Equip item from source slot
-            player.MoveItem(srcItems[0].Id,uint(srcItemsCount),uint(slot_dst));
-            player.Animate( 0, ANIM2_SWITCH_ITEMS, null, true, true );
-            // Move inventory item to source slot
-            if(dstItemsCount > 0){
-                player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(slot_src));
-            }
-            // If mode 2 is used and object can be used on someone, turn on USE ON mode
-            if( (srcItems[0].Flags & ITEM_CAN_USE_ON_SMTH) > 0 ){
-                player.RunClientScript("client_main@__ChangeCursor",CURSOR_USE_ITEM,0,0,"",null);
-            }
-        }
-    } else {
-        // Just fill the source slot with destination items if there is no source
-        if(dstItemsCount > 0){
-            player.MoveItem(dstItems[0].Id,uint(dstItemsCount),uint(slot_src));
-            player.Animate( 0, ANIM2_SWITCH_ITEMS, null, true, true );
+            player.MoveItem(items[0].Id,0,SLOT_INV);
+            player.MoveItem(items[0].Id,Random(1,items[0].GetCount()),SLOT_GROUND);
         }
     }
+    if(equipItemId > 0){ // "Equip instead" callback if present
+        Item@ item = player.GetItemById(equipItemId);
+        if(item !is null){
+            player.MoveItem(equipItemId,count,SLOT_HAND1);    
+            if(ITEM_TYPE_WEAPON == item.GetType()){
+                player.Animate( 0, ANIM2_SHOW_WEAPON, item, true, true );
+            } else {
+                player.Animate( 0, ANIM2_USE, item, true, true );
+            }
+            item.Update();
+        }
+    }
+    // Update info about thrown out items
+    if(count > 0) for(uint pos = 0; pos < count; pos++) items[pos].Update();
 }
-
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on critter item moved.

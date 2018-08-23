@@ -110,19 +110,6 @@ bool start()
     // Item slots, passed with -
     SetSendParameter( -SLOT_HAND1, true, "fonline_tla.dll@allowSlot_Hand1" );
     SetSendParameter( -SLOT_ARMOR, true );
-    // Quickbar @erandelax 22/08/18 (хз действительно ли надо)
-    SetSendParameter( -SLOT_QUICK_1, true );
-    SetSendParameter( -SLOT_QUICK_2, true );
-    SetSendParameter( -SLOT_QUICK_3, true );
-    SetSendParameter( -SLOT_QUICK_4, true );
-    SetSendParameter( -SLOT_QUICK_5, true );
-    SetSendParameter( -SLOT_QUICK_6, true );
-    SetSendParameter( -SLOT_QUICK_7, true );
-    SetSendParameter( -SLOT_QUICK_8, true );
-    SetSendParameter( -SLOT_QUICK_9, true );
-    SetSendParameter( -SLOT_QUICK_10, true );
-    SetSendParameter( -SLOT_QUICK_11, true );
-    SetSendParameter( -SLOT_QUICK_12, true );
     // Some flags for correct client working
     SetSendParameter( MODE_NO_BARTER, true );
     SetSendParameter( MODE_NO_STEAL, true );
@@ -1073,17 +1060,17 @@ bool critter_use_skill( Critter& cr, int skill, Critter@ targetCr, Item@ targetI
 		}
 		else if( activePid != PID_FIRST_AID_KIT && activePid != PID_DOCTORS_BAG )
 			{
-			if ( targetCr.Stat[ ST_DRUGS ] <= 0 && cr.Perk[ PE_EMPATHY ] == 0 )
+			if ( targetCr.Stat[ ST_FATIGUE ] <= 0 && cr.Perk[ PE_EMPATHY ] == 0 )
 				{
 				cr.SayMsg( SAY_NETMSG, TEXTMSG_GAME, STR_SKILL_NOFIRSTAID_NEEDDOCTOR );
 				break;
 				}
 			else
 				{
-				targetCr.ParamBase[ ST_DRUGS ] -= 2 * ( 1 + cr.PerkBase[ PE_EMPATHY ] );
-				if (targetCr.ParamBase[ ST_DRUGS ] <= 0)
+				targetCr.ParamBase[ ST_FATIGUE ] -= 2 * ( 1 + cr.PerkBase[ PE_EMPATHY ] );
+				if (targetCr.ParamBase[ ST_FATIGUE ] <= 0)
 					{
-					targetCr.ParamBase[ ST_DRUGS ] = 0;
+					targetCr.ParamBase[ ST_FATIGUE ] = 0;
 					targetCr.ParamBase[ ST_FEELSBAD ] = 0;
 					}
 				if ( cr.Perk[ PE_EMPATHY ] != 0 && Random( 1, 10 ) == 10 )
@@ -1102,8 +1089,8 @@ bool critter_use_skill( Critter& cr, int skill, Critter@ targetCr, Item@ targetI
 						targetCr.ParamBase[ST_INJURED] = 0 ;
 					if ( targetCr.ParamBase[ST_FEELSBAD] != 0 )
 						targetCr.ParamBase[ST_FEELSBAD] = 0 ;
-					if ( targetCr.ParamBase[ST_DRUGS] != 0 )
-						targetCr.ParamBase[ST_DRUGS] = 0 ;
+					if ( targetCr.ParamBase[ST_FATIGUE] != 0 )
+						targetCr.ParamBase[ST_FATIGUE] = 0 ;
 					cr.Say( SAY_NETMSG, "Вы избавили пациента от всех негативных эффектов!" );
 					}
 				
@@ -1275,8 +1262,8 @@ void critter_init( Critter& cr, bool firstTime )
             for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
                 cr.StatBase[ i ] = CLAMP( cr.StatBase[ i ], 0, 10 );
 			if ( cr.StatBase[ ST_EXPERIENCE ] == 0 )
-				cr.StatBase[ ST_FUD ] = 700;
-				cr.StatBase[ ST_WATAH ] = 700;
+				cr.StatBase[ ST_HUNGER ] = 700;
+				cr.StatBase[ ST_THIRST ] = 700;
 
             if( ( cr.StatBase[ ST_STRENGTH ] + cr.StatBase[ ST_PERCEPTION ] + cr.StatBase[ ST_ENDURANCE ] +
                   cr.StatBase[ ST_CHARISMA ] + cr.StatBase[ ST_INTELLECT ] + cr.StatBase[ ST_AGILITY ] + cr.StatBase[ ST_LUCK ] ) != __StartSpecialPoints )
@@ -1471,7 +1458,7 @@ void critter_idle( Critter& cr )
 	if ( cr.ParamBase[ ST_INJURED ] > 0 && regen > 0 )
 		regen /= 2;
 	
-	if ( !cr.IsPlayer() || cr.Perk[ PE_DONT_STARVE ] != 0 || ( cr.StatBase[ ST_FUD ] > 0 && cr.StatBase[ ST_WATAH ] > 0  ) )
+	if ( !cr.IsPlayer() || cr.Perk[ PE_DONT_STARVE ] != 0 || ( cr.StatBase[ ST_HUNGER ] > 0 && cr.StatBase[ ST_THIRST ] > 0  ) )
 		cr.StatBase[ ST_CURRENT_HP ] += regen;
 	if( cr.StatBase[ ST_CURRENT_HP ] > cr.Stat[ ST_MAX_LIFE ] )
 		cr.StatBase[ ST_CURRENT_HP ] = cr.Stat[ ST_MAX_LIFE ];
@@ -1481,12 +1468,12 @@ void critter_idle( Critter& cr )
     {	
 		if( !cr.IsDead() && cr.Mode[ MODE_NO_HEAL ] == 0 )
         {
-			cr.StatBase[ ST_FUD ] -= 6;
-			cr.StatBase[ ST_WATAH ] -= 3;
+			cr.StatBase[ ST_HUNGER ] -= 6;
+			cr.StatBase[ ST_THIRST ] -= 3;
 
 			
-			cr.ParamBase[ST_FUD] = CLAMP(cr.ParamBase[ ST_FUD ], 0, 2500);
-			cr.ParamBase[ST_WATAH] = CLAMP(cr.ParamBase[ ST_WATAH ], 0, 2500);
+			cr.ParamBase[ST_HUNGER] = CLAMP(cr.ParamBase[ ST_HUNGER ], 0, 2500);
+			cr.ParamBase[ST_THIRST] = CLAMP(cr.ParamBase[ ST_THIRST ], 0, 2500);
         }
 		cr.TimeoutBase[ TO_HEALING ] = HEALING_TIMEOUT( cr );
     }
