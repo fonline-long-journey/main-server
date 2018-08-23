@@ -3811,6 +3811,9 @@ namespace Game_TLJ
         string@ get_Text() override
         {
             CritterCl@ chosen = GetChosen();
+            
+            if(chosen is null) return "0";
+            
             uint colorOffset = (chosen.Param[ ST_CURRENT_AP ] >= 0) ? floor((255 * ABS(chosen.Param[ ST_CURRENT_AP ])) / 100) : 0;
             SetTextColor( COLOR_ARGB(255, 255 - colorOffset, colorOffset, 0) );
             return "" + chosen.Param[ ST_CURRENT_AP ];
@@ -3997,6 +4000,10 @@ namespace Game_TLJ
 
     class Quickbar : GUIPanel
     {
+        bool isHold = false;
+        int holdX   = 0;
+        int holdY   = 0;
+
         void OnConstruct() override
         {
             SetPosition( 119, 431 );
@@ -4009,15 +4016,50 @@ namespace Game_TLJ
             SetPosition(__ScreenWidth-50, 5);
             
         }
+
+        void OnDraw() override
+        {
+            if(get_Width() > 100){
+                SetBackgroundImage("art/intrface/quickbar.png");
+            }else{
+                SetBackgroundImage("art/intrface/quickbar_vertical.png");
+            }
+        }
+
+        void OnMouseDown( int button ) override
+        {
+            if(button == 1){
+                isHold = true;
+                holdX  = __MouseX;
+                holdY  = __MouseY;
+            }
+        }
+
+        void OnMouseUp( int button, bool lost ) override
+        {
+            if(button == 1) isHold = false;
+        }
+
+        void OnGlobalMouseMove() override
+        {
+            if(isHold){
+                SetPosition(AbsolutePosX + (__MouseX - holdX),AbsolutePosY + (__MouseY - holdY) );
+                holdX  = __MouseX;
+                holdY  = __MouseY;
+            }
+        }
     }
 
     class QuickbarGrid : GUIGrid
     {
+        uint scroll_position = 0;
+
         void OnConstruct() override
         {
             SetPosition( 9, 5 );
             SetCellPrototype( "QuickbarItem" );
             SetGridSize( 11 );
+            SetPadding( 4, 4 );
         }
     }
 
@@ -4025,33 +4067,79 @@ namespace Game_TLJ
     {
         uint slot_id = 0;
         uint item_id = 0;
+        uint id_offset(){
+            return cast< QuickbarGrid >(Parent).scroll_position;
+        }
 
         void OnConstruct() override
         {
-            SetPosition( 0, 1 );
+            SetPosition( -2, 0 );
             SetSize( 30, 30 );
         }
 
         void OnDraw() override
         {
-            //Message("SLOT"+slot_id);
-            //ItemCl@ item = quickItem(slot_id);
-            //BackgroundImage.Load( item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0 );
+            ItemCl@ item = quickItem(slot_id + id_offset());
+            uint icon = item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0;
+            SetBackgroundImage(icon > 0 ? icon : -1,IMAGE_LAYOUT_ZOOM);
+            
+        }
+
+        void OnMouseDown( int button ) override
+        {
+            if( button == MOUSE_BUTTON_WHEEL_UP || button == MOUSE_BUTTON_WHEEL_DOWN )
+            {
+                QuickbarGrid@ parent = cast <QuickbarGrid>(Parent);
+                if(button == MOUSE_BUTTON_WHEEL_UP){
+                    if(parent.scroll_position > 0){
+                        parent.scroll_position -= 1;
+                    }
+                }else{
+                    if(parent.scroll_position < 200){
+                        parent.scroll_position += 1;
+                    }
+                }
+                Message("Scroll:"+parent.scroll_position);
+            }
         }
 
         void OnLMousePressed() override
         {
-            //quickItemUse(slot_id);
+            quickItemUse(slot_id + id_offset());
         }
 
         void OnRMousePressed() override
         {
-            //quickItemAddCurrent(slot_id);
+            quickItemAddCurrent(slot_id + id_offset());
         }
 
         void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
         {
             slot_id = uint(cellIndex);
+        }
+    }
+
+    class QuickbarRotate : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetSize( 16, 12 );
+            SetBackgroundImage( "art/intrface/redDot.png" );
+            SetPressedImage( "art/intrface/greenDot.png" );
+        }
+
+        void OnCheckedChanged() override
+        {
+            GUIGrid@ QuickbarGrid = cast< GUIGrid > (Parent.Find("QuickbarGrid"));
+            
+            if(IsChecked){
+                Parent.SetSize(387, 50);
+                QuickbarGrid.SetColumns(11);
+            }else{
+                Parent.SetSize(50, 387);
+                QuickbarGrid.SetColumns(1);
+            }
+            QuickbarGrid.ResizeGrid(11);
         }
     }
 
@@ -4163,6 +4251,8 @@ namespace Game_TLJ
         _QuickbarGrid.Init( _Quickbar );
         QuickbarItem _QuickbarItem();
         _QuickbarItem.Init( _QuickbarGrid );
+        QuickbarRotate _QuickbarRotate();
+        _QuickbarRotate.Init( _Quickbar );
         GUI_RegisterScreen( screenIndex, _Screen );
     }
 }

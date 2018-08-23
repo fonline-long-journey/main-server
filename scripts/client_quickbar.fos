@@ -1,0 +1,83 @@
+/**
+ * 	Quickbar client interface extension
+ *  @erandelax 23/08/18
+ *  @todo индивидуальные настройки для каждого чара
+ * 	@todo больше вариантов взаимодействия с айтемами на панели
+ */
+
+
+#ifdef __CLIENT
+
+#include "_macros.fos"
+#include "_client_defines.fos"
+#include "_colors.fos"
+#include "_msgstr.fos"
+
+#define QUICKBAR_FILENAME    "QuickbarItems.txt"
+
+uint[] quickbar = {0};
+
+/*EXPORT*/ void LoadQuickbar()
+{
+	file f;
+	if( f.open(QUICKBAR_FILENAME,"r") >= 0) {
+		quickbar.resize(0);	
+		uint pos = 0;
+		while(not f.isEndOfFile()){
+			uint id = uint(f.readUint32());
+			quickbar.insertLast(id );
+		}
+		f.close();
+	}
+	for(uint pos = 0; pos < quickbar.length;pos++) Message(pos+"# "+quickbar[pos]);
+}
+
+void SaveQuickbar(){
+	if(quickbar.length > 0){
+		file f;
+		if( f.open(QUICKBAR_FILENAME,"w") >= 0) for(uint pos = 0; pos < quickbar.length; pos++){
+			f.writeUint32( uint32( quickbar[pos] ) );
+		}
+		f.close();
+	}
+}
+
+void ResizeQuickbar(uint quick_slot){
+	if(quickbar.length <= quick_slot) 
+		for(uint pos = quickbar.length;pos<=quick_slot;pos++)
+			quickbar.insertLast(0);
+}
+
+// Добавить айтем в избранное
+/*EXPORT*/ uint quickItemAddCurrent(uint quick_slot){
+	ResizeQuickbar(quick_slot);
+	CritterCl@ chosen = GetChosen();
+	if(chosen is null) return 0;
+	ItemCl@ item = chosen.GetItem(0,SLOT_HAND1);
+	if(item is null) return 0;
+	quickbar[quick_slot] = item.Id;
+	SaveQuickbar();
+	return item.Id;
+}
+
+// Получить айди айтема (для отрисовки иконок)
+/*EXPORT*/ ItemCl@ quickItem(uint quick_slot){
+	ResizeQuickbar(quick_slot);
+	CritterCl@ chosen = GetChosen();
+	if(chosen is null) return null;
+	Message(quick_slot+": "+quickbar[quick_slot]);
+	return chosen.GetItemById(quickbar[quick_slot]);
+}
+
+// Применить айтем из избранного
+/*EXPORT*/ void quickItemUse(uint quick_slot){
+	ResizeQuickbar(quick_slot);
+	// @@todo юз айтемов прямо с бара
+	uint[] use = {CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0};
+	SetChosenActions(use);
+}
+
+//#define CHOSEN_USE_ITEM                    ( 6 )  // Item id, Item pid, Target type (see below), Target id, Item mode (see below), Some param (timer)
+//#define CHOSEN_MOVE_ITEM                   ( 7 )  // Item id, Item count, To slot, Is barter container, Is second try
+// //int[] use = {CHOSEN_USE_ITEM, quickbar[quick_slot], 0, 0, 0, ITEM_MODE_USE, 0};
+#endif

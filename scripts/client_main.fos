@@ -26,6 +26,7 @@ import bool IgnorePlayer( string& message ) from "ignore_list";
 import void InitIgnoreList() from "ignore_list";
 import void InitChosenTabs() from "chosen_tabs";
 import void DrawChosenTabs() from "chosen_tabs";
+import void LoadQuickbar() from "client_quickbar";
 #ifdef PLAYERS_3D
 import void Init3DChaRegScreen() from "client_3d_cha_reg";
 import void Set3DRegistrationGender( int gender ) from "client_3d_cha_reg";
@@ -76,6 +77,7 @@ bool start()
     // InitTestScreen();
     InitRadioScreen();
     InitChosenTabs();
+    LoadQuickbar();
     #ifdef PLAYERS_3D
     Init3DChaRegScreen();
     #endif
