@@ -3112,6 +3112,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
+            SetActive( false );
             SetPosition( 1, 7 );
             SetSize( 655, 38 );
             SetNotHittable( true );
@@ -3154,6 +3155,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
+            SetActive( false );
             SetPosition( 13, 13 );
             SetSize( 630, 25 );
             SetTextFlags( FT_CENTERY );
@@ -3984,8 +3986,8 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            SetPosition(__ScreenWidth-50, 5);
-            
+            SetPosition(5, 5);
+            // @@todo сохранение позиции и поворота quickbar между сессиями
         }
 
         void OnDraw() override
