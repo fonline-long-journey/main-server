@@ -379,10 +379,15 @@
 #define STR_UPDATE_LOG_LATEST				 ( 1205 )
 #define STR_UPDATE_LOG_MAX					 ( 1500 )
 
+// Error replacer
+#define STR_CUSTOM_ERROR					 # (input,message)   (input == "error" ? message : input)
+
 // Parameters
 #define STR_PARAM_NAME                       # (index)         ( 100000 + ( index ) * 10 + 1 )
 #define STR_PARAM_DESC                       # (index)         ( 100000 + ( index ) * 10 + 2 )
-#define STR_PARAM_NAME_SHORT                 # (index)   ( 100000 + ( index ) * 10 + 3 )
+#define STR_PARAM_NAME_SHORT                 # (index) 		   ( 100000 + ( index ) * 10 + 3 )
+#define STR_PARAM_MATH						 # (index) 		   ( 100000 + ( index ) * 10 + 4 )
+#define STR_PARAM_PIC						 # (index) 		   ( 100000 + ( index ) * 10 + 5 )
 
 #define STR_STAT_LEVEL                       # (val)           ( ( val ) > 10 ? ( 2310 ) : ( ( val ) < 1 ? ( 2301 ) : 2300 + ( val ) ) )
 #define STR_STAT_LEVEL_ABB                   # (val)       ( ( val ) > 10 ? ( 2320 ) : ( ( val ) < 1 ? ( 2311 ) : 2310 + ( val ) ) )

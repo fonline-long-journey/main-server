@@ -4674,7 +4674,7 @@ namespace Character_TLJ
                 if( 0 == count ) result.insertLast(0);
                 count = 0;
                 result.insertLast(-STR_TOWNREP_TITLE_NAME);
-                for( uint i = REPUTATION_BEGIN; i <= REPUTATION_END; i++ ) if( uint(GetParam( i )) != 0x80000000 ){
+                for( uint i = REPUTATION_BEGIN; i <= REPUTATION_END; i++ ) if( uint(GetParam( i )) != 0x80000000 && GetParam( i ) != 0 ){
                     result.insertLast(i);
                     count++;
                 }
@@ -4759,7 +4759,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 2, 33 );
+            SetPosition( 3, 66 );
             SetCellPrototype( "BaseStat" );
             SetGridSize( ShowBaseStats.length() );
         }
@@ -4821,7 +4821,7 @@ namespace Character_TLJ
         {
             SetPosition( 97, 8 );
             SetSize( 55, 20 );
-            SetTextFlags( FT_CENTERX | FT_CENTERY | FT_BORDERED );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
         }
 
         string@ get_Text() override
@@ -4862,7 +4862,7 @@ namespace Character_TLJ
         {
             SetPosition( 0, 1 );
             SetSize( 122, 13 );
-            SetTextFlags( FT_CENTERY | FT_BORDERED );
+            SetTextFlags( FT_CENTERY );
         }
 
         void OnDraw() override
@@ -4919,7 +4919,7 @@ namespace Character_TLJ
         {
             SetSize( 100, 13 );
             SetText( "TXT" );
-            SetTextFlags( FT_CENTERY | FT_BORDERED );
+            SetTextFlags( FT_CENTERY );
         }
 
         void OnInit() override
@@ -4935,7 +4935,6 @@ namespace Character_TLJ
         {
             SetPosition( 99, 0 );
             SetSize( 25, 13 );
-            SetTextFlags( FT_BORDERED );
         }
 
         string@ get_Text() override
@@ -4956,7 +4955,8 @@ namespace Character_TLJ
 
     class Skills : GUIGrid
     {
-        int CurSkill = 0;
+        int CurSkill  = 0;
+        uint CurIndex = 0;
 
         void OnConstruct() override
         {
@@ -4974,6 +4974,8 @@ namespace Character_TLJ
     class Skill : GUIPanel
     {
         int Param;
+        uint Index = 0;
+        
 
         void OnConstruct() override
         {
@@ -4984,6 +4986,7 @@ namespace Character_TLJ
         void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
         {
             Param = ShowSkills[ cellIndex ];
+            Index = cellIndex;
         }
     }
 
@@ -4994,7 +4997,7 @@ namespace Character_TLJ
             SetPosition( 5, 0 );
             SetSize( 200, 13 );
             SetText( "TXT" );
-            SetTextFlags( FT_CENTERY | FT_BORDERED );
+            SetTextFlags( FT_CENTERY );
         }
 
         void OnInit() override
@@ -5009,8 +5012,10 @@ namespace Character_TLJ
 
         void OnMouseDown( int button ) override
         {
-            if( button == MOUSE_BUTTON_LEFT )
+            if( button == MOUSE_BUTTON_LEFT ){
                 cast< Skills >( Parent.Parent ).CurSkill = cast< Skill >( Parent ).Param;
+                cast< Skills >( Parent.Parent ).CurIndex = cast< Skill >( Parent ).Index;
+            }
         }
     }
 
@@ -5020,7 +5025,7 @@ namespace Character_TLJ
         {
             SetPosition( 218, 0 );
             SetSize( 40, 13 );
-            SetTextFlags( FT_CENTERX | FT_CENTERY | FT_BORDERED );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
         }
 
         void OnDraw() override
@@ -5030,8 +5035,10 @@ namespace Character_TLJ
 
         void OnMouseDown( int button ) override
         {
-            if( button == MOUSE_BUTTON_LEFT )
+            if( button == MOUSE_BUTTON_LEFT ){
                 cast< Skills >( Parent.Parent ).CurSkill = cast< Skill >( Parent ).Param;
+                cast< Skills >( Parent.Parent ).CurIndex = cast< Skill >( Parent ).Index;
+            }
         }
 
         string@ get_Text() override
@@ -5045,10 +5052,10 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 26, -30 );
-            SetSize( 150, 25 );
+            SetSize( 80, 25 );
             SetText( MSG_GAME( STR_CHA_SKILLS ) );
             SetTextFont( FONT_FAT );
-            SetTextFlags( FT_CENTERY );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
     }
@@ -5064,7 +5071,7 @@ namespace Character_TLJ
 
         void OnDraw() override
         {
-            SetPosition( 245, -10 + ( cast< Skills >( Parent ).CurSkill - SKILL_BEGIN ) * 11 );
+            SetPosition( 245, -10 + ( cast< Skills >( Parent ).CurIndex  ) * 13 );
         }
     }
 
@@ -5160,6 +5167,7 @@ namespace Character_TLJ
             SetSize( 120, 26 );
             SetText( MSG_GAME( STR_CHA_UNSPENT_SP ) );
             SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
     }
@@ -5168,7 +5176,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 91, 142 );
+            SetPosition( 89, 142 );
             SetSize( 45, 25 );
             SetTextFont( FONT_BIG_NUM );
             SetTextFlags( FT_CENTERR );
@@ -5211,10 +5219,15 @@ namespace Character_TLJ
                 CurTip = param;
                 FindText( "Name" ).Text = MSG_GAME( STR_PARAM_NAME( param ) );
                 FindText( "Desc" ).Text = MSG_GAME( STR_PARAM_DESC( param ) );
-                //string@ image =  GetConstantName( CONSTANTS_PICTURE, param );
-                //Message(image);
-                //if( image !is null ) FindPanel( "Image" ).SetBackgroundImage(image);
-                //else FindPanel( "Image" ).SetBackgroundImage(-1);
+                FindText( "Math" ).Text = MSG_GAME( STR_PARAM_MATH( param ) );
+                string@ image =  MSG_GAME( STR_PARAM_PIC( param ) );
+                GUIPanel@ uiImage = FindPanel( "Image" );
+                if(image != "error"){
+                    uiImage.SetBackgroundImage(image);
+                    uiImage.SetActive(true);
+                }else{
+                    uiImage.SetActive(false);
+                }
             }
         }
     }
@@ -5233,7 +5246,7 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 8, 7 );
-            SetSize( 270, 31 );
+            SetSize( 240, 31 );
             SetTextFont( FONT_THIN );
             SetTextColor( COLOR_BLACK );
         }
@@ -5246,6 +5259,39 @@ namespace Character_TLJ
             SetPosition( 8, 42 );
             SetSize( 270, 134 );
             SetTextColor( COLOR_BLACK );
+        }
+    }
+
+    class Math : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetActive( false );
+            SetPosition( 8, 42 );
+            SetSize( 270, 134 );
+            SetTextColor( COLOR_BLACK );
+        }
+    }
+
+    class Switch : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 258, 8 );
+            SetSize( 17, 12 );
+            SetBackgroundImage( "art/intrface/opt_button_dn.png" );
+            SetPressedImage( "art/intrface/minus_button_dn.png" );
+        }
+
+        void OnCheckedChanged() override
+        {
+            if( IsChecked ){
+                Parent.Find("Desc").SetActive(false);
+                Parent.Find("Math").SetActive(true);
+            }else{
+                Parent.Find("Desc").SetActive(true);
+                Parent.Find("Math").SetActive(false);
+            }
         }
     }
 
@@ -5279,9 +5325,11 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 17, 2 );
+            SetPosition( 19, 3 );
+            SetSize( 80, 20 );
             SetText( MSG_GAME( STR_CHA_PRINT ) );
             SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
     }
@@ -5322,9 +5370,11 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 17, 6 );
+            SetPosition( 17, 4 );
+            SetSize( 60, 20 );
             SetText( MSG_GAME( STR_CHA_OK ) );
             SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
     }
@@ -5356,9 +5406,11 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 9, 2 );
+            SetPosition( 8, -1 );
+            SetSize( 60, 20 );
             SetText( MSG_GAME( STR_CHA_CANCEL ) );
             SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
     }
@@ -5376,7 +5428,7 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 6, 4 );
-            SetSize( 145, 22 );
+            SetSize( 250, 22 );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
@@ -5392,7 +5444,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 161, 4 );
+            SetPosition( 270, 3 );
             SetSize( 32, 22 );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -5409,7 +5461,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 201, 5 );
+            SetPosition( 83, 36 );
             SetSize( 75, 22 );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -5435,7 +5487,6 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 2, -2 );
-            SetTextFlags( FT_BORDERED );
         }
 
         string@ get_Text() override
@@ -5449,7 +5500,6 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 2, 10 );
-            SetTextFlags( FT_BORDERED );
         }
 
         string@ get_Text() override
@@ -5463,7 +5513,6 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 2, 22 );
-            SetTextFlags( FT_BORDERED );
         }
 
         string@ get_Text() override
@@ -5481,7 +5530,7 @@ namespace Character_TLJ
 
         void OnConstruct() override
         {
-            SetPosition( 28, 281 );
+            SetPosition( 28, 279 );
         }
 
         void OnShow( dictionary@ params ) override
@@ -5501,6 +5550,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
+            SetPosition( -2, 1 );
         }
     }
 
@@ -5515,21 +5565,9 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -14, 47 );
+            SetPosition( -15, 48 );
             SetSize( 318, 33 );
             SetBackgroundImage( "art/intrface/cha_switcher_perks.png" );
-        }
-    }
-
-    class PerksTitleText : GUIText
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 60, 14 );
-            SetText( MSG_GAME( STR_SWITCH_PERKS_NAME ) );
-            SetTextFont( FONT_FAT );
-            SetTextFlags( FT_CENTERX | FT_CENTERY );
-            SetTextColor( COLOR_SAND );
         }
     }
 
@@ -5538,21 +5576,9 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetActive( false );
-            SetPosition( -17, 49 );
+            SetPosition( -15, 48 );
             SetSize( 318, 33 );
             SetBackgroundImage( "art/intrface/cha_switcher_karma.png" );
-        }
-    }
-
-    class KarmaTitleText : GUIText
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 161, 13 );
-            SetText( MSG_GAME( STR_SWITCH_KARMA_NAME ) );
-            SetTextFont( FONT_FAT );
-            SetTextFlags( FT_CENTERX | FT_CENTERY );
-            SetTextColor( COLOR_SAND );
         }
     }
 
@@ -5561,9 +5587,33 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetActive( false );
-            SetPosition( -14, 48 );
+            SetPosition( -15, 48 );
             SetSize( 318, 33 );
             SetBackgroundImage( "art/intrface/cha_switcher_kills.png" );
+        }
+    }
+
+    class PerksTitleText : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 45, 62 );
+            SetText( MSG_GAME( STR_SWITCH_PERKS_NAME ) );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
+        }
+    }
+
+    class KarmaTitleText : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 146, 61 );
+            SetText( MSG_GAME( STR_SWITCH_KARMA_NAME ) );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
+            SetTextColor( COLOR_SAND );
         }
     }
 
@@ -5571,7 +5621,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 259, 14 );
+            SetPosition( 244, 62 );
             SetText( MSG_GAME( STR_SWITCH_KILLS_NAME ) );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -5688,7 +5738,7 @@ namespace Character_TLJ
             SetGridSize( 7 );
         }
 
-        void OnInit() override
+        void OnShow( dictionary@ params ) override
         {
             Info    = ShowInfo(CurSwitch);
             CurInfo = CurSwitch;
@@ -5729,7 +5779,7 @@ namespace Character_TLJ
         {
             SetSize( 287, 15 );
             SetText( "Безымянный" );
-            SetTextFlags( FT_CENTERY | FT_BORDERED );
+            SetTextFlags( FT_CENTERY );
         }
 
         void OnDraw() override
@@ -5746,17 +5796,18 @@ namespace Character_TLJ
                     if( list.Info[id] >= REPUTATION_BEGIN && list.Info[id] <= REPUTATION_END ){
                         dvalue.SetText( MSG_GAME( STR_TOWNREP_RATIO_NAME( GetParam( list.Info[id] ) ) )+ " ("+GetParam( list.Info[id] )+")" );
                     }else{
-                        dvalue.SetText( "("+GetParam( list.Info[id] )+")" );
+                        int val = GetParam( list.Info[id] );
+                        dvalue.SetText( val < 2 ? "" : "("+val+")" );
                     }
-                    SetTextFlags( FT_CENTERY | FT_BORDERED );
+                    SetTextFlags( FT_CENTERY /*| FT_BORDERED*/ );
                 }else if(list.Info[id] == 0){
                     SetText( MSG_GAME(STR_ITEM_LOOK_NOTHING) ); // 
                     dvalue.SetText("");
-                    SetTextFlags( FT_CENTERY | FT_BORDERED );
+                    SetTextFlags( FT_CENTERY /*| FT_BORDERED*/ );
                 }else{
                     SetText(MSG_GAME( ABS(list.Info[id]) ) );
                     dvalue.SetText( "" );
-                    SetTextFlags( FT_CENTERY | FT_CENTERX | FT_BORDERED );
+                    SetTextFlags( FT_CENTERY | FT_CENTERX /*| FT_BORDERED*/ );
                 }
                 // For debug purposes: shows #param_id@message_id for missing text entries
                 if( Text.length() < 2 || Text == "error" ) SetText( "#"+(list.Info[id] > 0 ? list.Info[id] + "@" + STR_PARAM_NAME( list.Info[id] ) : "@"+ABS(list.Info[id])) );
@@ -5851,6 +5902,10 @@ namespace Character_TLJ
         _Name.Init( _Tip );
         Desc _Desc();
         _Desc.Init( _Tip );
+        Math _Math();
+        _Math.Init( _Tip );
+        Switch _Switch();
+        _Switch.Init( _Tip );
         Buttons _Buttons();
         _Buttons.Init( _Main );
         Print _Print();
@@ -5895,16 +5950,16 @@ namespace Character_TLJ
         _Backgrounds.Init( _Triggers );
         PerksTitle _PerksTitle();
         _PerksTitle.Init( _Backgrounds );
-        PerksTitleText _PerksTitleText();
-        _PerksTitleText.Init( _PerksTitle );
         KarmaTitle _KarmaTitle();
         _KarmaTitle.Init( _Backgrounds );
-        KarmaTitleText _KarmaTitleText();
-        _KarmaTitleText.Init( _KarmaTitle );
         KillsTitle _KillsTitle();
         _KillsTitle.Init( _Backgrounds );
+        PerksTitleText _PerksTitleText();
+        _PerksTitleText.Init( _Backgrounds );
+        KarmaTitleText _KarmaTitleText();
+        _KarmaTitleText.Init( _Backgrounds );
         KillsTitleText _KillsTitleText();
-        _KillsTitleText.Init( _KillsTitle );
+        _KillsTitleText.Init( _Backgrounds );
         PerksTitleTrigger _PerksTitleTrigger();
         _PerksTitleTrigger.Init( _Triggers );
         KarmaTitleTrigger _KarmaTitleTrigger();
