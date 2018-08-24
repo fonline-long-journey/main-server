@@ -27,6 +27,7 @@ import bool IgnorePlayer( string& message ) from "ignore_list";
 import void InitIgnoreList() from "ignore_list";
 import void InitChosenTabs() from "chosen_tabs";
 import void DrawChosenTabs() from "chosen_tabs";
+import void LoadQuickbar() from "client_quickbar";
 #ifdef PLAYERS_3D
 import void Init3DChaRegScreen() from "client_3d_cha_reg";
 import void Set3DRegistrationGender( int gender ) from "client_3d_cha_reg";
@@ -77,6 +78,7 @@ bool start()
     // InitTestScreen();
     InitRadioScreen();
     InitChosenTabs();
+    LoadQuickbar();
     #ifdef PLAYERS_3D
     Init3DChaRegScreen();
     #endif
@@ -224,7 +226,6 @@ void        render_iface( uint layer )
 		
 		if( valid( GetChosen() ) )
 		{
-			renderBars();
 			DrawWepRadius(GetChosen());
 		}
 
@@ -257,7 +258,7 @@ void        render_iface( uint layer )
     }
 }
 
-void renderBars()
+/*void renderBars()
 {
 	renderNewStyleApBar();
 	renderRandaruFud();
@@ -362,7 +363,7 @@ void renderRandaruDrugs()
 	if(valid(chosen))
 	{
 		float bulbValue = 100 / float( MAX_BULBS );
-		uint bulbCount = uint( ABS( chosen.Param[ST_DRUGS] ) / bulbValue );
+		uint bulbCount = uint( ABS( chosen.Param[ST_FATIGUE] ) / bulbValue );
 		uint color = COLOR_GRAY;
 		
 		for(uint i = 0; i <= bulbCount; i++)
@@ -371,10 +372,10 @@ void renderRandaruDrugs()
 		}
 		
 	}
-}
+}*/
 
 
-uint getBulbColor(uint bulbCount)
+/*uint getBulbColor(uint bulbCount)
 {
 	uint percentage = uint( getProc(bulbCount, MAX_BULBS) * 100.0 );
 	
@@ -397,7 +398,7 @@ float getProc(int first, int second)
 	float secondNum = float(second);
 
 	return firstNum / secondNum;
-}
+}*/
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Render map function. You can use DrawMap* functions only there. This drawing before 1 iface layer.
@@ -1911,7 +1912,7 @@ bool player_data_check( int[]& params )
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Forces chosen to do something @erandelax 22/08/18
-void __MakeChosenDo(int param1, int param2, int param3, string@ param4, int[]@ action){
+void __SetChosenActions(int param1, int param2, int param3, string@ param4, int[]@ action){
     uint[] _action = {0,0,0,0,0,0,0};
     for(uint pos = 0; pos < 7; pos++) if(action[pos] > 0) _action[pos] = action[pos];
     SetChosenActions(_action);

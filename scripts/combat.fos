@@ -2015,7 +2015,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
                     isBelow = true;
 					if( target.IsPlayer() && target.PerkBase[ PE_DONT_STARVE ] == 0 )
 					{
-						target.ParamBase[ ST_DRUGS ] = 100;
+						target.ParamBase[ ST_FATIGUE ] = 100;
 						target.ParamBase[ ST_FEELSBAD ] = 1;
 					}
 				}
@@ -2024,7 +2024,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
                     isDead = true;
 					if( target.IsPlayer() && target.PerkBase[ PE_DONT_STARVE ] == 0 )
 					{
-						target.ParamBase[ ST_DRUGS ] = 100;
+						target.ParamBase[ ST_FATIGUE ] = 100;
 						target.ParamBase[ ST_FEELSBAD ] = 1;
 					}
 				}
