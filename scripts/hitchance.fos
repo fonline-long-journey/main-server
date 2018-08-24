@@ -33,7 +33,7 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
     uint8 aim				= _WeaponModeAim( weaponMode );
     ItemMutual@ realWeapon	= _CritGetItemHand( cr );
     int   wpnMaxDist		= _WeaponMaxDist( weapon, use );  //Definition of weapon's max distance, macros.fos
-    uint skillNum			= _WeaponSkill   ( weapon, weaponMode ); //can be any number - skill that affects your Maximum Distance and Effective Distance
+    uint skillNum			= _WeaponSkill   ( weapon, use ); //can be any number - skill that affects your Maximum Distance and Effective Distance
     int  skillVal			= int(cr.Skill[skillNum]);                 // 
     int effDistance		= wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100; //your Effective Distance, linear buildup
 	uint8 weaponSubtype		=

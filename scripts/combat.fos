@@ -1297,14 +1297,14 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     // stuff like animations, effects
 
     // Shoot
-	/*
+	
     if( _WeaponEffect( weapon, use ) != 0 )
     {
         if( useHex )
             map.RunFlyEffect( _WeaponEffect( weapon, use ), cr, null, hx, hy, tx, ty );  // yeah, the target can be null (see: grenades, rocket launcher)
         else
             map.RunFlyEffect( _WeaponEffect( weapon, use ), cr, ( useNormal ? normalTarget : realTarget ), hx, hy, tx, ty );
-    }*/
+    }
 
     if( ammoRound > 0 && valid( realWeapon ) && cr.Mode[ MODE_UNLIMITED_AMMO ] == 0 )
     {
@@ -1397,7 +1397,6 @@ void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int r
 {
 	if( type < 0)
 	{
-		Log("Некорректный тип трассера.");
 		return;
 	}
 	// void CombatAttack( Critter& cr, Critter@ target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo, uint16 hexX, uint16 hexY ) // Export
@@ -1430,10 +1429,10 @@ void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int r
 	if( type == TRACER_LASER)
 	{
 		array<int> drawdata = {hexX, hexY, COLOR_RED, tx, ty, COLOR_DDRED, roundsCount, 1000/roundsCount};
-		int type = roundsCount == 1 ? DRAW_RAYS : DRAW_BURST_RAYS;
+		int drawType = roundsCount == 1 ? DRAW_RAYS : DRAW_BURST_RAYS;
 		for(uint i = 0, j = critters.length(); i<j; i++)
 		{
-			critters[i].RunClientScript ("client_main@__Draw", type, 0, 0, null, drawdata );
+			critters[i].RunClientScript ("client_main@__Draw", drawType, 0, 0, null, drawdata );
 		}
 	}
 	
