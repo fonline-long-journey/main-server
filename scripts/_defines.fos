@@ -83,6 +83,7 @@
 
 // Items types
 // Internal types
+#define ITEM_TYPE_BEGIN							 ( 0 )
 #define ITEM_TYPE_NONE                           ( 0 )
 #define ITEM_TYPE_ARMOR                          ( 1 )
 #define ITEM_TYPE_DRUG                           ( 2 )
@@ -96,6 +97,7 @@
 #define ITEM_TYPE_GENERIC                        ( 11 )
 #define ITEM_TYPE_WALL                           ( 12 )
 #define ITEM_TYPE_CAR                            ( 13 )
+#define ITEM_TYPE_END							 ( 13 )
 // User types
 #define ITEM_TYPE_MAGIC                          ( 20 )
 

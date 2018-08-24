@@ -2634,7 +2634,7 @@ Weapon_SoundId_1=76
 Weapon_HearRadius=50
 Weapon_Type=7
 
-[Proto] # PID_PLANT_SPIKE {Шип растения}
+[Proto] # PID_PLANT_SPIKE {Ўип растени€}
 ProtoId=365
 Type=3
 PicMap=art\items\plntspik.frm
@@ -2736,7 +2736,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=48
 
-[Proto] # PID_SHIV {Шило}
+[Proto] # PID_SHIV {Ўило}
 ProtoId=383
 Type=3
 PicMap=art\items\knife.frm

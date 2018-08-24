@@ -9,6 +9,7 @@
 #include "client_drawing_h.fos"
 #include "hitchance_h.fos"
 #include "mutual_h.fos"
+#include "typecolors_h.fos"
 
 import void InitializeGame() from "config";
 import void InitTestScreen() from "client_screen_test";
@@ -118,6 +119,7 @@ bool start()
 
     #endif
 	CreateWeaponRadius(0xFFFFFFFF).SetDistFunc(GetCalcFunc());
+	InitTypeColors();
 
     return true;
 }
@@ -1100,11 +1102,29 @@ string generic_description( int descType, int& offsX, int& offsY )
         ItemCl@ weaponMain = chosen.GetItem( 0, SLOT_HAND1 );
         if( valid( weaponMain ) )
         {
+
+			
             int use = _WeaponModeUse( weaponMain.Mode );
             if( use > 2 )
                 use = 0;
+				
+				string item_info_color = "|" + GetTypeColor(weaponMain.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponMain )) + "|" + COLOR_TEXT + " " + "\n";
+				result += item_info_color;
+				// result += itemDescText.SetText( GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponMain )), FONT_FALLOUT, FT_CENTERR | FT_CENTERY | FT_BORDERED ) + "\n";
 
-            result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponMain ) ) + "\n";
+			// #string fuel = GetMsgStr( TEXTMSG_GAME, STR_INV_CAR_FUEL );
+			// #fuel   = ReplaceText( fuel, "VALUE",     item.Charge / 100 );
+			// #result = ReplaceText( result, "%s", GetMsgStr( TEXTMSG_COMBAT, chosen.Stat[ ST_GENDER ] == GENDER_MALE ? 506 : 556 ) );
+			
+			// #DrawText( MSG_GAME( STR_GAME_HELP ), 0, 0, __ScreenWidth, __ScreenHeight, COLOR_WHITE, FONT_DEFAULT, FT_CENTERX | FT_CENTERY );
+			
+            // result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponMain ) ) + "\n";
+			
+			// string item_info_color = GetMsgStr( TEXTMSG_GAME, STR_INV_ITEM_COLOR );
+			// result += ReplaceText (item_info_color, "ITEMCOLOR", STR_ITEM_INFO( weaponMain )) + "\n";
+			
+			// result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponMain ) ) ;
+			
 
             if( weaponMain.GetType() == ITEM_TYPE_WEAPON )
             {
@@ -1159,7 +1179,8 @@ string generic_description( int descType, int& offsX, int& offsY )
             if( use > 2 )
                 use = 0;
 
-            result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponExt ) ) + "\n";
+			string item_info_color = "|" + COLOR_WEAPON + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponExt )) + "|" + COLOR_TEXT + " " + "\n";
+            result += item_info_color;
 
             if( weaponExt.GetType() == ITEM_TYPE_WEAPON )
             {

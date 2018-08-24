@@ -236,9 +236,11 @@
 #define STR_INV_CAR_NUMBER                   ( 560 )
 #define STR_INV_CAR_FUEL                     ( 561 )
 #define STR_INV_CAR_DETERIORATION            ( 562 )
+// Inventory additional drawings
 #define STR_INV_STR_REQ   	      		     ( 563 )
 #define STR_WAIT_TIME   	      		     ( 564 )
 #define STR_ITEM_AP_COST   	      		     ( 565 )
+#define STR_INV_ITEM_COLOR	     		     ( 566 )				
 // PipBoy
 #define STR_PIP_STATUS                       ( 700 )
 #define STR_PIP_REPLICATION_MONEY            ( 701 )
