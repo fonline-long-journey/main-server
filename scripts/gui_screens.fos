@@ -5267,7 +5267,7 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetPosition( 8, 42 );
-            SetSize( 280, 134 );
+            SetSize( 160, 134 );
             SetTextColor( COLOR_BLACK );
         }
     }
