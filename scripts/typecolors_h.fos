@@ -1,0 +1,18 @@
+// typecolors_h.fos
+
+#ifndef TYPECOLORS_H
+#define TYPECOLORS_H
+
+#include "mutual_h.fos"
+
+	#ifndef TYPECOLORS_MODULE
+		import void InitTypeColors() from "typecolors";
+		import uint GetTypeColor(uint8 type) from "typecolors";
+	#endif
+
+	#ifdef TYPECOLORS_MODULE
+		#include "_macros.fos"
+		#include "_colors.fos"
+	#endif
+
+#endif

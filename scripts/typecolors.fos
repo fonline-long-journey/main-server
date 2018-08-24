@@ -1,0 +1,100 @@
+// Author: Vice Dice + 10% shitcode of VVish.
+
+#define TYPECOLORS_MODULE
+
+#include "typecolors_h.fos"
+
+// Array of colors for STR_ITEM_INFO, array key equals ITEM_TYPE define. Feel free to use.
+// Колорайзер для предметов в руках персонажа, ячейка массива соответствует дефайнам ITEM_TYPE для упрощения понимания. Пользуйтесь на здоровье.
+// 1) https://i.imgur.com/nfFCkxa.png
+// 2) https://i.imgur.com/Fafh03l.png
+// 3) 
+
+// Installation: include typecolors_h into client_main, then add following lines.
+// Установка: включить хедер-файл typecolors_h в client_main, затем добавить линии ниже.
+
+// В инициализацию:
+/* start()
+{
+	InitTypeColors();
+}
+
+// Working example of the line that will recolor weapon in main hand.
+// Рабочий пример линии, которая перекрасит цвет оружия в текущей руке.
+string item_info_color = "|" + GetTypeColor(weaponMain.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponMain )) + "|" + COLOR_TEXT + " " + "\n";
+result += item_info_color; */
+ 
+
+// ARA AYE COLORS
+// could be dictionary, but strToInt
+array<uint> typesColor;
+
+
+void InitTypeColors()
+{
+	typesColor.resize(ITEM_TYPE_END+1);
+	typesColor[ITEM_TYPE_NONE] = COLOR_NONE;
+	typesColor[ITEM_TYPE_ARMOR] = COLOR_ARMOR;
+	typesColor[ITEM_TYPE_DRUG] = COLOR_DRUGS;
+	typesColor[ITEM_TYPE_WEAPON] = COLOR_WEAPON;
+	typesColor[ITEM_TYPE_AMMO] = COLOR_AMMO;
+	typesColor[ITEM_TYPE_MISC] = COLOR_MISC;
+	typesColor[ITEM_TYPE_KEY] = COLOR_KEY;
+	typesColor[ITEM_TYPE_CONTAINER] = COLOR_CONTAINER;
+	typesColor[ITEM_TYPE_DOOR] = COLOR_DOOR;
+	typesColor[ITEM_TYPE_GRID] = COLOR_GRID;
+	typesColor[ITEM_TYPE_GENERIC] = COLOR_GENERIC;
+	typesColor[ITEM_TYPE_WALL] = COLOR_WALL;
+	typesColor[ITEM_TYPE_CAR] = COLOR_CAR;
+}
+
+uint GetTypeColor(uint8 type)
+{
+	if (typesColor.length() != ITEM_TYPE_END)
+		InitTypeColors();
+		
+	if (type < ITEM_TYPE_BEGIN || type > ITEM_TYPE_END)
+	{
+		return COLOR_TEXT; // default unhandled type color
+	}
+	else 
+	{
+		return typesColor[type];
+	}
+}
+
+// Colors in _colors.fos,
+// Цвета в _colors.fos.
+
+// #define COLOR_NONE				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_ARMOR 			( COLOR_RGB( 0xFE, 0xEE, 0xAA ) )
+// #define COLOR_DRUGS 			( COLOR_RGB( 0xF2, 0x90, 0x09 ) )
+// #define COLOR_WEAPON 			( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_AMMO 				( COLOR_RGB( 0xFF, 0x45, 0xAA ) )
+// #define COLOR_MISC				( COLOR_RGB( 0xFF, 0xFF, 0xFF) )
+// #define COLOR_KEY				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_CONTAINER			( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_DOOR 				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_GRID 				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_GENERIC 			( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_WALL 				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+// #define COLOR_CAR 				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
+
+// Defines in _defines.fos.
+// Дефайны в _defines.fos.
+
+// #define ITEM_TYPE_BEGIN							( 0 )
+// #define ITEM_TYPE_NONE                           ( 0 )
+// #define ITEM_TYPE_ARMOR                          ( 1 )
+// #define ITEM_TYPE_DRUG                           ( 2 )
+// #define ITEM_TYPE_WEAPON                         ( 3 )
+// #define ITEM_TYPE_AMMO                           ( 4 )
+// #define ITEM_TYPE_MISC                           ( 5 )
+// #define ITEM_TYPE_KEY                            ( 7 )
+// #define ITEM_TYPE_CONTAINER                      ( 8 )
+// #define ITEM_TYPE_DOOR                           ( 9 )
+// #define ITEM_TYPE_GRID                           ( 10 )
+// #define ITEM_TYPE_GENERIC                        ( 11 )
+// #define ITEM_TYPE_WALL                           ( 12 )
+// #define ITEM_TYPE_CAR                            ( 13 )
+// #define ITEM_TYPE_END							 ( 13 )
