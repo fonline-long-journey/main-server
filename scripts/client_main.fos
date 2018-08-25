@@ -65,10 +65,12 @@ bool start()
 	}
 	else
 	{
-
     Message( GetMsgStr (TEXTMSG_GAME, STR_WELCOME_TO_TLJ) ); //"Файлы, возможно, даже и успешно загружены, а карта мира и интерфейс - изменены для игры на сервере не Вашей мечты - The Long Journey." + "\n" + "Команда разработки и просто нормальные ребята желают Вам приятного дня!" );
 	}
     LoadFont( FONT_COURIER_NEW_SMALL, "CourierNewSmall" );
+	Message( LoadFont(FONT_SEGOEUI, "SegoeUI") ? "YEAH" : "FUCK");
+	Message( LoadFont(FONT_ARIAL, "Arial") ? "YEAH" : "FUCK");
+	Message( LoadFont(FONT_ARIALBLACK, "ArialBlack") ? "YEAH" : "FUCK");
     // SetDefaultFont(FONT_COURIER_NEW_SMALL, COLOR_TEXT);
 
     GUI_EngineCallback_Start();
@@ -120,7 +122,10 @@ bool start()
     Preload3dFiles( preload3dFiles, PT_ART_CRITTERS );
 
     #endif
+    
+	// Effective range.
 	CreateWeaponRadius(0xFFFFFFFF).SetDistFunc(GetCalcFunc());
+	// Color massive for STR_ITEM_INFO replacement.
 	InitTypeColors();
 
     return true;
@@ -177,8 +182,18 @@ void screen_change( bool show, int screen, dictionary@ params )
 //    100 (over map), 101 (over all)
 void        render_iface( uint layer )
 {
+	// if ( layer == 1)
+	// {	
+		
+	// }
+
 	if( layer == 2 )
     {
+		if( valid( GetChosen() ) )
+		{
+			DrawWepRadius(GetChosen());
+		}
+		
 		GUI_EngineCallback_Draw( true );
         DrawChosenTabs();
         GUI_EngineCallback_Draw( false );
@@ -224,10 +239,6 @@ void        render_iface( uint layer )
             DrawText( MSG_GAME( STR_GAME_HELP ), 0, 0, __ScreenWidth, __ScreenHeight, COLOR_WHITE, FONT_DEFAULT, FT_CENTERX | FT_CENTERY );
         }
 		
-		if( valid( GetChosen() ) )
-		{
-			DrawWepRadius(GetChosen());
-		}
 
         // Zoom text
         if( __MapZooming && __SpritesZoomMin != __SpritesZoomMax )
