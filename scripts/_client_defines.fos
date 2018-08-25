@@ -59,7 +59,10 @@
 #define FONT_FAT                           ( 7 )
 #define FONT_BIG                           ( 8 )
 // User fonts, created in Bitmap Font Generator
-#define FONT_COURIER_NEW_SMALL             ( 10 )
+#define FONT_COURIER_NEW_SMALL				( 10 )
+#define FONT_SEGOEUI						( 11 )
+#define FONT_ARIAL							( 12 )
+#define FONT_ARIALBLACK						( 13 )
 
 // Font flags
 #define FT_NOBREAK                         ( 0x0001 )
