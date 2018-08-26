@@ -210,12 +210,12 @@ int to_hit( CritterMutual& cr, CritterMutual& target, ProtoItem@ weapon, uint8 w
 uint8 CalcEffRange (CritterCl@ source, ItemCl@ weapon)
 {
 	uint8  use				= _WeaponModeUse( weapon.Mode );
-	int  wpnMaxDist			= _WeaponMaxDist( weapon.Proto, weapon.Mode&0x0F );
-	uint skillNum			= _WeaponSkill  ( weapon.Proto, weapon.Mode );
+	int  wpnMaxDist			= _WeaponMaxDist( weapon.Proto, use );
+	uint skillNum			= _WeaponSkill  ( weapon.Proto, use );
 	int  skillVal			= int(source.Skill[skillNum]);            // 
 	uint8 effRange		    = wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100;//your Effective Distance, linear buildup
 	// Message(""+effRange);
-    return (effRange); 
+    return CLAMP(effRange, 1, 1000); 
 }
 // Getter. Возвращает указатель на функцию "CalcEffRange" типа "distCalcFunc".
 distCalcFunc@ GetCalcFunc()
