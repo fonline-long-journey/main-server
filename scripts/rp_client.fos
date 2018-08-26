@@ -37,9 +37,49 @@ void __reglog( int param0, int param1, int type, string@ param3, int[] @ param4 
 
 void __HearShot( int param0, int param1, int type, string@ param3, int[] @ param4 )
 {
-    string typestr = GetMsgStr( TEXTMSG_COMBAT, 110 + type );
-    MapMessage( typestr, param0 + Random( -2, 2 ), param1 + Random( -2, 2 ), __DamageHitDelay, 0xFFC80000, true, Random( -5, 5 ), -20 );
-    Message( GetMsgStr( TEXTMSG_COMBAT, 130 + type ), FOMB_COMBAT_RESULT );
+	CritterCl@ chosen = GetChosen();
+	uint8 dir = GetDirection(chosen.HexX, chosen.HexY, param0, param1);
+	string typestr = getShotMsg(type, false);
+	MapMessage( typestr, param0 + Random( -2, 2 ), param1 + Random( -2, 2 ), __DamageHitDelay, 0xFFC80000, true, Random( -5, 5 ), -20 );
+	Message( getShotMsg(type, true) + getDirectionMessage(dir), FOMB_COMBAT_RESULT );
+}
+
+string getShotMsg(int type, bool self){
+if(! self)
+	switch(type){
+		case 0:
+			return "выстрел";
+		case 1:
+			return "очередь";
+	}
+else
+	switch(type){
+		case 0:
+		return "Вы услышали выстрел ";
+		case 1:
+		return "Вы услышали очередь ";
+	}
+	return "";
+}
+
+string getDirectionMessage(uint8 dir){
+	switch(dir){
+		case 0:
+			return "с северо-востока";
+		case 1:
+			return "c востока";
+		case 2:
+			return "c юго-востока";
+		case 3:
+			return "c юго-запада";
+			
+		case 4:
+			return "с запада";
+		case 5:
+			return "с северо-запада";
+	
+	}
+	return "непонятно откуда";	
 }
 
 void _SetEffect( int param0, int param1, int type, string@ param3, int[] @ param4 )
