@@ -417,7 +417,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -8, 3 );
+            SetPosition( -7, 3 );
             SetSize( 35, 20 );
             SetText( "TXT" );
             SetTextFont( FONT_BIG );
@@ -466,7 +466,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 147, 4 );
+            SetPosition( 146, 4 );
             SetSize( 16, 12 );
             SetPressedImage( "art/intrface/plus_button_dn.png" );
         }
@@ -486,7 +486,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 147, 15 );
+            SetPosition( 146, 15 );
             SetSize( 16, 12 );
             SetPressedImage( "art/intrface/minus_button_dn.png" );
         }
@@ -514,7 +514,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -4, 3 );
+            SetPosition( -4, 5 );
             SetSize( 110, 30 );
             SetText( MSG_GAME( STR_REG_SPECIAL_SUM ) );
             SetTextFont( FONT_FAT );
@@ -527,7 +527,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 106, 4 );
+            SetPosition( 106, 5 );
             SetSize( 34, 30 );
             SetTextFont( FONT_BIG_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -914,7 +914,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 28, -28 );
+            SetPosition( 30, -28 );
             SetSize( 150, 24 );
             SetText( MSG_GAME( STR_CHA_SKILLS ) );
             SetTextFont( FONT_FAT );
@@ -935,7 +935,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 25, 1 );
+            SetPosition( 22, 1 );
             SetSize( 120, 26 );
             SetText( MSG_GAME( STR_REG_UNSPENT_TAGS ) );
             SetTextFont( FONT_FAT );
@@ -1010,7 +1010,7 @@ namespace Register_TLJ
         void OnConstruct() override
         {
             SetPosition( 8, 10 );
-            SetSize( 270, 30 );
+            SetSize( 235, 30 );
             SetTextFont( FONT_THIN );
             SetTextColor( COLOR_BLACK );
         }
@@ -1020,8 +1020,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 9, 42 );
-            SetSize( 280, 138 );
+            SetPosition( 9, 48 );
+            SetSize( 280, 130 );
             SetTextColor( COLOR_BLACK );
         }
     }
@@ -1233,7 +1233,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 32, 13 );
+            SetPosition( 122, 15 );
             SetNotHittable( true );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -1250,7 +1250,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 75, 3 );
+            SetPosition( 28, 1 );
             SetSize( 31, 29 );
             SetPressedImage( "art/intrface/male_button_dn.png" );
         }
@@ -1274,7 +1274,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 114, 3 );
+            SetPosition( 58, 1 );
             SetSize( 33, 31 );
             SetPressedImage( "art/intrface/female_button_dn.png" );
         }
@@ -1571,7 +1571,7 @@ namespace Register_TLJ
         void OnConstruct() override
         {
             SetPosition( 132, 337 );
-            SetSize( 205, 115 );
+            SetSize( 205, 110 );
             SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
         }
     }
@@ -1772,8 +1772,13 @@ namespace Options_TLJ
         {
             SetModal( true );
             SetCanMove( true, false );
-            SetSize( 800, 600 );
             SetDock( DOCK_FILL );
+            SetBackgroundImage( "art/intrface/background.png" );
+        }
+
+        void OnInit() override
+        {
+            SetSize(__ScreenWidth, __ScreenHeight);
         }
     }
 
@@ -1784,6 +1789,12 @@ namespace Options_TLJ
             SetPosition( 80, 60 );
             SetSize( 640, 480 );
             SetBackgroundImage( "art/intrface/options_tlj.png" );
+        }
+
+        void OnInit() override
+        {
+            
+            SetPosition((__ScreenWidth - get_Width()) / 2, (__ScreenHeight - get_Height()) / 2);
         }
     }
 
@@ -3432,9 +3443,9 @@ namespace Game_TLJ
         {
             SetPosition( 555, 11 );
             SetSize( 150, 50 );
-            SetTextFont( FONT_NUM );
+            SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
-            SetTextColor( COLOR_GREEN );
+            SetTextColor( COLOR_WHITE );
         }
 
         string@ get_Text() override
@@ -3453,9 +3464,9 @@ namespace Game_TLJ
         {
             SetPosition( 293, 10 );
             SetSize( 150, 50 );
-            SetTextFont( FONT_NUM );
+            SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
-            SetTextColor( COLOR_GREEN );
+            SetTextColor( COLOR_WHITE );
         }
 
         string@ get_Text() override
@@ -3538,9 +3549,10 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 121, 49 );
+            SetPosition( 127, 7 );
             SetNotHittable( true );
             SetTextFont( FONT_SPECIAL );
+            SetTextFlags( FT_CENTERY | FT_CENTERR );
         }
 
         void OnDrawItem( ItemCl@ item, GUIObject@ cell, uint cellIndex ) override
@@ -3597,9 +3609,17 @@ namespace Game_TLJ
                 if( usePic == 0 && FLAG( item.Flags, ITEM_CAN_USE ) )
                     usePic = GetStrHash( "art\\intrface\\uset.frm" );
             }
-            
+            //cast<UseLabel> (Find("UseLabel")).SetText(usePic);
             BackgroundImage.Load( usePic );
             //SetPosition( 180 - BackgroundImage.Width, PosY );
+        }
+    }
+
+    class UseLabel : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 0, -16 );
         }
     }
 
@@ -3643,8 +3663,9 @@ namespace Game_TLJ
         void OnConstruct() override
         {
             SetPosition( -22, 114 );
-            SetTextFont( FONT_SAND_NUM );
-            SetTextColor( COLOR_IFACE );
+            SetTextFont( FONT_FAT );
+            SetTextFlags( FT_BORDERED );
+            SetTextColor( COLOR_WHITE );
         }
     }
 
@@ -3652,7 +3673,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 121, 4 );
+            SetPosition( 114, 40 );
             SetSize( 18, 18 );
             SetNotHittable( true );
             SetBackgroundImage( "art/intrface/aim_pic.png" );
@@ -3685,7 +3706,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            sprite      = LoadSprite( "ap_bar_small.png", PT_ART_INTRFACE );
             spriteWidth = GetSpriteWidth(sprite, -1);
         }
 
@@ -3730,7 +3751,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 38, -2 );
+            SetPosition( 36, -2 );
             SetSize( 50, 18 );
             SetNotHittable( true );
             SetTextFont( FONT_FALLOUT );
@@ -3753,6 +3774,32 @@ namespace Game_TLJ
             }else{
                 SetText( "" );
             }
+        }
+    }
+
+    class BreakTime : GUIPanel
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 681, 30 );
+        }
+
+        void OnDraw() override
+        {
+            CritterCl@ chosen = GetChosen();
+            GetChild( 0 ).SetActive( chosen !is null && chosen.IsBusy() );
+        }
+    }
+
+    class BreakTimeLed : GUIPanel
+    {
+        bool IsChecked = false;
+
+        void OnConstruct() override
+        {
+            SetPosition( -54, 27 );
+            SetSize( 75, 75 );
+            SetBackgroundImage( "art/intrface/test5.png" );
         }
     }
 
@@ -3798,6 +3845,7 @@ namespace Game_TLJ
             SetNotHittable( true );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY | FT_BORDERED );
+            SetTextColor( COLOR_WHITE );
         }
 
         string@ get_Text() override
@@ -3809,32 +3857,6 @@ namespace Game_TLJ
             //uint colorOffset = (chosen.Param[ ST_CURRENT_AP ] >= 0) ? floor((255 * ABS(chosen.Param[ ST_CURRENT_AP ])) / 100) : 0;
             //SetTextColor( COLOR_ARGB(255, 255 - colorOffset, colorOffset, 0) );
             return "" + chosen.Param[ ST_CURRENT_AP ];
-        }
-    }
-
-    class BreakTime : GUIPanel
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 239, 50 );
-        }
-
-        void OnDraw() override
-        {
-            CritterCl@ chosen = GetChosen();
-            GetChild( 0 ).SetActive( chosen !is null && chosen.IsBusy() );
-        }
-    }
-
-    class BreakTimeLed : GUIPanel
-    {
-        bool IsChecked = false;
-
-        void OnConstruct() override
-        {
-            SetPosition( 32, 38 );
-            SetSize( 16, 12 );
-            SetBackgroundImage( "art/intrface/redDot.png" );
         }
     }
 
@@ -3864,7 +3886,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            sprite      = LoadSprite( "ap_bar_small.png", PT_ART_INTRFACE );
             spriteWidth = GetSpriteWidth(sprite, -1) ;
         }
 
@@ -3918,7 +3940,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            sprite      = LoadSprite( "ap_bar_small.png", PT_ART_INTRFACE );
             spriteWidth = GetSpriteWidth(sprite, -1) ;
         }
 
@@ -3973,7 +3995,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            sprite      = LoadSprite( "ap_bar.png", PT_ART_INTRFACE );
+            sprite      = LoadSprite( "ap_bar_small.png", PT_ART_INTRFACE );
             spriteWidth = GetSpriteWidth(sprite, -1) ;
             
         }
@@ -4269,6 +4291,8 @@ namespace Game_TLJ
         _DeteriorationValue.Init( _MainItemSlotCell );
         UsePic _UsePic();
         _UsePic.Init( _MainItemSlotCell );
+        UseLabel _UseLabel();
+        _UseLabel.Init( _UsePic );
         ApCost _ApCost();
         _ApCost.Init( _MainItemSlotCell );
         ApCostValue _ApCostValue();
@@ -4279,14 +4303,14 @@ namespace Game_TLJ
         _AmmoBar.Init( _MainItemSlotCell );
         AmmoCount _AmmoCount();
         _AmmoCount.Init( _AmmoBar );
-        ActionBar _ActionBar();
-        _ActionBar.Init( _Main );
-        ActionBarValue _ActionBarValue();
-        _ActionBarValue.Init( _ActionBar );
         BreakTime _BreakTime();
         _BreakTime.Init( _Main );
         BreakTimeLed _BreakTimeLed();
         _BreakTimeLed.Init( _BreakTime );
+        ActionBar _ActionBar();
+        _ActionBar.Init( _Main );
+        ActionBarValue _ActionBarValue();
+        _ActionBarValue.Init( _ActionBar );
         HungerBar _HungerBar();
         _HungerBar.Init( _Main );
         HungerFill _HungerFill();
@@ -4383,8 +4407,9 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 2, 27 );
+            SetPosition( 12, 28 );
             SetTextFlags( FT_CENTERR | FT_BOTTOM );
+            SetTextColor( COLOR_WHITE );
         }
 
         void OnDrawItem( ItemCl@ item, GUIObject@ cell, uint cellIndex ) override
@@ -4400,7 +4425,7 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 198, 441 );
+            SetPosition( 5, 519 );
             SetSize( 100, 65 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
@@ -4434,7 +4459,7 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 6, 517 );
+            SetPosition( 197, 442 );
             SetSize( 100, 65 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
@@ -4451,8 +4476,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 197, 518 );
-            SetSize( 100, 65 );
+            SetPosition( 207, 525 );
+            SetSize( 88, 57 );
             SetDraggable( true );
             SetBackgroundImage( "art/intrface/dummy.png", IMAGE_LAYOUT_ZOOM );
         }
@@ -4667,13 +4692,13 @@ namespace Inventory_TLJ
 
 namespace Character_TLJ
 {
-    int[] ShowBaseStats = { 
+    int[] ShowBaseStats = {
+        ST_AGILITY,
         ST_STRENGTH, 
         ST_PERCEPTION, 
         ST_ENDURANCE, 
         ST_CHARISMA, 
-        ST_INTELLECT, 
-        ST_AGILITY
+        ST_INTELLECT
     };
     int[] ShowHealthStats = { 
         ST_MAX_LIFE, 
@@ -4850,7 +4875,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 3, 6 );
+            SetPosition( 3, 5 );
             SetSize( 40, 20 );
             SetText( "TXT" );
             SetTextFont( FONT_BIG );
@@ -4885,7 +4910,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 97, 8 );
+            SetPosition( 99, 6 );
             SetSize( 55, 20 );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
         }
@@ -4999,7 +5024,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 99, 0 );
+            SetPosition( 102, 0 );
             SetSize( 25, 13 );
         }
 
@@ -5060,7 +5085,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 5, 0 );
+            SetPosition( 8, 0 );
             SetSize( 200, 13 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
@@ -5089,7 +5114,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 218, 0 );
+            SetPosition( 215, 0 );
             SetSize( 40, 13 );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
         }
@@ -5117,7 +5142,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 26, -30 );
+            SetPosition( 22, -32 );
             SetSize( 80, 25 );
             SetText( MSG_GAME( STR_CHA_SKILLS ) );
             SetTextFont( FONT_FAT );
@@ -5137,7 +5162,7 @@ namespace Character_TLJ
 
         void OnDraw() override
         {
-            SetPosition( 245, -10 + ( cast< Skills >( Parent ).CurIndex  ) * 13 );
+            SetPosition( 247, -12 + ( cast< Skills >( Parent ).CurIndex  ) * 13 );
         }
     }
 
@@ -5180,6 +5205,16 @@ namespace Character_TLJ
             if( IsTagSkill( curSkill ) )
                 SkillUp[ curSkill ]++;
         }
+    }
+
+    string@ FormatXXX( int value )
+    {
+        string@ result = "";
+        result = "" + ABS(value);
+        if(result.length() < 2) result = "0" + result;
+        if(result.length() < 3) result = "0" + result;
+        if( value < 0 ) result = "-" + result;
+        return result;
     }
 
     class SkillDecButton : GUIButton
@@ -5242,16 +5277,16 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 89, 142 );
-            SetSize( 45, 25 );
+            SetPosition( 88, 142 );
+            SetSize( 48, 25 );
             SetTextFont( FONT_BIG_NUM );
-            SetTextFlags( FT_CENTERR );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_IFACE );
         }
 
         string@ get_Text() override
         {
-            return FormatXX( UnspentSkillPoints );
+            return FormatXXX( UnspentSkillPoints );
         }
     }
 
@@ -5332,6 +5367,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
+            SetActive( false );
             SetPosition( 8, 42 );
             SetSize( 160, 134 );
             SetTextColor( COLOR_BLACK );
@@ -5433,7 +5469,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 1, 5 );
+            SetPosition( 0, 5 );
             SetSize( 15, 16 );
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
@@ -5514,7 +5550,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 6, 4 );
+            SetPosition( 6, 2 );
             SetSize( 250, 22 );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -5531,7 +5567,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 270, 3 );
+            SetPosition( 270, 2 );
             SetSize( 32, 22 );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
@@ -5548,8 +5584,8 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 83, 36 );
-            SetSize( 75, 22 );
+            SetPosition( 106, 35 );
+            SetSize( 55, 22 );
             SetTextFont( FONT_FAT );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
@@ -5733,7 +5769,6 @@ namespace Character_TLJ
             //Parent.FindPanel( "KillsTitle" ).SetSwitch( false );
             //Parent.Parent.FindText ("NormalText").SetText ("Perks supertext.");
             CurSwitch = 0;
-            Log("Выполняю хуй паука" + CurSwitch);
         }
     }
 
@@ -5753,7 +5788,6 @@ namespace Character_TLJ
             //Parent.FindPanel( "KillsTitle" ).SetSwitch( false );
             //Parent.Parent.FindText ("NormalText").SetText ("Karma supertext.");
             CurSwitch = 1;
-            Log("Выполняю хуй паука" + CurSwitch);
         }
     }
 
@@ -5771,7 +5805,6 @@ namespace Character_TLJ
             Parent.FindPanel( "Backgrounds" ).FindPanel ("KarmaTitle").SetActive (false);
             Parent.FindPanel( "Backgrounds" ).FindPanel ("KillsTitle").SetActive (true);
             CurSwitch = 2;
-            Message("Выполняю хуй паука " + CurSwitch);
         }
     }
 

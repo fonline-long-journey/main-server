@@ -108,6 +108,7 @@ import IMuzzleFlash@ CreateMuzzle( int[] drawData) from "client_drawing";
 import IBurstMuzzle@ CreateBurstMuzzle( int[] drawData) from "client_drawing";
 import IDelayedText@ _CreateDelayedText(int param0, int param1, int param2, string@ param3, int[]@ param4) from "client_drawing";
 import void CreateCustomRadius(uint color, uint radius) from "client_drawing";
+//import IWeaponRadiusChosen@ CreateWeaponRadius(uint color, uint opacity) from "client_drawing";
 import IWeaponRadiusChosen@ CreateWeaponRadius(uint color) from "client_drawing";
 
 import void DrawRays() from "client_drawing";

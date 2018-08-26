@@ -1191,9 +1191,8 @@ string generic_description( int descType, int& offsX, int& offsY )
             if( use > 2 )
                 use = 0;
 
-			string item_info_color = "|" + COLOR_WEAPON + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponExt )) + "|" + COLOR_TEXT + " " + "\n";
-            result += item_info_color;
-
+				string item_info_color = "|" + GetTypeColor(weaponExt.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( weaponExt )) + "|" + COLOR_TEXT + " " + "\n";
+				result += item_info_color;
             if( weaponExt.GetType() == ITEM_TYPE_WEAPON )
             {
                 result += GetMsgStr( TEXTMSG_GAME, STR_INV_DMG ) + " ";
@@ -1306,7 +1305,8 @@ string item_description( ItemCl& item, int lookType )
     // Short info
     else if( lookType == ITEM_LOOK_ONLY_NAME )
     {
-        result += ReplaceText( GetMsgStr( TEXTMSG_GAME, STR_ITEM_LOOK ), "NAME", GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) );
+		string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT + " ";
+        result += ReplaceText( GetMsgStr( TEXTMSG_GAME, STR_ITEM_LOOK ), "NAME", item_info_color );
     }
     // Full info
     else
@@ -1315,8 +1315,10 @@ string item_description( ItemCl& item, int lookType )
         {
             if( item.Lexems != "" )
                 result += item.Lexems + "\n";
-
-            result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) + "\n";
+				
+			string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT + " " + "\n" + "\n";
+			result += item_info_color;
+            //result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) + "\n";
         }
 
         if( item.GetProtoId() == PID_HOLODISK && item.HolodiskNumber != 0 )
@@ -1356,7 +1358,7 @@ string item_description( ItemCl& item, int lookType )
 				string str;
 				str = GetMsgStr( TEXTMSG_GAME, STR_ITEM_AP_COST );
 				str = ReplaceText( str, "VALUE", get_use_ap_cost ( chosen, item, item.Mode));
-				Message("" + str);
+				// Message("" + str);
 				result += str;
 			}
 			
@@ -1688,28 +1690,33 @@ string critter_description( CritterCl& cr, int lookType )
             {
                 if( item.GetType() == ITEM_TYPE_WEAPON )
                 {
+					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
+					//result += item_info_color;
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_WEAP );
-                    result = ReplaceText( result, "WEAPON", GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) );
+                    result = ReplaceText( result, "WEAPON", item_info_color );
                 }
                 else
                 {
+					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_MISC );
-                    result = ReplaceText( result, "MISC", GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) );
+                    result = ReplaceText( result, "MISC", item_info_color );
                 }
             }
 
             if( valid( item2 ) )
             {
+				string item_info_color = "|" + GetTypeColor(item2.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item2 )) + "|" + COLOR_TEXT;
                 result += " и ";
-                result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item2 ) );
+                result += item_info_color;
             }
             if( valid( item3 ) )
             {
+				string item_info_color = "|" + GetTypeColor(item3.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item3 )) + "|" + COLOR_TEXT;
                 if( gender == GENDER_FEMALE )
                     result += ", на ней ";
                 else
                     result += ", на нем ";
-                result += GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item3 ) );
+                result += item_info_color;
             }
         }
         else         // Simple
@@ -1749,13 +1756,16 @@ string critter_description( CritterCl& cr, int lookType )
             {
                 if( item.GetType() == ITEM_TYPE_WEAPON )
                 {
+					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
+					//result += item_info_color;
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_WEAP );
-                    result = ReplaceText( result, "WEAPON", GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) );
+                    result = ReplaceText( result, "WEAPON", item_info_color );
                 }
                 else
                 {
+				    string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_MISC );
-                    result = ReplaceText( result, "MISC", GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item ) ) );
+                    result = ReplaceText( result, "MISC", item_info_color );
                 }
             }
         }
