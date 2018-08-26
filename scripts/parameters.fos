@@ -480,6 +480,11 @@ int getParam_Ac( Critter& cr, uint )
     return CLAMP( val, 0, 999 );
 }
 
+int getParam_Shield( Critter& cr, uint )
+{
+    return cr.ParamBase[ ST_CURRENT_AC ];
+}
+
 int getParam_DamageResistance( Critter& cr, uint index )
 {
     int        dmgType = index - ST_NORMAL_RESIST + 1;

@@ -504,6 +504,7 @@
 #define ST_POSTMORTEM							 ( 146 )
 #define ST_FEELSBAD								 ( 147 )
 #define ST_EXECUTE								 ( 148 )
+#define ST_CURRENT_AC							 ( 149 )
 
 // 133..149
 #ifdef PLAYERS_3D
