@@ -319,7 +319,6 @@ class WeaponRadiusChosen : IWeaponRadiusChosen
 	{
 		if (RecalculateVertices())
 			DrawPrimitive(drawType, data);
-		// Message("Drawing suka");
 	} 
 
 	void SetDrawType(uint8 type)
@@ -342,10 +341,12 @@ class WeaponRadiusChosen : IWeaponRadiusChosen
 			uint16 hexX, hexY;
 			uint8 wepMode  = chosenWeapon.Mode&0x0F;
 			uint wpnMaxDist = @distFunc!=null ? distFunc(chosen, chosenWeapon) : _WeaponMaxDist(chosenWeapon.Proto, wepMode);
-				if(wpnMaxDist < 1)
-				{
-					return false;
-				}
+			
+			if(wpnMaxDist < 1)
+			{
+				return false;
+			}
+			
 			#ifdef _2238
 			wpnMaxDist += checkBonus(chosenWeapon, BONUS_WEAPON_MAX_RANGE);
 			if(chosen.Perk[PE_MARKSMAN]!=0)
@@ -388,8 +389,10 @@ class WeaponRadiusChosen : IWeaponRadiusChosen
 			}
 			
 		}
-	return true;
+		
+		return true;
 	}
+	
 }
 
 // What: Custom Radius. Always shown by default. Needed parameter or hotkey to be switchable.

@@ -202,8 +202,8 @@ void        render_iface( uint layer )
 		{
 			DrawRays();
 			DrawBurstRays();
-			DrawMuzzleFlashes();
 			DrawBurstMuzzles();
+			DrawMuzzleFlashes();
 		}
 		
         RenderThrowing();

@@ -1375,7 +1375,6 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 			{
 				//tracerType = TRACER_PLASMA;
 			}
-			
 			drawTracers(map, hx, hy, tx, ty, ammoRound, tracerType);
 		}
 		
@@ -1416,13 +1415,15 @@ void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int r
 	   
 	array<Critter@> critters;
 	map.GetCrittersWhoViewPath ( hexX, hexY, tx, ty, FIND_LIFE | FIND_ONLY_PLAYERS, critters);
-
+	
 	if( type == TRACER_DEFAULT)
 	{
-		array<int> drawdata = {hexX, hexY, 0xFFFF0000, tx, ty, 0xFF00FF00, 1500, 1200/roundsCount, roundsCount};
+		array<int> drawdata = {hexX, hexY, COLOR_GREEN, tx, ty, COLOR_WHITE, 2000, 900/roundsCount, roundsCount};
+		int drawType = roundsCount == 1 ? DRAW_MUZZLE_FLASHES : DRAW_BURST_MUZZLES;
+
 		for(uint i = 0, j = critters.length(); i<j; i++)
 		{
-			critters[i].RunClientScript ("client_main@__Draw", DRAW_BURST_MUZZLES, 0, 0, null, drawdata );
+			critters[i].RunClientScript ("client_main@__Draw", drawType, 0, 0, null, drawdata );
 		}
 	}
 	
