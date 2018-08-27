@@ -1429,7 +1429,7 @@ void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int r
 	
 	if( type == TRACER_LASER)
 	{
-		array<int> drawdata = {hexX, hexY, COLOR_RED, tx, ty, COLOR_DDRED, roundsCount, 1000/roundsCount};
+		array<int> drawdata = {hexX, hexY, COLOR_BLACK, tx, ty, COLOR_RED, roundsCount, 1000/roundsCount};
 		int drawType = roundsCount == 1 ? DRAW_RAYS : DRAW_BURST_RAYS;
 		for(uint i = 0, j = critters.length(); i<j; i++)
 		{

@@ -185,6 +185,10 @@ class RayMap : IRayMap
 		else
 		{
 			RecalculatePoints();
+			DrawPrimitive(drawType, getOffsetRayData(data, -1, int( COLOR_BLACK ), int( COLOR_BLACK )));
+			DrawPrimitive(drawType, getOffsetRayData(data, 1, data[2], data[5]));
+			DrawPrimitive(drawType, getOffsetRayData(data, 2, int( COLOR_BLACK ), int( COLOR_BLACK )));
+
 			DrawPrimitive(drawType, data);
 		}
 		
@@ -223,8 +227,7 @@ class BurstRay : IBurstRay
 	uint Id, currentRay;
 	array<uint16> rayTimeStart = array<uint16>(8);
 	uint16 rayExMs, rayExSec; 
-	
-	
+
 	BurstRay(int amount, int mapx1In, int mapy1In, int mapx2In, int mapy2In, uint renderTime, int rayOffsetX, int rayOffsetY)
 	{
 		if(amount>0)
@@ -278,6 +281,11 @@ class BurstRay : IBurstRay
 				GetTime(this.rayTimeStart[0],this.rayTimeStart[1],this.rayTimeStart[2],this.rayTimeStart[3],this.rayTimeStart[4],this.rayTimeStart[5],this.rayTimeStart[6],this.rayTimeStart[7]);
 			}
 			this.Rays[currentRay].RecalculatePoints();
+
+			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetRayData(this.Rays[currentRay].data, -1, int( COLOR_BLACK ), int( COLOR_BLACK )));
+			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetRayData(this.Rays[currentRay].data, 1, this.Rays[currentRay].data[2], this.Rays[currentRay].data[5]));
+			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetRayData(this.Rays[currentRay].data, 2, int( COLOR_BLACK ), int( COLOR_BLACK )));
+
 			DrawPrimitive(this.Rays[currentRay].drawType, this.Rays[currentRay].data);
 		}
 		else
@@ -286,7 +294,18 @@ class BurstRay : IBurstRay
 			@BurstRays[Id] = null;
 		}
 	}
+}
 
+array<int> getOffsetRayData(array<int> rayData, int offset, int startColor, int endColor)
+{
+	array<int> modifiedArray = rayData;
+	modifiedArray[1] = rayData[1] + offset;
+	modifiedArray[4] = rayData[4] + offset;
+
+	modifiedArray[2] = startColor;
+	modifiedArray[5] = endColor;
+
+	return modifiedArray;
 }
 
 // What: Weapon Effective distance radius.
