@@ -1900,8 +1900,10 @@ void player_data_generate( int[]& params )
         __RegParams[ ST_INTELLECT ] = 0;
         __RegParams[ ST_AGILITY ] = 0;
         //__RegParams[ ST_LUCK ] = 0;
-        __RegParams[ ST_AGE ] = Random( AGE_MIN, AGE_MAX );
+        __RegParams[ ST_AGE ] = Random( AGE_MIN, AGE_MAX > 100 ? 60 : AGE_MAX );
         __RegParams[ ST_GENDER ] = GENDER_MALE;
+        // @erandelax 29/08/18 Registration screen character skin selector
+        __RegParams[ ST_BASE_CRTYPE ] = GENDER_MALE;
     }
 
     params = __RegParams;

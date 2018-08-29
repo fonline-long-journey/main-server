@@ -262,8 +262,8 @@ void InitializeGame()                    // Export
         SetRegistrationParameter( i, true );
     SetRegistrationParameter( ST_AGE, true );
     SetRegistrationParameter( ST_GENDER, true );
-    #  ifdef PLAYERS_3D
     SetRegistrationParameter( ST_BASE_CRTYPE, true );
+    #  ifdef PLAYERS_3D
     SetRegistrationParameter( ST_ANIM3D_LAYERS + ANIM3D_LAYER_SKIN, true );
     SetRegistrationParameter( ST_ANIM3D_LAYERS + ANIM3D_LAYER_HAIR, true );
     SetRegistrationParameter( ST_ANIM3D_LAYERS + ANIM3D_LAYER_MUSTACHE, true );
