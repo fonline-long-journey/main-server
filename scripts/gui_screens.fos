@@ -421,11 +421,11 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( -7, 3 );
-            SetSize( 35, 20 );
+            SetPosition( -5, 4 );
+            SetSize( 25, 20 );
             SetText( "TXT" );
             SetTextFont( FONT_BIG );
-            SetTextFlags( FT_CENTERY );
+            SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_SAND );
         }
 
@@ -733,7 +733,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 19, 0 );
+            SetPosition( 23, 0 );
             SetSize( 115, 14 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
@@ -807,7 +807,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 19, 0 );
+            SetPosition( 20, 0 );
             SetSize( 105, 14 );
             SetText( "TXT" );
             SetTextFlags( FT_CENTERY );
@@ -995,7 +995,16 @@ namespace Register_TLJ
                 CurTip = param;
                 FindText( "Name" ).Text = MSG_GAME( STR_PARAM_NAME( param ) );
                 FindText( "Desc" ).Text = MSG_GAME( STR_PARAM_DESC( param ) );
-                FindPanel( "Image" ).SetBackgroundImage( GetConstantName( CONSTANTS_PICTURE, param ) );
+                FindText( "Math" ).Text = MSG_GAME( STR_PARAM_MATH( param ) );
+                //FindPanel( "Image" ).SetBackgroundImage( GetConstantName( CONSTANTS_PICTURE, param ) );
+                string@ image =  MSG_GAME( STR_PARAM_PIC( param ) );
+                GUIPanel@ uiImage = FindPanel( "Image" );
+                if(image != "error"){
+                    uiImage.SetBackgroundImage(image);
+                    uiImage.SetActive(true);
+                }else{
+                    uiImage.SetActive(false);
+                }
             }
         }
     }
@@ -1004,8 +1013,8 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 165, 98 );
-            SetSize( 120, 80 );
+            SetPosition( 172, 45 );
+            SetSize( 120, 135 );
         }
     }
 
@@ -1013,10 +1022,10 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 8, 10 );
-            SetSize( 235, 30 );
+            SetPosition( 13, 12 );
+            SetSize( 230, 30 );
             SetTextFont( FONT_THIN );
-            SetTextColor( COLOR_BLACK );
+            SetTextColor( COLOR_SAND );
         }
     }
 
@@ -1024,9 +1033,62 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 9, 48 );
-            SetSize( 280, 130 );
-            SetTextColor( COLOR_BLACK );
+            SetPosition( 13, 45 );
+            SetSize( 160, 134 );
+        }
+    }
+
+    class Math : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetActive( false );
+            SetPosition( 13, 45 );
+            SetSize( 160, 134 );
+        }
+    }
+
+    class Switch : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 251, 19 );
+            SetSize( 16, 12 );
+            SetPressedImage( "art/intrface/greenDot.png" );
+        }
+
+        void OnCheckedChanged() override
+        {
+            if( IsChecked ){
+                Parent.Find("Desc").SetActive(false);
+                Parent.Find("Math").SetActive(true);
+            }else{
+                Parent.Find("Desc").SetActive(true);
+                Parent.Find("Math").SetActive(false);
+            }
+        }
+    }
+
+    class ImgSwitch : GUICheckBox
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 274, 19 );
+            SetSize( 16, 12 );
+            SetPressedImage( "art/intrface/yellowDot.png" );
+        }
+
+        void OnCheckedChanged() override
+        {
+            if( IsChecked ){
+                Parent.Find("Desc").SetSize(280, 134);
+                Parent.Find("Math").SetSize(280, 134);
+                Parent.Find("Image").SetSize(0,0);
+            }else{
+                Parent.Find("Desc").SetSize(160, 134);
+                Parent.Find("Math").SetSize(160, 134);
+                Parent.Find("Image").SetSize(120, 135);
+            }
         }
     }
 
@@ -1547,7 +1609,7 @@ namespace Register_TLJ
         {
             if( __RegParams[ ST_GENDER ] == 1){
                 int currentId = skinFemale.find(__RegParams[ ST_BASE_CRTYPE ]);
-                if( currentId <= 0 ){
+                if( currentId < 0 ){
                     __RegParams[ ST_BASE_CRTYPE ] = skinFemale[0];
                 } else if( currentId > 0 ) {
                     __RegParams[ ST_BASE_CRTYPE ] = skinFemale[--currentId];
@@ -1556,7 +1618,7 @@ namespace Register_TLJ
                 }
             }else{
                 int currentId = skinMale.find(__RegParams[ ST_BASE_CRTYPE ]);
-                if( currentId <= 0){
+                if( currentId < 0){
                     __RegParams[ ST_BASE_CRTYPE ] = skinMale[0];
                 } else if( currentId > 0 ) {
                     __RegParams[ ST_BASE_CRTYPE ] = skinMale[--currentId];
@@ -1586,7 +1648,7 @@ namespace Register_TLJ
                 } else if( currentId < skinFemale.length - 1 ) {
                     __RegParams[ ST_BASE_CRTYPE ] = skinFemale[++currentId];
                 }else{
-                    __RegParams[ ST_BASE_CRTYPE ] = skinFemale[skinFemale.length - 1];
+                    __RegParams[ ST_BASE_CRTYPE ] = skinFemale[0];
                 }
             }else{
                 int currentId = skinMale.find(__RegParams[ ST_BASE_CRTYPE ]);
@@ -1595,7 +1657,7 @@ namespace Register_TLJ
                 } else if( currentId < skinFemale.length - 1 ) {
                     __RegParams[ ST_BASE_CRTYPE ] = skinMale[++currentId];
                 }else{
-                    __RegParams[ ST_BASE_CRTYPE ] = skinMale[skinMale.length - 1];
+                    __RegParams[ ST_BASE_CRTYPE ] = skinMale[0];
                 }
             }
             GenParams();
@@ -1684,7 +1746,7 @@ namespace Register_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 132, 337 );
+            SetPosition( 134, 338 );
             SetSize( 205, 110 );
             SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
         }
@@ -1776,6 +1838,12 @@ namespace Register_TLJ
         _Name.Init( _Tip );
         Desc _Desc();
         _Desc.Init( _Tip );
+        Math _Math();
+        _Math.Init( _Tip );
+        Switch _Switch();
+        _Switch.Init( _Tip );
+        ImgSwitch _ImgSwitch();
+        _ImgSwitch.Init( _Tip );
         Buttons _Buttons();
         _Buttons.Init( _TLJRegister );
         Print _Print();
@@ -5252,7 +5320,8 @@ namespace Character_TLJ
 
         string@ get_Text() override
         {
-            return GetParam( cast< Skill >( Parent ).Param ) + "%";
+            int param = cast< Skill >( Parent ).Param;
+            return ( GetParam( param ) + SkillUp[ param ] ) + "%";
         }
     }
 
@@ -5464,10 +5533,10 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 8, 7 );
-            SetSize( 235, 31 );
+            SetPosition( 12, 8 );
+            SetSize( 230, 25 );
             SetTextFont( FONT_THIN );
-            SetTextColor( COLOR_BLACK );
+            SetTextColor( COLOR_SAND );
         }
     }
 
@@ -5475,9 +5544,8 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 8, 42 );
-            SetSize( 160, 134 );
-            SetTextColor( COLOR_BLACK );
+            SetPosition( 12, 37 );
+            SetSize( 158, 140 );
         }
     }
 
@@ -5486,9 +5554,8 @@ namespace Character_TLJ
         void OnConstruct() override
         {
             SetActive( false );
-            SetPosition( 8, 42 );
-            SetSize( 160, 134 );
-            SetTextColor( COLOR_BLACK );
+            SetPosition( 12, 37 );
+            SetSize( 158, 140 );
         }
     }
 
@@ -5596,12 +5663,12 @@ namespace Character_TLJ
         {
             if( UnspentSkillPoints < GetParam( ST_UNSPENT_SKILL_POINTS ) )
             {
-                string skills;
-                for( uint i = 0; i < SkillUp.length(); i++ )
-                    if( SkillUp[ i ] != GetParam( i ) )
-                        skills += " " + i + " " + SkillUp[ i ];
-                if( skills != "" )
-                    CustomCall( "AssignSkillPoints" + skills );
+                int[] skills = {};
+                skills.resize(__SkillEnd - __SkillBegin + 1);
+                for(uint x = 0; x < skills.length; x++){
+                    skills[x] = SkillUp[__SkillBegin + x];
+                }
+                RunServerScriptUnsafe("parameters@unsafe_changeSkills",0,0,0,"",skills);
             }
             HideScreen();
         }

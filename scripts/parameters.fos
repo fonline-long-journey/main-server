@@ -16,6 +16,20 @@ import void PerkDown( Critter& cr, uint perk ) from "perks";
 #endif
 
 #ifndef __CLIENT
+void unsafe_changeSkills(Critter& player, int param0, int param1, int param2, string@ param3, int[]@ skills){
+    if( skills.length == __SkillEnd - __SkillBegin + 1 ){
+        for(uint i = __SkillBegin; i <= __SkillEnd && player.ParamBase[ST_UNSPENT_SKILL_POINTS] >= 0; i++){
+            if( _CritIsTagSkill(player,i) ){
+                player.ParamBase[ST_UNSPENT_SKILL_POINTS] -= floor(skills[i - __SkillBegin]/2);
+            }else{
+                player.ParamBase[ST_UNSPENT_SKILL_POINTS] -= skills[i - __SkillBegin];
+            }
+            player.ParamBase[i] += skills[i - __SkillBegin];
+        }
+    }
+}
+
+
 void changedParam_Hp( Critter& cr, uint, int oldValue )
 {
     int curHp = cr.StatBase[ ST_CURRENT_HP ];
