@@ -2144,7 +2144,7 @@ void answer_GM_PANNEL_ITEM_VALS( Critter& player ) // Меню предмета 
 	if( item is null ) { return; }
 	string Str = "PID: "+item.GetProtoId() +"\nID: "+item.Id;
 
-	string[] List = { ""+item.Val0, ""+item.Val1, ""+item.Val2, ""+item.Val3, ""+item.Val4, ""+item.Val5, ""+item.Val6, ""+item.Val7, ""+item.Val8, ""+item.Val9, "Назад" };
+	string[] List = { "Val0 "+item.Val0, "Val1 "+item.Val1, "Val2 "+item.Val2, "Val3 "+item.Val3, "Val4 "+item.Val4, "Val5 "+item.Val5, "Val6 "+item.Val6, "Val7 "+item.Val7, "Val8 "+item.Val8, "Val9 "+item.Val9, "Назад" };
 	MenuMaker( player, List, "answer_GM_PANNEL_ITEM_VALS_INPUT", Str );
 }
 void answer_GM_PANNEL_ITEM_VALS_INPUT( Critter& player, uint answerI, string& answerS ) // Меню предмета - Переменные (ввод).
