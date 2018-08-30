@@ -15,6 +15,13 @@ import int NextLevelNeedExp( Critter& cr ) from "parameters";
 //ErlKing spawn menu
 import void GM_MobInit( Critter& npc, int type) from "mob";
 
+// Mio import
+import void AffectRadiation( Critter& cr, int value ) from "radiation";
+import void AffectPoison( Critter& cr, int value ) from "poison";
+import void FlushScreen( Critter& cr, uint fromColor, uint toColor, uint timeMs ) from "effects";
+
+
+
 void tb( Critter& player, int param0, int param1, int param2 )
 {
     Map@ map = player.GetMap();
@@ -1021,310 +1028,504 @@ void _gmcont( Critter& player, int param0, int param1, int param2, string@ param
 }
 
 
-//ErlKing GM menus
+
+// ================================================== Няшные миообработчики ==================================================
+
+void MenuMaker( Critter& player, string[] List, string@ Pointer, string@ Headline )
+{
+	player.ShowScreen( SCREEN_DIALOGBOX, List.length(), Pointer );
+	player.Say( SAY_DIALOGBOX_TEXT, Headline );
+	for( uint i = 0, l = List.length(); i < l; i++ ) { player.Say( SAY_DIALOGBOX_BUTTON( i ), List[ i ] ); }
+}
+void MenuMakerCheck( Critter& player, string[] List, string@ Pointer, string@ Headline, uint[] Mode )
+{
+	string[] Sign = { "- ", "+ " };
+	player.ShowScreen( SCREEN_DIALOGBOX, List.length()+1, Pointer );
+	player.Say( SAY_DIALOGBOX_TEXT, Headline );
+	for( uint i = 0, l = List.length(); i < l; i++ ) { player.Say( SAY_DIALOGBOX_BUTTON( i ), Sign[ Mode[ i ] ] + List[ i ] ); }
+}
+void MenuInputMaker( Critter& player, string@ Pointer, string@ Headline )
+{
+	player.ShowScreen( SCREEN_SAY, 0, Pointer );
+	player.Say( SAY_SAY_TITLE, Headline );
+}
+
+
+
+// ####################################################################################################
+// #                                         Mio GM Menu ^_^                                          #
+// ####################################################################################################
 
 void unsafe_GM_PANNEL_SELF( Critter& player, int crId, int param1, int param2, string@ param3, int[] @ param4 )
 {
-    if( player.GetAccess() >= ACCESS_MODER )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_SELF" );
-        player.Say( SAY_DIALOGBOX_TEXT, "ГМ ПАНЕЛЬ" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "Режимы себя" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Режимы города(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "Смотреть Логи(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "По ID(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Склад" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "телепорт(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "прыг(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "Спавны1(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "Спавны2(неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "убр.лишних мобов(неакт)" );
-    }
+	if( player.GetAccess() >= ACCESS_MODER ) // Меню - Основное меню.
+	{
+		string[] List = { "Склад", "Действие по ID" };
+		MenuMaker( player, List, "answer_GM_PANNEL_SELF", "ГМ ПАНЕЛЬ" );
+	}
 }
-
 
 void answer_GM_PANNEL_SELF( Critter& player, uint answerI, string& answerS )
 {
-    if( answerI == 0 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 5, "answer_GM_PANNEL_SELF_MYMODES" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Выберите режимы" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "ред. как игрока" );
-        if( player.ParamBase[ MODE_INVULNERABLE ] == 0 )
-            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "+ неуязвимость" );
-        else
-            player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "- неуязвимость" );
-        if( player.ParamBase[ MODE_UNLIMITED_AMMO ] == 0 )
-            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "+ патроны" );
-        else
-            player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "- патроны" );
-        if( player.ParamBase[ MODE_NO_PVP ] == 0 )
-            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "+ nopvp" );
-        else
-            player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "- nopvp" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "назад" );
-    }
-    if( answerI == 4 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 11, "answer_GM_PANNEL_SELF_VAULT" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Склад" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "броня" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "пистолеты" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "винтовки" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "пушки" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "энерго" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "метание" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "мили" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "патроны" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "нарк" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "разное" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "назад" );
-    }
+	if( answerI == 0 ) // Меню - Склад.
+	{
+		string[] List = { "Броня", "Пистолеты", "Винтовки", "Пушки", "Энерго", "Метание", "Мили", "Патроны", "Нарк", "Разное", "Назад" };
+		MenuMaker( player, List, "answer_GM_PANNEL_SELF_VAULT", "Склад:" );
+	}
+	if( answerI == 1 ) // Меню - Действие по ID.
+	{
+		MenuInputMaker( player, "InputID", "ID" );
+	}
 }
 
-void answer_GM_PANNEL_SELF_VAULT( Critter& player, uint answerI, string& answerS )
+void answer_GM_PANNEL_SELF_VAULT( Critter& player, uint answerI, string& answerS ) // !!! Склад.
 {
-    if( answerI == 10 )
-    {
-        unsafe_GM_PANNEL_SELF( player, 0, 0, 0, null, null );
-    }
-	else _gmcont( player, answerI, 0, 0, null, null);
+	if( answerI == 10 ) { unsafe_GM_PANNEL_SELF( player, 0, 0, 0, null, null ); } else { _gmcont( player, answerI, 0, 0, null, null); }
 }
-
-
-void answer_GM_PANNEL_SELF_MYMODES( Critter& player, uint answerI, string& answerS )
+void InputID( Critter& player, uint answerI, string& answerS ) // !!! Действие по ID.
 {
-    if( answerI == 0 )
-    {
-        GM_PANNEL_CRITTER_PLAYER( player, player.Id, 0, 0, null, null );
-    }
-    if( answerI == 1 )
-    {
-        if( player.ModeBase[ MODE_INVULNERABLE ] == 0 )
-		{
-            player.ModeBase[ MODE_INVULNERABLE ] = 1;
-		}
-        else
-		{
-            player.ModeBase[ MODE_INVULNERABLE ] = 0;
-		}
-    }
-    if( answerI == 2 )
-    {
-        if( player.ParamBase[ MODE_UNLIMITED_AMMO ] == 0 )
-		{
-            player.ParamBase[ MODE_UNLIMITED_AMMO ] = 1;
-		}
-        else
-		{
-            player.ParamBase[ MODE_UNLIMITED_AMMO ] = 0;
-		}
-    }
-    if( answerI == 3 )
-    {
-        if( player.ModeBase[ MODE_NO_PVP ] == 0 )
-		{
-            player.ModeBase[ MODE_NO_PVP ] = 1;
-		}
-        else
-		{
-            player.ModeBase[ MODE_NO_PVP ] = 0;
-		}
-    }
-    if( answerI == 4 )
-    {
-        unsafe_GM_PANNEL_SELF( player, 0, 0, 0, null, null );
-    }
+	Critter@ targetCr;
+	if( answerS.length() > 0 )
+	{
+		int number = 0;
+		StrToInt( answerS, number );
+
+		@ targetCr = GetCritter( number );
+		if( !valid( targetCr ) ) { return; }
+		GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null );
+	}
 }
+
+
+
+// ####################################################################################################
+// #                                       Mio Critter Menu ^_^                                       #
+// ####################################################################################################
 
 void GM_PANNEL_CRITTER_PLAYER( Critter& player, int crId, int param1, int param2, string@ param3, int[] @ param4 )
 {
-    if( player.GetAccess() >= ACCESS_MODER )
-    {
-        Critter@ cr = GetCritter( crId );
-        if( cr is null )
-            return;
-        player.StatBase[ ST_VAR0 ] = cr.Id;
-        player.ShowScreen( SCREEN_DIALOGBOX, 5, "answer_GM_PANNEL_CRITTER_PLAYER" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Действия с игроком" + crId );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "режимы иры (неакт)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Параметры" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "Убить" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "Инвентарь" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Поощрения" );
-    }
+	if( player.GetAccess() >= ACCESS_MODER ) // Меню криттера - Основное меню.
+	{
+		Critter@ targetCr = GetCritter( crId );
+		if( targetCr is null ) { return; }
+		player.StatBase[ ST_VAR0 ] = targetCr.Id;
+		string Str;
+		string Invis;
+		string[] Access = { "Смертное", "Терпила", "ГМ", "Админ" };
+		//if( targetCr.Param[ QST_INVIS ] != 0 ) { Invis = " *"; }
+		if( targetCr.IsNpc() )
+		{
+			int AI_type = targetCr.ParamBase[ MERC_TYPE ];
+			string AI_string = "Не спавн";
+			string[] AI_List = { "Контроль", "Болванка", "Манекен", "Монстр", "Рейдер", "Охрана", "Мутант", "Респавн", "Зерг раш" };
+			if( AI_type >= 10 && AI_type <= 18 ) { AI_string = AI_List[ AI_type-10 ]; }
+			Str = "PID: "+targetCr.GetProtoId() + "\nAI: "+AI_string + "\nДиалог: "+targetCr.ParamBase[ ST_DIALOG_ID ] + "\nTeam: "+targetCr.ParamBase[ ST_TEAM_ID ];
+		}
+		else
+		{
+			string ID = "ID: "+crId;
+			string Name = "Имя: "+GetPlayerName( targetCr.Id );
+			string Age = "Возраст: "+targetCr.Param[ ST_AGE ];
+			string lvl80 = "Уровень: "+targetCr.Param[ ST_LEVEL ];
+			Str = ID+ " ("+Access[ targetCr.GetAccess() ]+")" +Invis +"\n"+lvl80 +"\n"+Name +"\n"+Age;
+		}
+
+		string[] List = { "Инвентарь", "Варп прыжок", "РП ситуации", "Изничтожить", "Параметры" };
+		if( targetCr.IsNpc() ) { List.resize( List.length() + 1 ); List[ List.length() - 1 ] = "НПЦ"; }
+		MenuMaker( player, List, "answer_GM_PANNEL_CRITTER_PLAYER", Str );
+	}
 }
+
+// ================================================== Меню криттера - Основное меню ==================================================
 
 void answer_GM_PANNEL_CRITTER_PLAYER( Critter& player, uint answerI, string& answerS )
 {
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 1 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_CRITTER_PLAYER_STATS" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Параметры игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "SPECIAL" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "SKILLS 0-9" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "SKILLS 10-20" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "Травмы" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Режимы" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "Скин/бодитайп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "Доп парам" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "Лексема" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "назад" );
-    }
-    if( answerI == 2 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 10, "answer_GM_PANNEL_CRITTER_PLAYER_KILL" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Убить предельно жестоким способом" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "Просто смерть" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Вырыв бока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "Разрыв Очередью" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "очередью" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "в прах" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "в куски" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "огонь" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "в соплю" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "пополам" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "назад" );
-    }
-    if( answerI == 3 )
-    {
-        player.ShowContainer( cr, null, TRANSFER_FAR_CRIT );
-    }
-    if( answerI == 4 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_GIFT" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Модерация" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "+Опыт" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "+Карма" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "-Карма" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "+Хп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "-Хп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "выдать перк(некат)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "убрать перк(некат)" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
-    }
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+	string Str;
+	if( targetCr.IsNpc() )
+	{
+		int AI_type = targetCr.ParamBase[ MERC_TYPE ];
+		string AI_string = "Не спавн";
+		string[] AI_List = { "Контроль", "Болванка", "Манекен", "Монстр", "Рейдер", "Охрана", "Мутант", "Респавн", "Зерг раш" };
+		if( AI_type >= 10 && AI_type <= 18 ) { AI_string = AI_List[ AI_type-10 ]; }
+		Str = "PID: "+targetCr.GetProtoId() + "\nAI: "+AI_string + "\nДиалог: "+targetCr.ParamBase[ ST_DIALOG_ID ] + "\nTeam: "+targetCr.ParamBase[ ST_TEAM_ID ];
+	}
+
+	if( answerI == 0 ) // Меню криттера - Инвентарь.
+	{
+		player.ShowContainer( targetCr, null, TRANSFER_FAR_CRIT );
+	}
+	if( answerI == 1 ) // Меню криттера - Варп прыжок.
+	{
+		WarpPoint( player );
+	}
+	if( answerI == 2 ) // Меню криттера - РП ситуации.
+	{
+		string[] List = { "+Опыт", "+Карма", "-Карма", "+Хп", "-Хп", "Кнокаут", "Мрак", "Травмы", "Назад" };
+		MenuMaker( player, List, "answer_GM_PANNEL_CRITTER_PLAYER_GIFT", "Влияние на ситуацию:" );
+	}
+	if( answerI == 3 ) // Меню криттера - Изничтожить.
+	{
+		string[] List = { "Инфаркт", "Вырвать бок", "Разрыв очередью", "Очередью", "Электрошок", "В порошок", "Поделить на два", "В соплю", "На куски", "Поджарить", "Танец огня", "Назад" };
+		MenuMaker( player, List, "answer_GM_PANNEL_CRITTER_PLAYER_KILL", "Карать жалкое смертное:" );
+	}
+	if( answerI == 4 ) // Меню криттера - Параметры.
+	{
+		string[] List = { "(X) SPECIAL", "(X) SKILLS", "(X) Скин/Бодитайп", "(X) Доп. парам.", "Режимы", "Лексема", "Назад" };
+		MenuMaker( player, List, "answer_GM_PANNEL_CRITTER_PLAYER_STATS", "Параметры:" );
+	}
+	if( answerI == 5 ) // Меню криттера - НПЦ.
+	{
+		string[] List = { "Поведение", "Хозяин", "Диалог", "NPC ROLE", "TEAM_ID", "Назад" };
+		MenuMaker( player, List, "answer_GM_PANNEL_CRITTER_NPC_STATS", Str );
+	}
 }
 
-void answer_GM_PANNEL_CRITTER_PLAYER_STATS( Critter& player, uint answerI, string& answerS )
+// ================================================== Меню криттера - РП ситуации ==================================================
+
+void WarpPoint( Critter& player ) // Меню криттера - Варп прыжок.
 {
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_DIALOGBOX_TEXT, "SPECIAL игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_STRENGTH ] + " - сила" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_PERCEPTION ] + " - восприятие" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ ST_ENDURANCE ] + " - выносливость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ ST_CHARISMA ] + " - харизма" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ ST_INTELLECT ] + " - интеллект" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ ST_AGILITY ] + " - ловкость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ ST_LUCK ] + " - удача" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
-    }
-    if( answerI == 1 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 12, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL1" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ SK_SMALL_GUNS ] + " - легкое" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ SK_BIG_GUNS ] + " - тяжелое" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ SK_ENERGY_WEAPONS ] + " - энерго" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ SK_UNARMED ] + " - рукопашная" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ SK_MELEE_WEAPONS ] + " - холодное" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ SK_THROWING ] + " - метание" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ SK_FIRST_AID ] + " - санитар" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + cr.ParamBase[ SK_DOCTOR ] + " - доктор" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + cr.ParamBase[ SK_SNEAK ] + " - скрытность" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "" + cr.ParamBase[ SK_LOCKPICK ] + " - взлом" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "" + cr.ParamBase[ SK_STEAL ] + " - кража" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "назад" );
-    }
-    if( answerI == 2 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL2" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ SK_TRAPS ] + " - ловушки" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ SK_SCIENCE ] + " - наука" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ SK_REPAIR ] + " - ремонт" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ SK_SPEECH ] + " - разговор" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ SK_BARTER ] + " - торговля" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ SK_GAMBLING ] + " - игра" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ SK_OUTDOORSMAN ] + " - скиталец" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
-    }
-    if( answerI == 3 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_DAMAGES" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Травмы игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ DAMAGE_EYE ] + " - травма глаза" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ DAMAGE_RIGHT_ARM ] + " - правая рука" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ DAMAGE_LEFT_ARM ] + " - левая рука" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ DAMAGE_RIGHT_LEG ] + " - правая нога" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ DAMAGE_LEFT_LEG ] + " - левая нога" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ DAMAGE_RADIATED ] + " - радиация" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ DAMAGE_POISONED ] + " - отравление" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
-    }
-    if( answerI == 4 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 10, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_MODES" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Режимы игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ MODE_NO_PVP ] + " - нопвп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ MODE_INVULNERABLE ] + " - неуязвимость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ MODE_NO_LOOT ] + " - нелутаемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ MODE_NO_STEAL ] + " - неворуемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ MODE_NO_PUSH ] + " - непихаемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ MODE_NO_WALK ] + " - стоять" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ MODE_NO_RUN ] + " - нет бега" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + cr.ParamBase[ MODE_NO_LOOSE_LIMBS ] + " - нет травм" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + cr.ParamBase[ MODE_NO_KNOCK ] + " - несбиваемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "назад" );
-    }
-    if( answerI == 5 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + cr.ParamBase[ ST_BASE_CRTYPE ] );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_BODY_TYPE ] + " - бодитайп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_BASE_CRTYPE ] + " - скин вручную" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "стандартный" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "дикари" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "гражданские" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "бандитские" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "разное" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
-    }
-    if( answerI == 6 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 4, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Дополнительные параметры" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_CURRENT_HP ] + "Текущее хп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_MAX_LIFE ] + "макс хп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ ST_AGE ] + "возраст" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ ST_GENDER ] + "пол" );
-    }
-    if( answerI == 7 )
-    {
-    player.ShowScreen( SCREEN_SAY, 0, "PlayerLexer" );
-        //ShowInputBoxScreen( player, "gm@unsafe_Description#Описание, приметы", 0, INPUTBOX_CLOSE_ON_ENTER );
-    }
-    if( answerI == 8 )
-    {
-        GM_PANNEL_CRITTER_PLAYER( player, cr.Id, 0, 0, null, null );
-    }
+	string[] List = { "Центр", "Редбрикс", "Юнквиль", "Кафе", "КЕМ" };
+	MenuMaker( player, List, "Warp", "Забросить:" );
 }
-
-void PlayerLexer( Critter& player, uint answerI, string& answerS )
+void answer_GM_PANNEL_CRITTER_PLAYER_GIFT( Critter& player, uint answerI, string& answerS ) // Меню криттера - РП ситуации.
 {
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null ) return;
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+	string[] List = { "Опыт", "+Карма", "-Карма", "+Хп", "-Хп" };
 
-     cr.SetLexems( answerS );
-     player.Say( SAY_NETMSG, "Lexem set" );
+	switch( answerI )
+	{
+		case 0: player.ParamBase[ ST_VAR1 ] = ST_EXPERIENCE; player.ParamBase[ ST_VAR2 ] = 1; break;
+		case 1: player.ParamBase[ ST_VAR1 ] = ST_KARMA; player.ParamBase[ ST_VAR2 ] = 1; break;
+		case 2: player.ParamBase[ ST_VAR1 ] = ST_KARMA; player.ParamBase[ ST_VAR2 ] = 0; break;
+		case 3: player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP; player.ParamBase[ ST_VAR2 ] = 1; break;
+		case 4: player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP; player.ParamBase[ ST_VAR2 ] = 0; break;
+	}
+	if( answerI < List.length() ) { MenuInputMaker( player, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD", List[ answerI ] ); }
+	if( answerI == 5 ) { MenuInputMaker( player, "answer_CRITTER_KNOCK", "- ОД" ); }
+	if( answerI == 6 ) { MenuInputMaker( player, "answer_CRITTER_DARK", "Секунд" ); }
+	if( answerI == 7 ) { answer_CRITTER_DAMAGES( player ); }
+	if( answerI == 8 ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
 }
+void answer_CRITTER_KNOCK( Critter& player, uint answerI, string& answerS ) // !!! Кнокаут.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( !valid( targetCr ) ) { return; }
+
+	if( answerS.length() > 0 )
+	{
+		int number = 0;
+		StrToInt( answerS, number );
+
+		if( !targetCr.IsDead() ) { targetCr.ToKnockout( KNOCKOUT_ANIM2_DEFAULT( ( Random(0, 1) == 0 ) ), number, targetCr.HexX, targetCr.HexY ); return; }
+	}
+	GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null );
+}
+void answer_CRITTER_DARK( Critter& player, uint answerI, string& answerS ) // !!! Мрак.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( !valid( targetCr ) ) { return; }
+
+	if( answerS.length() > 0 )
+	{
+		int number = 0;
+		StrToInt( answerS, number );
+
+		FlushScreen( targetCr, COLOR_BLACK, COLOR_BLACK, number*1000 );
+		return;
+	}
+	GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null );
+}
+void answer_CRITTER_DAMAGES( Critter& player ) // Меню криттера - РП ситуации - Травмы ( рекурсия ).
+{
+	string[] List = { "Травма глаз", "Правая рука", "Левая рука", "Правая нога", "Левая нога" };
+	uint[] Mode = { player.ParamBase[ DAMAGE_EYE ], player.ParamBase[ DAMAGE_RIGHT_ARM ], player.ParamBase[ DAMAGE_LEFT_ARM ], player.ParamBase[ DAMAGE_RIGHT_LEG ], player.ParamBase[ DAMAGE_LEFT_LEG ] };
+	MenuMakerCheck( player, List, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_DAMAGES", "Травмы:", Mode );
+	player.Say( SAY_DIALOGBOX_BUTTON( List.length() ), "Назад" );
+}
+
+void Warp( Critter& player, uint answerI, string& answerS ) // !!! Варп прыжок.
+{
+	int[][] Pointer = { { 232,300,301,57 ,235 },
+						{ 0,  0,  0,  0,  0 } };
+
+	Critter@ targetCr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+	if( not valid( targetCr ) ) { return; }
+
+	Location@ loc = GetLocationByPid( Pointer[ 0 ][ answerI ], 0 );
+	if( not valid( loc ) ) { player.Say( SAY_NETMSG, "Локация отсутствует!" ); return; }
+
+	Map@ map = loc.GetMapByIndex( Pointer[ 1 ][ answerI ] );
+	if( not valid( map ) )
+	{
+		player.Say( SAY_NETMSG, "Карта отсутствует!" );
+		@map = loc.GetMapByIndex( 0 );
+		if( not valid( map ) ) { return; }
+	}
+
+	targetCr.TransitToMap( map.Id, 0 );
+}
+void ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD( Critter& player, uint answerI, string& answerS ) // !!! РП ситуации.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	int parameter = player.Stat[ ST_VAR1 ];
+	if( !valid( targetCr ) ) { return; }
+
+	if( answerS.length() > 0 )
+	{
+		int number = 0;
+		StrToInt( answerS, number );
+		if( player.Stat[ ST_VAR2 ] == 1 )
+		{ targetCr.ParamBase[ parameter ] += number; player.Say( SAY_NETMSG, "Вы увеличили параметр " + parameter + " на " + number + " у ID: " + targetCr.Id ); }
+		else
+		{ targetCr.ParamBase[ parameter ] -= number; player.Say( SAY_NETMSG, "Вы уменьшили параметр " + parameter + " на " + number + " у ID: " + targetCr.Id ); }
+	}
+	GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null );
+}
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_DAMAGES( Critter& player, uint answerI, string& answerS ) // !!! Травмы.
+{
+	Critter@ targetCr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+	int parameter;
+
+	switch( answerI )
+	{
+		case 0: parameter = DAMAGE_EYE; break;
+		case 1: parameter = DAMAGE_RIGHT_ARM; break;
+		case 2: parameter = DAMAGE_LEFT_ARM; break;
+		case 3: parameter = DAMAGE_RIGHT_LEG; break;
+		case 4: parameter = DAMAGE_LEFT_LEG; break;
+	}
+	if( targetCr.ParamBase[ parameter ] == 0 ) { targetCr.ParamBase[ parameter ] = 1; } else { targetCr.ParamBase[ parameter ] = 0; }
+	if( answerI == 5 ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
+
+	answer_CRITTER_DAMAGES( player );
+}
+
+// ================================================== Меню криттера - Изничтожить ==================================================
+
+void answer_GM_PANNEL_CRITTER_PLAYER_KILL( Critter& player, uint answerI, string& answerS ) // !!! Изничтожить.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+
+	if( answerI == 11 ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
+	killbytype( player, answerI, 0, 0, null, null );
+	logger( player, GMLOG, " kill " + targetCr.Id + " gmpanel" );
+}
+void killbytype( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { player.Say( SAY_NETMSG, "Неверный криттер!" ); return; }
+
+	uint16 deadType = 0;
+	if( param0 > 0 && param0 < 11 ) { deadType = ANIM2_DEAD_BLOODY_SINGLE - 1 + param0; } else { deadType = ( Random( 0, 1 ) > 0 ? ANIM2_DEAD_FRONT : ANIM2_DEAD_BACK ); }
+	targetCr.ToDead( deadType, null );
+}
+
+// ================================================== Меню криттера - Параметры ==================================================
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS( Critter& player, uint answerI, string& answerS ) // Меню криттера - Параметры - Ересь.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+
+	/*if( answerI == 0 )
+	{
+		player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
+		player.Say( SAY_DIALOGBOX_TEXT, "SPECIAL игрока" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + targetCr.ParamBase[ ST_STRENGTH ] + " - сила" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + targetCr.ParamBase[ ST_PERCEPTION ] + " - восприятие" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + targetCr.ParamBase[ ST_ENDURANCE ] + " - выносливость" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + targetCr.ParamBase[ ST_CHARISMA ] + " - харизма" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + targetCr.ParamBase[ ST_INTELLECT ] + " - интеллект" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + targetCr.ParamBase[ ST_AGILITY ] + " - ловкость" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + targetCr.ParamBase[ ST_LUCK ] + " - удача" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+	}
+	if( answerI == 1 )
+	{
+		player.ShowScreen( SCREEN_DIALOGBOX, 12, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL1" );
+		player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + targetCr.ParamBase[ SK_SMALL_GUNS ] + " - легкое" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + targetCr.ParamBase[ SK_BIG_GUNS ] + " - тяжелое" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + targetCr.ParamBase[ SK_ENERGY_WEAPONS ] + " - энерго" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + targetCr.ParamBase[ SK_UNARMED ] + " - рукопашная" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + targetCr.ParamBase[ SK_MELEE_WEAPONS ] + " - холодное" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + targetCr.ParamBase[ SK_THROWING ] + " - метание" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + targetCr.ParamBase[ SK_FIRST_AID ] + " - санитар" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + targetCr.ParamBase[ SK_DOCTOR ] + " - доктор" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + targetCr.ParamBase[ SK_SNEAK ] + " - скрытность" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "" + targetCr.ParamBase[ SK_LOCKPICK ] + " - взлом" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "" + targetCr.ParamBase[ SK_STEAL ] + " - кража" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "назад" );
+	}
+	if( answerI == 2 )
+	{
+		player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL2" );
+		player.Say( SAY_DIALOGBOX_TEXT, "Навыки игрока" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + targetCr.ParamBase[ SK_TRAPS ] + " - ловушки" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + targetCr.ParamBase[ SK_SCIENCE ] + " - наука" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + targetCr.ParamBase[ SK_REPAIR ] + " - ремонт" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + targetCr.ParamBase[ SK_SPEECH ] + " - разговор" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + targetCr.ParamBase[ SK_BARTER ] + " - торговля" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + targetCr.ParamBase[ SK_GAMBLING ] + " - игра" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + targetCr.ParamBase[ SK_OUTDOORSMAN ] + " - скиталец" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+	}
+	if( answerI == 3 )
+	{
+		player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS" );
+		player.Say( SAY_DIALOGBOX_TEXT, "Текущий скин - " + targetCr.ParamBase[ ST_BASE_CRTYPE ] );
+		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + targetCr.ParamBase[ ST_BODY_TYPE ] + " - бодитайп" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + targetCr.ParamBase[ ST_BASE_CRTYPE ] + " - скин вручную" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "стандартный" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "дикари" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "гражданские" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "бандитские" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "разное" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
+	}
+	if( answerI == 4 )
+	{
+		player.ShowScreen( SCREEN_DIALOGBOX, 4, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM" );
+		player.Say( SAY_DIALOGBOX_TEXT, "Дополнительные параметры:" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + targetCr.ParamBase[ ST_CURRENT_HP ] + "Текущее хп" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + targetCr.ParamBase[ ST_MAX_LIFE ] + "макс хп" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + targetCr.ParamBase[ ST_AGE ] + "возраст" );
+		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + targetCr.ParamBase[ ST_GENDER ] + "пол" );
+	}*/
+	if( answerI < 4 ) { player.Say( SAY_NETMSG, "Закрыто на профилактические работы." ); }
+
+	if( answerI == 4 )
+	{
+		answer_GM_PANNEL_MODES( player );
+	}
+	if( answerI == 5 )
+	{
+		player.ShowScreen( SCREEN_SAY, 0, "PlayerLexer" );
+		//ShowInputBoxScreen( player, "gm@unsafe_Description#Описание, приметы", 0, INPUTBOX_CLOSE_ON_ENTER );
+	}
+	if( answerI == 6 ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
+}
+void answer_GM_PANNEL_MODES( Critter& player ) // Меню криттера - Параметры - Режимы ( рекурсия ).
+{
+	Critter@ targetCr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+	string[] List = { "Неуязвимость", "Несбиваемость", "Непихаемость", "Неворуемость", "Нелутаемость", "Нет травм", "Патроны", "NoPVP", "Нет бега", "Стоять" };
+	uint[] Mode = { targetCr.ParamBase[ MODE_INVULNERABLE ], targetCr.ModeBase[ MODE_NO_KNOCK ], targetCr.ModeBase[ MODE_NO_PUSH ], targetCr.ModeBase[ MODE_NO_STEAL ], targetCr.ModeBase[ MODE_NO_LOOT ], targetCr.ModeBase[ MODE_NO_LOOSE_LIMBS ], targetCr.ParamBase[ MODE_UNLIMITED_AMMO ], targetCr.ParamBase[ MODE_NO_PVP ], targetCr.ModeBase[ MODE_NO_RUN ], targetCr.ModeBase[ MODE_NO_WALK ] };
+	if( targetCr.IsNpc() )
+	{
+		string[] ListX = { "Не говорит", "Только наличные", "Не торгует", "Забывает врагов", "Нет дом. гекса" };
+		uint[] ModeX = { targetCr.ParamBase[ MODE_NO_TALK ], targetCr.ParamBase[ MODE_BARTER_ONLY_CASH ], targetCr.ParamBase[ MODE_NO_BARTER ], targetCr.ParamBase[ MODE_NO_ENEMY_STACK ], targetCr.ParamBase[ MODE_NO_HOME ] };
+		for( uint i = 0, l = ListX.length(); i < l; i++ )
+		{
+			List.resize( List.length() + 1 );
+			List[ List.length() - 1 ] = ListX[ i ];
+			Mode.resize( Mode.length() + 1 );
+			Mode[ Mode.length() - 1 ] = ModeX[ i ];
+		}
+	}
+	MenuMakerCheck( player, List, "answer_GM_PANNEL_CRITTER_PLAYER_STATS_MODES", "Выберите режимы:", Mode );
+	player.Say( SAY_DIALOGBOX_BUTTON( List.length() ), "Назад" );
+}
+
+void answer_GM_PANNEL_CRITTER_PLAYER_STATS_MODES( Critter& player, uint answerI, string& answerS ) // !!! Режимы.
+{
+	Critter@ targetCr = GetCritter( player.ParamBase[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+	int parameter;
+	uint8 Type = 10;
+	if( targetCr.IsNpc() ) { Type = 15; }
+
+	switch( answerI )
+	{
+		case 0: parameter = MODE_INVULNERABLE; break;
+		case 1: parameter = MODE_NO_KNOCK; break;
+		case 2: parameter = MODE_NO_PUSH; break;
+		case 3: parameter = MODE_NO_STEAL; break;
+		case 4: parameter = MODE_NO_LOOT; break;
+		case 5: parameter = MODE_NO_LOOSE_LIMBS; break;
+		case 6: parameter = MODE_UNLIMITED_AMMO; break;
+		case 7: parameter = MODE_NO_PVP; break;
+		case 8: parameter = MODE_NO_RUN; break;
+		case 9: parameter = MODE_NO_WALK; break;
+		case 10: parameter = MODE_NO_TALK; break;
+		case 11: parameter = MODE_BARTER_ONLY_CASH; break;
+		case 12: parameter = MODE_NO_BARTER; break;
+		case 13: parameter = MODE_NO_ENEMY_STACK; break;
+		case 14: parameter = MODE_NO_HOME; break;
+	}
+	if( targetCr.ModeBase[ parameter ] == 0 ) { targetCr.ModeBase[ parameter ] = 1; } else { targetCr.ModeBase[ parameter ] = 0; }
+	if( answerI == Type ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
+
+	answer_GM_PANNEL_MODES( player );
+}
+void PlayerLexer( Critter& player, uint answerI, string& answerS ) // !!! Лексема.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+
+	targetCr.SetLexems( answerS );
+	player.Say( SAY_NETMSG, "Lexem set" );
+}
+
+// ================================================== Меню криттера - НПЦ ==================================================
+
+void answer_GM_PANNEL_CRITTER_NPC_STATS( Critter& player, uint answerI, string& answerS ) // Меню криттера - НПЦ.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	if( targetCr is null ) { return; }
+	string[] List = { "Поведение", "ID Хозяина", "N Диалога", "NPC_ROLE", "TEAM_ID" };
+	string[] AI_List = { "Контроль", "Болванка", "Манекен", "Монстр", "Рейдер", "Охрана", "Мутант", "Респавн", "Зерг раш", "Назад" };
+	string Str;
+
+	switch( answerI )
+	{
+		case 0: player.ParamBase[ ST_VAR1 ] = ST_AI_ID; break;
+		case 1: player.ParamBase[ ST_VAR1 ] = MERC_MASTER_ID; break;
+		case 2: player.ParamBase[ ST_VAR1 ] = ST_DIALOG_ID; break;
+		case 3: player.ParamBase[ ST_VAR1 ] = ST_NPC_ROLE; break;
+		case 4: player.ParamBase[ ST_VAR1 ] = ST_TEAM_ID; break;
+	}
+	if( answerI == 0 ) // Меню криттера - НПЦ - Поведение.
+	{
+		int AI_type = targetCr.ParamBase[ MERC_TYPE ];
+		string AI_string = "Не спавн";
+		string[] AI_List = { "Контроль", "Болванка", "Манекен", "Монстр", "Рейдер", "Охрана", "Мутант", "Респавн", "Зерг раш", "Назад" };
+		if( AI_type >= 10 && AI_type <= 18 ) { AI_string = AI_List[ AI_type-10 ]; }
+		Str = "Текущий AI: "+AI_string + " - " +AI_type;
+		MenuMaker( player, AI_List, "answer_GM_PANNEL_CRITTER_NPC_AI", Str );
+	}
+	else if( answerI < List.length() ) { MenuInputMaker( player, "answer_GM_PANNEL_CRITTER_NPC_AI_Type", List[ answerI ] ); }
+	if( answerI == 5 ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
+}
+
+void answer_GM_PANNEL_CRITTER_NPC_AI( Critter& player, uint answerI, string& answerS ) // !!! Поведение.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+
+	targetCr.ParamBase[ MERC_TYPE ] = answerI+10;
+	GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null );
+}
+void answer_GM_PANNEL_CRITTER_NPC_AI_Type( Critter& player, uint answerI, string& answerS ) // !!! НПЦ.
+{
+	Critter@ targetCr = GetCritter( player.Stat[ ST_VAR0 ] );
+	int parameter = player.Stat[ ST_VAR1 ];
+	if( !valid( targetCr ) ) { return; }
+
+	if( answerS.length() > 0 )
+	{
+		int number = 0;
+		StrToInt( answerS, number );
+		targetCr.ParamBase[ parameter ] = number;
+		player.Say( SAY_NETMSG, "Вы установили параметр " + parameter + " на " + number + " у ID: " + targetCr.Id );
+	}
+	GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null );
+}
+
+// ================================================== Дичь и адовый говнокод ==================================================
 
 void answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM( Critter& player, uint answerI, string& answerS )
 {
@@ -1354,68 +1555,6 @@ void answer_GM_PANNEL_CRITTER_PLAYER_STATS_PARAM( Critter& player, uint answerI,
     {
         player.ParamBase[ ST_VAR1 ] = ST_GENDER;
         player.Say( SAY_SAY_TITLE, "Пол" );
-    }
-}
-
-void answer_GM_PANNEL_CRITTER_PLAYER_STATS_DAMAGES( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-        if( cr.ParamBase[ DAMAGE_EYE ] == 0 )
-		{
-            cr.ParamBase[ DAMAGE_EYE ] = 1;
-		}
-        else
-		{
-            cr.ParamBase[ DAMAGE_EYE ] = 0;
-		}
-    }
-    else if( answerI == 1 )
-    {
-        if( cr.ParamBase[ DAMAGE_RIGHT_ARM ] == 0 )
-		{
-            cr.ParamBase[ DAMAGE_RIGHT_ARM ] = 1;
-		}
-        else
-		{
-            cr.ParamBase[ DAMAGE_RIGHT_ARM ] = 0;
-		}			
-    }
-    else if( answerI == 2 )
-    {
-        if( cr.ParamBase[ DAMAGE_LEFT_ARM ] == 0 )
-		{
-            cr.ParamBase[ DAMAGE_LEFT_ARM ] = 1;
-		}			
-        else
-		{
-            cr.ParamBase[ DAMAGE_LEFT_ARM ] = 0;
-		}			
-    }
-    else if( answerI == 3 )
-    {
-        if( cr.ParamBase[ DAMAGE_RIGHT_LEG ] == 0 )
-		{
-            cr.ParamBase[ DAMAGE_RIGHT_LEG ] = 1;
-		}			
-        else
-		{
-            cr.ParamBase[ DAMAGE_RIGHT_LEG ] = 0;
-		}			
-    }
-    else if( answerI == 4 )
-    {
-        if( cr.ParamBase[ DAMAGE_LEFT_LEG ] == 0 )
-		{
-            cr.ParamBase[ DAMAGE_LEFT_LEG ] = 1;
-		}			
-        else
-		{
-            cr.ParamBase[ DAMAGE_LEFT_LEG ] = 0;
-		}			
     }
 }
 
@@ -1730,131 +1869,6 @@ void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKINS_BODY( Critter& player, uint ans
 	//LogGmStuff (player, "GM PANEL: Сменил скин персонажа " + GetPlayerName (cr.Id) + " id: " + cr.Id + " на " + answerI + " в разделе ДИКАРИ.");
 }
 
-void answer_GM_PANNEL_CRITTER_PLAYER_STATS_MODES( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-        if( cr.ModeBase[ MODE_NO_PVP ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_PVP ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_PVP персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_PVP ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_PVP персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 1 )
-    {
-        if( cr.ModeBase[ MODE_INVULNERABLE ] == 0 )
-		{
-            cr.ModeBase[ MODE_INVULNERABLE ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_INVULNERABLE персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_INVULNERABLE ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_INVULNERABLE персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 2 )
-    {
-        if( cr.ModeBase[ MODE_NO_LOOT ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_LOOT ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOT персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_LOOT ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOT персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 3 )
-    {
-        if( cr.ModeBase[ MODE_NO_STEAL ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_STEAL ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_STEAL персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_STEAL ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_STEAL персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 4 )
-    {
-        if( cr.ModeBase[ MODE_NO_PUSH ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_PUSH ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_PUSH персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_PUSH ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_PUSH персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 5 )
-    {
-        if( cr.ModeBase[ MODE_NO_WALK ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_WALK ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_WALK персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_WALK ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_WALK персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 6 )
-    {
-        if( cr.ModeBase[ MODE_NO_RUN ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_RUN ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_RUN персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_RUN ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_RUN персонажу " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 7 )
-    {
-        if( cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOSE_LIMBS для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOSE_LIMBS для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-    if( answerI == 8 )
-    {
-        if( cr.ModeBase[ MODE_NO_KNOCK ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_KNOCK ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_KNOCK для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_KNOCK ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_KNOCK для NPC " + GetPlayerName (cr.Id) + " id: " + cr.Id);
-		}
-    }
-
-}
-
 void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SKILL2( Critter& player, uint answerI, string& answerS )
 {
     Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
@@ -2079,740 +2093,169 @@ void ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL( Critter& player, uint answerI, 
     }
 }
 
-void answer_GM_PANNEL_CRITTER_PLAYER_GIFT( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-
-    if( answerI == 0 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_EXPERIENCE;
-		player.ParamBase[ ST_VAR2 ] = 0;
-		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
-        player.Say( SAY_SAY_TITLE, "Опыт" );
-    }
-    if( answerI == 1 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_KARMA;
-		player.ParamBase[ ST_VAR2 ] = 0;
-		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
-        player.Say( SAY_SAY_TITLE, "Карма" );
-    }
-    if( answerI == 2 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_KARMA;
-		player.ParamBase[ ST_VAR2 ] = 1;
-		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
-        player.Say( SAY_SAY_TITLE, "Карма" );
-    }
-    if( answerI == 3 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP;
-		player.ParamBase[ ST_VAR2 ] = 0;
-		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
-        player.Say( SAY_SAY_TITLE, "Хп" );
-    }
-    if( answerI == 4 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_CURRENT_HP;
-		player.ParamBase[ ST_VAR2 ] = 1;
-		player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD" );
-        player.Say( SAY_SAY_TITLE, "Хп" );
-    }
-    if( answerI == 7 )
-    {
-        GM_PANNEL_CRITTER_PLAYER( player, cr.Id, 0, 0, null, null );
-    }
-}
-
-void ask_GM_PANNEL_CRITTER_PLAYER_GIFT_ADD( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ target = GetCritter( player.Stat[ ST_VAR0 ] );
-    int parameter = player.Stat[ ST_VAR1 ];
-    if( !valid( target ) )
-        return;
-    if( answerS.length() > 0 )
-    {
-        int number = 0;
-        StrToInt( answerS, number );
-		if( player.Stat[ ST_VAR2 ] == 0 )
-			{
-			target.ParamBase[ parameter ] += number;
-			player.Say( SAY_NETMSG, "вы увеличили параметр " + parameter + " на " + number + " у игрока " + target.Id );
-			logger( player, GMLOG, " param " + target.Id + " " + parameter + " " + number + " gmpanel");
-			}
-        else
-			{
-			target.ParamBase[ parameter ] -= number;
-			player.Say( SAY_NETMSG, "вы уменьшили параметр " + parameter + " на " + number + " у игрока " + target.Id );
-			logger( player, GMLOG, " param " + target.Id + " " + parameter + " " + number + " gmpanel");
-			}
-	}
-	GM_PANNEL_CRITTER_PLAYER( player, target.Id, 0, 0, null, null );
-}
-
-void answer_GM_PANNEL_CRITTER_PLAYER_KILL( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null ) return;
-
-    if( answerI == 9 )
-    {
-        GM_PANNEL_CRITTER_PLAYER( player, cr.Id, 0, 0, null, null );
-		return;
-    }
-
-	killbytype( player, answerI, 0, 0, null, null );
-	logger( player, GMLOG, " kill " + cr.Id + " gmpanel");
-}
-
-void killbytype( Critter& player, int param0, int param1, int param2, string@ param3, int[] @ param4 )
-{
-    Critter@ target = GetCritter( param0 );
-    if( target is null )
-    {
-        player.Say( SAY_NETMSG, "неверный криттер" );
-        return;
-    }
-
-    uint16 deadType = 0;
-    if( param1 > 0 && param1 < 9 )
-        deadType = ANIM2_DEAD_BLOODY_SINGLE - 1 + param1;
-    else
-        deadType = ( Random( 0, 1 ) > 0 ? ANIM2_DEAD_FRONT : ANIM2_DEAD_BACK );
-
-    target.ToDead( deadType, null );
-}
 
 
-void GM_PANNEL_CRITTER_NPC( Critter& player, int crId, int param1, int param2, string@ param3, int[] @ param4 )
-{
-    Critter@ cr = GetCritter( crId );
-    if( cr is null )
-        return;
-    if( player.GetAccess() >= ACCESS_MODER )
-    {
-        player.StatBase[ ST_VAR0 ] = crId;
-	int AI_type = cr.ParamBase[ MERC_TYPE ];
-
-	string AI_string;
-
-	switch( AI_type )
-	{
-	case 10:	AI_string = "контроль";break;
-	case 11:	AI_string = "болванка";break;
-	case 12:	AI_string = "манекен";break;
-	case 13:	AI_string = "монстр";break;
-	case 14:	AI_string = "рейдер";break;
-	case 15:	AI_string = "охрана";break;
-	case 16:	AI_string = "мутант";break;
-	case 17:	AI_string = "респавн";break;
-	case 18:	AI_string = "зерг раш";break;
-	default:	AI_string = "не спавн";break;
-	}
-
-        player.ShowScreen( SCREEN_DIALOGBOX, 4, "answer_GM_PANNEL_CRITTER_NPC" );
-        player.Say( SAY_DIALOGBOX_TEXT, "НПЦ, protoId - " + cr.GetProtoId() + ", диалог - " + cr.ParamBase[ ST_DIALOG_ID ] + " , АИ=" + AI_string + " Team=" + cr.ParamBase[ ST_TEAM_ID ]  );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "Режимы" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "Параметры" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "НПЦ-Параметры" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "АИ-Параметры" );
-    }
-}
-
-void answer_GM_PANNEL_CRITTER_NPC( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.StatBase[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 14, "answer_GM_PANNEL_CRITTER_NPC_MODES" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Режимы игрока" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ MODE_NO_HOME ] + " - нет дом гекса" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ MODE_NO_ENEMY_STACK ] + " - не запоминает врагов" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ MODE_NO_LOOT ] + " - нелутаемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ MODE_NO_STEAL ] + " - неворуемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ MODE_NO_PUSH ] + " - непихаемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "" + cr.ParamBase[ MODE_NO_WALK ] + " - стоять" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "" + cr.ParamBase[ MODE_NO_RUN ] + " - нет бега" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "" + cr.ParamBase[ MODE_NO_LOOSE_LIMBS ] + " - нет травм" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "" + cr.ParamBase[ MODE_NO_KNOCK ] + " - несбиваемость" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 9 ), "" + cr.ParamBase[ MODE_NO_BARTER ] + " - неторгует" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 10 ), "" + cr.ParamBase[ MODE_BARTER_ONLY_CASH ] + " - только наличные" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 11 ), "" + cr.ParamBase[ MODE_NO_TALK ] + " - не разговаривает" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 12 ), "" + cr.ParamBase[ MODE_UNLIMITED_AMMO ] + " - беск патроны" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 13 ), "" + cr.ParamBase[ MODE_INVULNERABLE ] + " - неуязвимость" );
-    }
-    if( answerI == 1 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_CRITTER_PLAYER_STATS" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Параметры, protoId - " + cr.GetProtoId() + ", диалог - " + cr.ParamBase[ ST_DIALOG_ID ] );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "SPECIAL" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "SKILLS 0-9" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "SKILLS 10-20" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "Травмы" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "Режимы" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "Скин/бодитайп" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "Доп парам" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "Лексема" );
-    }
-    if( answerI == 2 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 6, "answer_GM_PANNEL_CRITTER_NPC_STATS" );
-        player.Say( SAY_DIALOGBOX_TEXT, "НПЦ параметры, protoId - " + cr.GetProtoId() + ", диалог - " + cr.ParamBase[ ST_DIALOG_ID ] );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "" + cr.ParamBase[ ST_DIALOG_ID ] + "Диалог" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "" + cr.ParamBase[ ST_AI_ID ] + "AI ID" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "" + cr.ParamBase[ ST_NPC_ROLE ] + "NPC ROLE" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "" + cr.ParamBase[ MERC_MASTER_ID ] + "хозяин" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "" + cr.ParamBase[ ST_TEAM_ID ] + "TEAM_ID" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "назад" );
-    }
-    if( answerI == 3 )
-    {
-	int AI_type = cr.ParamBase[ MERC_TYPE ];
-
-	string AI_string;
-
-	switch( AI_type )
-	{
-	case 10:	AI_string = "контроль";break;
-	case 11:	AI_string = "болванка";break;
-	case 12:	AI_string = "манекен";break;
-	case 13:	AI_string = "монстр";break;
-	case 14:	AI_string = "рейдер";break;
-	case 15:	AI_string = "охрана";break;
-	case 16:	AI_string = "мутант";break;
-	case 17:	AI_string = "респавн";break;
-	case 18:	AI_string = "зерг раш";break;
-	default:	AI_string = "не спавн";break;
-	}
-        player.ShowScreen( SCREEN_DIALOGBOX, 3, "answer_GM_PANNEL_CRITTER_NPC_AI" );
-        player.Say( SAY_DIALOGBOX_TEXT, "НПЦ, protoId - " + cr.GetProtoId() + " , АИ=" + AI_string + " , Team=" + cr.ParamBase[ ST_TEAM_ID ]  );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "АИ - " + AI_string );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "TEAM - " + cr.ParamBase[ ST_TEAM_ID ] );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "назад" );
-    }
-}
-
-void answer_GM_PANNEL_CRITTER_NPC_AI( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-	int AI_type = cr.ParamBase[ MERC_TYPE ];
-
-	string AI_string;
-
-	switch( AI_type )
-	{
-	case 10:	AI_string = "контроль";break;
-	case 11:	AI_string = "болванка";break;
-	case 12:	AI_string = "манекен";break;
-	case 13:	AI_string = "монстр";break;
-	case 14:	AI_string = "рейдер";break;
-	case 15:	AI_string = "охрана";break;
-	case 16:	AI_string = "мутант";break;
-	case 17:	AI_string = "респавн";break;
-	case 18:	AI_string = "зерг раш";break;
-	default:	AI_string = "не спавн";break;
-	}
-
-        player.ShowScreen( SCREEN_DIALOGBOX, 8, "answer_GM_PANNEL_CRITTER_NPC_AI_Type" );
-        player.Say( SAY_DIALOGBOX_TEXT, "АИ, текущее - " + AI_type + " - " + AI_string );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "1 - болванка" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "2 - манекен" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "3 - монстр" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "4 - рейдер" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "5 - охрана" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "6 - мутант" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "7 - респавн" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "назад" );
-    }
-    if( answerI == 1 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_TEAM_ID;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_SAY_TITLE, "TEAM_ID" );
-    }
-    if( answerI == 2 )
-    {
-        GM_PANNEL_CRITTER_NPC( player, cr.Id, 0, 0, null, null );
-    }
-}
-
-void answer_GM_PANNEL_CRITTER_NPC_AI_Type( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI != 7 )
-    {
-        GM_MobInit( cr, answerI +1 );
-    }
-    if( answerI == 7 )
-    {
-        GM_PANNEL_CRITTER_NPC( player, cr.Id, 0, 0, null, null );
-    }
-}
-
-void answer_GM_PANNEL_CRITTER_NPC_STATS( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.Stat[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-        player.ToLife();
-        player.ParamBase[ ST_VAR1 ] = ST_DIALOG_ID;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_SAY_TITLE, "DIALOG_ID" );
-    }
-    if( answerI == 1 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_AI_ID;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_SAY_TITLE, "AI_ID" );
-    }
-    if( answerI == 2 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_NPC_ROLE;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_SAY_TITLE, "NPC_ROLE" );
-    }
-    if( answerI == 3 )
-    {
-        player.ParamBase[ ST_VAR1 ] = MERC_MASTER_ID;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_SAY_TITLE, "MERC_MASTER_ID" );
-    }
-    if( answerI == 4 )
-    {
-        player.ParamBase[ ST_VAR1 ] = ST_TEAM_ID;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL" );
-        player.Say( SAY_SAY_TITLE, "TEAM_ID" );
-    }
-    if( answerI == 5 )
-    {
-        GM_PANNEL_CRITTER_NPC( player, cr.Id, 0, 0, null, null );
-    }
-}
-
-void answer_GM_PANNEL_CRITTER_NPC_MODES( Critter& player, uint answerI, string& answerS )
-{
-    Critter@ cr = GetCritter( player.ParamBase[ ST_VAR0 ] );
-    if( cr is null )
-        return;
-    if( answerI == 0 )
-    {
-        if( cr.ModeBase[ MODE_NO_HOME ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_HOME ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_HOME для NPC id: " + cr.Id);
-		}	
-        else
-		{
-            cr.ModeBase[ MODE_NO_HOME ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_HOME для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 1 )
-    {
-        if( cr.ModeBase[ MODE_NO_ENEMY_STACK ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_ENEMY_STACK ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_ENEMY_STACK для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_ENEMY_STACK ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_ENEMY_STACK для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 2 )
-    {
-        if( cr.ModeBase[ MODE_NO_LOOT ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_LOOT ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOT для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_LOOT ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOT для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 3 )
-    {
-        if( cr.ModeBase[ MODE_NO_STEAL ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_STEAL ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_STEAL для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_STEAL ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_STEAL для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 4 )
-    {
-        if( cr.ModeBase[ MODE_NO_PUSH ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_PUSH ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_PUSH для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_PUSH ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_PUSH для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 5 )
-    {
-        if( cr.ModeBase[ MODE_NO_WALK ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_WALK ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_WALK для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_WALK ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_WALK для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 6 )
-    {
-        if( cr.ModeBase[ MODE_NO_RUN ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_RUN ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_RUN для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_RUN ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_RUN для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 7 )
-    {
-        if( cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_LOOSE_LIMBS для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_LOOSE_LIMBS ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_LOOSE_LIMBS для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 8 )
-    {
-        if( cr.ModeBase[ MODE_NO_KNOCK ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_KNOCK ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_KNOCK для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_KNOCK ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_KNOCK для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 9 )
-    {
-        if( cr.ModeBase[ MODE_NO_BARTER ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_BARTER ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_BARTER для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_BARTER ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_BARTER для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 10 )
-    {
-        if( cr.ModeBase[ MODE_BARTER_ONLY_CASH ] == 0 )
-		{
-            cr.ModeBase[ MODE_BARTER_ONLY_CASH ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_BARTER_ONLY_CASH для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_BARTER_ONLY_CASH ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_BARTER_ONLY_CASH для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 11 )
-    {
-        if( cr.ModeBase[ MODE_NO_TALK ] == 0 )
-		{
-            cr.ModeBase[ MODE_NO_TALK ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_NO_TALK для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_NO_TALK ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_NO_TALK для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 12 )
-    {
-        if( cr.ModeBase[ MODE_UNLIMITED_AMMO ] == 0 )
-		{
-            cr.ModeBase[ MODE_UNLIMITED_AMMO ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_UNLIMITED_AMMO для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_UNLIMITED_AMMO ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_UNLIMITED_AMMO для NPC id: " + cr.Id);
-		}
-    }
-    if( answerI == 13 )
-    {
-        if( cr.ModeBase[ MODE_INVULNERABLE ] == 0 )
-		{
-            cr.ModeBase[ MODE_INVULNERABLE ] = 1;
-			//LogGmStuff (player, "GM PANEL: Включил MODE_INVULNERABLE для NPC id: " + cr.Id);
-		}
-        else
-		{
-            cr.ModeBase[ MODE_INVULNERABLE ] = 0;
-			//LogGmStuff (player, "GM PANEL: Выключил MODE_INVULNERABLE для NPC id: " + cr.Id);
-		}
-    }
-}
-
-
-
-
-
-
-
+// ####################################################################################################
+// #                                        Mio Item Menu ^_^                                         #
+// ####################################################################################################
 
 void GM_PANNEL_ITEM( Critter& player, int itemId, int param1, int param2, string@ param3, int[] @ param4 )
 {
-    if( player.GetAccess() >= ACCESS_MODER )
-    {
-        Item@ item = GetItem( itemId );
-        if( item is null )
-            return;
-        player.StatBase[ ST_VAR0 ] = itemId;
-        player.ShowScreen( SCREEN_DIALOGBOX, 3, "answer_GM_PANNEL_ITEM" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + itemId );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "переменные" );
-		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "назначить скрипт" );
-		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "флаги" );
-    }
+	if( player.GetAccess() >= ACCESS_MODER ) // Меню предмета - Основное меню.
+	{
+		Item@ item = GetItem( itemId );
+		if( item is null ) { return; }
+		player.StatBase[ ST_VAR0 ] = itemId;
+		string Str = "PID: "+item.GetProtoId() +"\nID: "+itemId;
+
+		string[] List = { "Переменные", "Флаги", "Назначить скрипт" };
+		MenuMaker( player, List, "answer_GM_PANNEL_ITEM", Str );
+	}
 }
+
+// ================================================== Меню предмета - Основное меню ==================================================
 
 void answer_GM_PANNEL_ITEM( Critter& player, uint answerI, string& answerS )
 {
-    Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
-    if( item is null ) return;
-    if( answerI == 0 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_ITEM_VALS" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), ""+item.Val0 +" Val0" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), ""+item.Val1 +" Val1" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), ""+item.Val2 +" Val2" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), ""+item.Val3 +" Val3" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), ""+item.Val4 +" Val4" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), ""+item.Val5 +" Val5" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), ""+item.Val6 +" Val6" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), ""+item.Val7 +" Val7" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), ""+item.Val8 +" Val8" );
-    }
-	if( answerI == 1 )
-    {
-        player.ShowScreen( SCREEN_DIALOGBOX, 1, "answer_GM_PANNEL_ITEM_SCRIPT" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "верстак (неакт)");
-    }
-	if( answerI == 2 )
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null ) return;
+	string Str = "PID: "+item.GetProtoId() +"\nID: "+item.Id;
+
+	if( answerI == 0 ) // Меню предмета - Переменные.
 	{
-		player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_ITEM_FLAG" );
-		player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
-		player.Say( SAY_DIALOGBOX_BUTTON( 0 ), "плоский " + FLAG( item.Flags, ITEM_FLAT ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 1 ), "проходимый " + FLAG( item.Flags, ITEM_NO_BLOCK ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 2 ), "прострел " + FLAG( item.Flags, ITEM_SHOOT_THRU ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 3 ), "не блок свет " + FLAG( item.Flags, ITEM_LIGHT_THRU ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 4 ), "нет обводки " + FLAG( item.Flags, ITEM_NO_HIGHLIGHT ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 5 ), "используемый " + FLAG( item.Flags, ITEM_CAN_USE ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 6 ), "источник света " + FLAG( item.Flags, ITEM_LIGHT ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 7 ), "игнор света " + FLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE ) );
-		player.Say( SAY_DIALOGBOX_BUTTON( 8 ), "подбираемый " + FLAG( item.Flags, ITEM_CAN_PICKUP ) );
+		answer_GM_PANNEL_ITEM_VALS( player );
 	}
-}
-
-void answer_GM_PANNEL_ITEM_SCRIPT( Critter& player, uint answerI, string& answerS )
-{
-        Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
-        if( item is null )
-            return;
-    if( answerI == 0 )
-    {
-	if( (item.GetProtoId() != 157) && (player.GetAccess() <= ACCESS_MODER) ) { player.Say( SAY_NETMSG, "Не тот прототип." ); return; } 
-	else
+	if( answerI == 1 ) // Меню предмета - Флаги.
 	{
-	//SetWorkbench( player, item.Id, 0, 0 );
-	//LogGmStuff (player, "GM PANEL: Выставил предмету " + item.Id + " скрипт верстака.");
+		answer_GM_PANNEL_ITEM_FLAG( player );
 	}
+	if( answerI == 2 ) // Меню предмета - Назначить скрипт.
+	{
+		string[] List = { "(Х) Верстак", "Назад" };
+		MenuMaker( player, List, "answer_GM_PANNEL_ITEM_SCRIPT", Str );
 	}
 }
 
-void answer_GM_PANNEL_ITEM_VALS( Critter& player, uint answerI, string& answerS )
-{
-        Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
-        if( item is null )
-            return;
-        player.ParamBase[ ST_VAR1 ] = answerI;
-        player.ShowScreen( SCREEN_SAY, 0, "gm@ask_GM_PANNEL_ITEM" );
-        player.Say( SAY_SAY_TITLE, "Val"+answerI);
-}
+// ================================================== Меню предмета - Переменные ==================================================
 
-void answer_GM_PANNEL_ITEM_FLAG( Critter& player, uint answerI, string& answerS )
+void answer_GM_PANNEL_ITEM_VALS( Critter& player ) // Меню предмета - Переменные (рекурсия).
 {
 	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
-	if( item is null )
-        return;
-	
+	if( item is null ) { return; }
+	string Str = "PID: "+item.GetProtoId() +"\nID: "+item.Id;
+
+	string[] List = { ""+item.Val0, ""+item.Val1, ""+item.Val2, ""+item.Val3, ""+item.Val4, ""+item.Val5, ""+item.Val6, ""+item.Val7, ""+item.Val8, ""+item.Val9, "Назад" };
+	MenuMaker( player, List, "answer_GM_PANNEL_ITEM_VALS_INPUT", Str );
+}
+void answer_GM_PANNEL_ITEM_VALS_INPUT( Critter& player, uint answerI, string& answerS ) // Меню предмета - Переменные (ввод).
+{
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null ) { return; }
+	player.ParamBase[ ST_VAR1 ] = answerI;
+
+	if( answerI > 9 ) { GM_PANNEL_ITEM( player, item.Id, 0, 0, null, null ); return; }
+
+	MenuInputMaker( player, "ask_GM_PANNEL_ITEM", "Val"+answerI );
+}
+
+void ask_GM_PANNEL_ITEM( Critter& player, uint answerI, string& answerS ) // !!! Переменные.
+{
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null ) { return; }
+	string Str = "PID: "+item.GetProtoId() +"\nID: "+item.Id;
+
+	if( answerS.length() > 0 )
+	{
+		int val_number = player.StatBase[ ST_VAR1 ];
+		int number = 0;
+		StrToInt( answerS, number );
+		switch( val_number )
+		{
+			case 0: item.Val0 = number; break;
+			case 1: item.Val1 = number; break;
+			case 2: item.Val2 = number; break;
+			case 3: item.Val3 = number; break;
+			case 4: item.Val4 = number; break;
+			case 5: item.Val5 = number; break;
+			case 6: item.Val6 = number; break;
+			case 7: item.Val7 = number; break;
+			case 8: item.Val8 = number; break;
+			case 9: item.Val9 = number; break;
+		}
+		player.Say( SAY_NETMSG, "Вы изменили val" + val_number + " на " + number + " у предмета " + item.Id );
+	}
+	answer_GM_PANNEL_ITEM_VALS( player );
+}
+
+// ================================================== Меню предмета - Флаги ==================================================
+
+void answer_GM_PANNEL_ITEM_FLAG( Critter& player ) // Меню предмета - Флаги (рекурсия).
+{
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null ) return;
+	string Str = "PID: "+item.GetProtoId() +"\nID: "+item.Id;
+
+	string[] List = { "Подбираемый", "Используемый", "Нет обводки", "Проходимый", "Прострел", "Плоский", "Не блок свет", "Источник света", "Игнор света" };
+	bool[] ModeX = { FLAG( item.Flags, ITEM_CAN_PICKUP ), FLAG( item.Flags, ITEM_CAN_USE ), FLAG( item.Flags, ITEM_NO_HIGHLIGHT ), FLAG( item.Flags, ITEM_NO_BLOCK ), FLAG( item.Flags, ITEM_SHOOT_THRU ), FLAG( item.Flags, ITEM_FLAT ), FLAG( item.Flags, ITEM_LIGHT_THRU ), FLAG( item.Flags, ITEM_LIGHT ), FLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE ) };
+	uint[] Mode;
+	for( uint i = 0, l = List.length(); i < l; i++ )
+	{
+		Mode.resize( Mode.length() + 1 );
+		Mode[ Mode.length() - 1 ] = ModeX[ i ] == true ? 1 : 0;
+	}
+	MenuMakerCheck( player, List, "answer_GM_PANNEL_ITEM_FLAG_FUNK", Str, Mode );
+	player.Say( SAY_DIALOGBOX_BUTTON( List.length() ), "Назад" );
+}
+
+void answer_GM_PANNEL_ITEM_FLAG_FUNK( Critter& player, uint answerI, string& answerS ) // !!! Флаги.
+{
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null ) { return; }
 	string logflag;
+	int parameter;
 
 	switch( answerI )
 	{
-	case 0:
-	{
-		if FLAG( item.Flags, ITEM_FLAT ) 
-			UNSETFLAG( item.Flags, ITEM_FLAT );
-		else
-			SETFLAG( item.Flags, ITEM_FLAT );
-		logflag = "ITEM_FLAT";
+		case 0: parameter = ITEM_CAN_PICKUP; logflag = "ITEM_CAN_PICKUP"; break;
+		case 1: parameter = ITEM_CAN_USE; logflag = "ITEM_CAN_USE"; break;
+		case 2: parameter = ITEM_NO_HIGHLIGHT; logflag = "ITEM_NO_HIGHLIGHT"; break;
+		case 3: parameter = ITEM_NO_BLOCK; logflag = "ITEM_NO_BLOCK"; break;
+		case 4: parameter = ITEM_SHOOT_THRU; logflag = "ITEM_SHOOT_THRU"; break;
+		case 5: parameter = ITEM_FLAT; logflag = "ITEM_FLAT"; break;
+		case 6: parameter = ITEM_LIGHT_THRU; logflag = "ITEM_LIGHT_THRU"; break;
+		case 7: parameter = ITEM_LIGHT; logflag = "ITEM_LIGHT"; break;
+		case 8: parameter = ITEM_NO_LIGHT_INFLUENCE; logflag = "ITEM_NO_LIGHT_INFLUENCE"; break;
 	}
-	break;
-	case 1:
-	{
-		if FLAG( item.Flags, ITEM_NO_BLOCK ) 
-			UNSETFLAG( item.Flags, ITEM_NO_BLOCK );
-		else
-			SETFLAG( item.Flags, ITEM_NO_BLOCK );
-		logflag = "ITEM_NO_BLOCK";
-	}
-	break;
-	case 2:
-	{
-		if FLAG( item.Flags, ITEM_SHOOT_THRU ) 
-			UNSETFLAG( item.Flags, ITEM_SHOOT_THRU );
-		else
-			SETFLAG( item.Flags, ITEM_SHOOT_THRU );
-		logflag = "ITEM_SHOOT_THRU";
-	}
-	break;
-	case 3:
-	{
-		if FLAG( item.Flags, ITEM_LIGHT_THRU ) 
-			UNSETFLAG( item.Flags, ITEM_LIGHT_THRU );
-		else
-			SETFLAG( item.Flags, ITEM_LIGHT_THRU );
-		logflag = "ITEM_LIGHT_THRU";
-	}
-	break;
-	case 4:
-	{
-		if FLAG( item.Flags, ITEM_NO_HIGHLIGHT ) 
-			UNSETFLAG( item.Flags, ITEM_NO_HIGHLIGHT );
-		else
-			SETFLAG( item.Flags, ITEM_NO_HIGHLIGHT );
-		logflag = "ITEM_NO_HIGHLIGHT";
-	}
-	break;
-	case 5:
-	{
-		if FLAG( item.Flags, ITEM_CAN_USE ) 
-			UNSETFLAG( item.Flags, ITEM_CAN_USE );
-		else
-			SETFLAG( item.Flags, ITEM_CAN_USE );
-		logflag = "ITEM_CAN_USE";
-	}
-	break;
-	case 6:
-	{
-		if FLAG( item.Flags, ITEM_LIGHT ) 
-			UNSETFLAG( item.Flags, ITEM_LIGHT );
-		else
-			SETFLAG( item.Flags, ITEM_LIGHT );
-		logflag = "ITEM_LIGHT";
-	}
-	break;
-	case 7:
-	{
-		if FLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE ) 
-			UNSETFLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE );
-		else
-			SETFLAG( item.Flags, ITEM_NO_LIGHT_INFLUENCE );
-		logflag = "ITEM_NO_LIGHT_INFLUENCE";
-	}
-	break;
-	case 8:
-	{
-		if FLAG( item.Flags, ITEM_CAN_PICKUP ) 
-			UNSETFLAG( item.Flags, ITEM_CAN_PICKUP );
-		else
-			SETFLAG( item.Flags, ITEM_CAN_PICKUP );
-		logflag = "ITEM_CAN_PICKUP";
-	}
-	break;
-	}
+	if( FLAG( item.Flags, parameter ) ) { UNSETFLAG( item.Flags, parameter ); } else { SETFLAG( item.Flags, parameter ); }
 	item.Update();
-	string logmsg = "GM PANEL: Изменил флаг " + logflag + " для предмета " + item.Id; 
+	string logmsg = "GM PANEL: Изменил флаг " + logflag + " для предмета " + item.Id;
 	//LogGmStuff (player, logmsg);
+	if( answerI == 9 ) { GM_PANNEL_ITEM( player, item.Id, 0, 0, null, null ); return; }
+
+	answer_GM_PANNEL_ITEM_FLAG( player );
 }
 
-void ask_GM_PANNEL_ITEM( Critter& player, uint answerI, string& answerS )
+// ================================================== Меню предмета - Назначить скрипт ==================================================
+
+void answer_GM_PANNEL_ITEM_SCRIPT( Critter& player, uint answerI, string& answerS ) // !!! Назначить скрипт.
 {
-        Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
-        if( item is null ) return;
-    if( answerS.length() > 0 )
-    {
-        int val_number = player.StatBase[ ST_VAR1 ];
-        int number = 0;
-        StrToInt( answerS, number );
-      switch( val_number )
-      {
-      case  0: item.Val0=number;  break;
-      case  1: item.Val1=number;  break;
-      case  2: item.Val2=number;  break;
-      case  3: item.Val3=number;  break;
-      case  4: item.Val4=number;  break;
-      case  5: item.Val5=number;  break;
-      case  6: item.Val6=number;  break;
-      case  7: item.Val7=number;  break;
-      case  8: item.Val8=number;  break;
-      }
-        player.Say( SAY_NETMSG, "вы изменили val" + val_number + " на " + number + " у предмета " + item.Id );
-		//LogGmStuff (player, "GM PANEL: Изменил предмету " + item.Id + " переменную Val" + val_number + " на " + number);
+	Item@ item = GetItem( player.StatBase[ ST_VAR0 ] );
+	if( item is null ) { return; }
 
-        player.ShowScreen( SCREEN_DIALOGBOX, 9, "answer_GM_PANNEL_ITEM_VALS" );
-        player.Say( SAY_DIALOGBOX_TEXT, "Предмет, protoID =" + item.GetProtoId() + ", ид =" + item.Id );
-        player.Say( SAY_DIALOGBOX_BUTTON( 0 ), ""+item.Val0 +" Val0" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 1 ), ""+item.Val1 +" Val1" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 2 ), ""+item.Val2 +" Val2" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 3 ), ""+item.Val3 +" Val3" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 4 ), ""+item.Val4 +" Val4" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 5 ), ""+item.Val5 +" Val5" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 6 ), ""+item.Val6 +" Val6" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 7 ), ""+item.Val7 +" Val7" );
-        player.Say( SAY_DIALOGBOX_BUTTON( 8 ), ""+item.Val8 +" Val8" );
-    }
+	if( answerI == 0 )
+	{
+		if( (item.GetProtoId() != 157) && (player.GetAccess() <= ACCESS_MODER) ) { player.Say( SAY_NETMSG, "Не тот прототип." ); return; } 
+		else
+		{
+			//SetWorkbench( player, item.Id, 0, 0 );
+			//LogGmStuff (player, "GM PANEL: Выставил предмету " + item.Id + " скрипт верстака.");
+		}
+	}
+	if( answerI == 1 ) { GM_PANNEL_ITEM( player, item.Id, 0, 0, null, null ); return; }
 }
+
+// ================================================== Дичь и адовый говнокод ==================================================
+
 
 
 void GM_PANNEL_HEX( Critter& player, int hexX, int hexY, int param2, string@ param3, int[] @ param4 )
