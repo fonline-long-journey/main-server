@@ -80,19 +80,19 @@ void global_process( int processType, Critter& cr, Item@ car,
                 speedMod = 1.00f;
                 break;
             case 0xB:
-                speedMod = 1.10f;
-                break;
-            case 0xC:
                 speedMod = 1.20f;
                 break;
-            case 0xD:
-                speedMod = 1.30f;
-                break;
-            case 0xE:
+            case 0xC:
                 speedMod = 1.40f;
                 break;
-            case 0xF:
+            case 0xD:
                 speedMod = 1.50f;
+                break;
+            case 0xE:
+                speedMod = 1.80f;
+                break;
+            case 0xF:
+                speedMod = 2.00f;
                 break;
             default:
                 break;

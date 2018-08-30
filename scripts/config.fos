@@ -72,8 +72,8 @@ void InitializeGame()                    // Export
     __RunOnCombat               = true;
     __RunOnTransfer             = true;
     __RunOnTurnBased            = false;
-    __GlobalMapWidth            = 19;     // Maximum 100
-    __GlobalMapHeight           = 19;     // Maximum 100
+    __GlobalMapWidth            = 55;     // Maximum 100
+    __GlobalMapHeight           = 40;     // Maximum 100
     __GlobalMapZoneLength       = 50;     // Maximum 500
     __GlobalMapMaxGroupCount    = 10;
     __GlobalMapMoveTime         = 250;

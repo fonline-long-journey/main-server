@@ -401,238 +401,60 @@ table.AddEncounter( 8, 20000034 ).AddGroup( GROUP_RP_Pigrats, 3, 5 ).AddGroup( G
 table.AddEncounter( 3, 20000037 ).AddGroup( GROUP_RP_Scorpion_Family, 7, 9 ).AddGroup( GROUP_Player, 0, 0 ).Fighting( 0, 1 );
 
 
-SetZone( 2, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 3, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 4, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 4, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 4, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 4, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 4, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 5, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 5, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 5, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 5, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 5, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 5, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 6, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 6, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 6, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 6, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 6, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 6, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 7, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 8, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 9, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 9, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 9, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 11, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 18, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 14, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 15, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 16, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 17, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+// Массив, отвечающий за то, какой квадрат на глобале какие будет генерировать энки
+uint D = TERRAIN_Desert;
+uint C = TERRAIN_City;
+uint[][] MAP = {
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
 
-SetZone( 14, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 10, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 12, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 13, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,D,D,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,D,D,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,D,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
 
-SetZone( 10, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 14, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 0, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 10, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 14, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 1, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 11, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 14, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 2, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 12, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 14, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 3, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 13, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 14, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 4, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 14, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 5, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 18, 6, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 15, 7, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 16, 7, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
-SetZone( 17, 7, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );
+	{D,D,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,D,D},
 
-SetZone( 0, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 4, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 5, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 6, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 2, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 3, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 4, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 5, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 6, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 2, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 3, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 4, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 2, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 3, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 2, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 3, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 2, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 3, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 2, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 3, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 0, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 1, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	D,D,D,D,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	D,D,D,D,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,D,D,D,D,D,	D,D,D,C,D,C,D,C,D,C,	C,C,C,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,C,C,C,C,C,	C,C,C,C,C,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,C,	D,D,D,C,C,C,C,C,C,C,	C,C,C,C,C,C,C,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,D,C,C,C,C,	C,C,C,C,C,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,C,C,C,C,C,C,	C,C,C,C,C,C,C,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,D,D,C,C,C,	C,C,C,C,C,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,C,C,C,C,C,C,	C,C,C,C,C,C,C,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D},
+	{D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D,D,D,D,D,	D,D,D,D,D,D},
+};
 
-SetZone( 10, 4, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 4, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 4, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 10, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 5, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 10, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 6, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 9, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 10, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 18, 7, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 9, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 10, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 15, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 16, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 17, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 18, 8, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 15, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 16, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 17, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 18, 9, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 11, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 16, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 17, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 18, 10, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 15, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 16, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 17, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 18, 11, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 15, 12, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 12, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 13, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 15, 14, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 15, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 16, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 17, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 13, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
-SetZone( 14, 18, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+for(uint y = 0; y < __GlobalMapHeight; y++){ 
+	for(uint x = 0; x < __GlobalMapWidth; x++){
+		if(MAP[y][x] == TERRAIN_City)
+			SetZone( x, y, TABLE_PTH_Wild, -10, TERRAIN_City, CHANCE_Frequent  );		
+		else
+			SetZone( x, y, TABLE_PTH_Desert1, -10, TERRAIN_Desert, CHANCE_Frequent  );
+	}
+}
