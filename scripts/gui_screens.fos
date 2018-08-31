@@ -359,6 +359,8 @@ namespace Register_TLJ
 
     class Character : GUIScreen
     {
+        uint ScreenWidth = 0;
+
         void OnConstruct() override
         {
             SetModal( true );
@@ -370,7 +372,19 @@ namespace Register_TLJ
         void OnInit() override
         {
             GenParams();
-            SetSize( __ScreenHeight, __ScreenWidth );
+        }
+
+        void OnDraw() override
+        {
+            if( ScreenWidth != __ScreenWidth ){
+                ScreenWidth = __ScreenWidth;
+                SetSize( __ScreenHeight, __ScreenWidth );
+                if( __ScreenWidth < 1000) {
+                    Find("Main").SetPosition( floor(__ScreenHeight/2 - 640/1.999999), floor(__ScreenWidth/2 - 538/1.999999) );
+                }else{
+                    Find("Main").SetPosition( floor(__ScreenHeight/2 - 640/2), floor(__ScreenWidth/2 - 538/2) );
+                }
+            }
         }
     }
 
@@ -380,11 +394,6 @@ namespace Register_TLJ
         {
             SetSize( 640, 539 );
             SetBackgroundImage( "art/intrface/register_tlj.png" );
-        }
-
-        void OnShow( dictionary@ params ) override
-        {
-            SetPosition( floor(__ScreenHeight/2 - 640/1.999999), floor(__ScreenWidth/2 - 538/1.999999) );
         }
     }
 
