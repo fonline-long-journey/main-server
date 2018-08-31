@@ -1418,7 +1418,7 @@ void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int r
 	
 	if( type == TRACER_DEFAULT)
 	{
-		array<int> drawdata = {hexX, hexY, COLOR_GREEN, tx, ty, COLOR_WHITE, 2000, 900/roundsCount, roundsCount};
+		array<int> drawdata = {hexX, hexY, COLOR_WHITE, tx, ty, COLOR_DEFAULT_TRACER, 2000, 900/roundsCount, roundsCount};
 		int drawType = roundsCount == 1 ? DRAW_MUZZLE_FLASHES : DRAW_BURST_MUZZLES;
 
 		for(uint i = 0, j = critters.length(); i<j; i++)

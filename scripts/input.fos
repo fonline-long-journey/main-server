@@ -576,6 +576,7 @@ bool HandleHotkeys( uint8 key )
                     break;
                 case DIK_W:
                     CustomCall( "SwitchShootBorders" );
+					__ShootBordersEnabled = !__ShootBordersEnabled;
                     break;
                 case DIK_A:
                 {
