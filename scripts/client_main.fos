@@ -189,9 +189,10 @@ void        render_iface( uint layer )
 
 	if( layer == 2 )
     {
-		if( valid( GetChosen() ) )
+		CritterCl@ chosen = GetChosen();
+		if( valid( chosen ) && __ShootBordersEnabled )
 		{
-			DrawWepRadius(GetChosen());
+			DrawWepRadius(chosen);
 		}
 		
 		GUI_EngineCallback_Draw( true );

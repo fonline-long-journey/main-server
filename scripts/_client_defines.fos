@@ -11,6 +11,7 @@
 #pragma globalvar "uint __ConfigWeaponDistColor          = 0"
 #pragma globalvar "bool __ConfigDrawWeaponDist           = false"
 #pragma globalvar "bool __ConfigDrawMuzzles              = true" 
+#pragma globalvar "bool __ShootBordersEnabled            = false"
 
 // logger
 #define DEADLOG                            ( 0 )
