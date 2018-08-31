@@ -24,30 +24,44 @@ namespace Login_TLJ
     uint currentLogStrNum = STR_UPDATE_LOG_LATEST;
     void NextLog()
         {
-        	if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
-        		currentLogStrNum++;
+            if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
+                currentLogStrNum++;
         }
-        		
+                
     void PreviousLog()
         {
             if   (currentLogStrNum-1 >= STR_UPDATE_LOG_BEGIN)
-        		currentLogStrNum--;
+                currentLogStrNum--;
         }
     
 
     class Login : GUIScreen
     {
+        uint ScreenWidth = 0;
+
         void OnConstruct() override
         {
             SetPosition( 199, 14 );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
+            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_CENTER );
         }
 
-        void OnInit() override
+        void OnDraw() override
         {
-            SetSize( __ScreenHeight, __ScreenWidth );
+            if( __ScreenWidth != ScreenWidth ){
+                ScreenWidth = __ScreenWidth;
+                SetSize( __ScreenWidth, __ScreenHeight  );
+                if( __ScreenWidth > 1200 ){
+                    Find("Menu").SetPosition( floor(__ScreenWidth/2 - 273/2),  floor(__ScreenHeight/2 - 360/2) );
+                }else if (__ScreenWidth < 1000){
+                    Find("Menu").SetPosition( 20, floor(__ScreenHeight/2 - 360/2) );
+                }else{
+                    Find("Menu").SetPosition( floor(__ScreenWidth/5*2 - 273/2), floor(__ScreenHeight/2 - 360/2) );
+                }
+                
+                Find("UpdateLogPanel").SetPosition( __ScreenWidth - 477, 0);
+            }
         }
 
         void OnGlobalInput( uint8 key, string@ text ) override
@@ -57,18 +71,25 @@ namespace Login_TLJ
         }
     }
 
+    class Version : GUIText
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 10, 5 );
+            SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
+            SetText( MSG_GAME( STR_VERSION_INFO ) );
+            SetTextFlags( FT_BORDERED );
+            SetTextColor( COLOR_WHITE );
+        }
+    }
+
     class Menu : GUIPanel
     {
         void OnConstruct() override
         {
-            SetPosition( 468, 34 );
+            SetPosition( -9, 474 );
             SetSize( 360, 273 );
             SetBackgroundImage( "art/intrface/login_tlj.png" );
-        }
-
-        void OnShow( dictionary@ params ) override
-        {
-            SetPosition( __ScreenHeight/2 - 360/2, __ScreenWidth/2 - 273/2);
         }
     }
 
@@ -199,18 +220,6 @@ namespace Login_TLJ
         }
     }
 
-    class Version : GUIText
-    {
-        void OnConstruct() override
-        {
-            SetPosition( 10, 5 );
-            SetAnchor( ANCHOR_LEFT| ANCHOR_TOP );
-            SetText( MSG_GAME( STR_VERSION_INFO ) );
-            SetTextFlags( FT_BORDERED );
-            SetTextColor( COLOR_WHITE );
-        }
-    }
-
     class UpdateLogPanel : GUIPanel
     {
         void OnConstruct() override
@@ -218,11 +227,6 @@ namespace Login_TLJ
             SetSize( 377, 477 );
             SetDock( DOCK_RIGHT );
             SetBackgroundImage( "art/intrface/log_tlj.png" );
-        }
-
-        void OnShow( dictionary@ params ) override
-        {
-            SetPosition( 0, __ScreenWidth - 477);
         }
     }
 
@@ -253,7 +257,7 @@ namespace Login_TLJ
         void OnLMouseClick() override
         {
             NextLog();
-            Parent.FindText("UpdateLogText").SetText ( ( MSG_GAME( currentLogStrNum ) ) );
+            cast<UpdateLogText>(Parent).SetText ( ( MSG_GAME( currentLogStrNum ) ) );
         }
     }
 
@@ -269,7 +273,7 @@ namespace Login_TLJ
         void OnLMouseClick() override
         {
             PreviousLog();
-            Parent.FindText("UpdateLogText").SetText ( ( MSG_GAME( currentLogStrNum ) ) );
+            cast<UpdateLogText>(Parent).SetText ( ( MSG_GAME( currentLogStrNum ) ) );
         }
     }
 
@@ -277,8 +281,10 @@ namespace Login_TLJ
     {
         Login _Login();
         _Login.Init( null );
+        Version _Version();
+        _Version.Init( _Login );
         Menu _Menu();
-        _Menu.Init( _Login );
+        _Menu.Init( _Version );
         Play _Play();
         _Play.Init( _Menu );
         Registration _Registration();
@@ -295,8 +301,6 @@ namespace Login_TLJ
         _InputPassword.Init( _InputLogin );
         MessageBox _MessageBox();
         _MessageBox.Init( _Menu );
-        Version _Version();
-        _Version.Init( _Login );
         UpdateLogPanel _UpdateLogPanel();
         _UpdateLogPanel.Init( _Login );
         UpdateLogText _UpdateLogText();
@@ -360,7 +364,7 @@ namespace Register_TLJ
             SetModal( true );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-            SetBackgroundImage( "art/intrface/background.png" );
+            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_CENTER );
         }
 
         void OnInit() override
@@ -380,7 +384,7 @@ namespace Register_TLJ
 
         void OnShow( dictionary@ params ) override
         {
-            SetPosition( __ScreenHeight/2 - 640/2, __ScreenWidth/2 - 538/2);
+            SetPosition( floor(__ScreenHeight/2 - 640/1.999999), floor(__ScreenWidth/2 - 538/1.999999) );
         }
     }
 
@@ -1582,18 +1586,6 @@ namespace Register_TLJ
             SetSize( 135, 175 );
             SetBackgroundImage( "art/intrface/character_select_main.png" );
         }
-
-        void OnShow( dictionary@ params ) override
-        {
-            if( ActiveSelf )
-                SetActive( false );
-        }
-
-        void OnGlobalMouseDown( int button ) override
-        {
-            if( Active && !IsMouseHit() )
-                SetActive( false );
-        }
     }
 
     class ChaButtonUp : GUIButton
@@ -1675,7 +1667,7 @@ namespace Register_TLJ
 
         void OnLMouseClick() override
         {
-            Screen.FindPanel( "CharacterSelectPopUp" ).SetActive( false );
+            //Screen.FindPanel( "CharacterSelectPopUp" ).SetActive( false );
         }
     }
 
@@ -1954,6 +1946,8 @@ namespace Options_TLJ
 
     class Screen : GUIScreen
     {
+        uint ScreenWidth = 0;
+
         void OnConstruct() override
         {
             SetModal( true );
@@ -1962,9 +1956,19 @@ namespace Options_TLJ
             SetBackgroundImage( "art/intrface/background.png" );
         }
 
-        void OnInit() override
+        void OnDraw() override
         {
-            SetSize(__ScreenWidth, __ScreenHeight);
+            if( ScreenWidth != __ScreenWidth){
+                ScreenWidth = __ScreenWidth;
+                SetSize(__ScreenWidth, __ScreenHeight);
+                Main@ main = cast<Main>(Find("Main"));
+                if( ScreenWidth < 1000){
+                    // Если делить ровно на два все улетаёт нах-- за край экрана, хз почему
+                    main.SetPosition( floor(__ScreenWidth/2-640/1.99999) , floor(__ScreenHeight/2-480/1.99999) );
+                }else{
+                    main.SetPosition( floor(__ScreenWidth/2-main.get_Width()/2) , floor(__ScreenHeight/2-main.get_Height()/2) );
+                }
+            }
         }
     }
 
@@ -1974,13 +1978,7 @@ namespace Options_TLJ
         {
             SetPosition( 80, 60 );
             SetSize( 640, 480 );
-            SetBackgroundImage( "art/intrface/options_tlj.png" );
-        }
-
-        void OnInit() override
-        {
-            
-            SetPosition((__ScreenWidth - get_Width()) / 2, (__ScreenHeight - get_Height()) / 2);
+            SetBackgroundImage( "art/intrface/options_tlj.png", IMAGE_LAYOUT_CENTER );
         }
     }
 
