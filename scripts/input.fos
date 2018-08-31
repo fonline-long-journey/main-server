@@ -534,6 +534,7 @@ bool HandleHotkeys( uint8 key )
             // Open screen
             if( key == DIK_C && ( screen.Index == CLIENT_MAIN_SCREEN_GAME || screen.Index == CLIENT_MAIN_SCREEN_GLOBAL_MAP ) )
             {
+				ShowScreen( CLIENT_SCREEN_CHARACTER );
                 CritterCl@ chosen = GetChosen();
                 if( chosen !is null && chosen.ParamBase[ ST_UNSPENT_PERKS ] > 0 )
                     ShowScreen( CLIENT_SCREEN_PERK );
