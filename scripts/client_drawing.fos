@@ -651,6 +651,8 @@ class MuzzleFlash : IMuzzleFlash
 		else
 		{
 			RecalculatePoints(msDiff);
+			
+			DrawPrimitive(drawType, getOffsetRayData(data, 1, data[2], data[5]));
 			DrawPrimitive(drawType, data);
 		}
 		
