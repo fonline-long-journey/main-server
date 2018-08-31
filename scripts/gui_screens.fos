@@ -3188,9 +3188,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            //SetSize(1024, 101);
             SetPosition((__ScreenWidth - get_Width()) / 2, __ScreenHeight - _BaseHeight);
-            //Log("Pyromother!" + get_Parent().get_Width() + "" + get_Parent().get_Height());
         }
     }
 
@@ -3634,8 +3632,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 555, 11 );
-            SetSize( 150, 50 );
+            SetPosition( 634, 37 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -3647,6 +3644,14 @@ namespace Game_TLJ
             CritterCl@ chosen = GetChosen();
             if( chosen !is null )
                 result = chosen.Param[ ST_CURRENT_HP ];
+            
+            if( chosen.Param[ ST_CURRENT_HP ] > 0 ){
+                int d = floor(255 * chosen.Param[ ST_CURRENT_HP ] / chosen.Param[ ST_MAX_LIFE ]);
+                SetTextColor( COLOR_RGB(255 - d,d,0) );
+            } else {
+                SetTextColor( COLOR_RGB(255,0,0) );
+            }
+            
             return FormatXXX( result );
         }
     }
@@ -3655,8 +3660,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 293, 10 );
-            SetSize( 150, 50 );
+            SetPosition( 371, 36 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -3667,7 +3671,7 @@ namespace Game_TLJ
             int result = 0;
             CritterCl@ chosen = GetChosen();
             if( chosen !is null )
-                result = chosen.Param[ ST_ARMOR_CLASS ];
+                result = chosen.Param[ ST_CURRENT_AC ];
             return FormatXXX( result );
         }
     }
