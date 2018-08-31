@@ -3592,7 +3592,7 @@ namespace Game_TLJ
             int result = 0;
             CritterCl@ chosen = GetChosen();
             if( chosen !is null )
-                result = chosen.Param[ ST_ARMOR_CLASS ];
+                result = chosen.Param[ ST_CURRENT_AC ];
             return FormatXXX( result );
         }
     }
