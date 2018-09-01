@@ -185,9 +185,9 @@ class RayMap : IRayMap
 		else
 		{
 			RecalculatePoints();
-			DrawPrimitive(drawType, getOffsetRayData(data, -1, int( COLOR_BLACK ), int( COLOR_BLACK )));
-			DrawPrimitive(drawType, getOffsetRayData(data, 1, data[2], data[5]));
-			DrawPrimitive(drawType, getOffsetRayData(data, 2, int( COLOR_BLACK ), int( COLOR_BLACK )));
+			DrawPrimitive(drawType, getOffsetDrawData(data, -1, int( COLOR_BLACK ), int( COLOR_BLACK )));
+			DrawPrimitive(drawType, getOffsetDrawData(data, 1, data[2], data[5]));
+			DrawPrimitive(drawType, getOffsetDrawData(data, 2, int( COLOR_BLACK ), int( COLOR_BLACK )));
 
 			DrawPrimitive(drawType, data);
 		}
@@ -282,9 +282,9 @@ class BurstRay : IBurstRay
 			}
 			this.Rays[currentRay].RecalculatePoints();
 
-			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetRayData(this.Rays[currentRay].data, -1, int( COLOR_BLACK ), int( COLOR_BLACK )));
-			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetRayData(this.Rays[currentRay].data, 1, this.Rays[currentRay].data[2], this.Rays[currentRay].data[5]));
-			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetRayData(this.Rays[currentRay].data, 2, int( COLOR_BLACK ), int( COLOR_BLACK )));
+			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetDrawData(this.Rays[currentRay].data, -1, int( COLOR_BLACK ), int( COLOR_BLACK )));
+			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetDrawData(this.Rays[currentRay].data, 1, this.Rays[currentRay].data[2], this.Rays[currentRay].data[5]));
+			DrawPrimitive(this.Rays[currentRay].drawType, getOffsetDrawData(this.Rays[currentRay].data, 2, int( COLOR_BLACK ), int( COLOR_BLACK )));
 
 			DrawPrimitive(this.Rays[currentRay].drawType, this.Rays[currentRay].data);
 		}
@@ -296,7 +296,7 @@ class BurstRay : IBurstRay
 	}
 }
 
-array<int> getOffsetRayData(array<int> rayData, int offset, int startColor, int endColor)
+array<int> getOffsetDrawData(array<int> rayData, int offset, int startColor, int endColor)
 {
 	array<int> modifiedArray = rayData;
 	modifiedArray[1] = rayData[1] + offset;
@@ -651,6 +651,8 @@ class MuzzleFlash : IMuzzleFlash
 		else
 		{
 			RecalculatePoints(msDiff);
+			
+			DrawPrimitive(drawType, getOffsetDrawData(data, 1, data[2], data[5]));
 			DrawPrimitive(drawType, data);
 		}
 		

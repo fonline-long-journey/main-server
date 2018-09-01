@@ -48,8 +48,8 @@
 #define COLOR_GENERIC 			( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
 #define COLOR_WALL 				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
 #define COLOR_CAR 				( COLOR_RGB( 0xF2, 0xE5, 0x19 ) )
-#define COLOR_DEFAULT_TRACER    ( COLOR_RGB( 255, 60, 0 ) )
-	
+#define COLOR_DEFAULT_TRACER    ( COLOR_RGB( 255, 50, 0 ) )
+#define COLOR_TRACER_START      ( COLOR_RGB(255, 255, 145) )
 
 
 
