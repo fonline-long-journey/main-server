@@ -147,13 +147,12 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         aim = HIT_LOCATION_HEAD;
 
     int crTimeout = BATTLE_TIMEOUT( cr );
-	if( cr.Timeout[ TO_BATTLE ] == 0 )
-		cr.StatBase[ ST_CURRENT_AC ] = cr.Stat[ ST_ARMOR_CLASS ];
+
     if( cr.Timeout[ TO_BATTLE ] < crTimeout - __FullSecond )
         cr.TimeoutBase[ TO_BATTLE ] = crTimeout;
+		
     int targetTimeout = BATTLE_TIMEOUT( target );
-	if( target.Timeout[ TO_BATTLE ] == 0 )
-		target.StatBase[ ST_CURRENT_AC ] = target.Stat[ ST_ARMOR_CLASS ];
+
     if( target.Timeout[ TO_BATTLE ] < targetTimeout - __FullSecond )
         target.TimeoutBase[ TO_BATTLE ] = targetTimeout;
 
