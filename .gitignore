@@ -1,6 +1,7 @@
 # Trash
 logs/
 save/
+scripts/ASCompiler
 FOnlineServer.cfg
 *.log
 
