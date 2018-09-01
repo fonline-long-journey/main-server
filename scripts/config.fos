@@ -253,6 +253,9 @@ void InitializeGame()                    // Export
     SetParameterChangeBehaviour( ST_UNSPENT_PERKS, "parameters@changedParam_UnspentPerks" );
     #  endif
 
+	SetParameterChangeBehaviour( ST_CURRENT_AC, "parameters@changedCurrentAc");
+	SetParameterChangeBehaviour( ST_ARMOR_CLASS, "parameters@changedArmorClass");
+
     // / Registration parameters
     for( uint i = ST_STRENGTH; i <= ST_AGILITY; i++ )
         SetRegistrationParameter( i, true );

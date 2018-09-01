@@ -356,6 +356,7 @@
 #define CTE_ASSONFIRE                            ( 150 )
 #define CTE_BLEED                                ( 151 )
 #define CTE_STAMINA								 ( 152 )
+#define CTE_AC_REGEN                             ( 153 )
 // Drugs time events                40 (PID_STIMPAK) .. 1000
 
 // Parameters

@@ -128,6 +128,44 @@ void changedParam_FastShot( Critter& cr, uint, int oldValue )
     cr.ModeBase[ MODE_NO_AIM ] = ( cr.Trait[ TRAIT_FAST_SHOT ] != 0 ? 1 : 0 );
 }
 
+void changedCurrentAc( Critter& cr, uint, int oldValue )
+{
+	int value = cr.Param[ ST_CURRENT_AC ];
+	if( value < oldValue )
+	{
+		cr.EraseTimeEvents(CTE_AC_REGEN);
+		cr.AddTimeEvent( "cte_armorRegeneration", 0, CTE_AC_REGEN);
+	}
+	
+	cr.ParamBase[ ST_CURRENT_AC ] = CLAMP(cr.ParamBase[ ST_CURRENT_AC ], 0, cr.Param[ ST_ARMOR_CLASS ]);
+}
+
+void changedArmorClass( Critter& cr, uint, int oldValue )
+{
+	int value = cr.Param[ ST_ARMOR_CLASS ];
+
+	cr.EraseTimeEvents(CTE_AC_REGEN);
+	cr.AddTimeEvent( "cte_armorRegeneration", 0, CTE_AC_REGEN);
+	
+	cr.ParamBase[ ST_CURRENT_AC ] = CLAMP(cr.ParamBase[ ST_CURRENT_AC ], 0, cr.Param[ ST_ARMOR_CLASS ]);
+}
+
+uint cte_armorRegeneration( Critter& cr, int identifier, uint& rate ){
+	
+	if(cr.IsDead() || cr.Param[ST_CURRENT_AC] >= cr.Param[ST_ARMOR_CLASS])
+	{
+		return 0;
+	}
+	
+	if( cr.Timeout[TO_BATTLE] > 0 )
+	{
+		return 1;
+	}
+	
+	cr.ParamBase[ ST_CURRENT_AC ] += 1;
+	return 1;
+}
+
 int NextLevelNeedExp( Critter& cr ) // Export
 {
     int level = cr.Stat[ ST_LEVEL ];
