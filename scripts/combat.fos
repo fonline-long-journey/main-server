@@ -147,9 +147,13 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         aim = HIT_LOCATION_HEAD;
 
     int crTimeout = BATTLE_TIMEOUT( cr );
+	if( cr.Timeout[ TO_BATTLE ] == 0 )
+		cr.StatBase[ ST_CURRENT_AC ] = cr.Stat[ ST_ARMOR_CLASS ];
     if( cr.Timeout[ TO_BATTLE ] < crTimeout - __FullSecond )
         cr.TimeoutBase[ TO_BATTLE ] = crTimeout;
     int targetTimeout = BATTLE_TIMEOUT( target );
+	if( target.Timeout[ TO_BATTLE ] == 0 )
+		target.StatBase[ ST_CURRENT_AC ] = target.Stat[ ST_ARMOR_CLASS ];
     if( target.Timeout[ TO_BATTLE ] < targetTimeout - __FullSecond )
         target.TimeoutBase[ TO_BATTLE ] = targetTimeout;
 
@@ -409,9 +413,6 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		CLAMP(vietnamcrit, 0, 10);
 		if( realWeapon.Proto.Weapon_Type == WT_ASSAULT_RIFLE && cr.Perk[ PE_FIRE_STORM ] != 0)
 			critmod += vietnamcrit;
-
-		if( dist <= 10 && cr.Perk[ PE_YANDERE ] > 0 && cr.StatBase[ ST_CURRENT_ARMOR_PERK ] != ARMOR_PERK_HP4 && cr.StatBase[ ST_CURRENT_ARMOR_PERK ] != ARMOR_PERK_HP3 && cr.StatBase[ ST_CURRENT_ARMOR_PERK ] != ARMOR_PERK_HP2 )
-			critmod += 20;
 			
 		if( dist <= 10 && cr.Perk[ PE_SCHADENFREUDE ] > 0 )
 			critmod += 15;
@@ -423,8 +424,8 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		
         if( isHthAttack && cr.Perk[ PE_SLAYER ] != 0 ) //( attack.RealWeapon.Proto.Weapon_Type == WT_BLADE || attack.RealWeapon.Proto.Weapon_Type == WT_PENETRATION || attack.RealWeapon.Proto.Weapon_Type == WT_BLUNT )
             isCritical = true;
-        else
-            isCritical = ( Random( 1, 100 ) <= cr.Stat[ ST_CRITICAL_CHANCE ] + GetHitAim( aim ) + critmod );
+        /*else
+            isCritical = ( Random( 1, 100 ) <= cr.Stat[ ST_CRITICAL_CHANCE ] + GetHitAim( aim ) + critmod );*/
 
         //if( !isCritical && isUnarmed )
             //isCritical = Random( 1, 100 ) <= weapon.Weapon_UnarmedCriticalBonus;
@@ -1522,9 +1523,6 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 		
 	if( isCritical && valid(attack.RealWeapon) && ( attack.RealWeapon.Proto.Weapon_Type == WT_MINIGUN || attack.RealWeapon.Proto.Weapon_Type == WT_FLAMER ) )
 		isCritical = false;
-
-	    //if( isCritical && target.Perk[ PE_YANDERE ] != 0 && dist <= 10 ) 
-		//isCritical = false;
 		
     if( isCritical && ( target.Perk[ PE_TERMINATOR ] != 0 || target.Perk[ PE_SWAN_SONG ] != 0 ) && Random( 1, 4 ) == 1 ) 
 		isCritical = false;
@@ -1674,15 +1672,9 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 		
 	if( valid( attack.RealWeapon ) && attack.RealWeapon.Proto.Weapon_Type == WT_PENETRATION )
 		targetDR /= 2;
-	
-	if( valid( attack.RealWeapon ) && attack.Attacker.Perk[ PE_BAYONET_SPIRIT ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_PENETRATION )
-		targetDR -= 6;
 		
-	if ( weaponPerk == WEAPON_PERK_PENETRATE )
-		targetDR -= 5;
-	
-    if ( weaponPerk == WEAPON_PERK_PENETRATE && ( attack.RealWeapon.Proto.Weapon_Type == WT_SMG || attack.RealWeapon.Proto.Weapon_Type == WT_ASSAULT_RIFLE || attack.RealWeapon.Proto.Weapon_Type == WT_MACHINE_GUN ) )
-        targetDT /= 2;
+	/*if ( weaponPerk == WEAPON_PERK_PENETRATE )
+		targetDR -= 5;*/
 		
 	uint8  mode = 0;
     uint16 isrifle = target.GetSlotProto( SLOT_HAND1, mode ).Weapon_Type;
@@ -1712,6 +1704,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
     int dmgMax = attack.DmgMax + attack.BonusDmg;
     int rawDmg;
     int totalDmg = 0;
+	int armorDmg = 0;
 	uint hx = attack. Attacker.HexX;
 	uint hy = attack. Attacker.HexY;
 	int dist = GetDistantion( hx, hy, target.HexX, target.HexY );
@@ -1749,14 +1742,18 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
         rawDmg = Random( dmgMin, dmgMax );
         rawDmg *= dmgMul;
         rawDmg /= dmgDiv;
-        rawDmg -= targetDT;
-        rawDmg -= ( rawDmg * targetDR ) / 100;
+        //rawDmg -= targetDT; РЕЗИСТ
+        //rawDmg -= ( rawDmg * targetDR ) / 100;
+		
+		
         if( rawDmg > 0 )
-            totalDmg += rawDmg;
+		{
+			armorDmg += ( rawDmg * CLAMP(targetDR, 20, 100) ) / 100;
+            totalDmg += rawDmg - armorDmg;
+		}
     }
 	
 
-	int yandere = 0;
     if( validAttacker )
     {		
 	
@@ -1768,56 +1765,26 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 		totalDmg += 8;
 		attack.Attacker.ParamBase[ PE_FALCON_PUNCH ] = 1;
 		}*/
-		
-		if( attack.Attacker.Perk[ PE_HEAVY_HANDED ] != 0 )
-			totalDmg = CLAMP( totalDmg, 0, 40 );
-		
-        if( attack.Attacker.Perk[ PE_PYROMANIAC ] != 0 && dmgType == DAMAGE_FIRE ) //&& dmgType == DAMAGE_FIRE && attack.Attacker.Perk[ PE_YANDERE ] != 0 && dist <= 10 
-            {
-			totalDmg += 3;
-			yandere +=3;
-			}
-			
-		if( attack.Attacker.Perk[ PE_GAMBLER ] != 0 )
-            {
-			totalDmg += isCritical ? 2 : 0 ;
-			yandere += isCritical ? 2 : 0 ;
-			}
 			
         if( valid( attack.RealWeapon ) )
         {
             if( attack.Attacker.Perk[ PE_COWBOY ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_PISTOL )
-                {
 				totalDmg += 1;
-				yandere += 1;
-				}
 				
 		//if( attack.Attacker.Perk[ PE_LIGHT_STEP ] != 0 && ( dmgType == DAMAGE_EXPLODE ) && attack.Attacker.Id == target.Id )
             //totalDmg *= 0.5 ;
 				
 			if( attack.Attacker.Perk[ PE_COLDBLOOD ] != 0 )
-                {
 				totalDmg += 1;
-				yandere += 1;
-				}
 				
 			if( attack.Attacker.Perk[ PE_LIVING_ANATOMY ] != 0 && attack.Attacker.TimeoutBase[ TO_SK_FIRST_AID ] != 0 )
-				                {
 				totalDmg += 2;
-				yandere += 2;
-				}
 				
 			if( target.Perk[ PE_COLDBLOOD ] != 0 )
 				totalDmg -= 1;
 			
 			if( dist != 0 && attack.Attacker.Perk[ PE_SHOTGUN_TIME ] != 0 && ( attack.RealWeapon.Proto.Weapon_Type == WT_SHOTGUN || attack.RealWeapon.Proto.Weapon_Type == WT_MACHINE_GUN ) )
-                {
 				totalDmg += ( 6 / dist );
-				yandere += ( 6 / dist );
-				}
-				
-			if( attack.Attacker.Perk[ PE_YANDERE ] != 0 && dist <= 10 )
-				totalDmg += yandere;
 				
             //if( attack.Attacker.Perk[ PE_SHARPSHOT ] != 0 && ( attack.RealWeapon.Proto.Weapon_Type == WT_RIFLE || attack.RealWeapon.Proto.Weapon_Type == WT_SNIPER_RIFLE ) )
                 //totalDmg += isCritical ? 2 : 0;
@@ -1825,9 +1792,6 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
             //if( attack.Attacker.Perk[ PE_SHOT_OF_RELIEF ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_SNIPER_RIFLE && _CritIsInjured( target ) )
                 //totalDmg += attack.Attacker.Stat[ ST_PERCEPTION ];
         }
-		
-		if( target.Perk[ PE_YANDERE ] > 0 && dist <= 10 && target.StatBase[ ST_CURRENT_ARMOR_PERK ] != ARMOR_PERK_HP4 && target.StatBase[ ST_CURRENT_ARMOR_PERK ] != ARMOR_PERK_HP3 && target.StatBase[ ST_CURRENT_ARMOR_PERK ] != ARMOR_PERK_HP2 ) 
-			totalDmg *= 0.5;
 		
 		if( target.IsPlayer() && ( totalDmg >= target.StatBase[ ST_CURRENT_HP ] / 3 && isCritical ) && target.StatBase[ ST_INJURED ] == 0 && target.PerkBase[ PE_DONT_STARVE ] == 0 )
 			target.StatBase[ ST_INJURED ] = 1;
@@ -1999,8 +1963,18 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
     }
     if( totalDmg > 0 )
     {
-        if( target.Mode[ MODE_INVULNERABLE ] == 0 )
-        {
+        if( target.Mode[ MODE_INVULNERABLE ] == 0 ) 
+        { 
+			//Урон по броне
+			if ( target.Stat[ ST_CURRENT_AC ] <= armorDmg )
+				{
+				totalDmg += armorDmg - target.Stat[ ST_CURRENT_AC ];
+				target.StatBase[ ST_CURRENT_AC ] = 0;
+				}
+			else
+				target.StatBase[ ST_CURRENT_AC ] -= armorDmg;
+		
+		
 			target.StatBase[ ST_CURRENT_HP ] -= totalDmg;
             if( target.Stat[ ST_CURRENT_HP ] < 1 )
             {
