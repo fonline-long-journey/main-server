@@ -493,14 +493,14 @@
 #define MAP_rocketsilo2                        ( 501 )
 #define MAP_rocketsilo2                        ( 502 )
 
-#define MAP_creation						   ( 999 )
+#define MAP_creation						   ( 999 )		
 
 #define MAP_redbricks                          ( 1000 )
 #define MAP_redbricks_basement                 ( 1001 )
 #define MAP_hidden_stage                       ( 1002 )
 #define MAP_junkville						   ( 1010 )
 
-
+#define MAP_wallbridge						   ( 1030 )
 
 // ************************************************************************/
 // *                                                                      */

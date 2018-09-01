@@ -1229,10 +1229,11 @@ void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 // Default start position for players is center of global map.
 void critter_init( Critter& cr, bool firstTime )
 {
+
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
 	{
 		#ifdef __ACCESSNAMES
-			if(cr.Name == "Успех || Провал")
+			if(cr.Name == "Успех")
 				cr.SetAccess(ACCESS_ADMIN);
 		#endif
 		cr.RunClientScript("rp_client@AccessCallback", cr.GetAccess(), 0, 0, null, null);
@@ -1242,6 +1243,10 @@ void critter_init( Critter& cr, bool firstTime )
     {
         if( cr.IsPlayer() )
         {
+			Location@ loc = GetLocationByPid(262, 0);
+			cr.SetKnownLoc(true, loc.Id);	
+			cr.SetFog(loc.WorldX, loc.WorldY, FOG_NONE);
+			loc.Update();
             // Input: 7 special, 3 tag skills, 2 traits, age, gender
             uint traits = 0;
             for( uint i = TRAIT_BEGIN; i <= TRAIT_END; i++ )
