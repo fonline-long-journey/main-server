@@ -1568,6 +1568,8 @@
 
 # ifdef __SERVER
 #  pragma bindfield "uint Critter::GlobalMapMoveCounter -> 0"
+//#  pragma bindfunc  "void dummy() -> fonline_tla.dll SERVER"
+//#  pragma bindfunc  "void dummy() -> fonline_tla_client.dll CLIENT"
 # endif
 
 // /
