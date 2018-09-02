@@ -95,95 +95,21 @@ void SetStartLocation( Critter& cr ) // Export
 {
     uint startloc = 299;
     uint x, y = 0;
-    x = 525;
-    y = 525;
+    // РџРѕР·РёС†РёСЏ
+    x = 253;
+    y = 817;
     uint      locId = CreateLocation( startloc, x, y, null ); //MAP LINK
     Location@ loc = GetLocation( locId );
     Map@[] maps;
     loc.GetMaps( maps );
     uint zoneX = cr.WorldX / __GlobalMapZoneLength;
     uint zoneY = cr.WorldY / __GlobalMapZoneLength;
-    cr.SetFog( zoneX, zoneY, FOG_FULL );
-    cr.SetFog( zoneX - 1, zoneY - 1, FOG_FULL );
-    cr.SetFog( zoneX, zoneY - 1, FOG_FULL );
-    cr.SetFog( zoneX + 1, zoneY - 1, FOG_FULL );
-    cr.SetFog( zoneX - 1, zoneY, FOG_FULL );
-    cr.SetFog( zoneX + 1, zoneY, FOG_FULL );
-    cr.SetFog( zoneX - 1, zoneY + 1, FOG_FULL );
-    cr.SetFog( zoneX, zoneY + 1, FOG_FULL );
-    cr.SetFog( zoneX + 1, zoneY + 1, FOG_FULL );
-    cr.SetFog( 10, 10, FOG_NONE );
-
     cr.TransitToMap( maps[ 0 ].Id, 0 );
-    cr.SetKnownLoc( false, LOCATION_central_town );
-	cr.SetKnownLoc( false, LOCATION_redbricks );
 
-    zoneX = cr.WorldX / __GlobalMapZoneLength;
-    zoneY = cr.WorldY / __GlobalMapZoneLength;
-    cr.SetFog( zoneX, zoneY, FOG_NONE );
-    cr.SetFog( zoneX - 1, zoneY - 1, FOG_HALF );
-    cr.SetFog( zoneX, zoneY - 1, FOG_HALF );
-    cr.SetFog( zoneX + 1, zoneY - 1, FOG_HALF );
-    cr.SetFog( zoneX - 1, zoneY, FOG_HALF );
-    cr.SetFog( zoneX + 1, zoneY, FOG_HALF );
-    cr.SetFog( zoneX - 1, zoneY + 1, FOG_HALF );
-    cr.SetFog( zoneX, zoneY + 1, FOG_HALF );
-    cr.SetFog( zoneX + 1, zoneY + 1, FOG_HALF );
-
-/*
-    Map@ replicator = GetStartReplicatorMap();
-    if( not valid( replicator ) )
-        return;
-
-    // Hidden fog on default player position
-    uint zoneX = cr.WorldX / __GlobalMapZoneLength;
-    uint zoneY = cr.WorldY / __GlobalMapZoneLength;
-    cr.SetFog( zoneX, zoneY, FOG_FULL );
-    cr.SetFog( zoneX - 1, zoneY - 1, FOG_FULL );
-    cr.SetFog( zoneX, zoneY - 1, FOG_FULL );
-    cr.SetFog( zoneX + 1, zoneY - 1, FOG_FULL );
-    cr.SetFog( zoneX - 1, zoneY, FOG_FULL );
-    cr.SetFog( zoneX + 1, zoneY, FOG_FULL );
-    cr.SetFog( zoneX - 1, zoneY + 1, FOG_FULL );
-    cr.SetFog( zoneX, zoneY + 1, FOG_FULL );
-    cr.SetFog( zoneX + 1, zoneY + 1, FOG_FULL );
-
-    cr.TransitToMap( replicator.Id, ENTIRE_REPLICATION );
-
-    cr.SetKnownLoc( true, replicator.GetLocation().Id );
-    cr.SetKnownLoc( false, LOCATION_ReplicationHell );
-    uint16 replPid = replicator.GetLocation().GetProtoId();
-    if( replPid == LOCATION_Replication1 )
-    {
-       // cr.SetKnownLoc( false, LOCATION_Den );
-        //cr.SetKnownLoc( false, LOCATION_Klamath );
+    // РћС‚РєСЂС‹РІР°РµС‚ РІРµСЃСЊ РіР»РѕР±Р°Р» РєР°Рє "РЅРµ СЂР°Р·РІРµРґР°РЅРЅС‹Р№"
+    for(uint gx = 0; gx < __GlobalMapWidth; gx++) for(uint gy = 0; gy < __GlobalMapHeight; gy++){
+        if( not (gx == zoneX && gy == zoneY) ) cr.SetFog( gx, gy, FOG_HALF );
     }
-    else if( replPid == LOCATION_Replication2 )
-    {
-        //cr.SetKnownLoc( false, LOCATION_Modoc );
-    }
-    else if( replPid == LOCATION_Replication3 )
-    {
-        //cr.SetKnownLoc( false, LOCATION_Redding );
-    }
-    else if( replPid == LOCATION_Replication4 )
-    {
-       // cr.SetKnownLoc( false, LOCATION_BrokenHills );
-        //cr.SetKnownLoc( false, LOCATION_NewReno );
-    }
-
-    zoneX = cr.WorldX / __GlobalMapZoneLength;
-    zoneY = cr.WorldY / __GlobalMapZoneLength;
-    cr.SetFog( zoneX, zoneY, FOG_NONE );
-    cr.SetFog( zoneX - 1, zoneY - 1, FOG_HALF );
-    cr.SetFog( zoneX, zoneY - 1, FOG_HALF );
-    cr.SetFog( zoneX + 1, zoneY - 1, FOG_HALF );
-    cr.SetFog( zoneX - 1, zoneY, FOG_HALF );
-    cr.SetFog( zoneX + 1, zoneY, FOG_HALF );
-    cr.SetFog( zoneX - 1, zoneY + 1, FOG_HALF );
-    cr.SetFog( zoneX, zoneY + 1, FOG_HALF );
-    cr.SetFog( zoneX + 1, zoneY + 1, FOG_HALF );
- */
 }
 
 void SetReplicationTime( Critter& cr ) // Export
@@ -252,7 +178,7 @@ void ReplicateCritter( Critter& cr ) // Export
         bool customReplMap = false;
         if( cr.Stat[ ST_NEXT_REPLICATION_MAP ] > 0 )
         {
-            // Нестандартная репликация в Чистилище
+            // РќРµСЃС‚Р°РЅРґР°СЂС‚РЅР°СЏ СЂРµРїР»РёРєР°С†РёСЏ РІ Р§РёСЃС‚РёР»РёС‰Рµ
             customReplMap = NeedReplicateCritterToBattle( cr );
         }
 
@@ -331,7 +257,7 @@ void ReplicateCritter( Critter& cr ) // Export
         }
         else
         {
-            // Очистка данных по нестандартной репликации
+            // РћС‡РёСЃС‚РєР° РґР°РЅРЅС‹С… РїРѕ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ СЂРµРїР»РёРєР°С†РёРё
             cr.StatBase[ ST_NEXT_REPLICATION_MAP ] = 0;
             cr.StatBase[ ST_NEXT_REPLICATION_ENTIRE ] = 0;
         }
