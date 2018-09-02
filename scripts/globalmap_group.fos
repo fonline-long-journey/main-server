@@ -244,7 +244,7 @@ void global_process( int processType, Critter& cr, Item@ car,
 
             // Validate charisma
             Critter@ leader = group[ 0 ];
-            if( int( group.length() ) > leader.Stat[ ST_CHARISMA ] + leader.Perk[ PE_MAGNETIC_PERSONALITY ] )
+            if( int( group.length() ) > leader.Stat[ ST_CHARISMA ] + 1 + leader.Perk[ PE_MAGNETIC_PERSONALITY ] )
             {
                 leader.SayMsg( SAY_NETMSG, TEXTMSG_GAME, STR_CRIT_BAD_CHARISMA );
                 speed = 0.0f;                 // Stop

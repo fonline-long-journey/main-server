@@ -110,6 +110,7 @@ void SetStartLocation( Critter& cr ) // Export
     for(uint gx = 0; gx < __GlobalMapWidth; gx++) for(uint gy = 0; gy < __GlobalMapHeight; gy++){
         if( not (gx == zoneX && gy == zoneY) ) cr.SetFog( gx, gy, FOG_HALF );
     }
+     cr.SetFog( zoneX, zoneY, FOG_NONE );
 }
 
 void SetReplicationTime( Critter& cr ) // Export
