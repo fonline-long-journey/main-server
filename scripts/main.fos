@@ -65,6 +65,7 @@ import void Shave( Critter& cr, Critter& onCr ) from "hair";
 import void logger( Critter& cr, int type, string@ message ) from "logger";
 import void refreshnames(Critter& player) from "gm";
 import void InitCritterTypes() from "critter_types";
+import void WeatherInit() from "weather";
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Called before world generation.
@@ -171,6 +172,9 @@ bool start()
     // Game Events initialization
     DeclareEvents();
     CheckAllGameEvents();
+
+    // Weather system
+    WeatherInit();
 
     // Bulletin boards
     StartMessenger();

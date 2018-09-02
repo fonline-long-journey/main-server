@@ -1,0 +1,105 @@
+#include "_macros.fos"
+#include "_defines.fos"
+
+// Weather system #wip @erandelax 02/09/18
+
+class Storm{
+	uint16 WorldX;
+	uint16 WorldY;
+	uint radius;
+	int speedX;
+	int speedY;
+
+	Storm(uint16 WorldX, uint16 WorldY, uint16 radius = 350){
+		this.WorldX = WorldX;
+		this.WorldY = WorldY;
+		this.radius = radius;
+		this.speedX = 0;
+		this.speedY = 0;
+	}
+}
+
+uint globalWidth = __GlobalMapWidth * __GlobalMapZoneLength;
+uint globalHeight = __GlobalMapHeight * __GlobalMapZoneLength;
+
+Storm@[] storms;
+
+uint world_distance(uint16 x1, uint16 y1, uint16 x2, uint16 y2){
+	return uint(floor( sqrt( ABS(x1 - x2) * ABS(x1 - x2) + ABS(y1 - y2) * ABS(y1 - y2) ) ));
+}
+
+/*EXPORT*/ void WeatherInit(){
+	//Log("Weather system initialization");
+	CreateTimeEvent(__FullSecond + 1, "e_WeatherLoop", false /*drop on shutdown*/ );
+}
+
+/*EXPORT*/ void add_storm(uint16 x, uint16 y, uint radius = 350){
+	storms.insertLast( Storm(x, y, radius) );
+}
+
+/*EXPORT*/ void remove_storm(){
+	storms.resize(0);
+}
+
+/* ~run */ void _storm_add(Critter& player, int p1, int p2, int p3){
+	add_storm( player.WorldX, player.WorldY, 350 );
+}
+
+/* ~run */ void _storm_wipe(Critter& player, int p1, int p2, int p3){
+	remove_storm();
+}
+
+/* ~run */ void _storm_info(Critter& player, int p1, int p2, int p3){
+	if(storms.length > 0) for(uint pos = 0; pos < storms.length; pos++){
+		player.Say(SAY_NETMSG, "X:"+storms[pos].WorldX+" Y:"+storms[pos].WorldY+" R:"+storms[pos].radius);
+	}
+}
+
+uint e_WeatherLoop(uint[]@ values){
+	if( storms.length < 2 ){
+		storms.insertLast( Storm(Random(0,globalWidth),Random(0,globalHeight),150) );
+		storms.insertLast( Storm(Random(0,globalWidth),Random(0,globalHeight),150) );
+		//Log("Creating storms...");
+	} else {
+		Location @[] locations;
+		//uint count = GetLocations(uint16(floor(globalWidth/2)),uint16(floor(globalHeight/2)),globalWidth,locations);
+		uint count = GetAllLocations(0,locations);
+		//Log("Found "+count+" locations");
+		// Apply storms to locations
+		if(count > 0) for(uint pos = 0; pos < count; pos++){
+			Location@ location = locations[pos];
+			uint8 power = 0;
+			// Get maps
+			Map @[] maps;
+			uint mapsCount = location.GetMaps(maps);
+			if(mapsCount > 0){
+				// Check storms for location closeness and define power
+				for(uint spos = 0; spos < storms.length; spos++){
+					uint distance = world_distance(location.WorldX, location.WorldY, storms[spos].WorldX, storms[spos].WorldY);
+					//Log("Storm distance "+distance+" "+location.WorldX+":"+location.WorldY);
+					if( distance <= storms[spos].radius){
+						//Log("Enough close");
+						uint8 newPower = uint(255 - floor(255 * distance / storms[spos].radius));
+						if(power < newPower) power = newPower;
+					}
+				}
+				// Apply it to all maps
+				for(uint mpos = 0; mpos < mapsCount; mpos++){
+					maps[mpos].SetRain(power);
+				}
+				//Log("Applied storm="+power+" to location "+location.WorldX+":"+location.WorldY);
+			} else {
+				//Log("No maps at "+location.WorldX+":"+location.WorldY);
+			}
+		}
+		// Move storms
+		if( storms.length > 0 ) for(uint spos = 0; spos < storms.length; spos++){
+			storms[spos].speedX =  storms[spos].speedX + Random(-1, 1) % 5;
+			storms[spos].speedY =  storms[spos].speedY + Random(-1, 1) % 5;
+			storms[spos].WorldX = ( storms[spos].WorldX + storms[spos].speedX ) % globalWidth;
+			storms[spos].WorldY = ( storms[spos].WorldY + storms[spos].speedY ) % globalHeight;
+			//Log("Storm "+spos+" moved to "+storms[spos].WorldX+":"+storms[spos].WorldY);
+		}
+	}
+	return 20; // Adjust for good performance
+}
