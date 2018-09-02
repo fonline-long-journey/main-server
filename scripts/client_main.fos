@@ -147,7 +147,11 @@ uint loop()
 {
     GUI_EngineCallback_Loop();
 	GUI_EngineCallback_ItemChanged(false);
-	//__ConsoleActive = GUI_IsConsoleActive();
+	GUIScreen@ screen = GUI_GetActiveScreen();
+	if( screen.Index != CLIENT_MAIN_SCREEN_GLOBAL_MAP )
+	{
+		__ConsoleActive = GUI_IsConsoleActive();
+	}
     return 1;
 }
 
