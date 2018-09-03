@@ -198,7 +198,7 @@ uint[][][] parameters =
         { aPids_WeaponUnarmed, 1, 1 }
     },
     {
-        { LOCATION_Den },
+        { LOCATION_WALLBRIDGE },
         { PID_LEATHER_JACKET, 1, PID_LOUISVILLE_SLUGGER, 1, PID_COOKIE, 1, PID_BOTTLE_CAPS, 1000, PID_BOOZE, 2, PID_STIMPAK, 5 },
         { aPids_WeaponRifles, 1, 1 }
     },

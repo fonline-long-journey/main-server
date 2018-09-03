@@ -65,7 +65,7 @@ void _EliInit( Critter& cr, bool firstTime )
     cr.PerkBase[ PE_SLAYER ] = 1;
     cr.PerkBase[ PE_TERMINATOR ] = 1;
     uint16[] locPids;
-    for( uint16 i = LOCATION_Den; i <= LOCATION_GeckCity; i++ )
+    for( uint16 i = LOCATION_WALLBRIDGE; i <= LOCATION_GeckCity; i++ )
     {
         if( i == LOCATION_SanFrancisco || i == LOCATION_Atoll )
             continue;

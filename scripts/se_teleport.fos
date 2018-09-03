@@ -118,7 +118,7 @@ Critter @ GetRandomPlayer()                                                     
     {
         tries--;         // Счетчик для сокращения числа циклов
 
-        locPid = Random( LOCATION_Den, LOCATION_ReplicationHell );
+        locPid = Random( LOCATION_WALLBRIDGE, LOCATION_ReplicationHell );
         @ loc = GetLocationByPid( locPid, 0 );
         if( !valid( loc ) )
             continue;

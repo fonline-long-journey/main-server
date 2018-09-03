@@ -1894,7 +1894,6 @@ void answer_GM_PANNEL_CRITTER_NPC_STATS( Critter& player, uint answerI, string& 
 	{
 		int AI_type = targetCr.ParamBase[ MERC_TYPE ];
 		string AI_string = "Не спавн";
-		string[] AI_List = { "Контроль", "Болванка", "Манекен", "Монстр", "Рейдер", "Охрана", "Мутант", "Респавн", "Зерг раш", "Назад" };
 		if( AI_type >= 10 && AI_type <= 18 ) { AI_string = AI_List[ AI_type-10 ]; }
 		Str = "Текущий AI: "+AI_string + " - " +AI_type;
 		MenuMaker( player, AI_List, "answer_GM_PANNEL_CRITTER_NPC_AI", Str );

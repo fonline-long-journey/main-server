@@ -1247,10 +1247,8 @@ void critter_init( Critter& cr, bool firstTime )
     {
         if( cr.IsPlayer() )
         {
-			Location@ loc = GetLocationByPid(262, 0);
+			Location@ loc = GetLocationByPid(LOCATION_WALLBRIDGE, 0);
 			cr.SetKnownLoc(true, loc.Id);	
-			cr.SetFog(loc.WorldX, loc.WorldY, FOG_NONE);
-			loc.Update();
             // Input: 7 special, 3 tag skills, 2 traits, age, gender
             uint traits = 0;
             for( uint i = TRAIT_BEGIN; i <= TRAIT_END; i++ )

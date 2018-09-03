@@ -286,7 +286,7 @@ uint e_RunPreparationStage( uint[] @ values )
     uint16 y = 0;
 
     // Расстановка нпц-нанимателей
-    for( uint i = LOCATION_Den; i < = LOCATION_ReplicationHell; i++ )
+    for( uint i = LOCATION_WALLBRIDGE; i < = LOCATION_ReplicationHell; i++ )
     {
         if( LOCATION_IS_CITY( i ) || i == LOCATION_ReplicationHell )
         {
@@ -371,7 +371,7 @@ uint e_RunBeginStage( uint[] @ values )
 
     critters.resize( 0 );
     // Удаление экзекуторов
-    for( uint i = LOCATION_Den; i < = LOCATION_ReplicationHell; i++ )
+    for( uint i = LOCATION_WALLBRIDGE; i < = LOCATION_ReplicationHell; i++ )
     {
         if( LOCATION_IS_CITY( i ) || i == LOCATION_ReplicationHell )
         {

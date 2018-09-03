@@ -6,10 +6,10 @@
 // ************************************************************************/
 
 
-#define LOCATION_IS_CITY                       # (locPid)                 ( ( ( locPid ) >= LOCATION_Den && ( locPid ) <= LOCATION_Vault13 && ( locPid ) != LOCATION_Cathedral && ( locPid ) != LOCATION_MilitaryBase && ( locPid ) != LOCATION_Sierra ) || ( locPid ) == LOCATION_ReplicationHell )
+#define LOCATION_IS_CITY                       # (locPid)                 ( ( ( locPid ) >= LOCATION_WALLBRIDGE && ( locPid ) <= LOCATION_Vault13 && ( locPid ) != LOCATION_Cathedral && ( locPid ) != LOCATION_MilitaryBase && ( locPid ) != LOCATION_Sierra ) || ( locPid ) == LOCATION_ReplicationHell )
 #define LOCATION_IS_OCEAN                      # (locPid)                 ( ( locPid ) >= LOCATION_OceanEncounter1 && ( locPid ) <= LOCATION_OceanTrader )
 
-#define LOCATION_Den                           ( 1 )
+#define LOCATION_WALLBRIDGE                    ( 1 )
 #define LOCATION_Klamath                       ( 2 )
 #define LOCATION_Modoc                         ( 3 )
 #define LOCATION_VaultCity                     ( 4 )
