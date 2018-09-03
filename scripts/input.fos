@@ -74,10 +74,7 @@ void mouse_down( int button ) // Engine callback
                     ItemCl    @it = GetMonitorItem( x, y );
                     if( @cr != null )
                     {
-                        if( cr.IsPlayer() )
-                            RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );                     // панель действий с игроком
-                        else
-                            RunServerScript( "gm@GM_PANNEL_CRITTER_NPC", cr.Id, 0, 0, null, null );                        // панель действий с нпц
+                        RunServerScript( "gm@GM_PANNEL_CRITTER_PLAYER", cr.Id, 0, 0, null, null );             // панель действий с криттером
                     }
                     else if( @it != null )
                     {
@@ -87,7 +84,7 @@ void mouse_down( int button ) // Engine callback
                     {
                         uint16 hexX = 0, hexY = 0;
                         GetMonitorHex( x, y, hexX, hexY );
-                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                       // панель действий с гексом
+                        RunServerScript( "gm@GM_PANNEL_HEX", hexX, hexY, 0, null, null );                      // панель действий с гексом
                     }
                 }
             }
