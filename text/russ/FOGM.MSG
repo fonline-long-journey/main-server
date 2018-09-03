@@ -22,6 +22,7 @@
 {20}{}{Arroyo Temple Entrance}
 {25}{}{17arroyo}
 {26}{}{gntlwin1:25, gntlwind:25, animal1:20, animal:20, gustwind:5, gustwin1:5}
+
 # Map 2, base 30
 {30}{}{Arroyo}
 {35}{}{17arroyo}
@@ -56,10 +57,12 @@
 {100}{}{Klamath Downtown}
 {105}{}{03wrldmp}
 {106}{}{laughter:10, laughte1:10, gntlwind:30, gntlwin1:20, brdchir1:10, brdchirp:20}
+
 # Map 10, base 110
 {110}{}{Klamath Mall}
 {115}{}{03wrldmp}
-{116}{}{animal:20, gntlwind:30, gntlwin1:20, brdchir1:10, brdchirp:20}
+{116}{}{gntlwin1:25, gntlwind:25, gustwind:10, dogbark1:10, laughter:15, vulture:10}
+
 # Map 11, base 120
 {120}{}{Klamath Vic's toilet}
 {125}{}{12junktn}
@@ -79,8 +82,9 @@
 
 # Map 15, base 160
 {160}{}{Vault City Courtyard}
-{165}{}{22vcity}
-{166}{}{blank:40, brdchirp:25, brdchir1:25, potspans:5, potspan1:5}
+{165}{}{01hub}
+{166}{}{gntlwin1:25, gntlwind:25, gustwind:10, dogbark1:10, laughter:15, vulture:10}
+
 # Map 16, base 170
 {170}{}{Vault City Downtown}
 {175}{}{22vcity}
@@ -1384,21 +1388,19 @@
 # Entire X pic x, (pid + 100) * 1000 + 100 + X*10 + 2
 # Entire X pic y, (pid + 100) * 1000 + 100 + X*10 + 3
 
-# Den, pid 1, base 101000
-{101000}{}{Яма}
-{101005}{}{Город бандитов и работорговцев.}
+# Wallbridge, pid 1, base 101000
+{101000}{}{Уоллбридж}
+{101005}{}{Торговое поселение, основанное жителями из города Форт Уорт. Контролирует ключевой караванный маршрут региона.}
 {101020}{}{art\intrface\twnden.frm}
 {101030}{}{art\intrface\WM_DEN.FRM}
 {101090}{}{3}
-{101101}{}{Западная сторона}
-{101102}{}{140}
-{101103}{}{278}
-{101111}{}{Стоянка}
-{101112}{}{80}
+{101101}{}{Стоянка Караванов}
+{101102}{}{120}
+{101103}{}{280}
+{101111}{}{КПП}
+{101112}{}{150}
 {101113}{}{260}
-{101121}{}{Восточная сторона}
-{101122}{}{280}
-{101123}{}{380}
+
 
 # Klamath, pid 2, base 102000
 {102000}{}{Кламат}

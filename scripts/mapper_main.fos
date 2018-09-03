@@ -1660,6 +1660,7 @@ void map_save( MapperMap& map )
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Some useful functions.
 // #ConvertMaps
+// #ClearTiles
 // #MapTime         value
 // #MapNoLogOut     value
 // #MapScriptModule moduleName
@@ -1667,91 +1668,251 @@ void map_save( MapperMap& map )
 
 MapperMap@ GetActiveMap()
 {
-    MapperMap@[] maps;
-    int cur = GetLoadedMaps( maps );
-    if( cur == -1 )
-        return null;
-    return maps[ cur ];
+	MapperMap@[] maps;
+	int cur = GetLoadedMaps(maps);
+	if(cur == -1) return null;
+	return maps[cur];
 }
 
 // Maps convertation to text format
-string ConvertMaps( string str )
+string ConvertMaps(string str)
 {
-    string@[] mapNames;
-    GetMapFileNames( null, mapNames );
+	string@[] mapNames;
+	GetMapFileNames(null, mapNames);
 
-    uint success = 0;
-    uint fail = 0;
-    for( uint i = 0; i < mapNames.length(); i++ )
-    {
-        MapperMap@ map = LoadMap( mapNames[ i ], PT_SERVER_MAPS );
-        if( not (map is null) )
-        {
-            if( SaveMap( map, mapNames[ i ], PT_SERVER_MAPS ) )
-            {
-                success++;
-            }
-            else
-            {
-                Message( "Fail to save " + mapNames[ i ] );
-                fail++;
-            }
+	uint success = 0;
+	uint fail = 0;
+	for(uint i = 0; i < mapNames.length(); i++)
+	{
+		MapperMap@ map = LoadMap(mapNames[i], PT_SERVER_MAPS);
+		if(not (map is null))
+		{
+			if(SaveMap(map, mapNames[i], PT_SERVER_MAPS))
+			{
+				success++;
+			}
+			else
+			{
+				Message("Fail to save " + mapNames[i]);
+				fail++;
+			}
 
-            UnloadMap( map );
-        }
-        else
-        {
-            Message( "Fail to load " + mapNames[ i ] );
-            fail++;
-        }
-    }
+			UnloadMap(map);
+		}
+		else
+		{
+			Message("Fail to load " + mapNames[i]);
+			fail++;
+		}
+	}
 
-    return "Done, maps converted " + ( success + fail ) + ", success " + success + ", fail " + fail + ".";
+	return "Done, maps converted " + (success + fail) + ", success " + success + ", fail " + fail + ".";
+}
+
+// Keep only one tile per hex
+string ClearTiles(string str)
+{
+	MapperMap@ map = GetActiveMap();
+	if(map is null) return "Map not loaded.";
+
+	uint deleted = 0;
+	for(uint hx = 0; hx < map.Width; hx++)
+	{
+		for(uint hy = 0; hy < map.Height; hy++)
+		{
+			if( hx%2 == 0 && hy%2 == 0)
+			{
+				for(;map.GetTilesCount(hx, hy, false) > 1; deleted++)
+					map.DeleteTile(hx, hy, false, 0);
+				for(;map.GetTilesCount(hx, hy, true)  > 1; deleted++)
+					map.DeleteTile(hx, hy, true , 0);
+			}
+			else
+			{
+				for(;map.GetTilesCount(hx, hy, false) > 0; deleted++)
+					map.DeleteTile(hx, hy, false, 0);
+				for(;map.GetTilesCount(hx, hy, true)  > 0; deleted++)
+					map.DeleteTile(hx, hy, true , 0);
+			}
+		}
+	}
+
+	return "Done. Deleted " + deleted + " tiles.";
 }
 
 // Map parameters
-string MapTime( string str )
+string MapTime(string str)
 {
-    MapperMap@ map = GetActiveMap();
-    if( map is null )
-        return "Map not loaded.";
-    int value = 0;
-    if( not StrToInt( str, value ) )
-        return "Wrong value.";
+	MapperMap@ map = GetActiveMap();
+	if(map is null) return "Map not loaded.";
+	int value = 0;
+	if(not StrToInt(str, value)) return "Wrong value.";
 
-    map.Time = value;
-    return "Done. Time setted to " + map.Time + ".";
+	map.Time = value;
+	return "Done. Time setted to " + map.Time + ".";
 }
 
-string MapNoLogOut( string str )
+string MapNoLogOut(string str)
 {
-    MapperMap@ map = GetActiveMap();
-    if( map is null )
-        return "Map not loaded.";
-    int value = 0;
-    if( not StrToInt( str, value ) )
-        return "Wrong value.";
+	MapperMap@ map = GetActiveMap();
+	if(map is null) return "Map not loaded.";
+	int value = 0;
+	if(not StrToInt(str, value)) return "Wrong value.";
 
-    map.NoLogOut = value != 0 ? true : false;
-    return "Done. NoLogOut setted to " + map.NoLogOut + ".";
+	map.NoLogOut = value != 0 ? true : false;
+	return "Done. NoLogOut setted to " + map.NoLogOut + ".";
 }
 
-string MapScriptModule( string str )
+string MapScriptModule(string str)
 {
-    MapperMap@ map = GetActiveMap();
-    if( map is null )
-        return "Map not loaded.";
+	MapperMap@ map = GetActiveMap();
+	if(map is null) return "Map not loaded.";
 
-    map.ScriptModule = str;
-    return "Done. ScriptModule setted to " + map.ScriptModule + ".";
+	map.ScriptModule = str;
+	return "Done. ScriptModule setted to " + map.ScriptModule + ".";
 }
 
-string MapScriptFunc( string str )
+string MapScriptFunc(string str)
 {
-    MapperMap@ map = GetActiveMap();
-    if( map is null )
-        return "Map not loaded.";
+	MapperMap@ map = GetActiveMap();
+	if(map is null) return "Map not loaded.";
 
-    map.ScriptFunc = str;
-    return "Done. ScriptFunc setted to " + map.ScriptFunc + ".";
+	map.ScriptFunc = str;
+	return "Done. ScriptFunc setted to " + map.ScriptFunc + ".";
 }
+
+
+
+
+    #define EXIT_GRID_NEW   (4052)
+    #define MAP_LENGTH  (1000)
+     
+    string setexitval(string str)
+    {
+        MapperMap@ map = GetActiveMap();
+        if(map !is null)
+        {
+            for(uint16 y = 0; y < MAP_LENGTH; ++y)
+            {
+                for(uint16 x = 0; x < MAP_LENGTH; ++x)
+                {
+                    MapperObject@ obj = map.GetObject(x, y, MAP_OBJECT_ITEM, EXIT_GRID_NEW, 0);
+                    if(obj !is null)
+                    {
+                        obj.Item_Val1 = obj.Item_Val0;
+                        obj.Item_Val0 = 0;
+                    }
+                }
+            }
+            return "done.";
+        }
+        return "fail, map !loaded";
+    } 
+
+
+    #define SPLIT_TOKEN " "
+        
+	string removegrid(string str){
+        for(uint i = 4031; i <= 4038; ++i){
+            delbypid(""+i+" ");
+        }
+       
+        return "done.";
+    }  
+    string delbypid(string str)
+    {
+        string@[]@ param = split(str, SPLIT_TOKEN);
+        int pid = 0;
+        StrToInt(param[0], pid);
+        if(pid == 0) {return "not valid protoId";}
+        MapperMap@ map = GetActiveMap();
+        if(map !is null)
+        {
+            for(uint16 y = 0; y < MAP_LENGTH; ++y)
+            {
+                for(uint16 x = 0; x < MAP_LENGTH; ++x)
+                {
+                    MapperObject@ obj = map.GetObject(x, y, param[1] == "0" ? MAP_OBJECT_ITEM : MAP_OBJECT_SCENERY, pid, 0);
+                    if(obj !is null)
+                    {
+                        DeleteObject(obj);
+                    }
+                }
+            }
+            return "done.";
+        }
+        return "fail, map !loaded";
+    } 
+
+
+    #define EXIT_GRID_NEW   (4052)
+    #define EXIT_GRID_NEW_  (4053)
+    #define MAP_LENGTH  (1000)
+     
+    string convgen(string str)
+    {
+        MapperMap@ map = GetActiveMap();
+        if(map !is null)
+        {
+            for(uint16 y = 0; y < MAP_LENGTH; ++y)
+            {
+                for(uint16 x = 0; x < MAP_LENGTH; ++x)
+                {
+                    MapperObject@ obj = map.GetObject(x, y, MAP_OBJECT_ITEM, EXIT_GRID_NEW, 0);
+                    if(obj !is null)
+                    {
+                        int tempVal = obj.Item_Val1;
+                        DeleteObject(obj);
+                        @obj = map.AddObject(x, y, MAP_OBJECT_SCENERY, EXIT_GRID_NEW_);
+                        //obj.MapObjType = 11;
+                        if(obj !is null)
+                        {
+                            obj.Scenery_Param0 = tempVal;
+                            obj.Scenery_ParamsCount = 1;
+                        }
+                        else {Message("!valid");}
+                        //obj.Item_Val1 = obj.Item_Val0;AddObject(uint16 hexX, uint16 hexY, int mapObjType, uint16 pid)
+                        //obj.Item_Val1 = 0;
+                    }
+                }
+            }
+            return "done.";
+        }
+        return "fail, map !loaded";
+    } 
+    string ClearClones( string str )
+    {
+        MapperMap@ map = GetActiveMap();
+        if( map is null )
+            return "Map not loaded.";
+	int iConv = -1; StrToInt(str, iConv);
+
+     
+        uint deleted = 0;
+        for( uint16 hx = 0; hx < map.Width; hx++ )
+        {
+            for( uint16 hy = 0; hy < map.Height; hy++ )
+            {
+                MapperObject@[] objects;
+              uint len; if( iConv > -1 ) len = map.GetObjects(hx, hy, 0,  iConv , 0, objects); else {
+               len = map.GetObjects(hx, hy, 0, MAP_OBJECT_SCENERY, 0, objects); len+=map.GetObjects(hx, hy, 0, MAP_OBJECT_ITEM, 0, objects);
+		}
+		 for(uint i=0; i<len; i++)
+                {
+                    if(objects[i] is null) continue;
+                    uint16 pid = objects[i].ProtoId;
+                    for(uint k=i+1; k<len; k++)
+                    {
+                        if((objects[k] !is null) and (objects[k].ProtoId==pid))
+                        {
+                            DeleteObject(objects[k]);
+                            @objects[k]=null;
+                            deleted++;
+                        }
+                    }
+                }
+            }
+        }
+     
+        return "Done. Deleted " + deleted + " items.";
+    } 
