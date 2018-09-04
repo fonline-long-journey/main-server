@@ -24,30 +24,44 @@ namespace Login_TLJ
     uint currentLogStrNum = STR_UPDATE_LOG_LATEST;
     void NextLog()
         {
-        	if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
-        		currentLogStrNum++;
+            if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
+                currentLogStrNum++;
         }
-        		
+                
     void PreviousLog()
         {
             if   (currentLogStrNum-1 >= STR_UPDATE_LOG_BEGIN)
-        		currentLogStrNum--;
+                currentLogStrNum--;
         }
     
 
     class Login : GUIScreen
     {
+        uint ScreenWidth = 0;
+
         void OnConstruct() override
         {
-            SetPosition( -286, 112 );
+            SetPosition( 199, 14 );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
+            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_CENTER );
         }
 
-        void OnInit() override
+        void OnDraw() override
         {
-            SetSize( __ScreenHeight, __ScreenWidth );
+            if( __ScreenWidth != ScreenWidth ){
+                ScreenWidth = __ScreenWidth;
+                SetSize( __ScreenWidth, __ScreenHeight  );
+                if( __ScreenWidth > 1200 ){
+                    Find("Menu").SetPosition( int(floor(__ScreenWidth/2 - 273/2)),  int(floor(__ScreenHeight/2 - 360/2)) );
+                }else if (__ScreenWidth < 1000){
+                    Find("Menu").SetPosition( 20, int(floor(__ScreenHeight/2 - 360/2)) );
+                }else{
+                    Find("Menu").SetPosition( int(floor(__ScreenWidth/5*2 - 273/2)), int(floor(__ScreenHeight/2 - 360/2)) );
+                }
+                
+                Find("UpdateLogPanel").SetPosition( int(__ScreenWidth - 477), 0);
+            }
         }
 
         void OnGlobalInput( uint8 key, string@ text ) override
@@ -61,14 +75,9 @@ namespace Login_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 468, 34 );
+            SetPosition( 1, 479 );
             SetSize( 360, 273 );
             SetBackgroundImage( "art/intrface/login_tlj.png" );
-        }
-
-        void OnShow( dictionary@ params ) override
-        {
-            SetPosition( __ScreenHeight/2 - 360/2, __ScreenWidth/2 - 273/2);
         }
     }
 
@@ -81,14 +90,17 @@ namespace Login_TLJ
             SetPressedImage( "art/intrface/done.png" );
         }
 
-        void OnLMouseClick() override
+        void OnMousePressed( int button ) override
         {
             PlaySound ("click22+23.ogg");
+        }
+
+        void OnLMouseClick() override
+        {
             if( !__Singleplayer )
                 CustomCall( "Login\n" + Screen.FindText("InputLogin").Text + "\n" + Screen.FindText("InputPassword").Text, "\n" );
             else
                 ShowScreen( CLIENT_MAIN_SCREEN_REGISTRATION );
-            
         }
     }
 
@@ -101,13 +113,17 @@ namespace Login_TLJ
             SetPressedImage( "art/intrface/MENUDOWN.png" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click4.ogg");
+        }
+
         void OnLMouseClick() override
         {
             if( !__Singleplayer )
                 ShowScreen( CLIENT_MAIN_SCREEN_REGISTRATION );
             else
                 ShowScreen( CLIENT_SCREEN_SAVE_LOAD );
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -136,10 +152,14 @@ namespace Login_TLJ
             SetPressedImage( "art/intrface/MENUDOWN.png" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click4.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_MAIN_SCREEN_CREDITS );
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -154,7 +174,7 @@ namespace Login_TLJ
 
         void OnLMouseClick() override
         {
-            PlaySound ("pyromother.wav");
+            PlaySound ("click4.ogg");
             TryExit();
             
         }
@@ -223,11 +243,6 @@ namespace Login_TLJ
             SetDock( DOCK_RIGHT );
             SetBackgroundImage( "art/intrface/log_tlj.png" );
         }
-
-        void OnShow( dictionary@ params ) override
-        {
-            SetPosition( 0, __ScreenWidth - 477);
-        }
     }
 
     class UpdateLogText : GUIText
@@ -254,11 +269,15 @@ namespace Login_TLJ
             SetPressedImage( "art/intrface/bigkey_up.png" );
         }
 
-        void OnLMouseClick() override
+        void OnMouseClick( int button ) override
         {
             PlaySound ("click22.ogg");
+        }
+
+        void OnLMouseClick() override
+        {
             NextLog();
-            Parent.FindText("UpdateLogText").SetText ( ( MSG_GAME( currentLogStrNum ) ) );
+            cast<UpdateLogText>(Parent).SetText ( ( MSG_GAME( currentLogStrNum ) ) );
         }
     }
 
@@ -271,11 +290,15 @@ namespace Login_TLJ
             SetPressedImage( "art/intrface/bigkey_down.png" );
         }
 
-        void OnLMouseClick() override
+        void OnMouseClick( int button ) override
         {
             PlaySound ("click22.ogg");
+        }
+
+        void OnLMouseClick() override
+        {
             PreviousLog();
-            Parent.FindText("UpdateLogText").SetText ( ( MSG_GAME( currentLogStrNum ) ) );
+            cast<UpdateLogText>(Parent).SetText ( ( MSG_GAME( currentLogStrNum ) ) );
         }
     }
 
@@ -361,18 +384,32 @@ namespace Register_TLJ
 
     class Character : GUIScreen
     {
+        uint ScreenWidth = 0;
+
         void OnConstruct() override
         {
             SetModal( true );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-            SetBackgroundImage( "art/intrface/background.png" );
+            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_CENTER );
         }
 
         void OnInit() override
         {
             GenParams();
-            SetSize( __ScreenHeight, __ScreenWidth );
+        }
+
+        void OnDraw() override
+        {
+            if( ScreenWidth != __ScreenWidth ){
+                ScreenWidth = __ScreenWidth;
+                SetSize( __ScreenHeight, __ScreenWidth );
+                if( __ScreenWidth < 1000) {
+                    Find("Main").SetPosition( int(floor(__ScreenHeight/2 - 640/1.999999)), int(floor(__ScreenWidth/2 - 538/1.999999) ));
+                }else{
+                    Find("Main").SetPosition( int(floor(__ScreenHeight/2 - 640/2)), int(floor(__ScreenWidth/2 - 538/2) ));
+                }
+            }
         }
     }
 
@@ -382,11 +419,6 @@ namespace Register_TLJ
         {
             SetSize( 640, 539 );
             SetBackgroundImage( "art/intrface/register_tlj.png" );
-        }
-
-        void OnShow( dictionary@ params ) override
-        {
-            SetPosition( __ScreenHeight/2 - 640/2, __ScreenWidth/2 - 538/2);
         }
     }
 
@@ -481,7 +513,12 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/plus_button_dn.png" );
         }
 
-        void OnLMouseClick() override
+        void OnMousePressed( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
+        void OnLMousePressed() override
         {
             int param = cast< BaseStat >( Parent ).Param;
             if( Params[ param ] < 10 && GetUnspentStatPoints() > 0 )
@@ -489,7 +526,6 @@ namespace Register_TLJ
                 __RegParams[ param ]++;
                 GenParams();
             }
-             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -502,7 +538,12 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/minus_button_dn.png" );
         }
 
-        void OnLMouseClick() override
+        void OnMousePressed( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
+        void OnLMousePressed() override
         {
             int param = cast< BaseStat >( Parent ).Param;
             if( Params[ param ] > 1 )
@@ -510,7 +551,6 @@ namespace Register_TLJ
                 __RegParams[ param ]--;
                 GenParams();
             }
-             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -714,6 +754,11 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/tag_button_dn.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             int param = cast< TraitLeft >( Parent ).Param;
@@ -734,7 +779,6 @@ namespace Register_TLJ
             Parent.FindText( "TraitName1" ).SetTextColor( __RegParams[ param ] != 0 ? COLOR_LGRAY : 0 );
             
             GenParams();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -789,6 +833,11 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/tag_button_dn.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             int param = cast< TraitRight >( Parent ).Param;
@@ -809,7 +858,6 @@ namespace Register_TLJ
             Parent.FindText( "TraitName2" ).SetTextColor( __RegParams[ param ] != 0 ? COLOR_LGRAY : 0 );
             
             GenParams();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -863,6 +911,11 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/tag_button_dn.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             int param = cast< Skill >( Parent ).Param;
@@ -890,7 +943,6 @@ namespace Register_TLJ
             Parent.FindText( "SkillValue" ).SetTextColor( tagged ? COLOR_LGRAY : 0 );
             
             GenParams();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -1077,6 +1129,7 @@ namespace Register_TLJ
                 Parent.Find("Desc").SetActive(true);
                 Parent.Find("Math").SetActive(false);
             }
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -1100,6 +1153,7 @@ namespace Register_TLJ
                 Parent.Find("Math").SetSize(160, 134);
                 Parent.Find("Image").SetSize(120, 135);
             }
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -1128,7 +1182,7 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
 
-        void OnLMouseClick() override
+        void OnMouseClick( int button ) override
         {
             PlaySound ("click4.ogg");
         }
@@ -1162,10 +1216,14 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click4.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "Register" );
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -1197,10 +1255,14 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/smallbutton_on.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click4.ogg");
+        }
+
         void OnLMouseClick() override
         {
             TryExit();
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -1232,10 +1294,14 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/NAMEON.PNG" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             Screen.FindPanel( "CharacterNamePopUp" ).SetActive( true );
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -1273,10 +1339,14 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/AGEON.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             Screen.FindPanel( "CharacterAgePopUp" ).SetActive( true );
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -1313,6 +1383,11 @@ namespace Register_TLJ
             SetSize( 24, 24 );
             SetPressedImage( "art/intrface/blank_sort.png" );
         }
+
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click7+8.ogg");
+        }
     }
 
     class GenderText : GUIText
@@ -1341,13 +1416,17 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/male_button_dn.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click7+8.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __RegParams[ ST_GENDER ] = GENDER_MALE;
             GenParams();
             SetSwitch( true );
             Parent.FindButton( "Female" ).SetSwitch( false );
-            PlaySound ("click7+8.ogg");
         }
 
         void OnActiveChanged() override
@@ -1366,13 +1445,17 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/female_button_dn.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click7+8.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __RegParams[ ST_GENDER ] = GENDER_FEMALE;
             GenParams();
             SetSwitch( true );
             Parent.FindButton( "Male" ).SetSwitch( false );
-            PlaySound ("click7+8.ogg");
         }
 
         void OnActiveChanged() override
@@ -1468,6 +1551,11 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/ok2.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("pyromother.wav");
+        }
+
         void OnLMouseClick() override
         {
             Screen.FindPanel( "CharacterNamePopUp" ).SetActive( false );
@@ -1507,9 +1595,13 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/age_inc_button_dn.png" );
         }
 
-        void OnLMousePressed() override
+        void OnMousePressed( int button ) override
         {
              PlaySound ("click22+23.ogg");
+        }
+
+        void OnLMousePressed() override
+        {
             __RegParams[ ST_AGE ]++;
             if( __RegParams[ ST_AGE ] > AGE_MAX )
                 __RegParams[ ST_AGE ] = AGE_MIN;
@@ -1526,9 +1618,13 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/age_dec_button_dn.png" );
         }
 
-        void OnLMousePressed() override
+        void OnMousePressed( int button ) override
         {
              PlaySound ("click22+23.ogg");
+        }
+
+        void OnLMousePressed() override
+        {
             __RegParams[ ST_AGE ]--;
             if( __RegParams[ ST_AGE ] < AGE_MIN )
                 __RegParams[ ST_AGE ] = AGE_MAX;
@@ -1607,18 +1703,6 @@ namespace Register_TLJ
             SetSize( 135, 175 );
             SetBackgroundImage( "art/intrface/character_select_main.png" );
         }
-
-        void OnShow( dictionary@ params ) override
-        {
-            if( ActiveSelf )
-                SetActive( false );
-        }
-
-        void OnGlobalMouseDown( int button ) override
-        {
-            if( Active && !IsMouseHit() )
-                SetActive( false );
-        }
     }
 
     class ChaButtonUp : GUIButton
@@ -1632,7 +1716,6 @@ namespace Register_TLJ
 
         void OnLMousePressed() override
         {
-            PlaySound ("click22.ogg");
             if( __RegParams[ ST_GENDER ] == 1){
                 int currentId = skinFemale.find(__RegParams[ ST_BASE_CRTYPE ]);
                 if( currentId < 0 ){
@@ -1653,6 +1736,7 @@ namespace Register_TLJ
                 }
             }
             GenParams();
+            PlaySound ("click22.ogg");
         }
     }
 
@@ -1667,7 +1751,6 @@ namespace Register_TLJ
 
         void OnLMousePressed() override
         {
-             PlaySound ("click22+23.ogg");
             if( __RegParams[ ST_GENDER ] == 1){
                 int currentId = skinFemale.find(__RegParams[ ST_BASE_CRTYPE ]);
                 if( currentId < 0 ){
@@ -1688,6 +1771,7 @@ namespace Register_TLJ
                 }
             }
             GenParams();
+             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -1700,10 +1784,15 @@ namespace Register_TLJ
             SetPressedImage( "art/intrface/MENUDOWN.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
         void OnLMouseClick() override
         {
-            Screen.FindPanel( "CharacterSelectPopUp" ).SetActive( false );
-             PlaySound ("click22+23.ogg");
+            //Screen.FindPanel( "CharacterSelectPopUp" ).SetActive( false );
+            
         }
     }
 
@@ -1982,6 +2071,8 @@ namespace Options_TLJ
 
     class Screen : GUIScreen
     {
+        uint ScreenWidth = 0;
+
         void OnConstruct() override
         {
             SetModal( true );
@@ -1990,9 +2081,19 @@ namespace Options_TLJ
             SetBackgroundImage( "art/intrface/background.png" );
         }
 
-        void OnInit() override
+        void OnDraw() override
         {
-            SetSize(__ScreenWidth, __ScreenHeight);
+            if( ScreenWidth != __ScreenWidth){
+                ScreenWidth = __ScreenWidth;
+                SetSize(__ScreenWidth, __ScreenHeight);
+                Main@ main = cast<Main>(Find("Main"));
+                if( ScreenWidth < 1000){
+                    // Если делить ровно на два все улетаёт нах-- за край экрана, хз почему
+                    main.SetPosition( int(floor(__ScreenWidth/2-640/1.99999)) , int(floor(__ScreenHeight/2-480/1.99999) ));
+                }else{
+                    main.SetPosition( int(floor(__ScreenWidth/2-main.get_Width()/2)) , int(floor(__ScreenHeight/2-main.get_Height()/2)) );
+                }
+            }
         }
     }
 
@@ -2002,13 +2103,7 @@ namespace Options_TLJ
         {
             SetPosition( 80, 60 );
             SetSize( 640, 480 );
-            SetBackgroundImage( "art/intrface/options_tlj.png" );
-        }
-
-        void OnInit() override
-        {
-            
-            SetPosition((__ScreenWidth - get_Width()) / 2, (__ScreenHeight - get_Height()) / 2);
+            SetBackgroundImage( "art/intrface/options_tlj.png", IMAGE_LAYOUT_CENTER );
         }
     }
 
@@ -2048,12 +2143,16 @@ namespace Options_TLJ
             SetChecked( CustomCall( "GetLanguage" ) == "russ" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetLanguage russ" );
             GUI_Callback_OnLanguageChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2077,12 +2176,16 @@ namespace Options_TLJ
             SetChecked( CustomCall( "GetLanguage" ) == "engl" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetLanguage engl" );
             GUI_Callback_OnLanguageChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2118,12 +2221,16 @@ namespace Options_TLJ
             SetChecked( __ScreenWidth == ScreenWidthOpt[ 0 ] && __ScreenHeight == ScreenHeightOpt[ 0 ] );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetResolution " + ScreenWidthOpt[ 0 ] + " " + ScreenHeightOpt[ 0 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2147,12 +2254,16 @@ namespace Options_TLJ
             SetChecked( __ScreenWidth == ScreenWidthOpt[ 1 ] && __ScreenHeight == ScreenHeightOpt[ 1 ] );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetResolution " + ScreenWidthOpt[ 1 ] + " " + ScreenHeightOpt[ 1 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2176,12 +2287,16 @@ namespace Options_TLJ
             SetChecked( __ScreenWidth == ScreenWidthOpt[ 2 ] && __ScreenHeight == ScreenHeightOpt[ 2 ] );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetResolution " + ScreenWidthOpt[ 2 ] + " " + ScreenHeightOpt[ 2 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2205,12 +2320,16 @@ namespace Options_TLJ
             SetChecked( __ScreenWidth == ScreenWidthOpt[ 3 ] && __ScreenHeight == ScreenHeightOpt[ 3 ] );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetResolution " + ScreenWidthOpt[ 3 ] + " " + ScreenHeightOpt[ 3 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2234,12 +2353,16 @@ namespace Options_TLJ
             SetChecked( __ScreenWidth == ScreenWidthOpt[ 4 ] && __ScreenHeight == ScreenHeightOpt[ 4 ] );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetResolution " + ScreenWidthOpt[ 4 ] + " " + ScreenHeightOpt[ 4 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2263,12 +2386,16 @@ namespace Options_TLJ
             SetChecked( __ScreenWidth == ScreenWidthOpt[ 5 ] && __ScreenHeight == ScreenHeightOpt[ 5 ] );
         }
 
+        void OnMousePressed( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "SetResolution " + ScreenWidthOpt[ 5 ] + " " + ScreenHeightOpt[ 5 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2301,9 +2428,13 @@ namespace Options_TLJ
             SetChecked( __FullScr );
         }
 
-        void OnLMouseClick() override
+        void OnMousePressed( int button ) override
         {
             PlaySound ("click10.ogg");
+        }
+
+        void OnLMouseClick() override
+        {
             CustomCall( "SwitchFullscreen" );
             SaveOptions();
         }
@@ -2329,9 +2460,13 @@ namespace Options_TLJ
             SetChecked( __AlwaysOnTop );
         }
 
-        void OnLMouseClick() override
+        void OnMousePressed( int button ) override
         {
             PlaySound ("click10.ogg");
+        }
+
+        void OnLMouseClick() override
+        {
             __AlwaysOnTop = IsChecked;
             SaveOptions();
         }
@@ -2356,6 +2491,11 @@ namespace Options_TLJ
             SetPressedImage( "art/intrface/minus_button_dn.png" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
         void OnLMousePressed() override
         {
             if( __MusicVolume > 0 )
@@ -2363,7 +2503,6 @@ namespace Options_TLJ
                 __MusicVolume--;
                  SaveOptions();
             }
-             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -2377,6 +2516,11 @@ namespace Options_TLJ
             SetPressedImage( "art/intrface/plus_button_dn.png" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
         void OnLMousePressed() override
         {
             if( __MusicVolume < 100 )
@@ -2384,7 +2528,6 @@ namespace Options_TLJ
                 __MusicVolume++;
                 SaveOptions();
             }
-             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -2421,6 +2564,11 @@ namespace Options_TLJ
             SetPressedImage( "art/intrface/minus_button_dn.png" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
         void OnLMousePressed() override
         {
             if( __SoundVolume > 0 )
@@ -2428,7 +2576,6 @@ namespace Options_TLJ
                 __SoundVolume--;
                 SaveOptions();
             }
-             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -2442,6 +2589,11 @@ namespace Options_TLJ
             SetPressedImage( "art/intrface/plus_button_dn.png" );
         }
 
+        void OnMousePressed( int button ) override
+        {
+             PlaySound ("click22+23.ogg");
+        }
+
         void OnLMousePressed() override
         {
             if( __SoundVolume < 100 )
@@ -2449,7 +2601,6 @@ namespace Options_TLJ
                 __SoundVolume++;
                 SaveOptions();
             }
-             PlaySound ("click22+23.ogg");
         }
     }
 
@@ -2487,9 +2638,13 @@ namespace Options_TLJ
             SetChecked( __AlwaysRun );
         }
 
-        void OnLMouseClick() override
+        void OnMouseClick( int button ) override
         {
             PlaySound ("click10.ogg");
+        }
+
+        void OnLMouseClick() override
+        {
             __AlwaysRun = IsChecked;
             SaveOptions();
         }
@@ -2515,11 +2670,15 @@ namespace Options_TLJ
             SetChecked( __DefaultCombatMode == COMBAT_MODE_ANY );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __DefaultCombatMode = COMBAT_MODE_ANY;
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2543,11 +2702,15 @@ namespace Options_TLJ
             SetChecked( __DefaultCombatMode == COMBAT_MODE_REAL_TIME );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __DefaultCombatMode = COMBAT_MODE_REAL_TIME;
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2571,11 +2734,15 @@ namespace Options_TLJ
             SetChecked( __DefaultCombatMode == COMBAT_MODE_TURN_BASED );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __DefaultCombatMode = COMBAT_MODE_TURN_BASED;
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2608,11 +2775,15 @@ namespace Options_TLJ
             SetChecked( __CombatMessagesType == 0 );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __CombatMessagesType = 0;
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2636,11 +2807,15 @@ namespace Options_TLJ
             SetChecked( __CombatMessagesType != 0 );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __CombatMessagesType = 1;
             SaveOptions();
-            PlaySound ("click10.ogg");
         }
     }
 
@@ -2737,6 +2912,11 @@ namespace Options_TLJ
             SetChecked( __ProxyType == 0 );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __ProxyType = 0;
@@ -2762,6 +2942,11 @@ namespace Options_TLJ
             SetBackgroundImage( "art/intrface/opt_button_up.png" );
             SetPressedImage( "art/intrface/opt_button_dn.png" );
             SetChecked( __ProxyType == 1 );
+        }
+
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
         }
 
         void OnLMouseClick() override
@@ -2791,6 +2976,11 @@ namespace Options_TLJ
             SetChecked( __ProxyType == 2 );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             __ProxyType = 2;
@@ -2816,6 +3006,11 @@ namespace Options_TLJ
             SetBackgroundImage( "art/intrface/opt_button_up.png" );
             SetPressedImage( "art/intrface/opt_button_dn.png" );
             SetChecked( __ProxyType == 3 );
+        }
+
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
         }
 
         void OnLMouseClick() override
@@ -2972,10 +3167,14 @@ namespace Options_TLJ
             SetPressedImage( "art/intrface/done.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click18+19.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_MAIN_SCREEN_LOGIN );
-            PlaySound ("click18+19.ogg");
         }
     }
 
@@ -3230,9 +3429,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            //SetSize(1024, 101);
             SetPosition((__ScreenWidth - get_Width()) / 2, __ScreenHeight - _BaseHeight);
-            //Log("Pyromother!" + get_Parent().get_Width() + "" + get_Parent().get_Height());
         }
     }
 
@@ -3305,6 +3502,7 @@ namespace Game_TLJ
 
         void OnMousePressed( int button ) override
         {
+            PlaySound ("click22.ogg");
             MessageBoxExtended@ messageBoxExtended = cast<MessageBoxExtended>(Parent.Find("MessageBoxExtended"));
             GUIObject@ messageBoxText = Parent.Find( "MessageBoxText" );
             
@@ -3461,6 +3659,7 @@ namespace Game_TLJ
 
         void OnCheckedChanged() override
         {
+            PlaySound ("click22.ogg");
             cast< MessageBoxText >( Parent.Find( "MessageBoxText" ) ).FiltersChanged();
         }
     }
@@ -3476,6 +3675,7 @@ namespace Game_TLJ
 
         void OnCheckedChanged() override
         {
+            PlaySound ("click22.ogg");
             cast< MessageBoxText >( Parent.Find( "MessageBoxText" ) ).FiltersChanged();
         }
     }
@@ -3489,10 +3689,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/menu.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_MENU );
-            PlaySound ("click7+8.ogg");
         }
     }
 
@@ -3505,10 +3709,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/inv.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_INVENTORY );
-            PlaySound ("click2.ogg");
         }
     }
 
@@ -3521,10 +3729,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/btn_skill.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "ChangeSlot" );
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -3537,10 +3749,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/btn_skill.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_SKILLBOX );
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -3553,10 +3769,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/map.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_MINIMAP );
-            PlaySound ("click2.ogg");
         }
     }
 
@@ -3569,13 +3789,17 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/cha.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_CHARACTER );
             CritterCl@ chosen = GetChosen();
             if( chosen !is null && chosen.ParamBase[ ST_UNSPENT_PERKS ] > 0 )
                 ShowScreen( CLIENT_SCREEN_PERK );
-            PlaySound ("click2.ogg");
         }
     }
 
@@ -3588,10 +3812,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/pip.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_PIP_BOY );
-            PlaySound ("click2.ogg");
         }
     }
 
@@ -3604,10 +3832,14 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/fix.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
+        }
+
         void OnLMouseClick() override
         {
             ShowScreen( CLIENT_SCREEN_FIX_BOY );
-            PlaySound ("click2.ogg");
         }
     }
 
@@ -3652,6 +3884,11 @@ namespace Game_TLJ
             SetPressedImage( "art/intrface/end_turn_button_dn.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
+        }
+
         void OnLMouseClick() override
         {
             CustomCall( "EndTurn" );
@@ -3678,14 +3915,18 @@ namespace Game_TLJ
         {
             CustomCall( "EndCombat" );
         }
+
+        void OnCheckedChanged() override
+        {
+            PlaySound ("click10.ogg");
+        }
     }
 
     class HitPoints : GUIText
     {
         void OnConstruct() override
         {
-            SetPosition( 555, 11 );
-            SetSize( 150, 50 );
+            SetPosition( 634, 37 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -3697,6 +3938,14 @@ namespace Game_TLJ
             CritterCl@ chosen = GetChosen();
             if( chosen !is null )
                 result = chosen.Param[ ST_CURRENT_HP ];
+            
+            if( chosen.Param[ ST_CURRENT_HP ] > 0 ){
+                int d = floor(255 * chosen.Param[ ST_CURRENT_HP ] / chosen.Param[ ST_MAX_LIFE ]);
+                SetTextColor( COLOR_RGB(255 - d,d,0) );
+            } else {
+                SetTextColor( COLOR_RGB(255,0,0) );
+            }
+            
             return FormatXXX( result );
         }
     }
@@ -3705,8 +3954,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 293, 10 );
-            SetSize( 150, 50 );
+            SetPosition( 371, 36 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -3717,7 +3965,7 @@ namespace Game_TLJ
             int result = 0;
             CritterCl@ chosen = GetChosen();
             if( chosen !is null )
-                result = chosen.Param[ ST_ARMOR_CLASS ];
+                result = chosen.Param[ ST_CURRENT_AC ];
             return FormatXXX( result );
         }
     }
@@ -3744,6 +3992,7 @@ namespace Game_TLJ
 
         void OnMouseClick( int button ) override
         {
+            PlaySound ("click22.ogg");
             if( button == MOUSE_BUTTON_LEFT )
                 CustomCall( "UseMainItem" );
             else if( button == MOUSE_BUTTON_RIGHT )
@@ -3752,8 +4001,6 @@ namespace Game_TLJ
                 CustomCall( "NextItemMode Prev" );
             else if( button == MOUSE_BUTTON_WHEEL_DOWN )
                 CustomCall( "NextItemMode" );
-            PlaySound ("click12.ogg");
-            
         }
     }
 
@@ -4144,7 +4391,7 @@ namespace Game_TLJ
                 //uint colorOffset = 255 * ABS( chosen.Param[ST_HUNGER] ) / 2500;
                 //DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(200,255-colorOffset,colorOffset,0));
                 float brightness = 0.7;
-                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(255,floor(red*brightness),floor(green*brightness),floor(blue*brightness)));
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(255,uint(floor(red*brightness)),uint(floor(green*brightness)),uint(floor(blue*brightness))));
             }
         }
     }
@@ -4198,7 +4445,7 @@ namespace Game_TLJ
                 //uint colorOffset = 255 * ABS( chosen.Param[ST_THIRST] ) / 2500;
                 //DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(200,255-colorOffset,colorOffset,0));
                 float brightness = 0.7;
-                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(255,floor(red*brightness),floor(green*brightness),floor(blue*brightness)));
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(255,uint(floor(red*brightness)),uint(floor(green*brightness)),uint(floor(blue*brightness))));
             }
         }
     }
@@ -4254,7 +4501,7 @@ namespace Game_TLJ
                 //uint colorOffset = 255 * ABS( chosen.Param[ST_FATIGUE] ) / 2500;
                 //DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(200,255-colorOffset,colorOffset,0));
                 float brightness = 0.7;
-                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(255,floor(red*brightness),floor(green*brightness),floor(blue*brightness)));
+                DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,15,0,0,COLOR_ARGB(255,uint(floor(red*brightness)),uint(floor(green*brightness)),uint(floor(blue*brightness))));
             }
         }
     }
@@ -4425,7 +4672,11 @@ namespace Game_TLJ
                 quickItemUse(slot_id + id_offset(),true);
                 break;
             }
-            PlaySound ("click2.ogg");
+        }
+
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click10.ogg");
         }
 
         void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
@@ -4454,6 +4705,11 @@ namespace Game_TLJ
             SetSize( 16, 12 );
             SetBackgroundImage( "art/intrface/redDot.png" );
             SetPressedImage( "art/intrface/greenDot.png" );
+        }
+
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click22.ogg");
         }
 
         void OnCheckedChanged() override
@@ -4611,7 +4867,7 @@ namespace Inventory_TLJ
         {
             SetPosition( 14, 20 );
             SetCellPrototype( "InvItem" );
-            SetGridSize( 15 );
+            SetGridSize( 10 );
             SetColumns( 1 );
             SetUserData( SLOT_INV );
             SetUseSorting( true );
@@ -4653,7 +4909,7 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 27, 7 );
+            SetPosition( 12, 28 );
             SetTextFlags( FT_CENTERR | FT_BOTTOM );
             SetTextColor( COLOR_WHITE );
         }
@@ -4671,8 +4927,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 12, 523 );
-            SetSize( 88, 57 );
+            SetPosition( 5, 519 );
+            SetSize( 100, 65 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
             SetUserData( SLOT_HAND1 );
@@ -4688,8 +4944,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 206, 521 );
-            SetSize( 88, 57 );
+            SetPosition( 197, 518 );
+            SetSize( 100, 65 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
             SetUserData( SLOT_HAND2 );
@@ -4705,8 +4961,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 203, 447 );
-            SetSize( 88, 57 );
+            SetPosition( 197, 442 );
+            SetSize( 100, 65 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
             SetUserData( SLOT_ARMOR );
@@ -4858,9 +5114,13 @@ namespace Inventory_TLJ
             SetCondition( invItems.CheckScrollAvailability( invItems.Scroll - 1 ) );
         }
 
-        void OnLMousePressed() override
+        void OnMousePressed( int button ) override
         {
             PlaySound ("click22.ogg");
+        }
+
+        void OnLMousePressed() override
+        {
             GUIItemView@ invItems = cast< GUIItemView >( Parent.Find( "InvItems", false ) );
             invItems.SetScroll( invItems.Scroll - 1, true );
         }
@@ -4883,9 +5143,13 @@ namespace Inventory_TLJ
             SetCondition( invItems.CheckScrollAvailability( invItems.Scroll + 1 ) );
         }
 
-        void OnLMousePressed() override
+        void OnMousePressed( int button ) override
         {
             PlaySound ("click22.ogg");
+        }
+
+        void OnLMousePressed() override
+        {
             GUIItemView@ invItems = cast< GUIItemView >( Parent.Find( "InvItems", false ) );
             invItems.SetScroll( invItems.Scroll + 1, true );
         }
@@ -4900,10 +5164,14 @@ namespace Inventory_TLJ
             SetPressedImage( "art/intrface/MENUDOWN.png" );
         }
 
+        void OnMouseClick( int button ) override
+        {
+            PlaySound ("click4.ogg");
+        }
+
         void OnLMouseClick() override
         {
             HideScreen();
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -5427,9 +5695,11 @@ namespace Character_TLJ
 
         void OnLMousePressed() override
         {
-            PlaySound ("click22.ogg");
-            if( UnspentSkillPoints <= 0 )
+            if( UnspentSkillPoints <= 0 ){
+                PlaySound ("click10.ogg");
                 return;
+            }
+            PlaySound ("click22.ogg");
             
             int curSkill = cast< Skills >( Parent.Parent ).CurSkill;
             int skillVal = GetParam( curSkill ) + SkillUp[ curSkill ];
@@ -5479,10 +5749,13 @@ namespace Character_TLJ
 
         void OnLMousePressed() override
         {
-            PlaySound ("click22.ogg");
             int curSkill = cast< Skills >( Parent.Parent ).CurSkill;
-            if( SkillUp[ curSkill ] <= 0 )
+            if( SkillUp[ curSkill ] <= 0 ){
+                PlaySound ("click10.ogg");
                 return;
+            }
+            
+            PlaySound ("click22.ogg");
             
             SkillUp[ curSkill ]--;
             if( IsTagSkill( curSkill ) )
@@ -5635,6 +5908,7 @@ namespace Character_TLJ
 
         void OnCheckedChanged() override
         {
+            PlaySound ("click22.ogg");
             if( IsChecked ){
                 Parent.Find("Desc").SetActive(false);
                 Parent.Find("Math").SetActive(true);
@@ -5656,6 +5930,7 @@ namespace Character_TLJ
 
         void OnCheckedChanged() override
         {
+            PlaySound ("click22.ogg");
             if( IsChecked ){
                 Parent.Find("Desc").SetSize(280, 134);
                 Parent.Find("Math").SetSize(280, 134);
@@ -5739,9 +6014,11 @@ namespace Character_TLJ
                     skills[x] = SkillUp[__SkillBegin + x];
                 }
                 RunServerScriptUnsafe("parameters@unsafe_changeSkills",0,0,0,"",skills);
+                PlaySound ("click10.ogg");
+            } else {
+                PlaySound ("click4.ogg");
             }
             HideScreen();
-            PlaySound ("click4.ogg");
         }
     }
 
@@ -6025,8 +6302,9 @@ namespace Character_TLJ
             //Parent.FindPanel( "PerksTitle" ).SetActive (false);
             //Parent.FindPanel( "KillsTitle" ).SetSwitch( false );
             //Parent.Parent.FindText ("NormalText").SetText ("Perks supertext.");
+            if(CurSwitch != 0 ) PlaySound ("click4.ogg");
             CurSwitch = 0;
-            PlaySound ("click17.ogg");
+            
         }
     }
 
@@ -6045,8 +6323,9 @@ namespace Character_TLJ
             Parent.FindPanel( "Backgrounds" ).FindPanel ("KarmaTitle").SetActive (true);
             //Parent.FindPanel( "KillsTitle" ).SetSwitch( false );
             //Parent.Parent.FindText ("NormalText").SetText ("Karma supertext.");
+            if(CurSwitch != 1) PlaySound ("click4.ogg");
             CurSwitch = 1;
-            PlaySound ("click17.ogg");
+            
         }
     }
 
@@ -6063,8 +6342,8 @@ namespace Character_TLJ
             Parent.FindPanel( "Backgrounds" ).FindPanel ("PerksTitle").SetActive (false);
             Parent.FindPanel( "Backgrounds" ).FindPanel ("KarmaTitle").SetActive (false);
             Parent.FindPanel( "Backgrounds" ).FindPanel ("KillsTitle").SetActive (true);
+            if(CurSwitch != 2) PlaySound ("click4.ogg");
             CurSwitch = 2;
-            PlaySound ("click17.ogg");
         }
     }
 
@@ -6080,9 +6359,11 @@ namespace Character_TLJ
 
         void OnLMousePressed() override
         {
-            PlaySound ("click22.ogg");
             DataList@ list = cast<DataList>(Parent.Find("DataList"));
-            if(list.Scroll > 0) list.Scroll--;
+            if(list.Scroll > 0){ 
+                PlaySound ("click22.ogg");
+                list.Scroll--;
+            }
             //if(list.Scroll < list.Info.length-7) list.Scroll++;
         }
     }
@@ -6099,10 +6380,12 @@ namespace Character_TLJ
 
         void OnLMousePressed() override
         {
-            PlaySound ("click22.ogg");
             DataList@ list = cast<DataList>(Parent.Find("DataList"));
             //if(list.Scroll > 0) list.Scroll--;
-            if(list.Scroll < list.Info.length-7) list.Scroll++;
+            if(list.Scroll < list.Info.length-7){
+                list.Scroll++;
+                PlaySound ("click22.ogg");
+            }
         }
     }
 
