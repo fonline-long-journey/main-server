@@ -19,6 +19,7 @@
 // Example: GetTimeString("%HOUR%:%MINUTE% %DAY% (%DOW-STR%) %MONTH-STR% %YEAR%",fullSecond) -> "14:05 23 (Sunday) November 2299"/"14:05 23 (Воскресенье) Ноябрь 2299".
 
 #include "_defines.fos"
+#include "_time.fos"
 
 #define STR_MONTH          # (m)               ( 20 + ( m ) )
 #define STR_DAY_OF_WEEK    # (dow)       ( 33 + ( dow ) )
