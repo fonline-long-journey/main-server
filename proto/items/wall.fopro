@@ -898,7 +898,7 @@ Type=12
 PicMapName=art\walls\jaw1001.frm
 PicInvName=art\inven\reserved.frm
 Corner=5
-Flags=16
+Flags=24
 
 [Proto]
 Pid=5124
@@ -6208,12 +6208,14 @@ Pid=5859
 Type=12
 PicMapName=art\walls\adb0999.frm
 PicInvName=art\inven\reserved.frm
+Flags=24
 
 [Proto]
 Pid=5860
 Type=12
 PicMapName=art\walls\adb1000.frm
 PicInvName=art\inven\reserved.frm
+Flags=24
 
 [Proto]
 Pid=5861
@@ -6326,6 +6328,7 @@ Type=12
 PicMapName=art\walls\adb1016.frm
 PicInvName=art\inven\reserved.frm
 Corner=5
+Flags=24
 
 [Proto]
 Pid=5877
