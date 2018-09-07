@@ -922,6 +922,8 @@ DisableEgg=1
 Weight=500000
 SoundId=76
 Material=1
+Door_NoBlockShoot=1
+Door_NoBlockLight=1
 
 [Proto]
 ProtoId=3467
@@ -933,6 +935,8 @@ DisableEgg=1
 Weight=500000
 SoundId=76
 Material=1
+Door_NoBlockShoot=1
+Door_NoBlockLight=1
 
 [Proto]
 ProtoId=3479
