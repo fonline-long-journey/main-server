@@ -161,6 +161,8 @@ void InitializeGame()                    // Export
 
     // / Client specific definitions
     #  ifdef __CLIENT
+    __Light = 20; // Яркость клиента
+
     __RoofAlpha             = 255;
     __HideCursor            = false;
     __DisableLMenu          = false;
@@ -181,8 +183,8 @@ void InitializeGame()                    // Export
 
     // Chosen lighting
     __ChosenLightColor      = 0xFFFFFF;
-    __ChosenLightDistance   = 4;
-    __ChosenLightIntensity  = MAX_LIGHT_VALUE / 4;
+    __ChosenLightDistance   = 0;
+    __ChosenLightIntensity  = 0; //MAX_LIGHT_VALUE / 4;
     __ChosenLightFlags      = 0; // LIGHT_* in _defines.fos
 
     // 3d rendering

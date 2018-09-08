@@ -24,27 +24,32 @@ namespace Login_TLJ
     uint currentLogStrNum = STR_UPDATE_LOG_LATEST;
     void NextLog()
         {
-            if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
-                currentLogStrNum++;
+        	if(currentLogStrNum+1 <= STR_UPDATE_LOG_LATEST)
+        		currentLogStrNum++;
         }
-                
+        		
     void PreviousLog()
         {
             if   (currentLogStrNum-1 >= STR_UPDATE_LOG_BEGIN)
-                currentLogStrNum--;
+        		currentLogStrNum--;
         }
     
 
     class Login : GUIScreen
     {
-        uint ScreenWidth = 0;
+        int ScreenWidth = 0;
 
         void OnConstruct() override
         {
-            SetPosition( 199, 14 );
+            SetPosition( -286, 112 );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_CENTER );
+            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
+        }
+
+        void OnInit() override
+        {
+            SetSize( __ScreenHeight, __ScreenWidth );
         }
 
         void OnDraw() override
@@ -81,13 +86,33 @@ namespace Login_TLJ
         }
     }
 
-    class Play : GUIButton
+    class Play2 : GUIButton
     {
         void OnConstruct() override
         {
             SetPosition( 247, 131 );
             SetSize( 82, 46 );
             SetPressedImage( "art/intrface/done.png" );
+        }
+
+        void OnLMouseClick() override
+        {
+            PlaySound ("click22+23.ogg");
+            if( !__Singleplayer )
+                CustomCall( "Login\n" + Screen.FindText("InputLogin").Text + "\n" + Screen.FindText("InputPassword").Text, "\n" );
+            else
+                ShowScreen( CLIENT_MAIN_SCREEN_REGISTRATION );
+            
+        }
+    }
+
+    class Play : GUIButton
+    {
+        void OnConstruct() override
+        {
+            SetPosition( 247, 131 );
+            SetSize( 82, 46 );
+            SetPressedImage( "art/intrface/MENUDOWN.png" );
         }
 
         void OnMousePressed( int button ) override
@@ -243,6 +268,11 @@ namespace Login_TLJ
             SetDock( DOCK_RIGHT );
             SetBackgroundImage( "art/intrface/log_tlj.png" );
         }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetPosition( 0, __ScreenWidth - 477);
+        }
     }
 
     class UpdateLogText : GUIText
@@ -308,6 +338,8 @@ namespace Login_TLJ
         _Login.Init( null );
         Menu _Menu();
         _Menu.Init( _Login );
+        Play2 _Play2();
+        _Play2.Init( _Menu );
         Play _Play();
         _Play.Init( _Menu );
         Registration _Registration();
@@ -384,19 +416,20 @@ namespace Register_TLJ
 
     class Character : GUIScreen
     {
-        uint ScreenWidth = 0;
+        int ScreenWidth = 0;
 
         void OnConstruct() override
         {
             SetModal( true );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
-            SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_CENTER );
+            SetBackgroundImage( "art/intrface/background.png" );
         }
 
         void OnInit() override
         {
             GenParams();
+            SetSize( __ScreenHeight, __ScreenWidth );
         }
 
         void OnDraw() override
@@ -419,6 +452,11 @@ namespace Register_TLJ
         {
             SetSize( 640, 539 );
             SetBackgroundImage( "art/intrface/register_tlj.png" );
+        }
+
+        void OnShow( dictionary@ params ) override
+        {
+            SetPosition( __ScreenHeight/2 - 640/2, __ScreenWidth/2 - 538/2);
         }
     }
 
@@ -1063,8 +1101,10 @@ namespace Register_TLJ
                 string@ image =  MSG_GAME( STR_PARAM_PIC( param ) );
                 GUIPanel@ uiImage = FindPanel( "Image" );
                 if(image != "error"){
+                    uint width = uiImage.get_Width();
                     uiImage.SetBackgroundImage(image);
                     uiImage.SetActive(true);
+                    if(width < 1) uiImage.SetSize(0,0);
                 }else{
                     uiImage.SetActive(false);
                 }
@@ -1703,6 +1743,18 @@ namespace Register_TLJ
             SetSize( 135, 175 );
             SetBackgroundImage( "art/intrface/character_select_main.png" );
         }
+
+        void OnShow( dictionary@ params ) override
+        {
+            if( ActiveSelf )
+                SetActive( false );
+        }
+
+        void OnGlobalMouseDown( int button ) override
+        {
+            if( Active && !IsMouseHit() )
+                SetActive( false );
+        }
     }
 
     class ChaButtonUp : GUIButton
@@ -1752,26 +1804,26 @@ namespace Register_TLJ
         void OnLMousePressed() override
         {
             if( __RegParams[ ST_GENDER ] == 1){
-                int currentId = skinFemale.find(__RegParams[ ST_BASE_CRTYPE ]);
+                int currentId = int(skinFemale.find(__RegParams[ ST_BASE_CRTYPE ]));
                 if( currentId < 0 ){
-                    __RegParams[ ST_BASE_CRTYPE ] = skinFemale[0];
-                } else if( currentId < skinFemale.length - 1 ) {
-                    __RegParams[ ST_BASE_CRTYPE ] = skinFemale[++currentId];
+                    __RegParams[ ST_BASE_CRTYPE ] = int(skinFemale[0]);
+                    } else if( currentId < int(skinFemale.length - 1) ) {
+                    __RegParams[ ST_BASE_CRTYPE ] = int(skinFemale[++currentId]);
                 }else{
-                    __RegParams[ ST_BASE_CRTYPE ] = skinFemale[0];
+                    __RegParams[ ST_BASE_CRTYPE ] = int(skinFemale[0]);
                 }
             }else{
-                int currentId = skinMale.find(__RegParams[ ST_BASE_CRTYPE ]);
+                int currentId = int(skinMale.find(__RegParams[ ST_BASE_CRTYPE ]));
                 if( currentId < 0  ){
-                    __RegParams[ ST_BASE_CRTYPE ] = skinMale[0];
-                } else if( currentId < skinFemale.length - 1 ) {
-                    __RegParams[ ST_BASE_CRTYPE ] = skinMale[++currentId];
+                    __RegParams[ ST_BASE_CRTYPE ] = int(skinMale[0]);
+                    } else if( currentId < int(skinFemale.length - 1 )) {
+                    __RegParams[ ST_BASE_CRTYPE ] = int(skinMale[++currentId]);
                 }else{
-                    __RegParams[ ST_BASE_CRTYPE ] = skinMale[0];
+                    __RegParams[ ST_BASE_CRTYPE ] = int(skinMale[0]);
                 }
             }
             GenParams();
-             PlaySound ("click22+23.ogg");
+            PlaySound ("click22+23.ogg");
         }
     }
 
@@ -2071,7 +2123,7 @@ namespace Options_TLJ
 
     class Screen : GUIScreen
     {
-        uint ScreenWidth = 0;
+        int ScreenWidth = 0;
 
         void OnConstruct() override
         {
@@ -2079,6 +2131,11 @@ namespace Options_TLJ
             SetCanMove( true, false );
             SetDock( DOCK_FILL );
             SetBackgroundImage( "art/intrface/background.png" );
+        }
+
+        void OnInit() override
+        {
+            SetSize(__ScreenWidth, __ScreenHeight);
         }
 
         void OnDraw() override
@@ -2103,7 +2160,13 @@ namespace Options_TLJ
         {
             SetPosition( 80, 60 );
             SetSize( 640, 480 );
-            SetBackgroundImage( "art/intrface/options_tlj.png", IMAGE_LAYOUT_CENTER );
+            SetBackgroundImage( "art/intrface/options_tlj.png" );
+        }
+
+        void OnInit() override
+        {
+            
+            SetPosition((__ScreenWidth - get_Width()) / 2, (__ScreenHeight - get_Height()) / 2);
         }
     }
 
@@ -2153,6 +2216,7 @@ namespace Options_TLJ
             CustomCall( "SetLanguage russ" );
             GUI_Callback_OnLanguageChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2186,6 +2250,7 @@ namespace Options_TLJ
             CustomCall( "SetLanguage engl" );
             GUI_Callback_OnLanguageChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2231,6 +2296,7 @@ namespace Options_TLJ
             CustomCall( "SetResolution " + ScreenWidthOpt[ 0 ] + " " + ScreenHeightOpt[ 0 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2264,6 +2330,7 @@ namespace Options_TLJ
             CustomCall( "SetResolution " + ScreenWidthOpt[ 1 ] + " " + ScreenHeightOpt[ 1 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2297,6 +2364,7 @@ namespace Options_TLJ
             CustomCall( "SetResolution " + ScreenWidthOpt[ 2 ] + " " + ScreenHeightOpt[ 2 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2330,6 +2398,7 @@ namespace Options_TLJ
             CustomCall( "SetResolution " + ScreenWidthOpt[ 3 ] + " " + ScreenHeightOpt[ 3 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2363,6 +2432,7 @@ namespace Options_TLJ
             CustomCall( "SetResolution " + ScreenWidthOpt[ 4 ] + " " + ScreenHeightOpt[ 4 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2396,6 +2466,7 @@ namespace Options_TLJ
             CustomCall( "SetResolution " + ScreenWidthOpt[ 5 ] + " " + ScreenHeightOpt[ 5 ] );
             GUI_Callback_OnResolutionChanged();
             SaveOptions();
+            PlaySound ("click10.ogg");
         }
     }
 
@@ -2435,6 +2506,7 @@ namespace Options_TLJ
 
         void OnLMouseClick() override
         {
+            PlaySound ("click10.ogg");
             CustomCall( "SwitchFullscreen" );
             SaveOptions();
         }
@@ -2467,6 +2539,7 @@ namespace Options_TLJ
 
         void OnLMouseClick() override
         {
+            PlaySound ("click10.ogg");
             __AlwaysOnTop = IsChecked;
             SaveOptions();
         }
@@ -3429,13 +3502,15 @@ namespace Game_TLJ
 
         void OnInit() override
         {
+            //SetSize(1024, 101);
             SetPosition((__ScreenWidth - get_Width()) / 2, __ScreenHeight - _BaseHeight);
+            //Log("Pyromother!" + get_Parent().get_Width() + "" + get_Parent().get_Height());
         }
     }
 
     class MessageBoxExtended : GUIPanel
     {
-        uint custom_height = 0;
+        int custom_height = 0;
 
         void OnConstruct() override
         {
@@ -3448,8 +3523,8 @@ namespace Game_TLJ
         void OnDraw() override
         {
             if( get_Height() != custom_height){
-                custom_height      =  get_Height();
-                uint spacerHeight = custom_height-25;
+                custom_height    = get_Height();
+                int spacerHeight = custom_height-25;
                 MessageBoxSpacer@ spacer = cast<MessageBoxSpacer>(Find("MessageBoxSpacer"));
                 spacer.SetSize(300,spacerHeight>0?spacerHeight:0); 
             }
@@ -3605,9 +3680,9 @@ namespace Game_TLJ
 
         void OnInput( uint8 key, string@ text ) override
         {
-            uint rowHeight      = 13;
-            uint requiredHeight = floor(_Text.length() / 78)*rowHeight+26;
-            uint height         = get_Height();
+            int rowHeight      = 13;
+            int requiredHeight = int(floor(_Text.length() / 78)*rowHeight+26);
+            int height         = get_Height();
             
             ConsoleImage@ image = cast<ConsoleImage>(Parent.Find("ConsoleImage"));
             
@@ -3926,7 +4001,8 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 634, 37 );
+            SetPosition( 555, 11 );
+            SetSize( 150, 50 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -3939,10 +4015,10 @@ namespace Game_TLJ
             if( chosen !is null )
                 result = chosen.Param[ ST_CURRENT_HP ];
             
-            if( chosen.Param[ ST_CURRENT_HP ] > 0 ){
-                int d = floor(255 * chosen.Param[ ST_CURRENT_HP ] / chosen.Param[ ST_MAX_LIFE ]);
-                SetTextColor( COLOR_RGB(255 - d,d,0) );
-            } else {
+            if( chosen.Param[ST_CURRENT_HP] > 0 ){
+                int d = int(floor(255 * chosen.Param[ ST_CURRENT_HP ] / chosen.Param[ST_MAX_LIFE] ));
+                SetTextColor( COLOR_RGB(255-d,d,0) );
+            }else{
                 SetTextColor( COLOR_RGB(255,0,0) );
             }
             
@@ -3954,7 +4030,8 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 371, 36 );
+            SetPosition( 293, 10 );
+            SetSize( 150, 50 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -4023,7 +4100,8 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetSize( 140, 67 );
+            SetPosition( 5, 7 );
+            SetSize( 130, 55 );
             SetNotHittable( true );
         }
 
@@ -4033,7 +4111,7 @@ namespace Game_TLJ
             if( item !is null )
                 picInv = ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv );
             SetBackgroundImage( picInv, IMAGE_LAYOUT_ZOOM );
-            SetSize(140,67);
+            SetSize(130,55);
         }
     }
 
@@ -4041,7 +4119,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 127, 7 );
+            SetPosition( 131, 3 );
             SetNotHittable( true );
             SetTextFont( FONT_SPECIAL );
             SetTextFlags( FT_CENTERY | FT_CENTERR );
@@ -4049,7 +4127,7 @@ namespace Game_TLJ
 
         void OnDrawItem( ItemCl@ item, GUIObject@ cell, uint cellIndex ) override
         {
-            SetText( item !is null && item.IsDeteriorable() ? item.Deterioration + "%" : "" );
+            SetText( item !is null && item.IsDeteriorable() ? int(floor(item.Deterioration)/100) + "%" : "" );
         }
     }
 
@@ -4057,7 +4135,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 7, 44 );
+            SetPosition( -1, 37 );
             SetSize( 17, 12 );
             SetAnchor( ANCHOR_LEFT| ANCHOR_BOTTOM );
             SetNotHittable( true );
@@ -4122,7 +4200,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 28, -106 );
+            SetPosition( 22, -114 );
             SetNotHittable( true );
         }
 
@@ -4165,7 +4243,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 114, 40 );
+            SetPosition( 112, 36 );
             SetSize( 18, 18 );
             SetNotHittable( true );
             SetBackgroundImage( "art/intrface/aim_pic.png" );
@@ -4191,7 +4269,7 @@ namespace Game_TLJ
 
         void OnConstruct() override
         {
-            SetPosition( 3, -9 );
+            SetPosition( -4, -16 );
             SetSize( 140, 8 );
             SetNotHittable( true );
         }
@@ -4204,19 +4282,19 @@ namespace Game_TLJ
 
         void OnDrawItem( ItemCl@ item, GUIObject@ cell, uint cellIndex ) override
         {
-            uint max  = 0;
-            uint curr = 0;
+            int max  = 0;
+            int curr = 0;
             if( item !is null )
             {
                 if( item.GetType() == ITEM_TYPE_WEAPON && item.Proto.Weapon_MaxAmmoCount > 0 )
                 {
-                    max  = item.Proto.Weapon_MaxAmmoCount;
-                    curr = item.AmmoCount;
+                    max  = int(item.Proto.Weapon_MaxAmmoCount);
+                    curr = int(item.AmmoCount);
                 }
                 else
                 {
-                    max  = item.GetCount();
-                    curr = item.GetCount() - 1;
+                    max  = int(item.GetCount());
+                    curr = int(item.GetCount() - 1);
                 }
                 if(max > 0 && curr <= max && curr >= 0){
                     float red        = 144;
@@ -4226,8 +4304,8 @@ namespace Game_TLJ
                     float brightness = 0.8;
                     //float brightness = 1; @@todo переделать все нафиг
                     //if( curr == max ){
-                        uint barWidth = curr == max ? get_Width() : floor( get_Width() * (curr) / max );
-                        DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,12,0,0,COLOR_ARGB(alpha,floor(red*brightness),floor(green*brightness),floor(blue*brightness)));
+                        int barWidth = int(curr == max ? get_Width() : floor( get_Width() * (curr) / max ));
+                        DrawSpritePattern(sprite,-1,AbsolutePosX,AbsolutePosY,barWidth,12,0,0,COLOR_ARGB(int(alpha),int(floor(red*brightness)),int(floor(green*brightness)),int(floor(blue*brightness))));
                     /*} else {
                         uint barWidth = curr == max ? get_Width() : floor( get_Width() * (curr * 1.0) / max );
                         float dred    = red  - ( (red-green) * (curr * 1.0)/max);
@@ -4243,7 +4321,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 36, -2 );
+            SetPosition( 45, -4 );
             SetSize( 50, 18 );
             SetNotHittable( true );
             SetTextFont( FONT_FALLOUT );
@@ -4609,9 +4687,9 @@ namespace Game_TLJ
 
     class QuickbarItem : GUIButton
     {
-        uint slot_id = 0;
-        uint item_id = 0;
-        uint id_offset(){
+        int slot_id = 0;
+        int item_id = 0;
+        int id_offset(){
             return cast< QuickbarGrid >(Parent).scroll_position;
         }
 
@@ -4624,7 +4702,7 @@ namespace Game_TLJ
         void OnDraw() override
         {
             ItemCl@ item = quickItem(slot_id + id_offset());
-            uint icon = item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0;
+            int icon = item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0;
             SetBackgroundImage(icon > 0 ? icon : -1,IMAGE_LAYOUT_ZOOM);
             
             QuickbarLabel@ label = cast<QuickbarLabel> (Find("QuickbarLabel"));
@@ -4672,6 +4750,7 @@ namespace Game_TLJ
                 quickItemUse(slot_id + id_offset(),true);
                 break;
             }
+            PlaySound ("click2.ogg");
         }
 
         void OnMouseClick( int button ) override
@@ -4681,7 +4760,7 @@ namespace Game_TLJ
 
         void OnResizeGrid( GUIObject@ cell, uint cellIndex ) override
         {
-            slot_id = uint(cellIndex);
+            slot_id = int(cellIndex);
         }
     }
 
@@ -4867,7 +4946,7 @@ namespace Inventory_TLJ
         {
             SetPosition( 14, 20 );
             SetCellPrototype( "InvItem" );
-            SetGridSize( 10 );
+            SetGridSize( 15 );
             SetColumns( 1 );
             SetUserData( SLOT_INV );
             SetUseSorting( true );
@@ -4927,8 +5006,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 5, 519 );
-            SetSize( 100, 65 );
+            SetPosition( 12, 522 );
+            SetSize( 88, 57 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
             SetUserData( SLOT_HAND1 );
@@ -4944,8 +5023,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 197, 518 );
-            SetSize( 100, 65 );
+            SetPosition( 203, 522 );
+            SetSize( 88, 57 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
             SetUserData( SLOT_HAND2 );
@@ -4961,8 +5040,8 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 197, 442 );
-            SetSize( 100, 65 );
+            SetPosition( 203, 446 );
+            SetSize( 88, 57 );
             SetCellPrototype( ".SlotItem" );
             SetGridSize( 1 );
             SetUserData( SLOT_ARMOR );
@@ -4978,7 +5057,7 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 207, 525 );
+            SetPosition( 203, 522 );
             SetSize( 88, 57 );
             SetDraggable( true );
             SetBackgroundImage( "art/intrface/dummy.png", IMAGE_LAYOUT_ZOOM );
@@ -5678,9 +5757,14 @@ namespace Character_TLJ
             SetBackgroundImage( "art/intrface/slider.png" );
         }
 
+        void OnShow( dictionary@ params ) override
+        {
+            SetActive(UnspentSkillPoints > 0);
+        }
+
         void OnDraw() override
         {
-            SetPosition( 247, -12 + ( cast< Skills >( Parent ).CurIndex  ) * 13 );
+            SetPosition( 247, -12 + int( cast< Skills >( Parent ).CurIndex  ) * 13 );
         }
     }
 
@@ -5849,8 +5933,10 @@ namespace Character_TLJ
                 string@ image =  MSG_GAME( STR_PARAM_PIC( param ) );
                 GUIPanel@ uiImage = FindPanel( "Image" );
                 if(image != "error"){
+                    uint width = uiImage.get_Width();
                     uiImage.SetBackgroundImage(image);
                     uiImage.SetActive(true);
+                    if(width<1) uiImage.SetSize(0,0);
                 }else{
                     uiImage.SetActive(false);
                 }
@@ -5932,8 +6018,8 @@ namespace Character_TLJ
         {
             PlaySound ("click22.ogg");
             if( IsChecked ){
-                Parent.Find("Desc").SetSize(280, 134);
-                Parent.Find("Math").SetSize(280, 134);
+                Parent.Find("Desc").SetSize(275, 134);
+                Parent.Find("Math").SetSize(275, 134);
                 Parent.Find("Image").SetSize(0,0);
             }else{
                 Parent.Find("Desc").SetSize(160, 134);
