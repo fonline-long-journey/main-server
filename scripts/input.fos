@@ -573,8 +573,7 @@ bool HandleHotkeys( uint8 key )
                     CustomCall( "SwitchLookBorders" );
                     break;
                 case DIK_W:
-                    CustomCall( "SwitchShootBorders" );
-					__ShootBordersEnabled = !__ShootBordersEnabled;
+					switchBordersMode();
                     break;
                 case DIK_A:
                 {
@@ -869,4 +868,24 @@ int[] control()
 uint8 current()
 {
     return current_group;
+}
+
+void switchBordersMode()
+{
+	__BordersMode++;
+	
+	if( __BordersMode > 3 )
+	{
+		__BordersMode = 0;
+	}
+	CustomCall( "SwitchShootBorders" );
+	if( __BordersMode == BORDERS_EFF_RANGE || __BordersMode == BORDERS_ALL)
+	{
+		__ShootBordersEnabled = true;
+	}
+	else
+	{
+		__ShootBordersEnabled = false;
+	}
+	
 }
