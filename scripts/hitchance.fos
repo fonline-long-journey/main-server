@@ -1,7 +1,7 @@
 #define HITCHANCE_MODULE
 
 #include "hitchance_h.fos"
-
+import uint GetActiveItemAttackDistantion( CritterCl& cr ) from "parameters";
 // Defines from header file.
 // Дефайны из хедер файла.
 
@@ -215,7 +215,7 @@ uint8 CalcEffRange (CritterCl@ source, ItemCl@ weapon)
 	int  skillVal			= int(source.Skill[skillNum]);            // 
 	uint8 effRange		    = wpnMaxDist * skillVal / MAX_SKILL * EFF_PERCENT / 100;//your Effective Distance, linear buildup
 	// Message(""+effRange);
-    return CLAMP(effRange, 1, 1000); 
+    return CLAMP(effRange, 1, GetActiveItemAttackDistantion(source)); 
 }
 // Getter. Возвращает указатель на функцию "CalcEffRange" типа "distCalcFunc".
 distCalcFunc@ GetCalcFunc()

@@ -836,16 +836,12 @@ uint GetProtoItemAttackDistantion( Critter& cr, ProtoItem& proto, uint8 mode )
     int   skill = _WeaponSkill( proto, use );
     int   dist = _WeaponMaxDist( proto, use );
     int   strength = getParam_Strength( cr, 0 );
-    int   tacthr = 0;
 
-    //if( cr.ParamBase[ PE_TACTICAL_THROWING ] > 0 && _WeaponDmgType( proto, use ) != DAMAGE_NORMAL )
-        //tacthr = 2;
-    // int   heaveHo = cr.ParamBase[ PE_HEAVE_HO ];
     if( skill == SK_THROWING )
     {
         if( cr.Perk[ PE_MASTER_THROWER ] > 0 )
             strength = 10;
-        dist = MIN( dist, int(3) * MIN( int(10), strength ) ) + tacthr;
+        dist = MIN( dist, int(3) * MIN( int(10), strength ) );
     }
     if( ProtoItem_Weapon_IsHtHAttack( proto, mode ) && cr.ParamBase[ PE_PRESENCE ] != 0 )
         dist++;
@@ -865,8 +861,8 @@ uint GetProtoItemAttackDistantion( Critter& cr, ProtoItem& proto, uint8 mode )
 
 
     dist += cr.GetMultihex();
-    if( dist < 0 )
-        dist = 0;
+    if( dist <= 0 )
+        dist = 1;
     return dist;
 }
 
