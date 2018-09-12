@@ -1636,7 +1636,63 @@ void karma_voting( Critter& crFrom, Critter& crTo, bool valUp )
 // Note: CRITTER_EVENT_SHOW_CRITTER_X, CRITTER_EVENT_HIDE_CRITTER_X is not processed.
 bool check_look( Map& map, Critter& cr, Critter& opponent )
 {
-    return true;
+    if( opponent.Mode[ MODE_HIDE ] > 0 && opponent.GetAccess() >= ACCESS_MODER )
+        return false;
+
+    uint16 hexX = cr.HexX, hexY = cr.HexY, oppHexX = opponent.HexX, oppHexY = opponent.HexY;
+
+    uint   dist = GetDistantion( hexX, hexY, oppHexX, oppHexY );
+
+    uint maxView = cr.Stat[ ST_PERCEPTION ] * 5,
+         maxHear = cr.Stat[ ST_PERCEPTION ] * 1.5;
+
+    bool isView = true, isHear = true, isRunOpp = opponent.IsRuning, isRunCr = cr.IsRuning;
+
+    int8 startDir = GetDirection( hexX, hexY, oppHexX, oppHexY );
+
+    int8 lookDir = abs( startDir - cr.Dir );
+    if( lookDir > 3 )
+        lookDir = 6 - lookDir;
+
+    switch( lookDir )
+    {
+    case 0:
+        maxView *= 1;
+        break;
+    case 1:
+        maxView *= 0.7;
+        break;
+    case 2:
+        maxView *= 0.5;
+        break;
+    case 3:
+        maxView *= 0;
+        break;
+    default:
+        Log( "look dir error!" );
+        return false;
+    }
+
+    uint16 wallHexX = oppHexX, wallHexY = oppHexY;
+
+    map.GetHexCoord( hexX, hexY, wallHexX, wallHexY, 0.0f, maxView );
+    uint walldist = GetDistantion( hexX, hexY, wallHexX, wallHexY );
+
+    bool isOutWall = dist > walldist;
+
+    if( isOutWall )
+    {
+        isView = false;
+        maxHear *= 0.5;
+    }
+
+    if( dist > maxView )
+        isView = false;
+
+    if( dist > maxHear )
+        isHear = false;
+
+    return ( !isView && !isHear ? false : true );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
