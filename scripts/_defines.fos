@@ -1573,6 +1573,11 @@
 //#  pragma bindfunc  "void dummy() -> fonline_tla_client.dll CLIENT"
 # endif
 
+// Load server extensions
+#ifdef __SERVER
+# pragma bindfunc "void fonline_ext_dll() -> fonline_ext.dll SERVER"
+#endif
+
 // /
 // / Item prototypes fields
 // /
