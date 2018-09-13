@@ -1095,8 +1095,8 @@ namespace Register_TLJ
             {
                 CurTip = param;
                 FindText( "Name" ).Text = MSG_GAME( STR_PARAM_NAME( param ) );
-                FindText( "Desc" ).Text = MSG_GAME( STR_PARAM_DESC( param ) );
-                FindText( "Math" ).Text = MSG_GAME( STR_PARAM_MATH( param ) );
+                FindText( "Desc" ).Text = FormatFormulas( MSG_GAME( STR_PARAM_DESC( param ) ) );
+                FindText( "Math" ).Text = FormatFormulas( MSG_GAME( STR_PARAM_MATH( param ) ) );
                 //FindPanel( "Image" ).SetBackgroundImage( GetConstantName( CONSTANTS_PICTURE, param ) );
                 string@ image =  MSG_GAME( STR_PARAM_PIC( param ) );
                 GUIPanel@ uiImage = FindPanel( "Image" );
@@ -3405,6 +3405,8 @@ namespace Options_TLJ
 
 namespace Game_TLJ
 {
+    import string FormatFormulas(string@ text, bool updateList = true) from "formulas";
+    
     string@ FormatXXX( int value )
     {
         string@ result = "";
@@ -4001,8 +4003,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 555, 11 );
-            SetSize( 150, 50 );
+            SetPosition( 633, 35 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -4030,8 +4031,7 @@ namespace Game_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 293, 10 );
-            SetSize( 150, 50 );
+            SetPosition( 370, 35 );
             SetTextFont( FONT_SAND_NUM );
             SetTextFlags( FT_CENTERX | FT_CENTERY );
             SetTextColor( COLOR_WHITE );
@@ -5928,8 +5928,8 @@ namespace Character_TLJ
             {
                 CurTip = param;
                 FindText( "Name" ).Text = MSG_GAME( STR_PARAM_NAME( param ) );
-                FindText( "Desc" ).Text = MSG_GAME( STR_PARAM_DESC( param ) );
-                FindText( "Math" ).Text = MSG_GAME( STR_PARAM_MATH( param ) );
+                FindText( "Desc" ).Text = FormatFormulas( MSG_GAME( STR_PARAM_DESC( param ) ) );
+                FindText( "Math" ).Text = FormatFormulas( MSG_GAME( STR_PARAM_MATH( param ) ) );
                 string@ image =  MSG_GAME( STR_PARAM_PIC( param ) );
                 GUIPanel@ uiImage = FindPanel( "Image" );
                 if(image != "error"){

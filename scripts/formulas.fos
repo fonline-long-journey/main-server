@@ -1,0 +1,44 @@
+dictionary formulas;
+
+// < import string FormatFormulas(string@ text, bool updateList = true) from "formulas"; >
+string FormatFormulas(string@ text, bool updateList = true){
+	// We may skip dictionary generation and use previous values if <updateList == false> when needed
+	if(formulas is null or updateList){
+		formulas.set("FormatFormulas.Status","OK"); // Replacement setup example
+
+		// Server + Client replacements setup
+		// formulas.set(<string:Tag>,<string:Replacement>) ...
+
+		#ifdef __CLIENT
+		// Client-only replacements setup
+		// formulas.set(<string:Tag>,<float|int|uint|string:Replacement>) ...
+
+		#endif
+		#ifdef __SERVER
+		// Server-only replacements setup
+		// formulas.set(<string:Tag>,<float|int|uint|string:Replacement>) ...
+
+		#endif
+	}
+
+	// Now, parse all @tags@ from <text> and replace <tags> with correspondent replacement from <formulas>
+	string@[] parts = split(text,"@");
+	string svalue;
+	float fvalue;
+	for(uint pos = 1; pos < parts.length; pos+=2){
+		if( formulas.get(parts[pos],svalue) ){
+			parts[pos] = svalue;
+		}else if( formulas.get(parts[pos],fvalue) ){
+			parts[pos] = fvalue;
+		}
+	}
+	return join(parts,"");
+}
+
+/*
+// Says Formulas replacer is OK on server startup if everything is OK
+class Debug{Debug(){
+	string test = "Formulas replacer is <@FormatFormulas.Status@>";
+	Log(FormatFormulas(test));
+}} Debug d;
+*/
