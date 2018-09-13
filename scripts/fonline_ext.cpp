@@ -16,7 +16,10 @@ void __attribute__( ( destructor ) )  DllUnload() {}
 bool Map_HasRoof(Map& map, uint16 hexX, uint16 hexY){
 	ProtoMap::TileVec& tiles = const_cast< ProtoMap::TileVec& >( map.Proto->Tiles );
 	for( uint i = 0, length = tiles.size(); i < length; i++ ){
-    	if( tiles[ i ].HexX == hexX && tiles[ i ].HexY == hexY && tiles[ i ].IsRoof ) return true;
+    	if( 
+    		((tiles[ i ].HexX == hexX) || (tiles[ i ].HexX == hexX + 1)) // Roof tile may have size 2x2
+    		&& ((tiles[ i ].HexY == hexY) || (tiles[ i ].HexY == hexY + 1))
+    		&& tiles[ i ].IsRoof ) return true;
     }
     return false;
 }
