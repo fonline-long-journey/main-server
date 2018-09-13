@@ -80,7 +80,16 @@ void ResizeQuickbar(uint quick_slot){
 		ItemCl@ item = chosen.GetItemById(quickbar[quick_slot]);
 		ItemCl@ equippedItem = chosen.GetItem(0,SLOT_HAND1);
 		if(item !is null){
-			if(equippedItem is item){ // Если в слоте и в руках один и тот же предмет
+			if( // Если в слоте патроны ко взятой в руки пушке - немедленно зарядить их
+				item.GetType() == ITEM_TYPE_AMMO && equippedItem !is null && equippedItem.GetType() == ITEM_TYPE_WEAPON
+				&& item.Proto.Ammo_Caliber == equippedItem.Proto.Weapon_Caliber
+				&& ( equippedItem.AmmoCount < equippedItem.Proto.Weapon_MaxAmmoCount || equippedItem.AmmoPid != item.GetProtoId() )
+				){ 
+					// Перезарядить оружие в руке item-ом
+					uint[] use = { CHOSEN_USE_ITEM, equippedItem.Id, 0, TARGET_SELF_ITEM, item.Id, USE_RELOAD, 0 };
+					SetChosenActions(use);
+					ChangeCursor( CURSOR_USE_WEAPON );
+			} else if(equippedItem is item){ // Если в слоте и в руках один и тот же предмет
 				if(ITEM_TYPE_WEAPON == item.GetType()){ // Для пушек - перейти к выбору цели
 					ChangeCursor( CURSOR_USE_WEAPON );
 				} else {  // Для айтемов - попробовать использовать на ком-то
@@ -96,11 +105,20 @@ void ResizeQuickbar(uint quick_slot){
 						SetChosenActions(use);
 					}
 				} else { // Обычная активация
-					if(ITEM_TYPE_WEAPON == item.GetType()){ // Взять оружие со слота
-						uint[] use = {CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0};
+					if(ITEM_TYPE_ARMOR == item.GetType()){ // Для брони - экипировать броню
+						uint[] use = {
+							CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_ARMOR, 0, 0, 0
+						};
+						SetChosenActions(use);
+					} else if(ITEM_TYPE_WEAPON == item.GetType()){ // Экипировать оружие со слота
+						uint[] use = {
+							CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0
+						};
 						SetChosenActions(use);
 					} else { // Взять предмет со слота
-						uint[] use = {CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0};
+						uint[] use = {
+							CHOSEN_MOVE_ITEM, quickbar[quick_slot], 1, SLOT_HAND1, 0, 0, 0
+						};
 						SetChosenActions(use);
 					}
 				}

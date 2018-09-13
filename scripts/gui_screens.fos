@@ -4702,7 +4702,7 @@ namespace Game_TLJ
         void OnDraw() override
         {
             ItemCl@ item = quickItem(slot_id + id_offset());
-            int icon = item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0;
+            uint icon = item !is null ? ( item.PicInv != 0 ? item.PicInv : item.Proto.PicInv ) : 0;
             SetBackgroundImage(icon > 0 ? icon : -1,IMAGE_LAYOUT_ZOOM);
             
             QuickbarLabel@ label = cast<QuickbarLabel> (Find("QuickbarLabel"));
