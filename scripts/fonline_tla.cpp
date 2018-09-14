@@ -74,7 +74,7 @@ void RegisterASExtensions()
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val9_b2", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 38);
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val9_b3", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 39);
 		
-		Log("Registered vals offsets on" + SCRIPT_ITEM_STR + \n");
+		Log("Registered vals offsets on" + SCRIPT_ITEM_STR + "\n");
 }
 
 FONLINE_DLL_ENTRY( isCompiler )
