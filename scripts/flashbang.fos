@@ -1,0 +1,73 @@
+#include "_macros.fos"
+#include "_colors.fos"
+
+void FlashBlast(Map& map, uint16 tx, uint16 ty){
+	Item@ item = map.AddItem( tx, ty, PID_SMOKE_GRENADE, 1 );
+	SETFLAG( item.Flags, ITEM_ALWAYS_VIEW );
+	SETFLAG( item.Flags, ITEM_NO_LOOT );
+	SETFLAG( item.Flags, ITEM_HIDDEN );
+	UNSETFLAG( item.Flags, ITEM_CAN_PICKUP );
+	item.Update();
+	int[] values = { map.Id, item.Id, 0, map.HasRoof(item.HexX,item.HexY) ? 45 : 20 };
+	CreateTimeEvent( __FullSecond + 1 , "e_Flashbang", values, true);
+}
+
+uint e_Flashbang(uint[]@ values){
+	Map@ map = GetMap(values[0]);
+	Item@ item = GetItem(values[1]);
+	int step = values[2];
+	uint maxdistance = uint(values[3]);
+	if(step == 0){
+		UNSETFLAG( item.Flags, ITEM_HIDDEN );
+		item.Update();
+		map.SetText(item.HexX,item.HexY,COLOR_RGB(255,128,0),"!");
+		map.PlaySound("TOGGLE.ACM",item.HexX,item.HexY,50);
+		values[2]++;
+		return 4; // Задержка гранаты
+	}
+	if(step == 1){
+		SETFLAG( item.Flags, ITEM_LIGHT );
+		item.LightIntensity = 80;
+	    item.LightDistance = 50;
+	    item.LightColor = COLOR_ARGB(255,255,255,255);
+	    map.RunEffect( PID_EXPLODE_FIRE_SMALL, item.HexX, item.HexY, 0 );
+	    map.PlaySound("WAR1XXX1.ACM",item.HexX,item.HexY,50);
+	    item.Update();
+
+	    Critter@[] critters;
+		map.GetCrittersWhoViewPath(item.HexX,item.HexY,item.HexX,item.HexY,FIND_LIFE,critters);
+		for( uint i = 0, j = critters.length(); i < j; i++ ){
+			uint dist = GetDistantion(critters[i].HexX, critters[i].HexY,item.HexX,item.HexY);
+	    	if(dist < maxdistance) {
+		    	uint delay = (CLAMP(maxdistance - dist,0,maxdistance)*100);
+		    	if(critters[i].IsPlayer())
+		        	critters[ i ].RunClientScript( "_QuakeScreen", 20, delay, 0, null, null );
+		        if(critters[i].IsRuning){ // Для бегущих
+		        	critters[i].ToKnockout( KNOCKOUT_ANIM2_DEFAULT( false ), 5, critters[i].HexX, critters[i].HexY );
+		        	critters[i].StatBase[ ST_CURRENT_AP ] = -delay;
+		        	critters[i].Wait(delay);	
+		        } else { // Для стоящих
+		        	if(dist < 10){ // Слишком близко
+		        		critters[i].ToKnockout( KNOCKOUT_ANIM2_DEFAULT( Random(0,1) == 1 ), 5, critters[i].HexX, critters[i].HexY );	
+		        	}
+	        		critters[i].StatBase[ ST_CURRENT_AP ] = -delay;
+	        		critters[i].Wait(delay);
+		        }
+		        
+	    	}
+		}
+
+	    values[2]++;
+	    return 1;
+	}
+	if(step == 2){
+		DeleteItem(item);
+		values[2]++;
+		return 0;
+	}
+	return 0;
+}
+
+/* run ~test */ void test(Critter& cr, int offX, int offY, int c){
+	FlashBlast(cr.GetMap(),cr.HexX+offX,cr.HexY+offY);
+}
