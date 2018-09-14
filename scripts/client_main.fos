@@ -2890,7 +2890,7 @@ void filename_logfile( string& filename )
 // Called on screenshot saving.
 void filename_screenshot( string& filename )
 {
-    filename = "screenshots\\" + filename;
+    filename = "screenshots\\" + ReplaceText(filename,".jpg",".png");
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
