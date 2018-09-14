@@ -1,5 +1,6 @@
 #include "_macros.fos"
 #include "_defines.fos"
+#include "_colors.fos"
 
 // Weather system #wip @erandelax 02/09/18
 
@@ -41,15 +42,15 @@ uint world_distance(uint16 x1, uint16 y1, uint16 x2, uint16 y2){
 	storms.resize(0);
 }
 
-/* ~run */ void _storm_add(Critter& player, int p1, int p2, int p3){
-	add_storm( player.WorldX, player.WorldY, 350 );
+/* ~run */ void add(Critter& player, int radius, int p2, int p3){
+	add_storm( player.WorldX, player.WorldY, radius );
 }
 
-/* ~run */ void _storm_wipe(Critter& player, int p1, int p2, int p3){
+/* ~run */ void wipe(Critter& player, int p1, int p2, int p3){
 	remove_storm();
 }
 
-/* ~run */ void _storm_info(Critter& player, int p1, int p2, int p3){
+/* ~run */ void info(Critter& player, int p1, int p2, int p3){
 	if(storms.length > 0) for(uint pos = 0; pos < storms.length; pos++){
 		player.Say(SAY_NETMSG, "X:"+storms[pos].WorldX+" Y:"+storms[pos].WorldY+" R:"+storms[pos].radius);
 	}
@@ -86,6 +87,24 @@ uint e_WeatherLoop(uint[]@ values){
 				// Apply it to all maps
 				for(uint mpos = 0; mpos < mapsCount; mpos++){
 					maps[mpos].SetRain(power);
+					if(power > 100){ // Lightnings allowed!
+						if(Random(0,power) >= 100){ // Lightning strike
+							uint x = Random(0,maps[mpos].GetWidth() - 2);
+							uint y = Random(0,maps[mpos].GetHeight() - 2);
+							while( maps[mpos].HasRoof(x,y) ){
+								x = Random(0,maps[mpos].GetWidth() - 2);
+								y = Random(0,maps[mpos].GetHeight() - 2);
+							}
+							uint[] _values = {
+								maps[mpos].Id, // Map.Id
+								x,  // x
+								y, // y 
+								0, // step
+								0 // Item.Id
+							};
+							CreateTimeEvent(__FullSecond, "e_LightningStrike", _values, true);
+						}
+					}
 				}
 				//Log("Applied storm="+power+" to location "+location.WorldX+":"+location.WorldY);
 			} else {
@@ -102,4 +121,51 @@ uint e_WeatherLoop(uint[]@ values){
 		}
 	}
 	return 20; // Adjust for good performance
+}
+
+/* ~run */ void lightning(Critter& cr, int ox, int oy, int o){
+	uint[] values = {
+		cr.GetMap().Id, // Map.Id
+		cr.HexX + ox,  // x
+		cr.HexY + oy, // y 
+		0, // step
+		0 // Item.Id
+	};
+	CreateTimeEvent(__FullSecond + 1, "e_LightningStrike", values, true);
+}
+
+uint e_LightningStrike(uint[]@ values){
+	Map@ map = GetMap(values[0]);
+	if(map is null) return 0;
+
+	uint step = values[3];
+
+	if( step == 0 ){
+		// Replace with PID_EFFECT_LIGHTNING when it 'd be available
+		Item@ item = map.AddItem( values[1], values[2], PID_FLOWER, 1 );
+		if(item is null) return 0;
+
+		SETFLAG( item.Flags, ITEM_ALWAYS_VIEW );
+		SETFLAG( item.Flags, ITEM_NO_LOOT );
+		UNSETFLAG( item.Flags, ITEM_CAN_PICKUP );
+		SETFLAG( item.Flags, ITEM_LIGHT );
+		item.LightIntensity = 50;
+	    item.LightDistance = 100;
+	    item.LightColor = COLOR_ARGB(255,255,255,255);
+		item.Update();
+		values[4] = item.Id;
+
+		values[3]++;
+		return 1;
+	} else if( step == 1 ){
+		Item@ item = GetItem(values[4]);
+		if(item is null) return 0;
+
+		map.PlaySound("WAR1XXX1.ACM",item.HexX,item.HexY,200); // Lightstrike sound @@todo
+		DeleteItem( item );
+
+		values[3]++;
+		return 0;
+	}
+	return 0;
 }

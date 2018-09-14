@@ -436,8 +436,10 @@ CritterCl@[] visibleCritters;
 
 void critter_in( CritterCl& cr )
 {
-    visibleCritters.insertLast(cr);
-    critter_update(cr, true);
+    if( not cr.IsChosen() ){
+        visibleCritters.insertLast(cr);
+        critter_update(cr, true);
+    }
 
     // Default colors
     cr.NameColor = COLOR_CRITTER_NAME;
