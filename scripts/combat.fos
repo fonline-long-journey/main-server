@@ -1806,7 +1806,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 			
 		if( attack.Attacker.StatBase[ ST_EXECUTE ] > 0 )
 		{
-			totalDmg = target.ParamBase[ ST_CURRENT_HP ] + 15;
+			totalDmg = target.ParamBase[ ST_CURRENT_HP ] + target.ParamBase[ ST_CURRENT_AC ] + Random(100, 125);
 			attack.Attacker.StatBase[ ST_EXECUTE ] -= 1 ;
 		}
 			
