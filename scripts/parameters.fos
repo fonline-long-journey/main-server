@@ -288,9 +288,9 @@ void CritterGenerate( int[]& params ) // Export to client_main@player_data_gener
     _param_[ ST_ARMOR_CLASS ] = 0;
     _param_[ ST_MAX_LIFE ] = 200 + _param_[ ST_ENDURANCE ] * 20;
     _param_[ ST_ACTION_POINTS ] = 100;
-    _param_[ ST_CARRY_WEIGHT ] = 1000 * ( 10 +  _param_[ ST_STRENGTH ] * 15  );
-    _param_[ ST_MELEE_DAMAGE ] = ( _param_[ ST_STRENGTH ] - 1 ) / 3;
-    _param_[ ST_NORMAL_RESIST ] = _param_[ ST_ENDURANCE ];
+    _param_[ ST_CARRY_WEIGHT ] = 1000 * ( 40 +  _param_[ ST_STRENGTH ] * 10  );
+    _param_[ ST_MELEE_DAMAGE ] = 0 + ( _param_[ ST_STRENGTH ] * 5 );
+    _param_[ ST_NORMAL_RESIST ] = 0;
     _param_[ ST_POISON_RESISTANCE ] = _param_[ ST_ENDURANCE ] * 4;
     _param_[ ST_RADIATION_RESISTANCE ] = _param_[ ST_ENDURANCE ] * 2;
     _param_[ ST_SEQUENCE ] = _param_[ ST_PERCEPTION ] * 2;
