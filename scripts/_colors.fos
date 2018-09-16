@@ -7,6 +7,48 @@
 #define COLOR_LIGHT2            # ( color, light, offs )( COLOR_LIGHT3( ( ( ( color ) >> ( offs ) ) & 0xFF ) + ( light ), 255 ) << ( offs ) )
 #define COLOR_LIGHT             # ( color, light )( COLOR_LIGHT2( color, light, 16 ) | COLOR_LIGHT2( color, light, 8 ) | COLOR_LIGHT2( color, light, 0 ) | ( ( color ) & 0xFF000000 ) )
 
+// Маски каналов
+#define COLOR_MASK_A	(0xFF000000)
+#define COLOR_MASK_R	(0x00FF0000)
+#define COLOR_MASK_G	(0x0000FF00)
+#define COLOR_MASK_B	(0x000000FF)
+#define COLOR_MASK_RGB	(0x00FFFFFF)
+#define COLOR_MASK_AGB	(0xFF00FFFF)
+#define COLOR_MASK_ARB	(0xFFFF00FF)
+#define COLOR_MASK_ARG	(0xFFFFFF00)
+
+// Извлечение одного канала (#00FF0000[R] -> 255)
+#define COLOR_EXTRACT_A 	# (color) ( (color & COLOR_MASK_A) >> 24 )
+#define COLOR_EXTRACT_R 	# (color) ( (color & COLOR_MASK_R) >> 16 )
+#define COLOR_EXTRACT_G 	# (color) ( (color & COLOR_MASK_G) >> 8	 )
+#define COLOR_EXTRACT_B 	# (color) ( (color & COLOR_MASK_B) 		 )
+
+// Смещение числа в канал (255[R]-> #00FF0000)
+#define COLOR_MAKE_A 		# (color) ( (color & 0xFF) << 24 )
+#define COLOR_MAKE_R 		# (color) ( (color & 0xFF) << 16 )
+#define COLOR_MAKE_G 		# (color) ( (color & 0xFF) << 8 )
+#define COLOR_MAKE_B 		# (color) ( (color & 0xFF) )
+
+// Замещение числом в канал (#00335599 + 255[R] -> #00FF5599)
+#define COLOR_INSERT_A  	# (color, mixin) ( (color & COLOR_MASK_RGB) | COLOR_MAKE_A(mixin) )
+#define COLOR_INSERT_R  	# (color, mixin) ( (color & COLOR_MASK_AGB) | COLOR_MAKE_R(mixin) )
+#define COLOR_INSERT_G  	# (color, mixin) ( (color & COLOR_MASK_ARB) | COLOR_MAKE_G(mixin) )
+#define COLOR_INSERT_B  	# (color, mixin) ( (color & COLOR_MASK_ARG) | COLOR_MAKE_B(mixin) )
+
+// Смешивание в пропорции channel + power * mixin
+#define COLOR_MIX_CHANNEL # (channel,mixin,power) ( uint8(floor( channel - (channel - mixin) * power )) )
+#define COLOR_MIX_A 	  # (color,mixin,power) ( COLOR_INSERT_A(color, COLOR_MIX_CHANNEL(COLOR_EXTRACT_A(color),COLOR_EXTRACT_A(mixin),power)) )
+#define COLOR_MIX_R 	  # (color,mixin,power) ( COLOR_INSERT_R(color, COLOR_MIX_CHANNEL(COLOR_EXTRACT_R(color),COLOR_EXTRACT_R(mixin),power)) )
+#define COLOR_MIX_G 	  # (color,mixin,power) ( COLOR_INSERT_G(color, COLOR_MIX_CHANNEL(COLOR_EXTRACT_G(color),COLOR_EXTRACT_G(mixin),power)) )
+#define COLOR_MIX_B 	  # (color,mixin,power) ( COLOR_INSERT_B(color, COLOR_MIX_CHANNEL(COLOR_EXTRACT_B(color),COLOR_EXTRACT_B(mixin),power)) )
+#define COLOR_MIX_RGB 	  # (color,mixin,power) ( COLOR_MIX_R(color,COLOR_MIX_G(color,COLOR_MIX_B(color,mixin,power),power),power) )
+#define COLOR_MIX_ARGB 	  # (color,mixin,power) ( COLOR_MIX_A(color,COLOR_MIX_RGB(color,mixin,power),power) )
+
+// Дебаг
+#define COLOR_DEBUG 		# (color) ( "A:"+COLOR_EXTRACT_A(color)+" R:"+COLOR_EXTRACT_R(color)+" G:"+COLOR_EXTRACT_G(color)+" B:"+COLOR_EXTRACT_B(color) )
+
+// Стандартные цвета
+
 #define COLOR_IFACE             ( COLOR_RGB( 123, 115, 106 ) )
 #define COLOR_TEXT              ( COLOR_RGB( 60, 248, 0 ) )       // Default text color
 #define COLOR_TEXT_FOCUSED      ( COLOR_RGB( 0, 0xAA, 0 ) )       // Default focused text color
