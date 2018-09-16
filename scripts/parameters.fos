@@ -162,8 +162,8 @@ uint cte_armorRegeneration( Critter& cr, int identifier, uint& rate ){
 		return 1;
 	}
 	
-	cr.ParamBase[ ST_CURRENT_AC ] += 1;
-	return 1;
+	cr.ParamBase[ ST_CURRENT_AC ] = cr.Param[ ST_ARMOR_CLASS ];
+	return 0;
 }
 
 int NextLevelNeedExp( Critter& cr ) // Export
@@ -256,45 +256,45 @@ void CritterGenerate( int[]& params ) // Export to client_main@player_data_gener
     if( _param_[ ST_LEVEL ] <= 0 )
         _param_[ ST_LEVEL ] = 1;
 
-    _param_[ SK_SMALL_GUNS ] += 0 + 3 * ( _param_[ ST_AGILITY ] + _param_[ ST_INTELLECT ] );
-    _param_[ SK_BIG_GUNS ] += 0 + 3 * ( _param_[ ST_STRENGTH ] + _param_[ ST_INTELLECT ] );
-    _param_[ SK_ENERGY_WEAPONS ] += 0 + 3 * ( _param_[ ST_INTELLECT ] + _param_[ ST_INTELLECT ] );
-    _param_[ SK_UNARMED ] += 30 + 3 * ( _param_[ ST_AGILITY ] + _param_[ ST_STRENGTH ] );
-    _param_[ SK_MELEE_WEAPONS ] += 20 + 3 * ( _param_[ ST_AGILITY ] + _param_[ ST_ENDURANCE ] );
-    _param_[ SK_THROWING ] += 10 + 3 * ( _param_[ ST_PERCEPTION ] + _param_[ ST_STRENGTH ] );
-    _param_[ SK_FIRST_AID ] += 0 + 3 * ( _param_[ ST_ENDURANCE ] + _param_[ ST_LUCK ] );
-    _param_[ SK_DOCTOR ] += 0 + 3 * ( _param_[ ST_INTELLECT ] + _param_[ ST_ENDURANCE ] );
-    _param_[ SK_SNEAK ] += -10 + 3 * ( _param_[ ST_PERCEPTION ] + _param_[ ST_LUCK ] );
-    _param_[ SK_LOCKPICK ] += -20 + 3 * ( _param_[ ST_LUCK ] + _param_[ ST_PERCEPTION ] );
-    _param_[ SK_STEAL ] += 0 + 3 * ( _param_[ ST_LUCK ] + _param_[ ST_PERCEPTION ] );
+    _param_[ SK_SMALL_GUNS ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_BIG_GUNS ] += 0;
+    _param_[ SK_ENERGY_WEAPONS ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_UNARMED ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_MELEE_WEAPONS ] += 0;
+    _param_[ SK_THROWING ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_FIRST_AID ] += 0;
+    _param_[ SK_DOCTOR ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_SNEAK ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_LOCKPICK ] += 0;
+    _param_[ SK_STEAL ] += 0;
     _param_[ SK_TRAPS ] += 0;
-    _param_[ SK_SCIENCE ] += 5 + 3 * ( _param_[ ST_INTELLECT ] + _param_[ ST_PERCEPTION ] );
-    _param_[ SK_REPAIR ] += 5 + 3 * ( _param_[ ST_INTELLECT ] + _param_[ ST_STRENGTH ] );
+    _param_[ SK_SCIENCE ] += 0 + _param_[ ST_INTELLECT ] * 5;
+    _param_[ SK_REPAIR ] += 0 + _param_[ ST_INTELLECT ] * 5;
     _param_[ SK_SPEECH ] += 0;
-    _param_[ SK_BARTER ] += 0 + 6 * _param_[ ST_CHARISMA ];
+    _param_[ SK_BARTER ] += 0 + _param_[ ST_INTELLECT ] * 5;
     _param_[ SK_GAMBLING ] += 0;
-    _param_[ SK_OUTDOORSMAN ] += 0 + 3 * ( _param_[ ST_ENDURANCE ] + _param_[ ST_LUCK ] );
+    _param_[ SK_OUTDOORSMAN ] += 0 + _param_[ ST_INTELLECT ] * 5;
 
     if( _param_[ TAG_SKILL1 ] != 0 )
-        _param_[ _param_[ TAG_SKILL1 ] ] += 20;
+        _param_[ _param_[ TAG_SKILL1 ] ] += 10;
     if( _param_[ TAG_SKILL2 ] != 0 )
-        _param_[ _param_[ TAG_SKILL2 ] ] += 20;
+        _param_[ _param_[ TAG_SKILL2 ] ] += 10;
     if( _param_[ TAG_SKILL3 ] != 0 )
-        _param_[ _param_[ TAG_SKILL3 ] ] += 20;
+        _param_[ _param_[ TAG_SKILL3 ] ] += 10;
 	
     #ifdef __CLIENT
     // Runtime calculations, only for client registration
 
-    _param_[ ST_ARMOR_CLASS ] = _param_[ ST_AGILITY ] / 2;
-    _param_[ ST_MAX_LIFE ] = 50 + _param_[ ST_ENDURANCE ] * 10;
+    _param_[ ST_ARMOR_CLASS ] = 0;
+    _param_[ ST_MAX_LIFE ] = 200 + _param_[ ST_ENDURANCE ] * 20;
     _param_[ ST_ACTION_POINTS ] = 100;
     _param_[ ST_CARRY_WEIGHT ] = 1000 * ( 10 +  _param_[ ST_STRENGTH ] * 15  );
     _param_[ ST_MELEE_DAMAGE ] = ( _param_[ ST_STRENGTH ] - 1 ) / 3;
     _param_[ ST_NORMAL_RESIST ] = _param_[ ST_ENDURANCE ];
-    _param_[ ST_POISON_RESISTANCE ] = 10 + _param_[ ST_ENDURANCE ] * 2;
+    _param_[ ST_POISON_RESISTANCE ] = _param_[ ST_ENDURANCE ] * 4;
     _param_[ ST_RADIATION_RESISTANCE ] = _param_[ ST_ENDURANCE ] * 2;
     _param_[ ST_SEQUENCE ] = _param_[ ST_PERCEPTION ] * 2;
-    _param_[ ST_HEALING_RATE ] = _param_[ ST_ENDURANCE ] / 2;
+    _param_[ ST_HEALING_RATE ] = 3 + _param_[ ST_ENDURANCE ];
     _param_[ ST_CRITICAL_CHANCE ] = 2 * _param_[ ST_LUCK ];
     #endif
 
@@ -504,7 +504,7 @@ int getParam_MeleeDmg( Critter& cr, uint )
 int getParam_HealingRate( Critter& cr, uint )
 {
     int e = getParam_Endurance( cr, 0 );
-    int val = cr.ParamBase[ ST_HEALING_RATE ] + cr.ParamBase[ ST_HEALING_RATE_EXT ] + 2 + cr.ParamBase[ ST_ENDURANCE ];
+    int val = cr.ParamBase[ ST_HEALING_RATE ] + cr.ParamBase[ ST_HEALING_RATE_EXT ] + 3 + cr.ParamBase[ ST_ENDURANCE ];
 		
     return CLAMP( val, 0, 9999 );
 }
