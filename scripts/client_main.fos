@@ -3041,6 +3041,14 @@ bool ItemsDragAndDropHandler( GUIObject& obj, GUIObject@ target )
     return true;
 }
 
+void Notify(int atcrId, int trgtId, int param2, string@ message, int[]@ param4){
+	string atcrName = GetCritter(atcrId) !is null ? GetCritter(atcrId).Name : "кто-то";
+	string trgtName = GetCritter(trgtId) !is null ? GetCritter(trgtId).Name : "кто-то";
+	string res = ReplaceText(message, "%atcr", atcrName);
+	res = ReplaceText(res, "%trgt", trgtName);
+	Message(res, FOMB_COMBAT_RESULT );
+}
+
 void __DrawBustMuzzle(int param0, int param1, int param2, string@ param3, int[]@ drawData)
 {
 	CreateBurstMuzzle( drawData );

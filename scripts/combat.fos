@@ -1167,6 +1167,12 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
             for( int i = 0, j = len_; i < j; i++ )
                 ApplyDamage( attack, critsHit[ i ], critsHitBullets[ i ], ( realTarget.Id == critsHit[ i ].Id ) && criticalHit, ( cr.IsPlayer() && !changedTarget ) || ( cr.IsNpc() && critsHit[ i ].Id == target.Id ), results );
 
+		if(cr.IsPlayer())
+		{
+			int index = FindCritterInArray( critsHit, realTarget );
+			cr.RunClientScript("client_main@Notify", cr.Id, realTarget.Id, 0, "В %trgt попало " + critsHitBullets[ index ]  + " пуль.", null);
+		}	
+		
         if( !changedTarget && !attack.TargetHit )
             NotifyMiss( cr, results );
     } // burst attack
