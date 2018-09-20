@@ -376,7 +376,7 @@
 // TLJ Update Log
 #define STR_UPDATE_LOG_BEGIN				 ( 1200 )
 // #define STR_UPDATE_LOG_END					 ( 1202 )
-#define STR_UPDATE_LOG_LATEST				 ( 1205 )
+#define STR_UPDATE_LOG_LATEST				 ( 1210 )
 #define STR_UPDATE_LOG_MAX					 ( 1500 )
 
 // Error replacer
