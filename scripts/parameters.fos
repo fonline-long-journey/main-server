@@ -441,6 +441,17 @@ int getParam_Luck( Critter& cr, uint )
     return CLAMP( val, 0, 10 );
 }
 
+// Skills
+int getParam_BigGuns( Critter& cr, uint ){ return cr.ParamBase[SK_FIREARMS]; }
+int getParam_MeleeWeapons( Critter& cr, uint ){ return cr.ParamBase[SK_MELEE_COMBAT]; }
+int getParam_Traps( Critter& cr, uint ){ return cr.ParamBase[SK_TACTICAL_WEAPONS]; }
+int getParam_Doctor( Critter& cr, uint ){ return cr.ParamBase[SK_MEDICINE]; }
+int getParam_Lockpick( Critter& cr, uint ){ return cr.ParamBase[SK_STEALTH]; }
+int getParam_Steal( Critter& cr, uint ){ return cr.ParamBase[SK_STEALTH]; }
+int getParam_Speech( Critter& cr, uint ){ return cr.ParamBase[SK_PERSUASION]; }
+
+// Stats
+
 int getParam_Hp( Critter& cr, uint )
 {
     return cr.ParamBase[ ST_CURRENT_HP ];

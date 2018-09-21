@@ -212,6 +212,17 @@ void InitializeGame()                    // Export
     SetParameterGetBehaviour( ST_INTELLECT, dllName + "getParam_Intellegence"   );
     SetParameterGetBehaviour( ST_AGILITY, dllName + "getParam_Agility"        );
     // SetParameterGetBehaviour( ST_LUCK, dllName + "getParam_Luck"           );
+
+    // Custom skills
+    SetParameterGetBehaviour( SK_BIG_GUNS, dllName + "getParam_BigGuns" );
+    SetParameterGetBehaviour( SK_MELEE_WEAPONS, dllName + "getParam_MeleeWeapons" );
+    SetParameterGetBehaviour( SK_TRAPS, dllName + "getParam_Traps" );
+    SetParameterGetBehaviour( SK_DOCTOR, dllName + "getParam_Doctor" );
+    SetParameterGetBehaviour( SK_LOCKPICK, dllName + "getParam_Lockpick" );
+    SetParameterGetBehaviour( SK_STEAL, dllName + "getParam_Steal" );
+    SetParameterGetBehaviour( SK_TRAPS, dllName + "getParam_Traps" );
+    SetParameterGetBehaviour( SK_SPEECH, dllName + "getParam_Speech" );
+
     SetParameterGetBehaviour( ST_CURRENT_HP, dllName + "getParam_Hp"             );
 	SetParameterGetBehaviour( ST_CURRENT_AC, dllName + "getParam_Shield"             );
     SetParameterGetBehaviour( ST_MAX_LIFE, dllName + "getParam_MaxLife"        );

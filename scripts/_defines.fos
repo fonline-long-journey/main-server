@@ -540,6 +540,18 @@
 #define SK_OUTDOORSMAN                           ( 217 ) // Выживание
 // 218..225
 
+// Custom skills (see <parameters.fos> for old-to-new skills redirections)
+#define SK_FIREARMS								 ( SK_SMALL_GUNS )	
+#define SK_TECH_WEAPONS							 ( SK_ENERGY_WEAPONS )
+#define SK_MELEE_COMBAT                          ( SK_UNARMED )		
+#define SK_TACTICAL_WEAPONS						 ( SK_THROWING )	
+#define SK_MEDICINE						 		 ( SK_FIRST_AID )	
+#define SK_STEALTH                               ( SK_SNEAK )		
+#define SK_KNOWLEDGE							 ( SK_SCIENCE )		
+#define SK_MECHANICS				 			 ( SK_REPAIR ) 		
+#define SK_PERSUASION							 ( SK_BARTER )		
+#define SK_SURVIVAL								 ( SK_OUTDOORSMAN )	
+
 // / Tag skills
 #define TAG_SKILL1                               ( 226 ) // Hardcoded
 #define TAG_SKILL2                               ( 227 ) // Hardcoded
