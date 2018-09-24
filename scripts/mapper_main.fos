@@ -239,8 +239,126 @@ void start()
     #endif
 }
 
+int[][] items;
+
+dictionary ContentTypes = { 
+    {"CRITTERS",-2},
+    {"ITEMS",-1},
+    {"NONE",ITEM_TYPE_NONE},
+    {"ARMOR",ITEM_TYPE_ARMOR},
+    {"DRUG",ITEM_TYPE_DRUG},
+    {"WEAPON",ITEM_TYPE_WEAPON},
+    {"AMMO",ITEM_TYPE_AMMO},
+    {"MISC",ITEM_TYPE_MISC},
+    {"KEY",ITEM_TYPE_KEY},
+    {"CONTAINER",ITEM_TYPE_CONTAINER},
+    {"DOOR",ITEM_TYPE_DOOR},
+    {"GRID",ITEM_TYPE_GRID},
+    {"GENERIC",ITEM_TYPE_GENERIC},
+    {"WALL",ITEM_TYPE_WALL},
+    {"CAR",ITEM_TYPE_CAR},
+    {"MAGIC",ITEM_TYPE_MAGIC}
+};
+
 void InitializeTabs()
 {
+    items.resize(15);
+    file f;
+    if( f.open("Pids.lst","r") >= 0 ){
+        // Buffers
+        int[] tabTypes; 
+        uint16[] tabItems;
+        uint16[] tabCritters;
+        int[] listItems;
+        int tabIndex = -1;
+        while(not f.isEndOfFile()){
+            string line = split(split(split(f.readLine(),"#")[0],"\n")[0],"\r")[0]; // Strip out any comments & \n
+            if( splitEx(line,"\n")[0].length() < 1 ) continue; // Skip empty lines
+
+            if(line[0] == "@"){ // Parsing new tab
+                tabIndex++;
+                TabDelete(tabIndex);
+                tabTypes.resize(0);
+                tabItems.resize(0);
+                tabCritters.resize(0);
+                string name = splitEx(line,"@")[0]; // Get rid of @, spaces
+                string@[] parts = splitEx(name,"=");
+                if(parts.length > 1 && tabIndex < TAB_INVENTORY){ // Predefined types list detected
+                    name = parts[0];
+                    string@[] types = splitEx(parts[1],",");
+                    for(uint pos = 0, length = types.length; pos < length; pos++) if( ContentTypes.exists(types[pos]) ){
+                        tabTypes.insertLast( int( ContentTypes[ types[pos] ] ) );
+                    }
+                    // PRELOAD CRITTERS
+                    if( tabTypes.find(-2) >= 0 ) { 
+                        for(uint pos = 0; pos < 65536; pos++) tabCritters.insertLast(uint16(pos));
+                        TabSetCritterPids(tabIndex,"# CRITTERS",tabCritters);
+                        tabCritters.resize(0);
+                    }
+                    // PRELOAD ITEMS
+                    bool hasAll = false;
+                    if( tabTypes.find(-1) >= 0 ) hasAll = true; // Preload items
+                    for(uint pos = 0; pos < 65536; pos++) {
+                        ProtoItem@ item = GetProtoItem(uint16(pos));
+                        if(item is null) continue;
+                        if( hasAll || ( tabTypes.find(item.Type) >= 0 ) ) tabItems.insertLast(uint16(pos));
+                    }
+                    TabSetItemPids(tabIndex,"# ITEMS",tabItems);
+                    tabItems.resize(0);
+                    // SPLIT ON TYPES
+                    for(uint pos = 0, length = types.length; pos < length; pos++) if( ContentTypes.exists(types[pos]) ){
+                        int itemType = int( ContentTypes[ types[pos] ] );
+                        if(itemType >= 0){
+                            for(uint i = 0; i < 65536; i++) {
+                                ProtoItem@ item = GetProtoItem(uint16(i));
+                                if(item is null) continue;
+                                if( item.Type == itemType ) tabItems.insertLast(uint16(i));
+                            }
+                            TabSetItemPids(tabIndex,"## "+types[pos],tabItems);
+                            tabItems.resize(0);
+                        } 
+                    }
+                }
+                TabSetName(tabIndex,name);
+            } else if(tabIndex < TAB_INVENTORY) { // Parse custom groups
+                bool areCritters = true;
+                string@[] parts = split(line, "=:");
+                if(parts.length < 2) {
+                    areCritters = false;
+                    parts = split(line,"=");
+                }
+                if(parts.length < 2) {
+                    Log("Can't parse: <"+line+">");
+                    continue;
+                }
+                string name = parts[0];
+                string@[] pids = splitEx(parts[1],",");
+                for(uint pos = 0, length = pids.length; pos < length; pos++) {
+                    int pid = 0;
+                    int pidEnd = 0;
+                    if( StrToInt(pids[pos],pid) && pid >= 0 ) { // Pid can be parsed directly
+                        tabItems.insertLast(uint16(pid));
+                    } else { // Is <range>, <constant> or <error>
+                        pid = 0;
+                        pid = GetConstantValue(CONSTANTS_ITEM,pids[pos]);
+                        if(pid > 0) { // is valid constant
+                            tabItems.insertLast(uint16(pid));
+                        } else {
+                            string@[] range = splitEx(pids[pos],"-");
+                            if(range.length > 0 && StrToInt(range[0],pid) && StrToInt(range[range.length-1],pidEnd) && pidEnd >= pid && pid >= 0){
+                                for(uint16 i = uint16(pid), len = uint16(pidEnd); i <= len; i++) tabItems.insertLast(i);
+                            }
+                        }
+                    }
+                }
+                if(areCritters) TabSetCritterPids(tabIndex,name,tabItems);
+                else  TabSetItemPids(tabIndex,name,tabItems);
+                tabItems.resize(0);
+            }
+        }
+        return;
+    } // If file does not exit, default code will be loaded as well as default tabs
+
     // FAST TAB
     TabDelete( TAB_FAST_ITEMS );
     uint16[] pids;
