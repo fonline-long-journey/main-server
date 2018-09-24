@@ -12,6 +12,8 @@
 #include "hitchance_h.fos"
 #include "_colors.fos"
 
+//#define __DEBUG
+
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
 import void AffectRadiation( Critter& cr, int value ) from "radiation";
@@ -1167,6 +1169,12 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
             for( int i = 0, j = len_; i < j; i++ )
                 ApplyDamage( attack, critsHit[ i ], critsHitBullets[ i ], ( realTarget.Id == critsHit[ i ].Id ) && criticalHit, ( cr.IsPlayer() && !changedTarget ) || ( cr.IsNpc() && critsHit[ i ].Id == target.Id ), results );
 
+		if(cr.IsPlayer())
+		{
+			int index = FindCritterInArray( critsHit, realTarget );
+			cr.RunClientScript("client_main@Notify", cr.Id, realTarget.Id, 0, "В %trgt попало " + critsHitBullets[ index ]  + " пуль.", null);
+		}	
+		
         if( !changedTarget && !attack.TargetHit )
             NotifyMiss( cr, results );
     } // burst attack
@@ -1656,8 +1664,28 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
     } // not messaged
 
     int dmgType = attack.DmgType;
-    int targetDR = target.Stat[ ST_NORMAL_RESIST + dmgType - 1 ];
-    int targetDT = target.Stat[ ST_NORMAL_ABSORB + dmgType - 1 ];	
+	#ifdef __DEBUG
+	target.Say
+	(SAY_NETMSG, 
+	"----------------------------" + "\n" + 
+	"Тип урона: "  + dmgType + "." //+ "\n" + 
+	//"-----------------------------"
+	);
+	#endif
+	int targetDR = 0;
+    int targetDT = 0;
+	int checkDRagaen = 0;
+	checkDRagaen = target.Stat[ ST_NORMAL_RESIST + dmgType - 1 ];
+	if(dmgType > DAMAGE_VANILLA_END)
+	{
+		targetDR = target.Stat[ ST_ACID_RESIST + dmgType - (DAMAGE_VANILLA_END+1) ];
+		targetDT = target.Stat[ ST_ACID_ABSORB + dmgType - (DAMAGE_VANILLA_END+1) ];
+	}
+	else
+	{
+		targetDR = target.Stat[ ST_NORMAL_RESIST + dmgType - 1 ];
+		targetDT = target.Stat[ ST_NORMAL_ABSORB + dmgType - 1 ];
+	}	
 	
     if( FLAG( eff, HF_BYPASS_ARMOR ) && dmgType != DAMAGE_EMP )
     {
@@ -1695,10 +1723,19 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 		targetDR = CLAMP( targetDR, 0, 60 );
 		
     //targetDR += ( validAttacker ? ( attacker.Trait[ TRAIT_FINESSE ] != 0 ? 30 : 0 ) : 0 );
-    targetDR += attack.DRMod; // always
+		targetDR += attack.DRMod; // always
 	if( validAttacker )
-	targetDR += attacker.ParamBase[ ST_DRMOD ];
+	targetDR += attacker.Stat[ ST_DRMOD ];
     targetDR = CLAMP( targetDR, 0, 100 );
+	#ifdef __DEBUG
+	target.Say
+	(SAY_NETMSG,
+	"----------------------------"         + "\n" + 
+	"Резист ваш: "   + checkDRagaen + "%." + "\n" +
+	"Резист цели: "  + targetDR     + "%."// + "\n" +
+	//"-----------------------------"
+	);
+	#endif
     int dmgMin = attack.DmgMin + attack.BonusDmg;
     int dmgMax = attack.DmgMax + attack.BonusDmg;
     int rawDmg;
@@ -1747,12 +1784,11 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 		
         if( rawDmg > 0 )
 		{
-			armorDmg += ( rawDmg * CLAMP(targetDR, 20, 100) ) / 100;
-            totalDmg += rawDmg - armorDmg;
+			armorDmg += ( rawDmg * CLAMP(targetDR, 0, 100) ) / 100;
+            totalDmg += rawDmg - armorDmg;	
 		}
     }
 	
-
     if( validAttacker )
     {		
 	
@@ -1963,7 +1999,19 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
     if( totalDmg > 0 )
     {
         if( target.Mode[ MODE_INVULNERABLE ] == 0 ) 
-        { 
+        { 	
+			if (target.IsPlayer())
+			{	
+				#ifdef __DEBUG
+				target.Say
+				(SAY_NETMSG, 
+				"----------------------------" 						     + "\n" +
+				"Текущий Класс Брони: " 	+ target.Stat[ST_CURRENT_AC] + "."  + "\n" + 
+				"Поглощенный броней урон: " + armorDmg               	 + "."  + "\n" + 
+				"-----------------------------"
+				);
+				#endif
+			}
 			//Урон по броне
 			if ( target.Stat[ ST_CURRENT_AC ] <= armorDmg )
 				{
@@ -2076,6 +2124,9 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
                 break;
             case DAMAGE_EXPLODE:
                 anim2Dead = ANIM2_DEAD_EXPLODE;
+                break;
+			case DAMAGE_ACID:
+                anim2Dead = ANIM2_DEAD_FUSED;
                 break;
             default:
                 break;

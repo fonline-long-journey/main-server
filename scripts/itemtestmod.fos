@@ -1,0 +1,7 @@
+#include "_macros.fos"
+#include "itembonuses_h.fos"
+
+void InitTestMod(Item& item, bool firstTime)
+{
+	TestMod(item);
+}

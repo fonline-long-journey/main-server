@@ -39,6 +39,7 @@
 #define DESC_INVENTORY_SPECIAL             ( 1 )
 #define DESC_INVENTORY_STATS               ( 2 )
 #define DESC_INVENTORY_RESIST              ( 3 )
+#define DESC_INVENTORY_RESIST_NAMES	       ( 4 )
 
 // Item look types
 #define ITEM_LOOK_DEFAULT                  ( 0 )

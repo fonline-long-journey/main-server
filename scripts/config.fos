@@ -28,7 +28,7 @@ void InitializeGame()                    // Export
     __SneakDivider              = 1;
     __LevelCap                  = 10;
     __LevelCapAddExperience     = true;
-    __LookNormal                = 20;
+    __LookNormal                = 30;	// Changed default FoV of 20.
     __LookMinimum               = 0;
     __CritterIdleTick           = 10000;
     __TurnBasedTick             = 30000;
@@ -205,58 +205,78 @@ void InitializeGame()                    // Export
        string dllName = "fonline_tla_client.dll@";
      #  endif*/
     string dllName = "parameters@";
-    SetParameterGetBehaviour( ST_STRENGTH, dllName + "getParam_Strength"       );
-    SetParameterGetBehaviour( ST_PERCEPTION, dllName + "getParam_Perception"     );
-    SetParameterGetBehaviour( ST_ENDURANCE, dllName + "getParam_Endurance"      );
-    SetParameterGetBehaviour( ST_CHARISMA, dllName + "getParam_Charisma"       );
-    SetParameterGetBehaviour( ST_INTELLECT, dllName + "getParam_Intellegence"   );
-    SetParameterGetBehaviour( ST_AGILITY, dllName + "getParam_Agility"        );
+	// SPECIAL aka ASPECT points
+    SetParameterGetBehaviour( ST_STRENGTH,		dllName + "getParam_Strength"       );
+    SetParameterGetBehaviour( ST_PERCEPTION,	dllName + "getParam_Perception"     );
+    SetParameterGetBehaviour( ST_ENDURANCE,		dllName + "getParam_Endurance"      );
+    SetParameterGetBehaviour( ST_CHARISMA,		dllName + "getParam_Charisma"       );
+    SetParameterGetBehaviour( ST_INTELLECT,		dllName + "getParam_Intellegence"   );
+    SetParameterGetBehaviour( ST_AGILITY,		dllName + "getParam_Agility"        );
     // SetParameterGetBehaviour( ST_LUCK, dllName + "getParam_Luck"           );
-    SetParameterGetBehaviour( ST_CURRENT_HP, dllName + "getParam_Hp"             );
-	SetParameterGetBehaviour( ST_CURRENT_AC, dllName + "getParam_Shield"             );
-    SetParameterGetBehaviour( ST_MAX_LIFE, dllName + "getParam_MaxLife"        );
-    SetParameterGetBehaviour( ST_ACTION_POINTS, dllName + "getParam_MaxAp"          );
-    SetParameterGetBehaviour( ST_CURRENT_AP, dllName + "getParam_Ap"             );
-    SetParameterGetBehaviour( ST_MAX_MOVE_AP, dllName + "getParam_MaxMoveAp"      );
-    SetParameterGetBehaviour( ST_MOVE_AP, dllName + "getParam_MoveAp"         );
-    SetParameterGetBehaviour( ST_CARRY_WEIGHT, dllName + "getParam_MaxWeight"      );
-    SetParameterGetBehaviour( ST_MELEE_DAMAGE, dllName + "getParam_MeleeDmg"       );
-    SetParameterGetBehaviour( ST_SEQUENCE, dllName + "getParam_Sequence"       );
-    SetParameterGetBehaviour( ST_HEALING_RATE, dllName + "getParam_HealingRate"    );
-    SetParameterGetBehaviour( ST_CRITICAL_CHANCE, dllName + "getParam_CriticalChance" );
-    SetParameterGetBehaviour( ST_MAX_CRITICAL, dllName + "getParam_MaxCritical"    );
-    SetParameterGetBehaviour( ST_ARMOR_CLASS, dllName + "getParam_Ac"             );
+
+    // Custom skills
+    SetParameterGetBehaviour( SK_BIG_GUNS, 	 	dllName + "getParam_BigGuns" );
+    SetParameterGetBehaviour( SK_MELEE_WEAPONS, dllName + "getParam_MeleeWeapons" );
+    SetParameterGetBehaviour( SK_TRAPS, 		dllName + "getParam_Traps" );
+    SetParameterGetBehaviour( SK_DOCTOR, 		dllName + "getParam_Doctor" );
+    SetParameterGetBehaviour( SK_LOCKPICK,		dllName + "getParam_Lockpick" );
+    SetParameterGetBehaviour( SK_STEAL, 		dllName + "getParam_Steal" );
+    SetParameterGetBehaviour( SK_TRAPS,			dllName + "getParam_Traps" );
+    SetParameterGetBehaviour( SK_SPEECH,		dllName + "getParam_Speech" );
+	
+	SetParameterGetBehaviour( ST_MAX_LIFE, 		dllName + "getParam_MaxLife"        );
+    SetParameterGetBehaviour( ST_CURRENT_HP,	dllName + "getParam_Hp"             );
+	SetParameterGetBehaviour( ST_ARMOR_CLASS,	dllName + "getParam_Ac"             );
+	SetParameterGetBehaviour( ST_CURRENT_AC,	dllName + "getParam_Shield"         );
+    SetParameterGetBehaviour( ST_ACTION_POINTS,	dllName + "getParam_MaxAp"          );
+    SetParameterGetBehaviour( ST_CURRENT_AP,	dllName + "getParam_Ap"             );
+    SetParameterGetBehaviour( ST_MAX_MOVE_AP,	dllName + "getParam_MaxMoveAp"      );
+    SetParameterGetBehaviour( ST_MOVE_AP,		dllName + "getParam_MoveAp"         );
+	SetParameterGetBehaviour( ST_APREGEN,		dllName + "getParam_RegenAp"        );
+    SetParameterGetBehaviour( ST_CARRY_WEIGHT,	dllName + "getParam_MaxWeight"      );
+    SetParameterGetBehaviour( ST_MELEE_DAMAGE,	dllName + "getParam_MeleeDmg"       );
+    SetParameterGetBehaviour( ST_SEQUENCE,		dllName + "getParam_Sequence"       );
+    SetParameterGetBehaviour( ST_HEALING_RATE,	dllName + "getParam_HealingRate"    );
+    SetParameterGetBehaviour( ST_CRITICAL_CHANCE,	dllName + "getParam_CriticalChance" );
+    SetParameterGetBehaviour( ST_MAX_CRITICAL,	dllName + "getParam_MaxCritical"    );
     SetParameterGetBehaviour( ST_RADIATION_RESISTANCE, dllName + "getParam_RadiationResist" );
     SetParameterGetBehaviour( ST_POISON_RESISTANCE, dllName + "getParam_PoisonResist"   );
+	SetParameterGetBehaviour( ST_BONUS_LOOK,	dllName + "getParam_BonusLook" );
+	SetParameterGetBehaviour( ST_ACID_RESIST,	dllName + "getParam_DamageResistance" );
+	SetParameterGetBehaviour( ST_ACID_ABSORB,	dllName + "getParam_DamageThreshold" );
     for( uint i = ST_NORMAL_RESIST; i <= ST_EXPLODE_RESIST; i++ )
-        SetParameterGetBehaviour( i, dllName + "getParam_DamageResistance" );
+        SetParameterGetBehaviour( i, 			dllName + "getParam_DamageResistance" );
     for( uint i = ST_NORMAL_ABSORB; i <= ST_EXPLODE_ABSORB; i++ )
-        SetParameterGetBehaviour( i, dllName + "getParam_DamageThreshold"  );
+        SetParameterGetBehaviour( i, 			dllName + "getParam_DamageThreshold"  );
     for( uint i = TIMEOUT_BEGIN; i <= TIMEOUT_END; i++ )
-        SetParameterGetBehaviour( i, dllName + "getParam_Timeout"          );
+        SetParameterGetBehaviour( i, 			dllName + "getParam_Timeout"          );
     // for(uint i = REPUTATION_BEGIN; i <= REPUTATION_END   ; i++) SetParameterGetBehaviour(i, dllName + "getParam_Reputation"       );
     // for(uint i = REPUTATION_BEGIN; i <= REPUTATION_END   ; i++) SetParameterChangeBehaviour(i, dllName + "changedParam_Reputation");
 
+	// Change of parameters
+	SetParameterChangeBehaviour( ST_CURRENT_AC,		"parameters@changedCurrentAc");
+	SetParameterChangeBehaviour( ST_ARMOR_CLASS,	"parameters@changedArmorClass");
+	
     #  ifndef __CLIENT
-    SetParameterChangeBehaviour( ST_CURRENT_HP, "parameters@changedParam_Hp"        );
-    SetParameterChangeBehaviour( ST_EXPERIENCE, "parameters@changedParam_Experience" );
-    SetParameterChangeBehaviour( MODE_HIDE, "parameters@changedParam_Hide"      );
-    SetParameterChangeBehaviour( TRAIT_FAST_SHOT, "parameters@changedParam_FastShot"  );
+	SetParameterChangeBehaviour( ST_STRENGTH, 		"parameters@changedStrength");
+	SetParameterChangeBehaviour( ST_STRENGTH_EXT,	"parameters@changedStrengthExt");
+    SetParameterChangeBehaviour( ST_CURRENT_HP,		"parameters@changedParam_Hp"        );
+    SetParameterChangeBehaviour( ST_EXPERIENCE,		"parameters@changedParam_Experience" );
+    SetParameterChangeBehaviour( MODE_HIDE,			"parameters@changedParam_Hide"      );
+    SetParameterChangeBehaviour( TRAIT_FAST_SHOT,	"parameters@changedParam_FastShot"  );
     for( uint i = PERK_BEGIN; i <= PERK_END; i++ )
-        SetParameterChangeBehaviour( i, "parameters@changedParam_Perks" );
-    SetParameterDialogGetBehaviour( ST_INTELLECT, "parameters@getParamDialog_Intellect" );
+        SetParameterChangeBehaviour( i,				"parameters@changedParam_Perks" );
+		
+    SetParameterDialogGetBehaviour( ST_INTELLECT,	"parameters@getParamDialog_Intellect" );
     for( uint i = REPUTATION_BEGIN; i <= REPUTATION_END; i++ )
-        SetParameterDialogGetBehaviour( i, "parameters@getParamDialog_Reputation" );
+        SetParameterDialogGetBehaviour( i,			"parameters@getParamDialog_Reputation" );
     #  endif
     #  ifdef __CLIENT
     // for(uint i=GOOD_EVIL_LIST_BEGIN;i<=GOOD_EVIL_LIST_END;i++) SetParameterChangeBehaviour(i,"parameters@changedParam_GoodEvilList"); (not used)
-    SetParameterChangeBehaviour( ST_LEVEL, "parameters@changedParam_Level"       );
-    SetParameterChangeBehaviour( ST_EXPERIENCE, "parameters@changedParam_Experience"  );
-    SetParameterChangeBehaviour( ST_UNSPENT_PERKS, "parameters@changedParam_UnspentPerks" );
+    SetParameterChangeBehaviour( ST_LEVEL,			"parameters@changedParam_Level"       );
+    SetParameterChangeBehaviour( ST_EXPERIENCE,		"parameters@changedParam_Experience"  );
+    SetParameterChangeBehaviour( ST_UNSPENT_PERKS,	"parameters@changedParam_UnspentPerks");
     #  endif
-
-	SetParameterChangeBehaviour( ST_CURRENT_AC, "parameters@changedCurrentAc");
-	SetParameterChangeBehaviour( ST_ARMOR_CLASS, "parameters@changedArmorClass");
 
     // / Registration parameters
     for( uint i = ST_STRENGTH; i <= ST_AGILITY; i++ )

@@ -140,6 +140,21 @@ void changedCurrentAc( Critter& cr, uint, int oldValue )
 	cr.ParamBase[ ST_CURRENT_AC ] = CLAMP(cr.ParamBase[ ST_CURRENT_AC ], 0, cr.Param[ ST_ARMOR_CLASS ]);
 }
 
+void updateCurrentAc (Critter& cr)
+{
+	cr.StatBase[ST_CURRENT_AC] = cr.Stat[ST_ARMOR_CLASS];
+}
+
+void changedStrength( Critter& cr, uint, int oldValue )
+{
+	updateCurrentAc(cr);
+}
+
+void changedStrengthExt( Critter& cr, uint, int oldValue )
+{
+	updateCurrentAc(cr);
+}
+
 void changedArmorClass( Critter& cr, uint, int oldValue )
 {
 	int value = cr.Param[ ST_ARMOR_CLASS ];
@@ -308,21 +323,34 @@ void CritterGenerate( int[]& params ) // Export to client_main@player_data_gener
 bool CritterGenerateCheck( const int[]& params ) // Export to client_main@player_data_check
 {
     // Check special
-    int special = 0;
-    for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
-    {
-        if( params[ i ] < 0 || params[ i ] > 10 )
-        {
-            Message( GetMsgStr( TEXTMSG_GAME, STR_NET_WRONG_SPECIAL ) );
-            return false;
-        }
-        special += __RegParams[ i ];
-    }
-    if( special != __StartSpecialPoints )
-    {
-        Message( GetMsgStr( TEXTMSG_GAME, STR_NET_WRONG_SPECIAL ) );
-        return false;
-    }
+	
+	uint targetStatCount = (__StartSpecialPoints + (REG_STAT_COUNT * REG_STAT_MINIMUM) );
+	uint statCount = 0;
+	for ( uint i = ST_STRENGTH, j = ST_AGILITY; i <= j; i++)
+	{
+		statCount += params [ i ];
+	}
+	if (statCount < targetStatCount)
+	{
+		Message (GetMsgStr (TEXTMSG_GAME, STR_NET_WRONG_SPECIAL));
+		return false;
+	}
+	
+    // int special = 0;
+    // for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
+    // {
+        // if( params[ i ] < 0 || params[ i ] > 10 )
+        // {
+            // Message( GetMsgStr( TEXTMSG_GAME, STR_NET_WRONG_SPECIAL ) );
+            // return false;
+        // }
+        // special += __RegParams[ i ];
+    // }
+    // if( special != __StartSpecialPoints )
+    // {
+        // Message( GetMsgStr( TEXTMSG_GAME, STR_NET_WRONG_SPECIAL ) );
+        // return false;
+    // }
 
     // Check choosed tag skills
     if( ( params[ TAG_SKILL1 ] < int(SKILL_BEGIN) || params[ TAG_SKILL1 ] > int(SKILL_END) ) ||
@@ -441,6 +469,17 @@ int getParam_Luck( Critter& cr, uint )
     return CLAMP( val, 0, 10 );
 }
 
+// Skills
+int getParam_BigGuns( Critter& cr, uint ){ return cr.ParamBase[SK_FIREARMS]; }
+int getParam_MeleeWeapons( Critter& cr, uint ){ return cr.ParamBase[SK_MELEE_COMBAT]; }
+int getParam_Traps( Critter& cr, uint ){ return cr.ParamBase[SK_TACTICAL_WEAPONS]; }
+int getParam_Doctor( Critter& cr, uint ){ return cr.ParamBase[SK_MEDICINE]; }
+int getParam_Lockpick( Critter& cr, uint ){ return cr.ParamBase[SK_STEALTH]; }
+int getParam_Steal( Critter& cr, uint ){ return cr.ParamBase[SK_STEALTH]; }
+int getParam_Speech( Critter& cr, uint ){ return cr.ParamBase[SK_PERSUASION]; }
+
+// Stats
+
 int getParam_Hp( Critter& cr, uint )
 {
     return cr.ParamBase[ ST_CURRENT_HP ];
@@ -479,6 +518,12 @@ int getParam_MoveAp( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_MOVE_AP ];
     return CLAMP( val, 0, 9999 );
+}
+
+int getParam_RegenAp( Critter& cr, uint )
+{
+	int val = cr.ParamBase[ST_APREGEN] + (cr.Stat[ST_AGILITY]*120) + 240;
+    return val;
 }
 
 int getParam_MaxWeight( Critter& cr, uint )
@@ -527,7 +572,7 @@ int getParam_Ac( Critter& cr, uint )
     int   val = cr.ParamBase[ ST_ARMOR_CLASS ] + cr.ParamBase[ ST_ARMOR_CLASS_EXT ];
     Item@ armor = cr.GetItem( 0, SLOT_ARMOR );
     if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR )
-        val += armor.Proto.Armor_AC + ( armor.Proto.Armor_AC * ( 100 + getParam_Strength( cr, 0 ) * 5 ) / 100 ) ;
+        val += armor.Proto.Armor_AC + ( armor.Proto.Armor_AC * ( getParam_Strength( cr, 0 ) * 5 ) / 100 ) ;
 		
     return CLAMP( val, 0, 999 );
 }
@@ -539,42 +584,51 @@ int getParam_Shield( Critter& cr, uint )
 
 int getParam_DamageResistance( Critter& cr, uint index )
 {
-    int        dmgType = index - ST_NORMAL_RESIST + 1;
+// Old check function doesn't work, because we are adding new critter stats - ST_ACID - at misplaced positions, unlike in original way.
+// Because of the engine bug, inside _defines.fos -> pragma bindfield we are using a field which was meant for ST_EMP_RESIST.
+// —тара€ функци€ проверки не работает из-за того, что мы добавили новые статы дл€ персонажа - ST_ACID - в отличных от оригинальных позиций.
+// »з-за движкового бага, в _defines.fos -> pragma bindfield используетс€ поле, которое было предназначено дл€ ST_EMP_RESIST.
+
+//  int        dmgType = index - ST_NORMAL_RESIST + 1; //23 - 23 + 1
     int        val = 0;
     int        drVal = 0;
     uint8      mode = 0;
     ProtoItem@ protoArmor = cr.GetSlotProto( SLOT_ARMOR, mode );
-    switch( dmgType )
+    switch( index )
     {
-    case DAMAGE_NORMAL:
+    case ST_NORMAL_RESIST:
         val = cr.ParamBase[ ST_NORMAL_RESIST ]  + cr.ParamBase[ ST_NORMAL_RESIST_EXT ];
         drVal = protoArmor.Armor_DRNormal;
         break;
-    case DAMAGE_LASER:
+    case ST_LASER_RESIST:
         val = cr.ParamBase[ ST_LASER_RESIST ]   + cr.ParamBase[ ST_LASER_RESIST_EXT ];
         drVal = protoArmor.Armor_DRLaser;
         break;
-    case DAMAGE_FIRE:
+    case ST_FIRE_RESIST:
         val = cr.ParamBase[ ST_FIRE_RESIST ]    + cr.ParamBase[ ST_FIRE_RESIST_EXT ];
         drVal = protoArmor.Armor_DRFire;
         break;
-    case DAMAGE_PLASMA:
+    case ST_PLASMA_RESIST:
         val = cr.ParamBase[ ST_PLASMA_RESIST ]  + cr.ParamBase[ ST_PLASMA_RESIST_EXT ];
         drVal = protoArmor.Armor_DRPlasma;
         break;
-    case DAMAGE_ELECTR:
+    case ST_ELECTRO_RESIST:
         val = cr.ParamBase[ ST_ELECTRO_RESIST ] + cr.ParamBase[ ST_ELECTRO_RESIST_EXT ];
         drVal = protoArmor.Armor_DRElectr;
         break;
-    case DAMAGE_EMP:
+/*     case ST_EMP_RESIST:
         val = cr.ParamBase[ ST_EMP_RESIST ]     + cr.ParamBase[ ST_EMP_RESIST_EXT ];
-        drVal = protoArmor.Armor_DRExplode; //protoArmor.Armor_DREmp
+        drVal = protoArmor.Armor_DREmp; //protoArmor.Armor_DREmp
+        break; */
+    case ST_EXPLODE_RESIST:
+        val = cr.StatBase[ ST_EXPLODE_RESIST ] + cr.ParamBase[ ST_EXPLODE_RESIST_EXT ]; // 29
+        drVal = protoArmor.Armor_DRExplode; //protoArmor.Armor_DRExplode
         break;
-    case DAMAGE_EXPLODE:
-        val = cr.ParamBase[ ST_EXPLODE_RESIST ] + cr.ParamBase[ ST_EXPLODE_RESIST_EXT ];
-        drVal = protoArmor.Armor_DREmp; //protoArmor.Armor_DRExplode
-        break;
-    case DAMAGE_UNCALLED:
+	case ST_ACID_RESIST:
+		val = cr.ParamBase[ ST_ACID_RESIST ] + cr.ParamBase[ ST_ACID_RESIST_EXT ];
+        drVal = protoArmor.Armor_DRAcid;
+		break;
+	case DAMAGE_UNCALLED:
     default:
         break;
     }
@@ -586,49 +640,61 @@ int getParam_DamageResistance( Critter& cr, uint index )
     if( valid( armor ) && armor.GetType() == ITEM_TYPE_ARMOR )
         val += drVal - (drVal * ( GetDeteriorationProc( armor ) / 100 ) );
 
-    if( dmgType == DAMAGE_EMP )
-        return CLAMP( val, 0, 999 );
+    // if( dmgType == DAMAGE_EMP )
+        // return CLAMP( val, 0, 999 );
     return CLAMP( val, 0, 200 );
 }
 
 int getParam_DamageThreshold( Critter& cr, uint index )
 {
-    int        dmgType = index - ST_NORMAL_ABSORB + 1;
+// Old check function doesn't work, because we are adding new critter stats - ST_ACID - at misplaced positions, unlike in original way.
+// Because of the engine bug, inside _defines.fos -> pragma bindfield we are using a field which was meant for ST_EMP_RESIST.
+// —тара€ функци€ проверки не работает из-за того, что мы добавили новые статы дл€ персонажа - ST_ACID - в отличных от оригинальных позиций.
+// »з-за движкового бага, в _defines.fos -> pragma bindfield используетс€ поле, которое было предназначено дл€ ST_EMP_RESIST.
+
+//	int        dmgType = index - ST_NORMAL_ABSORB + 1;
+/* 	#ifdef __CLIENT
+	Message ("" + dmgType);
+	#endif */
     int        val = 0;
     int        dtVal = 0;
     uint8      mode = 0;
     ProtoItem@ protoArmor = cr.GetSlotProto( SLOT_ARMOR, mode );
-    switch( dmgType )
+    switch( index )
     {
-    case DAMAGE_NORMAL:
+    case ST_NORMAL_ABSORB:
         val = cr.ParamBase[ ST_NORMAL_ABSORB ]  + cr.ParamBase[ ST_NORMAL_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTNormal;
         break;
-    case DAMAGE_LASER:
+    case ST_LASER_ABSORB:
         val = cr.ParamBase[ ST_LASER_ABSORB ]   + cr.ParamBase[ ST_LASER_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTLaser;
         break;
-    case DAMAGE_FIRE:
+    case ST_FIRE_ABSORB:
         val = cr.ParamBase[ ST_FIRE_ABSORB ]    + cr.ParamBase[ ST_FIRE_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTFire;
         break;
-    case DAMAGE_PLASMA:
+    case ST_PLASMA_ABSORB:
         val = cr.ParamBase[ ST_PLASMA_ABSORB ]  + cr.ParamBase[ ST_PLASMA_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTPlasma;
         break;
-    case DAMAGE_ELECTR:
+    case ST_ELECTRO_ABSORB:
         val = cr.ParamBase[ ST_ELECTRO_ABSORB ] + cr.ParamBase[ ST_ELECTRO_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTElectr;
         break;
-    case DAMAGE_EMP:
+/*     case ST_EMP_ABSORB:
         val = cr.ParamBase[ ST_EMP_ABSORB ]     + cr.ParamBase[ ST_EMP_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTEmp;
-        break;
-    case DAMAGE_EXPLODE:
+        break; */
+    case ST_EXPLODE_ABSORB:
         val = cr.ParamBase[ ST_EXPLODE_ABSORB ] + cr.ParamBase[ ST_EXPLODE_ABSORB_EXT ];
         dtVal = protoArmor.Armor_DTExplode;
         break;
-    case DAMAGE_UNCALLED:
+	case ST_ACID_ABSORB:
+		val = cr.ParamBase[ ST_ACID_ABSORB ] + cr.ParamBase[ ST_ACID_ABSORB_EXT ];
+        dtVal = protoArmor.Armor_DTAcid;
+        break;
+	case DAMAGE_UNCALLED:
     default:
         break;
     }
@@ -651,6 +717,13 @@ int getParam_PoisonResist( Critter& cr, uint )
     int val = cr.ParamBase[ ST_POISON_RESISTANCE ] + cr.ParamBase[ ST_POISON_RESISTANCE_EXT ] + getParam_Endurance( cr, 0 ) * 4;
     return CLAMP( val, 0, 500 );
 }
+
+int getParam_BonusLook( Critter& cr, uint )
+{
+	int val = cr.ParamBase [ST_BONUS_LOOK ] + getParam_Perception (cr, 0);
+	return val;
+}
+
 
 int getParam_Timeout( Critter& cr, uint index )
 {
@@ -767,7 +840,6 @@ uint GetProtoItemUseApCost( Critter& cr, ProtoItem& proto, uint8 mode )
     }
     else if( use == USE_RELOAD )
     {
-
 		apCost = _WeaponApCost(proto, USE_RELOAD);
 		
         if( proto.Type == ITEM_TYPE_WEAPON && proto.Weapon_Perk == WEAPON_PERK_FAST_RELOAD )
@@ -775,7 +847,6 @@ uint GetProtoItemUseApCost( Critter& cr, ProtoItem& proto, uint8 mode )
     }
     else if( use >= USE_PRIMARY && use <= USE_THIRD && proto.Type == ITEM_TYPE_WEAPON )
     {
-
         int  skill = _WeaponSkill( proto, use );
 		int handlingStrength = cr.Stat[ ST_STRENGTH ];
         int reqStrength = proto.Weapon_MinStrength;
@@ -808,10 +879,6 @@ uint GetProtoItemUseApCost( Critter& cr, ProtoItem& proto, uint8 mode )
 			
         if( cr.Perk[ PE_MAGNETIC_PERSONALITY ] > 0 && skill == SK_THROWING )
             apCost--;
-
-		
-		
-
     }
 
     if( apCost < 1 )

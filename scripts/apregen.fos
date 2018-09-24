@@ -1,0 +1,29 @@
+// ADD DESCRIPTION
+
+// Inside "macros.fos":
+// #define _GetApRegen                   # (cr)            ( (cr.Stat[ST_AGILITY] * 70)) //test
+
+// Inside "defines.fos":
+// #define CTE_AP_REGEN							 ( 154 )
+
+// Inside "client_defines.fos":
+// #define AP_REGEN_TIME							 ( 1000 )
+
+#define APREGEN_MODULE
+#include "apregen_h.fos"
+
+bool SetCritterApRegen(Critter& cr)
+{
+	return cr.AddTimeEvent("cte_RegenAp", 1, CTE_AP_REGEN);
+}
+
+uint cte_RegenAp(Critter& cr, int identifier, uint& rate)
+{
+	if(cr.Stat[ST_CURRENT_AP] < cr.Stat[ST_ACTION_POINTS])
+	{
+		cr.StatBase[ST_CURRENT_AP] += cr.Stat[ST_APREGEN];
+		return (REAL_MS(AP_REGEN_TIME));
+	}
+
+	return (REAL_MS(AP_REGEN_TIME));
+}

@@ -1,12 +1,12 @@
 // Generic and helper functions for wait time calculation override.
 // Both client and server.
 
-// You need to add this to defines.fos
+// You need to add this to "defines.fos":
 // # pragma bindfield "const uint16 ProtoItem::Wait_Time_0               -> 333"
 // # pragma bindfield "const uint16 ProtoItem::Wait_Time_1               -> 335"
 // # pragma bindfield "const uint16 ProtoItem::Wait_Time_2               -> 337"
 
-// You need to add this to _macros.fos
+// You need to add this to "_macros.fos":
 // #define _GetProtoTime                 # (prot, use)   (use == 0 ? prot.Wait_Time_0 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_0  \
                                                      // : use == 1 ? prot.Wait_Time_1 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_1 \
                                                      // : use == 2 ? prot.Wait_Time_2 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_2 \

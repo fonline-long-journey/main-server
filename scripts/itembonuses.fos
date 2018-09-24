@@ -1,0 +1,40 @@
+// ITEMBONUSES script file.
+
+#ifndef ITEMBONUSES_MODULE
+#define ITEMBONUSES_MODULE
+
+// Header file include.
+#include "itembonuses_h.fos"
+
+// Your functions here.
+
+	#ifdef __SERVER
+	
+// int FindFreeVal (Item& item)
+// {
+	// if(item.val0_b0 == 0) return 0;
+	// if(item.val0_b2 == 0) return 1;
+	// if(item.val1_b0 == 0) return 2;
+	// if(item.val1_b2 == 0) return 3;
+	// if(item.val2_b0 == 0) return 4;
+	// if(item.val2_b2 == 0) return 5;
+	// if(item.val3_b0 == 0) return 6;
+	// if(item.val3_b2 == 0) return 7;
+
+	// return -1;
+// }
+bool RollItemBonuses (Item& item)
+{
+	return true;
+}
+
+// void TestMod (Item& item)
+// {
+	// item.val0_b0 = Random(1, 100);
+	// item.val0_b1 = Random(1, 100);
+	// item.Update();
+	// Log(item.val0_b0 + " " + item.val0_b1);
+// }
+	#endif
+
+#endif
