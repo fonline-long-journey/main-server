@@ -41,7 +41,7 @@ namespace Login_TLJ
 
         void OnConstruct() override
         {
-            SetPosition( -286, 112 );
+            SetPosition( 63, 22 );
             SetSize( 1920, 1080 );
             SetDock( DOCK_FILL );
             SetBackgroundImage( "art/intrface/background.png", IMAGE_LAYOUT_STRETCH );
@@ -112,7 +112,7 @@ namespace Login_TLJ
         {
             SetPosition( 247, 131 );
             SetSize( 82, 46 );
-            SetPressedImage( "art/intrface/MENUDOWN.png" );
+            SetPressedImage( "art/intrface/done.png" );
         }
 
         void OnMousePressed( int button ) override
@@ -377,15 +377,15 @@ namespace Register_TLJ
     
             int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
             int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
-            int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_NORMAL_RESIST, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
+            int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE, ST_APREGEN };
             int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
             int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
             int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
     
     int[] Params( PARAMS_COUNT );
     
-    uint[] skinMale = {0,2,8,9,10,11,12,13,14,26,27,31,39,40,41,42,43,44,45,48,56,57,62,64,69,72,77,78,82,87,88,89,91,92,93};
-    uint[] skinFemale = {4,2,5,6,7,26,33,34,35,36,37,38,56,61,63,73,74,83};
+    uint[] skinMale = {0, 150};
+    uint[] skinFemale = {4, 151};
     
     
     int CurTip = -1;
@@ -404,7 +404,7 @@ namespace Register_TLJ
     {
         int unspent = __StartSpecialPoints;
         for( uint i = 0; i < ShowBaseStats.length(); i++ )
-            unspent -= __RegParams[ ShowBaseStats[ i ] ];
+             unspent -= __RegParams[ ShowBaseStats[ i ] ] - REG_STAT_MINIMUM;
         return unspent;
     }
     
@@ -559,7 +559,7 @@ namespace Register_TLJ
         void OnLMousePressed() override
         {
             int param = cast< BaseStat >( Parent ).Param;
-            if( Params[ param ] < 10 && GetUnspentStatPoints() > 0 )
+            if( Params[ param ] < REG_STAT_MAXIMUM && GetUnspentStatPoints() > 0 )
             {
                 __RegParams[ param ]++;
                 GenParams();
@@ -584,7 +584,7 @@ namespace Register_TLJ
         void OnLMousePressed() override
         {
             int param = cast< BaseStat >( Parent ).Param;
-            if( Params[ param ] > 1 )
+            if( Params[ param ] > REG_STAT_MINIMUM )
             {
                 __RegParams[ param ]--;
                 GenParams();
@@ -4042,7 +4042,7 @@ namespace Game_TLJ
             int result = 0;
             CritterCl@ chosen = GetChosen();
             if( chosen !is null )
-                result = chosen.Param[ ST_CURRENT_AC ];
+                result = chosen.Stat[ ST_CURRENT_AC ];
             return FormatXXX( result );
         }
     }
@@ -4635,7 +4635,7 @@ namespace Game_TLJ
 
         void OnInit() override
         {
-            SetPosition(5, 5);
+            SetPosition(5, 25);
             // @@todo сохранение позиции и поворота quickbar между сессиями
         }
 
@@ -4988,7 +4988,7 @@ namespace Inventory_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 12, 28 );
+            SetPosition( 21, 11 );
             SetTextFlags( FT_CENTERR | FT_BOTTOM );
             SetTextColor( COLOR_WHITE );
         }
@@ -5168,6 +5168,9 @@ namespace Inventory_TLJ
             
                 @text = generic_description( DESC_INVENTORY_RESIST, ox, oy );
                 DrawText( text, AbsolutePosX + ox, AbsolutePosY + oy, Width, Height, COLOR_TEXT, FONT_DEFAULT, FT_NOBREAK_LINE );
+                
+                @text = generic_description( DESC_INVENTORY_RESIST_NAMES, ox, oy );
+                DrawText( text, AbsolutePosX + ox, AbsolutePosY + oy, Width, Height, COLOR_TEXT, FONT_DEFAULT, FT_NOBREAK_LINE );
             }
             else
             {
@@ -5311,11 +5314,11 @@ namespace Character_TLJ
         ST_ACTION_POINTS, 
         ST_CARRY_WEIGHT, 
         ST_MELEE_DAMAGE, 
-        ST_NORMAL_RESIST, 
         ST_POISON_RESISTANCE, 
         ST_RADIATION_RESISTANCE, 
         ST_SEQUENCE, 
-        ST_HEALING_RATE
+        ST_HEALING_RATE,
+        ST_APREGEN
     };
     int[] ShowSkills = { 
         SK_SMALL_GUNS, 

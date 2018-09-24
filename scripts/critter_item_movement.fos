@@ -7,6 +7,10 @@
 # define Item       ItemCl
 #endif
 
+#ifdef __SERVER
+import void updateCurrentAc( Critter& cr) from "parameters";
+#endif
+
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on something critter want move item from one slot to another.
 // Return true to allow transaction, false to disallow.
@@ -108,12 +112,13 @@ void critter_move_item( Critter& cr, Item& item, uint8 fromSlot )
     // Armor changing
     if( item.GetType() == ITEM_TYPE_ARMOR && ( fromSlot == SLOT_ARMOR || toSlot == SLOT_ARMOR ) )
     {
-
+	
         if( GetCritterAnimType( cr.CrType ) != ANIM_TYPE_3D )
         {
             // Default dude
             bool isMale = ( cr.Stat[ ST_GENDER ] == GENDER_MALE );
-            uint crType = cr.Stat[ ST_BASE_CRTYPE ];
+			bool isFemale = ( cr.Stat[ ST_GENDER ] == GENDER_FEMALE );
+			uint crType = cr.Stat[ ST_BASE_CRTYPE ];
             if( crType == 0 )
                 crType = ( isMale ? CRTYPE_DEFAULT_M : CRTYPE_DEFAULT_F );
             if( toSlot == SLOT_ARMOR )
@@ -143,58 +148,198 @@ void critter_move_item( Critter& cr, Item& item, uint8 fromSlot )
                     92,
                     93,
                     95,
-                    99,
-                    121,
-                    128,
-                    129,
-                    134
+                    99
                 };
                 if( NoArmorSkins.find( cr.Stat[ ST_BASE_CRTYPE ] ) != -1 )
                     crType = cr.Stat[ ST_BASE_CRTYPE ];
             }
-
-            // Long hair dude redirects
-            if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_TRIBAL || cr.Stat[ ST_BASE_CRTYPE ] == 131 ) && isMale )
-            {
-                crType = CRTYPE_LHD_JUMPSUIT;
-                if( toSlot == SLOT_ARMOR )
-                {
+			// Armor AC Display
+				updateCurrentAc(cr);
+				
+            // Long Hair Dude Redirects
+             if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_TRIBAL || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_KHAN ) && isMale )
+             {
+                 crType = CRTYPE_LHD_JUMPSUIT;
+                 if( toSlot == SLOT_ARMOR )
+                 {
                     crType = item.Proto.Armor_CrTypeMale;
-                    if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
-                        crType = CRTYPE_LHD_LEATHER_ARMOR;
-                    else if( crType == CRTYPE_DW_LEATHER_JACKET_M )
+                    if( crType == CRTYPE_DW_JUMPSUIT_M )
+                        crType = CRTYPE_LHD_JUMPSUIT; 
+                    else if( item.Proto.ProtoId == PID_LEATHER_JACKET )
                         crType = CRTYPE_LHD_LEATHER_JACKET;
-                    else if( crType == CRTYPE_DW_METAL_ARMOR_M )
+					else if(( item.Proto.ProtoId  == PID_CURED_LEATHER_ARMOR))
+						crType = CRTYPE_LHD_COMBAT_LEATHER_JACKET;
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
+                        crType = CRTYPE_LHD_LEATHER_ARMOR;	
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_MK2_M)
+                        crType = CRTYPE_LHD_LEATHER_ARMOR_MK2;	
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_BLUE_M )
+                        crType = CRTYPE_LHD_LEATHER_ARMOR_BLUE;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_RED_M )
+                        // crType = CRTYPE_LHD_LEATHER_ARMOR_RED;						
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_GREY_M )
+						crType = CRTYPE_LHD_LEATHER_ARMOR_GREY;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_M )
                         crType = CRTYPE_LHD_METAL_ARMOR;
-                    else if( crType == CRTYPE_DW_LEATHERBLUE_M )
-                        crType = CRTYPE_LHD_LEATHERBLUE;
-                    else if( crType == CRTYPE_DW_JUMPSUIT_M )
-                        crType = CRTYPE_LHD_JUMPSUIT;
-                }
-            }
-            else if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_BLD_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_BLD_TRIBAL ) && isMale )
+					else if( crType == CRTYPE_DW_METAL_ARMOR_MK2_M )
+                        crType = CRTYPE_LHD_METAL_ARMOR_MK2;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_TESLA_M )
+                        crType = CRTYPE_LHD_METAL_ARMOR_TESLA;
+                 }
+             }
+			
+			// Long Hair Blonde Dude Redirects
+            // if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_BLONDE_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_BLONDE_TRIBAL || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_BLONDE_KHAN ) && isMale )
+            // {
+                // crType = CRTYPE_LHD_BLONDE_JUMPSUIT;
+                // if( toSlot == SLOT_ARMOR )
+                // {
+                    // crType = item.Proto.Armor_CrTypeMale;
+                    // if( crType == CRTYPE_DW_JUMPSUIT_M )
+                        // crType = CRTYPE_LHD_BLONDE_JUMPSUIT; 
+                    // else if( item.Proto.ProtoId == PID_LEATHER_JACKET )
+                        // crType = CRTYPE_LHD_BLONDE_LEATHER_JACKET;
+					// else if(( item.Proto.ProtoId  == PID_CURED_LEATHER_ARMOR))
+						// crType = CRTYPE_LHD_BLONDE_COMBAT_LEATHER_JACKET;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
+                        // crType = CRTYPE_LHD_BLONDE_LEATHER_ARMOR;	
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_MK2_M)
+                        // crType = CRTYPE_LHD_BLONDE_LEATHER_ARMOR_MK2;	
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_BLUE_M )
+                        // crType = CRTYPE_LHD_BLONDE_LEATHER_ARMOR_BLUE;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_RED_M )
+                        // crType = CRTYPE_LHD_BLONDE_LEATHER_ARMOR_RED;						
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_GREY_M )
+						// crType = CRTYPE_LHD_BLONDE_LEATHER_ARMOR_GREY;
+					// else if( crType == CRTYPE_DW_METAL_ARMOR_M )
+                        // crType = CRTYPE_LHD_BLONDE_METAL_ARMOR;
+					// else if( crType == CRTYPE_DW_METAL_ARMOR_MK2_M )
+                        // crType = CRTYPE_LHD_BLONDE_METAL_ARMOR_MK2;
+                // }
+            // }
+			
+			// Long Hair Brunette Dude Redirects
+            // if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_BRUNETTE_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_BRUNETTE_TRIBAL || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_BRUNETTE_KHAN ) && isMale )
+            // {
+                // crType = CRTYPE_LHD_BRUNETTE_JUMPSUIT;
+                // if( toSlot == SLOT_ARMOR )
+                // {
+                    // crType = item.Proto.Armor_CrTypeMale;
+                    // if( crType == CRTYPE_DW_JUMPSUIT_M )
+                        // crType = CRTYPE_LHD_BRUNETTE_JUMPSUIT; 
+                    // else if( item.Proto.ProtoId == PID_LEATHER_JACKET )
+                        // crType = CRTYPE_LHD_BRUNETTE_LEATHER_JACKET;
+					// else if(( item.Proto.ProtoId  == PID_CURED_LEATHER_ARMOR))
+						// crType = CRTYPE_LHD_BRUNETTE_COMBAT_LEATHER_JACKET;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
+                        // crType = CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR;	
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_MK2_M)
+                        // crType = CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_MK2;	
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_BLUE_M )
+                        // crType = CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_BLUE;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_RED_M )
+                        // crType = CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_RED;						
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_GREY_M )
+						// crType = CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_GREY;
+					// else if( crType == CRTYPE_DW_METAL_ARMOR_M )
+                        // crType = CRTYPE_LHD_BRUNETTE_METAL_ARMOR;
+					// else if( crType == CRTYPE_DW_METAL_ARMOR_MK2_M )
+                        // crType = CRTYPE_LHD_BRUNETTE_METAL_ARMOR_MK2;
+                // }
+            // }
+			
+			// Long Hair Logan Dude Redirects
+            // if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_LOGAN_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_LOGAN_TRIBAL || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_LHD_LOGAN_KHAN ) && isMale )
+            // {
+                // crType = CRTYPE_LHD_LOGAN_JUMPSUIT;
+                // if( toSlot == SLOT_ARMOR )
+                // {
+                    // crType = item.Proto.Armor_CrTypeMale;
+                    // if( crType == CRTYPE_DW_JUMPSUIT_M )
+                        // crType = CRTYPE_LHD_LOGAN_JUMPSUIT; 
+                    // else if( item.Proto.ProtoId == PID_LEATHER_JACKET )
+                        // crType = CRTYPE_LHD_LOGAN_LEATHER_JACKET;
+					// else if(( item.Proto.ProtoId  == PID_CURED_LEATHER_ARMOR))
+						// crType = CRTYPE_LHD_LOGAN_COMBAT_LEATHER_JACKET;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
+                        // crType = CRTYPE_LHD_LOGAN_LEATHER_ARMOR;	
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_MK2_M)
+                        // crType = CRTYPE_LHD_LOGAN_LEATHER_ARMOR_MK2;	
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_BLUE_M )
+                        // crType = CRTYPE_LHD_LOGAN_LEATHER_ARMOR_BLUE;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_RED_M )
+                        // crType = CRTYPE_LHD_LOGAN_LEATHER_ARMOR_RED;						
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_GREY_M )
+						// crType = CRTYPE_LHD_LOGAN_LEATHER_ARMOR_GREY;
+					// else if( crType == CRTYPE_DW_METAL_ARMOR_M )
+                        // crType = CRTYPE_LHD_LOGAN_METAL_ARMOR;
+					// else if( crType == CRTYPE_DW_METAL_ARMOR_MK2_M )
+                        // crType = CRTYPE_LHD_LOGAN_METAL_ARMOR_MK2;
+                // }
+            // }
+			
+			// Bald Dude Redirects			
+            if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_BLD_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_BLD_TRIBAL ) && isMale )
             {
                 crType = cr.Stat[ ST_BASE_CRTYPE ];
                 if( toSlot == SLOT_ARMOR )
                 {
                     crType = item.Proto.Armor_CrTypeMale;
-                    if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
-                        crType = CRTYPE_BLD_LEATHER_ARMOR;
-                    else if( crType == CRTYPE_DW_LEATHER_JACKET_M )
-                        crType = CRTYPE_BLD_LEATHER_JACKET;
-                    else if( crType == CRTYPE_DW_METAL_ARMOR_M )
-                        crType = CRTYPE_BLD_METAL_ARMOR;
-                    else if( crType == CRTYPE_DW_LEATHERBLUE_M )
-                        crType = CRTYPE_BLD_LEATHERBLUE;
-                    else if( crType == CRTYPE_DW_JUMPSUIT_M )
+					if ( crType == CRTYPE_DW_JUMPSUIT_M )
                         crType = CRTYPE_BLD_JUMPSUIT;
+					else if( crType == CRTYPE_DW_LEATHER_JACKET_M )
+                        crType = CRTYPE_BLD_LEATHER_JACKET;
+                    else if( crType == CRTYPE_DW_LEATHER_ARMOR_M )
+                        crType = CRTYPE_BLD_LEATHER_ARMOR;
+                    else if( crType == CRTYPE_DW_LEATHER_ARMOR_BLUE_M )
+                        crType = CRTYPE_BLD_LEATHER_ARMOR_BLUE;
+					// else if( crType == CRTYPE_DW_LEATHER_ARMOR_RED_M )
+                        // crType = CRTYPE_BLD_LEATHER_ARMOR_BLUE;
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_GREY_M )
+						crType = CRTYPE_BLD_LEATHER_ARMOR_GREY;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_M )
+                        crType = CRTYPE_BLD_METAL_ARMOR;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_MK2_M )
+                        crType = CRTYPE_BLD_METAL_ARMOR_MK2;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_TESLA_M )
+                        crType = CRTYPE_BLD_METAL_ARMOR_TESLA;
                 }
             }
-
-            if( cr.CrType != crType )
-                cr.ChangeCrType( crType );
-        }
-
+			
+			// Punk Girl Redirects	
+			else if( ( cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_PNK_JUMPSUIT || cr.Stat[ ST_BASE_CRTYPE ] == CRTYPE_PNK_TRIBAL ) && isFemale )
+            {
+                crType = cr.Stat[ ST_BASE_CRTYPE ];
+                if( toSlot == SLOT_ARMOR )
+                {
+                    crType = item.Proto.Armor_CrTypeFemale;
+					if( crType == CRTYPE_DW_JUMPSUIT_F )
+                        crType = CRTYPE_PNK_JUMPSUIT;
+					else if( crType == CRTYPE_DW_LEATHER_JACKET_F )
+                        crType = CRTYPE_PNK_LEATHER_JACKET;
+                    else if( crType == CRTYPE_DW_LEATHER_ARMOR_F )
+                        crType = CRTYPE_PNK_LEATHER_ARMOR;
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_MK2_F )
+                        crType = CRTYPE_PNK_LEATHER_ARMOR; // TODO Create MK2 Variation
+                     else if( crType == CRTYPE_DW_LEATHER_ARMOR_BLUE_F )
+                         crType = CRTYPE_PNK_LEATHER_ARMOR_BLUE;
+                     // else if( crType == CRTYPE_DW_LEATHER_ARMOR_RED_F )
+                         // crType = CRTYPE_PNK_LEATHER_ARMOR_RED;
+					else if( crType == CRTYPE_DW_LEATHER_ARMOR_GREY_F )
+						crType = CRTYPE_PNK_LEATHER_ARMOR_GREY;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_F )
+                        crType = CRTYPE_PNK_METAL_ARMOR;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_MK2_F )
+                        crType = CRTYPE_PNK_METAL_ARMOR_MK2;
+					else if( crType == CRTYPE_DW_METAL_ARMOR_TESLA_F )
+                        crType = CRTYPE_PNK_METAL_ARMOR_MK2;  // TODO Create TESLA Variation
+                }
+            }
+			
+			if( cr.CrType != crType )
+			cr.ChangeCrType( crType );
+		}
+  
         // Armor modifiers
         // Also look Armor perk validation in critter_init
         int sign = ( toSlot == SLOT_ARMOR ? int(1) : -1 );

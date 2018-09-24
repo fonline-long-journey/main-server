@@ -1,0 +1,18 @@
+// itembonuses.fos header file.
+
+#ifndef ITEMBONUSES_H
+#define ITEMBONUSES_H
+
+#include "mutual_h.fos"
+
+	#ifndef ITEMBONUSES_MODULE
+	// Imports - here
+	// import void TestMod (Item& item) from "itembonuses";
+	#endif
+
+	#ifdef ITEMBONUSES_MODULE
+	// Includes - here
+	#include "_macros.fos"
+	#endif
+
+#endif

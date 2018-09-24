@@ -60,7 +60,7 @@ bool start()
     #endif
 	if( !AppendIfaceIni( "thelj.ini" ) )
 	{
-	// Message( "К нашему глубокому сожалению, у вас отсутствует файл настроек интерфейса - thelongjourhey.ini. Мама Пиромансера скорбит вместе с нами." );
+	// Message( "К нашему глубокому сожалению, у вас отсутствует файл настроек интерфейса - thelj.ini. Мама Пиромансера скорбит вместе с нами." );
 		Message( GetMsgStr (TEXTMSG_GAME, STR_INVALID_INI) );
 	}
 	else
@@ -186,7 +186,7 @@ void screen_change( bool show, int screen, dictionary@ params )
 // PopUp menu, Cursor
 //    4
 //
-// Extra layers:
+// Extra layers:  
 // Global map
 //    100 (over map), 101 (over all)
 void        render_iface( uint layer )
@@ -217,6 +217,13 @@ void        render_iface( uint layer )
 		}
 		
         RenderThrowing();
+		
+		// Armor Class Icon
+ 		//int x = 0, y = 0, w = 0, h = 0, lines = 0;
+		//bool isVisible;
+		//chosen.GetNameTextInfo( isVisible, x, y, w, h, lines );
+		//uint sprite = LoadSprite    ("btn_skill.png",PT_ART_INTRFACE );
+        //DrawSprite(sprite,0,x+w+10,y,0xFFFFFFFF); 
         // Help info
         if( __HelpInfo )
         {
@@ -1162,13 +1169,13 @@ string generic_description( int descType, int& offsX, int& offsY )
     if( descType == DESC_INVENTORY_MAIN )
     {
         result += chosen.Name        + "\n";
-        result += "---------------------\n";
+        result += "---------------------\n\n\n";
+		result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_AGILITY ) )    + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_STRENGTH ) )   + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_PERCEPTION ) ) + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_ENDURANCE ) )  + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_CHARISMA ) )   + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_INTELLECT ) )  + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_AGILITY ) )    + "\n";
         // result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_LUCK ) )       + "\n";
 		result += "\n";
         result += "---------------------\n";
@@ -1306,30 +1313,37 @@ string generic_description( int descType, int& offsX, int& offsY )
     else if( descType == DESC_INVENTORY_SPECIAL )
     {
         offsX = 23;
-        result += "\n\n";
+        result += "\n\n\n\n";
+		result += chosen.Stat[ ST_AGILITY ]    + "\n";
         result += chosen.Stat[ ST_STRENGTH ]   + "\n";
         result += chosen.Stat[ ST_PERCEPTION ] + "\n";
         result += chosen.Stat[ ST_ENDURANCE ]  + "\n";
         result += chosen.Stat[ ST_CHARISMA ]   + "\n";
         result += chosen.Stat[ ST_INTELLECT ]  + "\n";
-        result += chosen.Stat[ ST_AGILITY ]    + "\n";
         // result += chosen.Stat[ ST_LUCK ];
     }
     else if( descType == DESC_INVENTORY_STATS )
     {
-        offsX = 39;
+        offsX = 0;
         result += "\n\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_HP ) + " ";
-        result += chosen.Stat[ ST_CURRENT_HP ] + "/" + chosen.Stat[ ST_MAX_LIFE ] + "\n";
+        result += chosen.Stat[ ST_CURRENT_HP ] + "/" + chosen.Stat[ ST_MAX_LIFE ] + "   "; //+ "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_AC ) + " ";
-        result += chosen.Stat[ ST_ARMOR_CLASS ] + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_NORMAL ) + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_LASER )  + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_FIRE )   + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_PLASMA ) + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_EXPLODE );
+        result += chosen.Stat[ ST_CURRENT_AC ] + "/" +  chosen.Stat[ ST_ARMOR_CLASS ] + "\n";
     }
-    else if( descType == DESC_INVENTORY_RESIST )
+	else if( descType == DESC_INVENTORY_RESIST )
+    {
+		offsX = 45;
+		result += "\n\n\n\n";
+        result += GetMsgStr( TEXTMSG_GAME, STR_INV_NORMAL )  + "\n";
+        result += GetMsgStr( TEXTMSG_GAME, STR_INV_LASER )   + "\n";
+        result += GetMsgStr( TEXTMSG_GAME, STR_INV_FIRE )    + "\n";
+        result += GetMsgStr( TEXTMSG_GAME, STR_INV_PLASMA )  + "\n";
+        result += GetMsgStr( TEXTMSG_GAME, STR_INV_EXPLODE ) + "\n";
+		result += GetMsgStr( TEXTMSG_GAME, STR_INV_ELECTRO ) + "\n";
+		result += GetMsgStr( TEXTMSG_GAME, STR_INV_ACID );
+    }
+    else if( descType == DESC_INVENTORY_RESIST_NAMES )
     {
         offsX = 103;
         result += "\n\n\n\n";
@@ -1337,7 +1351,9 @@ string generic_description( int descType, int& offsX, int& offsY )
         result += chosen.Stat[ ST_LASER_ABSORB ]   + "/" + chosen.Stat[ ST_LASER_RESIST ]   + "%\n";
         result += chosen.Stat[ ST_FIRE_ABSORB ]    + "/" + chosen.Stat[ ST_FIRE_RESIST ]    + "%\n";
         result += chosen.Stat[ ST_PLASMA_ABSORB ]  + "/" + chosen.Stat[ ST_PLASMA_RESIST ]  + "%\n";
-        result += chosen.Stat[ ST_EXPLODE_ABSORB ] + "/" + chosen.Stat[ ST_EXPLODE_RESIST ] + "%";
+        result += chosen.Stat[ ST_EXPLODE_ABSORB ] + "/" + chosen.Stat[ ST_EXPLODE_RESIST ] + "%\n"; 
+		result += chosen.Stat[ ST_ELECTRO_ABSORB ] + "/" + chosen.Stat[ ST_ELECTRO_RESIST ] + "%\n";
+		result += chosen.Stat[ ST_ACID_ABSORB ] + "/" + chosen.Stat[ ST_ACID_RESIST ] + "%"; 
     }
 
     return result;
@@ -1390,7 +1406,7 @@ string item_description( ItemCl& item, int lookType )
 
         if( lookType != ITEM_LOOK_MAP )
         {
-			//  Strength Requirement, PigBoss ti rak
+			//  Item Strength Requirement, PigBoss ti rak
 			if( item.GetType() == ITEM_TYPE_WEAPON || item.GetType() == ITEM_TYPE_ARMOR )
 			{
 				result += "\n";
@@ -1407,10 +1423,10 @@ string item_description( ItemCl& item, int lookType )
 			if( FLAG(item.Flags, ITEM_CAN_USE) || FLAG(item.Flags, ITEM_CAN_USE_ON_SMTH) || item.GetType() == ITEM_TYPE_WEAPON )
 			{
 				result += "\n";
-				string str;
-				str = GetMsgStr( TEXTMSG_GAME, STR_WAIT_TIME );
-				str = ReplaceText( str, "VALUE", GetProtoTime (item.Proto, item.Mode, chosen));
-				result += str;
+				string str2;
+				str2 = GetMsgStr( TEXTMSG_GAME, STR_WAIT_TIME );
+				str2 = ReplaceText( str2, "VALUE", GetProtoTime (item.Proto, item.Mode, chosen));
+				result += str2;
 			}
 			
 			//  Custom AP cost
@@ -1424,6 +1440,17 @@ string item_description( ItemCl& item, int lookType )
 				result += str;
 			}
 			
+			// Custom Reload AP cost
+			if( item.Proto.Weapon_MaxAmmoCount > 0)
+			{
+				result += "\n";
+				string str;
+				str = GetMsgStr( TEXTMSG_GAME, STR_ITEM_RELOAD_COST );
+				str = ReplaceText( str, "VALUE", item.Proto.Weapon_ReloadAp);
+				// Message("" + str);
+				result += str;
+			}
+				
             // Ammo load
             if( item.GetType() == ITEM_TYPE_WEAPON )
             {
@@ -1692,7 +1719,6 @@ string critter_description( CritterCl& cr, int lookType )
     if( lookType == CRITTER_LOOK_FULL )
     {
         result += " ";
-
         CritterCl@ chosen = GetChosen();
         ItemCl@    item = cr.GetItem( 0, SLOT_HAND1 );
         ItemCl@    item2 = cr.GetItem( 0, SLOT_HAND2 );
@@ -1724,6 +1750,7 @@ string critter_description( CritterCl& cr, int lookType )
             {
                 result = ReplaceText( result, "CUR", cr.Stat[ ST_CURRENT_HP ] );
                 result = ReplaceText( result, "MAX", cr.Stat[ ST_MAX_LIFE ] );
+				
             }
             else
                 result = ReplaceText( result, "CUR/MAX", floor( ( curhp / maxhp )  * 100 ) + "%" );
@@ -1752,14 +1779,14 @@ string critter_description( CritterCl& cr, int lookType )
             {
                 if( item.GetType() == ITEM_TYPE_WEAPON )
                 {
-					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
+					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT + " " + "\n";
 					//result += item_info_color;
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_WEAP );
                     result = ReplaceText( result, "WEAPON", item_info_color );
                 }
                 else
                 {
-					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
+					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT + " " + "\n";
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_MISC );
                     result = ReplaceText( result, "MISC", item_info_color );
                 }
@@ -1767,13 +1794,13 @@ string critter_description( CritterCl& cr, int lookType )
 
             if( valid( item2 ) )
             {
-				string item_info_color = "|" + GetTypeColor(item2.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item2 )) + "|" + COLOR_TEXT;
+				string item_info_color = "|" + GetTypeColor(item2.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item2 )) + "|" + COLOR_TEXT + " " + "\n";
                 result += " и ";
                 result += item_info_color;
             }
             if( valid( item3 ) )
             {
-				string item_info_color = "|" + GetTypeColor(item3.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item3 )) + "|" + COLOR_TEXT;
+				string item_info_color = "|" + GetTypeColor(item3.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item3 )) + "|" + COLOR_TEXT + " " + "\n";
                 if( gender == GENDER_FEMALE )
                     result += ", на ней ";
                 else
@@ -1818,14 +1845,14 @@ string critter_description( CritterCl& cr, int lookType )
             {
                 if( item.GetType() == ITEM_TYPE_WEAPON )
                 {
-					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
+					string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT + " ";
 					//result += item_info_color;
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_WEAP );
                     result = ReplaceText( result, "WEAPON", item_info_color );
                 }
                 else
                 {
-				    string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT;
+				    string item_info_color = "|" + GetTypeColor(item.GetType()) + " " + GetMsgStr( TEXTMSG_ITEM, STR_ITEM_INFO( item )) + "|" + COLOR_TEXT + " ";
                     result += GetMsgStr( TEXTMSG_GAME, STR_CRIT_LOOK_MISC );
                     result = ReplaceText( result, "MISC", item_info_color );
                 }
@@ -1939,7 +1966,7 @@ uint item_cost( ItemCl& item, CritterCl& chosen, CritterCl& npc, bool sell )
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
-// Call to determine perk aviability.
+// Call to determine perk availability.
 bool check_perk( CritterCl& cr, uint perk )
 {
     return PerkCheck( cr, perk );
@@ -1955,12 +1982,12 @@ void player_data_generate( int[]& params )
         @__RegParams = regParams;
         __RegParams.resize( PARAMS_COUNT );
 
-        __RegParams[ ST_STRENGTH ] = 0;
-        __RegParams[ ST_PERCEPTION ] = 0;
-        __RegParams[ ST_ENDURANCE ] = 0;
-        __RegParams[ ST_CHARISMA ] = 0;
-        __RegParams[ ST_INTELLECT ] = 0;
-        __RegParams[ ST_AGILITY ] = 0;
+        __RegParams[ ST_STRENGTH ] = REG_STAT_MINIMUM; // 0
+        __RegParams[ ST_PERCEPTION ] = REG_STAT_MINIMUM; // 1
+        __RegParams[ ST_ENDURANCE ] = REG_STAT_MINIMUM; // 2
+        __RegParams[ ST_CHARISMA ] = REG_STAT_MINIMUM; // 3
+        __RegParams[ ST_INTELLECT ] = REG_STAT_MINIMUM; // 4
+        __RegParams[ ST_AGILITY ] = REG_STAT_MINIMUM; // 5
         //__RegParams[ ST_LUCK ] = 0;
         __RegParams[ ST_AGE ] = Random( AGE_MIN, AGE_MAX > 100 ? 60 : AGE_MAX );
         __RegParams[ ST_GENDER ] = GENDER_MALE;
@@ -1971,7 +1998,7 @@ void player_data_generate( int[]& params )
     params = __RegParams;
 
     CritterGenerate( params );
-
+	
     #ifdef PLAYERS_3D
     Set3DRegistrationGender( params[ ST_GENDER ] );
     #endif
@@ -1982,7 +2009,18 @@ bool player_data_check( int[]& params )
     #ifdef PLAYERS_3D
     Fill3DRegistrationParameters( params );
     #endif
-
+	
+	uint targetStatCount = (__StartSpecialPoints + (REG_STAT_COUNT * REG_STAT_MINIMUM) );
+	uint statCount = 0;
+	for ( uint i = ST_STRENGTH, j = ST_AGILITY; i <= j; i++)
+	{
+		statCount += params [ i ];
+	}
+	if (statCount < targetStatCount)
+	{
+		Message (GetMsgStr (TEXTMSG_GAME, STR_INVALID_REG_PARAMS) + " " + (targetStatCount - statCount) );
+		return false;
+	}
     // Check name
     uint nameError = CheckPlayerName( __RegName );
     if( nameError != 0 )

@@ -145,6 +145,10 @@
 #define DAMAGE_EMP                               ( 6 )
 #define DAMAGE_EXPLODE                           ( 7 )
 
+#define DAMAGE_VANILLA_END						 ( 7 )
+
+#define DAMAGE_ACID								 ( 8 )
+
 // Critter events, description see in templates.fos
 #define CRITTER_EVENT_IDLE                       ( 0 )
 #define CRITTER_EVENT_FINISH                     ( 1 )
@@ -254,6 +258,25 @@
 #define SLOT_PERK_MOTION_SENSOR                  ( 0x04 ) // +20 outdoorsman
 #define SLOT_PERK_STEALTH_BOY                    ( 0x08 ) // +20 sneak
 
+// Item craft upgrade
+#define WEAPON_UPGRADES_BEGIN
+#define WEAPON_UPGRADES_APCOST
+#define WEAPON_UPGRADES_MAXRANGE
+#define WEAPON_UPGRADES_SPEED
+#define WEAPON_UPGRADES_RELOADCOST
+#define WEAPON_UPGRADES_WEIGHT
+#define WEAPON_UPGRADES_END
+
+#define ARMOR_UPGRADES_BEGIN
+#define ARMOR_UPGRADES_WEIGHT
+#define ARMOR_UPGRADES_ARMORCLASS
+#define ARMOR_UPGRADES_END
+
+#define ITEM_UPGRADES_BEGIN
+#define ITEM_UPGRADES_APCOST
+#define ITEM_UPGRADES_SPEED
+#define ITEM_UPGRADES_END
+
 // In SendMessage
 #define MESSAGE_TO_WHO_SEES_ME                   ( 0 )    // Отослать сообщения всем кто видет криттера.
 #define MESSAGE_TO_I_SEE                         ( 1 )    // Отослать сообщения всем кого видит криттер.
@@ -357,6 +380,7 @@
 #define CTE_BLEED                                ( 151 )
 #define CTE_STAMINA								 ( 152 )
 #define CTE_AC_REGEN                             ( 153 )
+#define CTE_AP_REGEN							 ( 154 )
 // Drugs time events                40 (PID_STIMPAK) .. 1000
 
 // Parameters
@@ -513,13 +537,53 @@
 # define ST_ANIM3D_LAYERS                        ( 150 ) // Hardcoded
 // 150..179 reserved for 30 layers
 #endif
-// 180..199
+// 180..191
+// The Long Journey New Dolboeb Damage + Resistance Type
+#define ST_ACID_ABSORB							( 180 )
+// 4
+#define ST_ACID_RESIST							( 185 )
+
+#define ST_ACID_ABSORB_EXT						( 186 )
+// +4 
+#define ST_ACID_RESIST_EXT						( 191 )
+// 192..199 
+// Additional critter stats
+#define ST_APREGEN							    ( 192 )
 
 // / Skills
 #define SKILL_BEGIN                              ( __SkillBegin )
 #define SKILL_END                                ( __SkillEnd )
 #define SKILL_COUNT                              ( SKILL_END - SKILL_BEGIN + 1 )
 #define MAX_SKILL_VAL                            ( __SkillMaxValue )
+// #define SK_FIREARMS								 ( 200 )				// Огнестрельное оружие
+// #define SK_SMALL_GUNS                            ( SK_FIREARMS )		// Легкое оружие
+// #define SK_BIG_GUNS                              ( SK_FIREARMS )		// Тяжелое оружие
+// #define SK_TECH_WEAPONS							 ( 202 )				// Энергетическое оружие
+// #define SK_ENERGY_WEAPONS                        ( SK_TECH_WEAPONS )	// Энергетическое оружие
+// #define SK_MELEE_COMBAT                          ( 203 )				// Ближний бой
+// #define SK_UNARMED                               ( SK_MELEE_COMBAT )			// Рукопашный бой
+// #define SK_MELEE_WEAPONS                         ( SK_MELEE_COMBAT )			// Холодное оружие
+// #define SK_TACTICAL_WEAPONS						 ( 205 )				// Тактическое оружие
+// #define SK_THROWING                              ( SK_TACTICAL_WEAPONS )// Метательное оружие
+// #define SK_TRAPS                                 ( SK_TACTICAL_WEAPONS )// Ловушки
+// #define SK_MEDICINE						 		 ( 206 )				// Медицина
+// #define SK_FIRST_AID                             ( SK_MEDICINE )		// Первая Помощь
+// #define SK_DOCTOR                                ( SK_MEDICINE )		// Доктор
+// #define SK_STEALTH                               ( 208 )				// Скрытность
+// #define SK_SNEAK                                 ( SK_STEALTH ) 		// Инвиз для пауков
+// #define SK_LOCKPICK                              ( SK_STEALTH )			// Взлом
+// #define SK_STEAL                                 ( SK_STEALTH )			// Воровство
+// #define SK_KNOWLEDGE							    ( 212 )				// Наука
+// #define SK_SCIENCE                               ( SK_KNOWLEDGE ) 		// Наука
+// #define SK_MECHANICS				 			    ( 213 ) 				// Механика
+// #define SK_REPAIR                                ( SK_MECHANICS ) 		// Ремонт
+// #define SK_PERSUASION							 ( 215 )				// Убеждение
+// #define SK_SPEECH                                ( SK_PERSUASION ) 		// Красноречие
+// #define SK_BARTER                                ( SK_PERSUASION ) 		// Бартер
+// #define SK_GAMBLING                              ( 216 ) 				// Азартные игры (в игре не используется, но вызывает эррор если не оставить тут
+// #define SK_SURVIVAL								 ( 217 )				// Выживание
+// #define SK_OUTDOORSMAN                           ( SK_SURVIVAL ) 		// Скиталец
+
 #define SK_SMALL_GUNS                            ( 200 ) // Огнестрельное оружие
 #define SK_BIG_GUNS                              ( 201 ) //(Merge with small guns)
 #define SK_ENERGY_WEAPONS                        ( 202 ) // Энергетическое оружие
@@ -900,7 +964,7 @@
 // #define GOOD_EVIL_LIST_END         (799)
 // #define GOOD_EVIL_LIST_COUNT       (GOOD_EVIL_LIST_END-GOOD_EVIL_LIST_BEGIN+1)
 
-// / Mercenary settings
+// / Mercenary settings **0 - 020
 #define MERC_BEGIN                               ( 800 )
 #define MERC_END                                 ( 810 )
 #define MERC_COUNT                               ( MERC_END - MERC_BEGIN + 1 )
@@ -1230,7 +1294,7 @@
 #define LOOK_CHECK_DIR                           ( 0x01 ) // Nerfe look by directions of look
 #define LOOK_CHECK_SNEAK_DIR                     ( 0x02 ) // Nerfe opponent sneak by directions of look
 #define LOOK_CHECK_SNEAK_WEIGHT                  ( 0x04 ) // Nerfe sneak by current weight
-#define LOOK_CHECK_TRACE                         ( 0x08 ) // Tracing for wall aviablility
+#define LOOK_CHECK_TRACE                         ( 0x08 ) // Tracing for wall availability
 #define LOOK_CHECK_SCRIPT                        ( 0x10 ) // Allow bool check_look(...) in main.fos, all other defines ignored
 #define LOOK_CHECK_ITEM_SCRIPT                   ( 0x20 ) // Allow bool check_trap_look(...) in main.fos, for items with ITEM_TRAP flag
 
@@ -1244,73 +1308,215 @@
 # define CRTYPE_DEFAULT_F                        ( CRTYPE_3D_FEMALE_NORMAL )
 #endif
 #define CRTYPE_NONE                              ( 0 ) // Used with ST_BASE_CRTYPE as default
-// Dweller
-#define CRTYPE_DW_JUMPSUIT_M                     ( 11 )
-#define CRTYPE_DW_JUMPSUIT_F                     ( 4 )
-#define CRTYPE_DW_LEATHER_JACKET_F               ( 6 )
-#define CRTYPE_DW_LEATHER_ARMOR_M                ( 12 )
-#define CRTYPE_DW_LEATHER_JACKET_M               ( 13 )
-#define CRTYPE_DW_METAL_ARMOR_M                  ( 14 )
-#define CRTYPE_DW_TRIBAL_F                       ( 63 )
-#define CRTYPE_DW_TRIBAL_M                       ( 64 )
-#define CRTYPE_DW_LEATHERBLUE_M                  ( 124 )
 // Vault citizen
 #define CRTYPE_VAULT_M                           ( 69 )
 #define CRTYPE_VAULT_F                           ( 74 )
+// Dweller
+// Dweller Jumpsuit Section
+#define CRTYPE_DW_JUMPSUIT_M                     ( 11 )
+#define CRTYPE_DW_JUMPSUIT_F                     ( 4 )
+#define CRTYPE_DW_JUMPSUIT_SCOUT_M               ( 104 )
+#define CRTYPE_DW_JUMPSUIT_SCOUT_F               ( 105 )
+// Dweller Original Animations Section
+#define CRTYPE_DW_TRIBAL_F                       ( 63 )
+#define CRTYPE_DW_TRIBAL_M                       ( 64 )
+#define CRTYPE_DW_LEATHER_JACKET_M               ( 13 )
+#define CRTYPE_DW_LEATHER_JACKET_F               ( 6 )
+// Dweller Leather  Armor Section
+#define CRTYPE_DW_LEATHER_ARMOR_M                ( 12 )
+#define CRTYPE_DW_LEATHER_ARMOR_F                ( 5 )
+#define CRTYPE_DW_LEATHER_ARMOR_MK2_M            ( 114 )
+#define CRTYPE_DW_LEATHER_ARMOR_MK2_F            ( 115 )
+#define CRTYPE_DW_LEATHER_ARMOR_BLUE_M           ( 116 )
+#define CRTYPE_DW_LEATHER_ARMOR_BLUE_F           ( 117 )
+//#define CRTYPE_DW_LEATHER_ARMOR_RED_M          ( 118 ) // Free for next armor color
+//#define CRTYPE_DW_LEATHER_ARMOR_RED_F          ( 119 ) // Free for next armor color
+//#define CRTYPE_DW_LEATHER_ARMOR_NONE_M         ( 122 ) // Free for next armor color
+//#define CRTYPE_DW_LEATHER_ARMOR_NONE_F         ( 123 ) // Free for next armor color
+#define CRTYPE_DW_LEATHER_ARMOR_GREY_M			 ( 124 )
+#define CRTYPE_DW_LEATHER_ARMOR_GREY_F			 ( 125 )
+#define CRTYPE_DW_LEATHER_ARMOR_GREY2_M			 ( 126 )
+#define CRTYPE_DW_LEATHER_ARMOR_GREY2_F			 ( 127 )
+// Dweller Metal Armor Section
+#define CRTYPE_DW_METAL_ARMOR_M                  ( 14  )
+#define CRTYPE_DW_METAL_ARMOR_F                  (  7  )
+#define CRTYPE_DW_METAL_ARMOR_MK2_M              ( 134 )
+#define CRTYPE_DW_METAL_ARMOR_MK2_F              ( 135 )
+#define CRTYPE_DW_METAL_ARMOR_TESLA_M            ( 136 )
+#define CRTYPE_DW_METAL_ARMOR_TESLA_F            ( 137 )
+// Dweller Combat Armor Section
+#define CRTYPE_DW_COMBAT_ARMOR_BLUE			     ( 150 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLUE			     ( 151 )
+#define CRTYPE_DW_COMBAT_ARMOR_DARK			     ( 152 )
+#define CRTYPE_DW_COMBAT_ARMOR_DARK			     ( 153 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT			 ( 154 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT			 ( 155 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN	     ( 156 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN	     ( 157 )
+#define CRTYPE_DW_COMBAT_ARMOR_SAND			     ( 158 )
+#define CRTYPE_DW_COMBAT_ARMOR_SAND			     ( 159 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLACK			 ( 160 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLACK			 ( 161 )
+#define CRTYPE_DW_COMBAT_ARMOR_SCOUT			 ( 162 )
+#define CRTYPE_DW_COMBAT_ARMOR_SCOUT			 ( 163 )
+#define CRTYPE_DW_COMBAT_ARMOR_RED		         ( 164 )
+#define CRTYPE_DW_COMBAT_ARMOR_RED		         ( 165 )
+// Long Hair Dude. LHD_TRIBAL && LHD_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
+#define CRTYPE_LHD_TRIBAL                        ( 180 )
+#define CRTYPE_LHD_JUMPSUIT                      ( 181 )
+#define CRTYPE_LHD_LEATHER_JACKET                ( 182 )
+#define CRTYPE_LHD_COMBAT_LEATHER_JACKET         ( 183 )
+#define CRTYPE_LHD_LEATHER_ARMOR                 ( 184 )
+#define CRTYPE_LHD_LEATHER_ARMOR_MK2             ( 185 )
+#define CRTYPE_LHD_LEATHER_ARMOR_BLUE            ( 186 )
+#define CRTYPE_LHD_LEATHER_ARMOR_RED             ( 186 )
+#define CRTYPE_LHD_LEATHER_ARMOR_GREY            ( 188 )
+#define CRTYPE_LHD_METAL_ARMOR                   ( 189 )
+#define CRTYPE_LHD_METAL_ARMOR_MK2               ( 190 )
+#define CRTYPE_LHD_METAL_ARMOR_TESLA             ( 191 )
+#define CRTYPE_LHD_KHAN              			 ( 209 )
+// Long Hair Blonde Dude. LHD_BLONDE_TRIBAL && LHD_BLONDE_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
+//#define CRTYPE_LHD_BLONDE_TRIBAL                 ( 210 )
+//#define CRTYPE_LHD_BLONDE_JUMPSUIT               ( 211 )
+//#define CRTYPE_LHD_BLONDE_LEATHER_JACKET         ( 212 )
+//#define CRTYPE_LHD_BLONDE_COMBAT_LEATHER_JACKET  ( 213 )
+//#define CRTYPE_LHD_BLONDE_LEATHER_ARMOR          ( 214 )
+//#define CRTYPE_LHD_BLONDE_LEATHER_ARMOR_MK2      ( 215 )
+//#define CRTYPE_LHD_BLONDE_LEATHER_ARMOR_BLUE     ( 216 )
+//#define CRTYPE_LHD_BLONDE_LEATHER_ARMOR_RED      ( 217 )
+//#define CRTYPE_LHD_BLONDE_LEATHER_ARMOR_GREY     ( 218 )
+//#define CRTYPE_LHD_BLONDE_METAL_ARMOR            ( 219 )
+//#define CRTYPE_LHD_BLONDE_METAL_ARMOR_MK2        ( 220 )
+//#define CRTYPE_LHD_BLONDE_METAL_ARMOR_TESLA      ( 221 )
+//#define CRTYPE_LHD_BLONDE_KHAN              	 ( 229 )
+// Long Hair Brunette Dude. LHD_BRUNETTE_TRIBAL && LHD_BRUNETTE_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
+//#define CRTYPE_LHD_BRUNETTE_TRIBAL               ( 230 )
+//#define CRTYPE_LHD_BRUNETTE_JUMPSUIT             ( 231 )
+//#define CRTYPE_LHD_BRUNETTE_LEATHER_JACKET       ( 232 )
+//#define CRTYPE_LHD_BRUNETTE_COMBAT_LEATHER_JACKET( 233 )
+//#define CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR        ( 234 )
+//#define CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_MK2    ( 235 )
+//#define CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_BLUE   ( 236 )
+//#define CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_RED    ( 237 )
+//#define CRTYPE_LHD_BRUNETTE_LEATHER_ARMOR_GREY   ( 238 )
+//#define CRTYPE_LHD_BRUNETTE_METAL_ARMOR          ( 239 )
+//#define CRTYPE_LHD_BRUNETTE_METAL_ARMOR_MK2      ( 240 )
+//#define CRTYPE_LHD_BRUNETTE_METAL_ARMOR_TESLA    ( 241 )
+//#define CRTYPE_LHD_BRUNETTE_KHAN              	 ( 249 )
+// Long Hair Logan Dude. LHD_LOGAN_TRIBAL && LHD_LOGAN_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
+//#define CRTYPE_LHD_LOGAN_TRIBAL                  ( 250 )
+//#define CRTYPE_LHD_LOGAN_JUMPSUIT                ( 251 )
+//#define CRTYPE_LHD_LOGAN_LEATHER_JACKET          ( 252 )
+//#define CRTYPE_LHD_LOGAN_COMBAT_LEATHER_JACKET   ( 253 )
+//#define CRTYPE_LHD_LOGAN_LEATHER_ARMOR           ( 254 )
+//#define CRTYPE_LHD_LOGAN_LEATHER_ARMOR_MK2       ( 255 )
+//#define CRTYPE_LHD_LOGAN_LEATHER_ARMOR_BLUE      ( 256 )
+//#define CRTYPE_LHD_LOGAN_LEATHER_ARMOR_RED       ( 257 )
+//#define CRTYPE_LHD_LOGAN_LEATHER_ARMOR_GREY      ( 258 )
+//#define CRTYPE_LHD_LOGAN_METAL_ARMOR             ( 259 )
+//#define CRTYPE_LHD_LOGAN_METAL_ARMOR_MK2         ( 260 )
+//#define CRTYPE_LHD_LOGAN_METAL_ARMOR_TESLA       ( 261 )
+//#define CRTYPE_LHD_LOGAN_KHAN              		 ( 269 )
+// Bald dude. BLD_TRIBAL && BLD_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
+#define CRTYPE_BLD_TRIBAL                        ( 270 )
+#define CRTYPE_BLD_JUMPSUIT                      ( 271 )
+#define CRTYPE_BLD_LEATHER_JACKET                ( 272 )
+#define CRTYPE_BLD_LEATHER_ARMOR                 ( 273 )
+#define CRTYPE_BLD_LEATHER_ARMOR_MK2             ( 274 )
+#define CRTYPE_BLD_LEATHER_ARMOR_BLUE            ( 275 )
+#define CRTYPE_BLD_LEATHER_ARMOR_RED             ( 276 )
+#define CRTYPE_BLD_LEATHER_ARMOR_GREY            ( 277 )
+#define CRTYPE_BLD_METAL_ARMOR                   ( 278 )
+#define CRTYPE_BLD_METAL_ARMOR_MK2               ( 279 )
+#define CRTYPE_BLD_METAL_ARMOR_TESLA             ( 280 )
+#define CRTYPE_BLD_COMBAT_ARMOR_NOHELMET         ( 288 )
+#define CRTYPE_BLD_COMBAT_ARMOR_GREY_NOHELMET    ( 289 )
+// Punk Girl. PNK_TRIBAL && PNK_JUMPSUIT = ST_BASE_CRTYP)E for the skinset.
+// Green Hair
+#define CRTYPE_PNK_TRIBAL						 ( 300 )
+#define CRTYPE_PNK_JUMPSUIT		 				 ( 301 )
+#define CRTYPE_PNK_LEATHER_JACKET				 ( 302 )
+#define CRTYPE_PNK_LEATHER_ARMOR				 ( 303 )
+// #define CRTYPE_PNK_LEATHER_ARMOR_MK2			 ( 304 )
+#define CRTYPE_PNK_LEATHER_ARMOR_BLUE			 ( 305 )
+// #define CRTYPE_PNK_LEATHER_ARMOR_RED			 ( 306 )
+#define CRTYPE_PNK_LEATHER_ARMOR_GREY			 ( 307 )
+#define CRTYPE_PNK_METAL_ARMOR					 ( 308 )
+#define CRTYPE_PNK_METAL_ARMOR_MK2				 ( 309 )
+// #define CRTYPE_PNK_METAL_ARMOR_TESLA			 ( 310 )
+// Black Dweller
+// Black Male
+// Black Female
+// Black Longhair
+// Black Longhair Blonde
+// Black Longhair Brunette
+// Black Longhair Logan
+// Black Bald
+// Black Punk
+
+// Mexican Dweller
+// Mexican Male
+// Mexican Female
+// Mexican Longhair
+// Mexican Longhair Blonde
+// Mexican Longhair Brunette
+// Mexican Longhair Logan
+// Mexican Bald
+// Mexican Punk
+ 
+// Custom skins with no redirects & with armor-animation limitations. 600 <-> 789. 
+// Human Single Skins
+#define CRTYPE_MALE_IAN_OLD						 ( 601 )
+#define CRTYPE_FEMALE_MIRI_BLACK				 ( 602 )
+#define CRTYPE_MALE_COAT_BOSS				     ( 603 )
+// Robes
+#define CRTYPE_SAND_ROBE						 ( 650 )
 // Robots
 #define CRTYPE_ROBOT                             ( 66 )
-// Long Hair Dude
-#define CRTYPE_LHD_JUMPSUIT                      ( 106 ) // Used with ST_BASE_CRTYPE
-#define CRTYPE_LHD_LEATHER_ARMOR                 ( 107 )
-#define CRTYPE_LHD_LEATHER_JACKET                ( 108 )
-#define CRTYPE_LHD_METAL_ARMOR                   ( 109 )
-#define CRTYPE_LHD_TRIBAL                        ( 110 )
-#define CRTYPE_LHD_LEATHERBLUE                   ( 125 )
-// Bald dude
-#define CRTYPE_BLD_JUMPSUIT                      ( 116 )
-#define CRTYPE_BLD_LEATHER_ARMOR                 ( 117 )
-#define CRTYPE_BLD_LEATHER_JACKET                ( 118 )
-#define CRTYPE_BLD_METAL_ARMOR                   ( 119 )
-#define CRTYPE_BLD_TRIBAL                        ( 120 )
-#define CRTYPE_BLD_LEATHERBLUE                   ( 126 )
-// Mobs
+#define CTTYPE_VAULT_TURRET                      ( 690 )
+// Fauna
 #define CRTYPE_RAT                               ( 24 )
 #define CRTYPE_MOLESKIN_RAT_BIG                  ( 19 )
+#define CRTYPE_RED_DOG							 ( 710 )
+// Supermutants
+#define CRTYPE_SUPERMUTANT_LIEUTENANT			 ( 750 )
 // Other
-#define CRTYPE_VAULT_BOY                         ( 249 )
+#define CRTYPE_VAULT_BOY						 ( 760 )
+
+
 // 3d critters
-#define CRTYPE_3D_MALE_NORMAL                    ( 290 )
-#define CRTYPE_3D_MALE_WIRY                      ( 291 )
-#define CRTYPE_3D_MALE_STRONG                    ( 292 )
-#define CRTYPE_3D_MALE_FAT                       ( 293 )
-#define CRTYPE_3D_MALE_SKELETON                  ( 294 )
-#define CRTYPE_3D_FEMALE_NORMAL                  ( 295 )
-#define CRTYPE_3D_FEMALE_WIRY                    ( 296 )
-#define CRTYPE_3D_FEMALE_STRONG                  ( 297 )
-#define CRTYPE_3D_FEMALE_FAT                     ( 298 )
-#define CRTYPE_3D_FEMALE_SKELETON                ( 299 )
-#define CRTYPE_3D_ANT                            ( 300 )
-#define CRTYPE_3D_ANT_QUEEN                      ( 301 )
-#define CRTYPE_3D_BAT                            ( 302 )
-#define CRTYPE_3D_BEETLE                         ( 303 )
-#define CRTYPE_3D_CENTIPEDE                      ( 304 )
-#define CRTYPE_3D_COUGAR                         ( 305 )
-#define CRTYPE_3D_COW                            ( 306 )
-#define CRTYPE_3D_DEATHCLAW                      ( 307 )
-#define CRTYPE_3D_DESERT_STALKER                 ( 308 )
-#define CRTYPE_3D_DOG                            ( 309 )
-#define CRTYPE_3D_GILA                           ( 310 )
-#define CRTYPE_3D_MANTRAP                        ( 311 )
-#define CRTYPE_3D_RAD_TOAD                       ( 312 )
-#define CRTYPE_3D_RAT                            ( 313 )
-#define CRTYPE_3D_THORN_SLINGER                  ( 314 )
-#define CRTYPE_3D_WASP_GIANT                     ( 315 )
-#define CRTYPE_3D_WEEDLING                       ( 316 )
+#define CRTYPE_3D_MALE_NORMAL                    ( 790 )
+#define CRTYPE_3D_MALE_WIRY                      ( 791 )
+#define CRTYPE_3D_MALE_STRONG                    ( 792 )
+#define CRTYPE_3D_MALE_FAT                       ( 793 )
+#define CRTYPE_3D_MALE_SKELETON                  ( 794 )
+#define CRTYPE_3D_FEMALE_NORMAL                  ( 795 )
+#define CRTYPE_3D_FEMALE_WIRY                    ( 796 )
+#define CRTYPE_3D_FEMALE_STRONG                  ( 797 )
+#define CRTYPE_3D_FEMALE_FAT                     ( 798 )
+#define CRTYPE_3D_FEMALE_SKELETON                ( 799 )
+#define CRTYPE_3D_ANT                            ( 800 )
+#define CRTYPE_3D_ANT_QUEEN                      ( 801 )
+#define CRTYPE_3D_BAT                            ( 802 )
+#define CRTYPE_3D_BEETLE                         ( 803 )
+#define CRTYPE_3D_CENTIPEDE                      ( 804 )
+#define CRTYPE_3D_COUGAR                         ( 805 )
+#define CRTYPE_3D_COW                            ( 806 )
+#define CRTYPE_3D_DEATHCLAW                      ( 807 )
+#define CRTYPE_3D_DESERT_STALKER                 ( 808 )
+#define CRTYPE_3D_DOG                            ( 809 )
+#define CRTYPE_3D_GILA                           ( 810 )
+#define CRTYPE_3D_MANTRAP                        ( 811 )
+#define CRTYPE_3D_RAD_TOAD                       ( 812 )
+#define CRTYPE_3D_RAT                            ( 813 )
+#define CRTYPE_3D_THORN_SLINGER                  ( 814 )
+#define CRTYPE_3D_WASP_GIANT                     ( 815 )
+#define CRTYPE_3D_WEEDLING                       ( 816 )
 // Tactics
-#define CRTYPE_TACTICS_RHUMANOID                 ( 460 )
+#define CRTYPE_TACTICS_RHUMANOID                 ( 960 )
 // Arcanum
-#define CRTYPE_ARCANUM_GEN_CR_BEGIN              ( 600 )
-#define CRTYPE_ARCANUM_GEN_CR_END                ( 699 )
+#define CRTYPE_ARCANUM_GEN_CR_BEGIN              ( 998 )
+#define CRTYPE_ARCANUM_GEN_CR_END                ( 999 )
 
 // Global map events
 #define GLOBAL_PROCESS_MOVE                      ( 0 ) // Called every __GlobalMapMoveTime
@@ -1510,10 +1716,17 @@
 #define DEFAULT_AP_USE							 ( 3 )
 #define DEFAULT_AP_ACTION						 ( 2 )
 #define DEFAULT_AP_RELOAD						 ( 2 )
+#define AP_DIVIDER                               ( 100 )
+#define AP_REGEN_TIME							 ( 1000 )
 // client side cached sprites to work with ( non-dynamically loaded ones )
 #define CACHED_SPRITES_COUNT                     (500) // just for now
 #define CACHED_MAIN_MENU_SPRITE                  (0)
 #define CACHED_REG_SPRITE                        (1)
+
+//
+#define REG_STAT_MINIMUM						 ( 1 )
+#define REG_STAT_MAXIMUM						 ( 5 )
+#define REG_STAT_COUNT							 ( 6 )
 
 
 //Drawing types
@@ -1581,8 +1794,7 @@
 
 # ifdef __SERVER
 #  pragma bindfield "uint Critter::GlobalMapMoveCounter -> 0"
-//#  pragma bindfunc  "void dummy() -> fonline_tla.dll SERVER"
-//#  pragma bindfunc  "void dummy() -> fonline_tla_client.dll CLIENT"
+#  pragma bindfunc  "void dummy() -> fonline_tla.dll SERVER"
 # endif
 
 // Load server extensions
@@ -1596,6 +1808,7 @@
 
 // Whole size for data - 500 bytes
 // Common
+//Armor_DREmp -> Armor_DRExplode at entry 136
 # pragma bindfield "const int    ProtoItem::MagicPower -> 0"
 // Armor
 # pragma bindfield "const uint   ProtoItem::Armor_CrTypeMale   -> 100"
@@ -1607,17 +1820,20 @@
 # pragma bindfield "const int    ProtoItem::Armor_DRFire       -> 124"
 # pragma bindfield "const int    ProtoItem::Armor_DRPlasma     -> 128"
 # pragma bindfield "const int    ProtoItem::Armor_DRElectr     -> 132"
-# pragma bindfield "const int    ProtoItem::Armor_DREmp        -> 136"
-# pragma bindfield "const int    ProtoItem::Armor_DRExplode    -> 140"
+# pragma bindfield "const int    ProtoItem::Armor_DRExplode	   -> 136"  // Former ProtoItem::Armor_DREmp
+// Armor_DRExplode
+//# pragma bindfield "const int    ProtoItem::Armor_DRExplode  -> 140"  // broken byte entry
 # pragma bindfield "const int    ProtoItem::Armor_DTNormal     -> 144"
 # pragma bindfield "const int    ProtoItem::Armor_DTLaser      -> 148"
 # pragma bindfield "const int    ProtoItem::Armor_DTFire       -> 152"
 # pragma bindfield "const int    ProtoItem::Armor_DTPlasma     -> 156"
 # pragma bindfield "const int    ProtoItem::Armor_DTElectr     -> 160"
-# pragma bindfield "const int    ProtoItem::Armor_DTEmp        -> 164"
+//# pragma bindfield "const int    ProtoItem::Armor_    	   -> 164" // Free to use byte entry
 # pragma bindfield "const int    ProtoItem::Armor_DTExplode    -> 168"
-// # pragma bindfield "const int    ProtoItem::Armor_MinStrength  -> 172"
-# pragma bindfield "const bool   ProtoItem::Armor_Flexible     -> 172"
+# pragma bindfield "const int    ProtoItem::Armor_DRAcid       -> 172"
+# pragma bindfield "const int    ProtoItem::Armor_DTAcid       -> 176"
+# pragma bindfield "const bool   ProtoItem::Armor_Flexible     -> 180"
+
 // Weapon
 # pragma bindfield "const int    ProtoItem::Weapon_DmgType_0 -> 200"
 # pragma bindfield "const int    ProtoItem::Weapon_DmgType_1 -> 204"
@@ -1662,6 +1878,7 @@
 # ifdef __CLIENT
 // Next line produce error due to disabled AllowClientNativeCalls
 // #  pragma bindfunc "void TestFunc(string&) -> fonline_test_client.dll TestFunc"
+#  pragma bindfunc  "void dummy() -> fonline_tla_client.dll CLIENT"
 # endif
 
 #endif // SKIP_PRAGMAS

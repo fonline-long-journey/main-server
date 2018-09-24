@@ -99,6 +99,7 @@
 #define _GetProtoWaitTime             # (prot, use)     (_GetProtoTime(prot, use))
 #define _GetSkillWaitTime             # (sk)        	(DEFAULT_WAIT_TIME) // for future needs
 #define _GetActionWaitTime            # (action) 		(DEFAULT_WAIT_TIME)
+//#define _GetApRegen                   # (cr)            ( (cr.Stat[ST_AGILITY] * 70)) //test
 
 // ApCost Spice must flow
 #define _GetProtoAp                   # (prot, use)      ((_WeaponApCost (prot, use) -1) * 100)

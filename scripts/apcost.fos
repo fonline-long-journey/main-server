@@ -19,7 +19,7 @@
 		} */
 		
 
-// ApCost Spice must flow in "_macros.fos"
+// ApCost Spice must flow in "_macros.fos":
 // #define _WeaponApCost                # ( proto, use )( (use == 0 ? proto.Weapon_ApCost_0 == 0 ? DEFAULT_AP_USE  : proto.Weapon_ApCost_0  \
                                                      // : use == 1 ? proto.Weapon_ApCost_1 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_1 \
                                                      // : use == 2 ? proto.Weapon_ApCost_2 == 0 ? DEFAULT_AP_USE : proto.Weapon_ApCost_2 \

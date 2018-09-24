@@ -9,6 +9,7 @@
 #include "_colors.fos"
 #include "wait_time_h.fos"
 #include "critter_types_h.fos"
+#include "apregen_h.fos"
 #define __ACCESSNAMES
 
 // Imports
@@ -194,8 +195,8 @@ void get_start_time( uint16& multiplier, uint16& year, uint16& month, uint16& da
 {
     multiplier = 2;
     year = 2280;
-    month = 1;
-    day = 1;
+    month = 3;
+    day = 14;
     hour = 0;
     minute = 0;
 }
@@ -1242,9 +1243,17 @@ void critter_init( Critter& cr, bool firstTime )
 		#endif
 		cr.RunClientScript("rp_client@AccessCallback", cr.GetAccess(), 0, 0, null, null);
 	}
+	
+	// Pidor detection.
+	// if(cr.Id==5000118)
+	// {
+		// Log("The pidor is at:" + cr.GetMap().GetLocation().GetProtoId () + "Map ProtoID: " + cr.GetMap().GetProtoId () + "Position X: " + cr.HexX + "Position Y: " + cr.HexY) + ".";
+	// }
 		
     if( firstTime )
     {
+		SetCritterApRegen(cr);
+	
         if( cr.IsPlayer() )
         {
 			Location@ loc = GetLocationByPid(LOCATION_WALLBRIDGE, 0);
@@ -1261,7 +1270,7 @@ void critter_init( Critter& cr, bool firstTime )
                 else
                     cr.TraitBase[ i ] = 0;
             }
-	
+			
             if( cr.StatBase[ ST_GENDER ] < 0 || cr.StatBase[ ST_GENDER ] > 1 )
                 cr.StatBase[ ST_GENDER ] = 0;
             if( cr.StatBase[ ST_AGE ] < 14 || cr.StatBase[ ST_AGE ] > 80 )
@@ -1273,7 +1282,7 @@ void critter_init( Critter& cr, bool firstTime )
 				cr.StatBase[ ST_THIRST ] = 700;
 
             if( ( cr.StatBase[ ST_STRENGTH ] + cr.StatBase[ ST_PERCEPTION ] + cr.StatBase[ ST_ENDURANCE ] +
-                  cr.StatBase[ ST_CHARISMA ] + cr.StatBase[ ST_INTELLECT ] + cr.StatBase[ ST_AGILITY ] + cr.StatBase[ ST_LUCK ] ) != __StartSpecialPoints )
+                  cr.StatBase[ ST_CHARISMA ] + cr.StatBase[ ST_INTELLECT ] + cr.StatBase[ ST_AGILITY ]  ) != __StartSpecialPoints + (REG_STAT_COUNT * REG_STAT_MINIMUM) )  // + cr.StatBase[ ST_LUCK ]
             {
                 for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
                     cr.StatBase[ i ] = 0;
