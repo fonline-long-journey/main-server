@@ -605,8 +605,8 @@ void GUI_Callback_OnLanguageChanged()
 // Internal
 //
 
-import bool[] @ GetKeyPressed() from "input";
-import bool[] @ GetMousePressed() from "input";
+import string @ GetKeyPressed() from "input";
+import string @ GetMousePressed() from "input";
 
 void CreateHardcodedScreen( int screenIndex, bool canMove = false )
 {

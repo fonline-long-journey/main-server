@@ -1,12 +1,337 @@
+// Custom input controls (by Erandelax aka Sjaman)
 #ifndef __INPUT__
 #define __INPUT__
 
 #include "_client_defines.fos"
 
-import bool IsKeyPressed( int key ) from "input";
-import bool IsMousePressed( int button ) from "input";
+//////////////////////////////////////////////////////////////////////////////*/
+#define ARG_STORAGE_FLAG        (777)
+
+// Command argument types
+#define ARG_ERROR 				(0)     // Should not exist anywhere
+#define ARG_VOID 				(1) 	// Argument is absent
+#define ARG_INT 				(1<<1) 	// Custom number <int>
+#define ARG_INTS 				(1<<2)  // Array of numbers <int>
+#define ARG_STRING 				(1<<3) 	// Custom string <string>
+#define ARG_CRITTER 			(1<<4)  // Single critter Id <int>
+#define ARG_CRITTERS 			(1<<5) 	// Multiple critter Ids <int[]>
+#define ARG_ITEM 				(1<<6)  // Single item Id <int>
+#define ARG_ITEMS 				(1<<7)  // Multiple item Ids <int[]>
+#define ARG_HEX					(1<<8)  // Hex coordinates <uint16[](2)>
+#define ARG_PATH 				(1<<9)  // Hex coordinates pair <uint16[](4)>
+#define ARG_CUSTOM 				(1<<10)  // Custom argument value <int>
+
+#ifndef __INPUT_MODULE__
+import bool IsKeyPressed(int) from "input";
+import bool IsMousePressed(int) from "input";
 import bool IsCtrlDown() from "input";
 import bool IsAltDown() from "input";
 import bool IsShiftDown() from "input";
+import void RegisterCommand(string,ClientScriptFunction@,int[]) from "input";
+import void RegisterCommand(string tag,ClientScriptFunction@ scriptName,int arg0 = ARG_VOID,int arg1 = ARG_VOID,int arg2 = ARG_VOID,int arg3 = ARG_VOID,int arg4 = ARG_VOID,int arg5 = ARG_VOID,int arg6 = ARG_VOID,int arg7 = ARG_VOID,int arg8 = ARG_VOID,int arg9 = ARG_VOID) from "input";
+import void RegisterCommand(string,string,int[]) from "input";
+import void RegisterCommand(string tag,string serverScriptName,int arg0 = ARG_VOID,int arg1 = ARG_VOID,int arg2 = ARG_VOID,int arg3 = ARG_VOID,int arg4 = ARG_VOID,int arg5 = ARG_VOID,int arg6 = ARG_VOID,int arg7 = ARG_VOID,int arg8 = ARG_VOID,int arg9 = ARG_VOID) from "input";
+import void RegisterArgument(string,string,int) from "input";
+import void RegisterHotkey(string@) from "input";
+import bool LimitCommand(string tag, uint ticks) from "input";
+import bool UnblockCommand(string tag) from "input";
+import bool IsWithoutConsole() from "input";
+import int[] Keys(int key0 = 0, int key1 = 0, int key2 = 0, int key3 = 0, int key4 = 0, int key5 = 0, int key6 = 0, int key7 = 0) from "input";
+#endif
 
 #endif // __INPUT__
+
+// Entity aliases for client side
+#ifdef __CLIENT
+	#ifndef Item 
+	#define Item ItemCl
+    #endif
+
+    #ifndef Critter
+	#define Critter CritterCl
+	#endif
+#endif
+
+// Client callables pattern
+funcdef void ClientScriptFunction(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt);
+
+// Universal arguments storage (<string & int[]>) <int|int[]|Critter|CritterCl|Item|ItemCl|string>
+shared class ArgumentValue
+{
+	int Type = ARG_VOID;
+	protected any _storage;
+
+	ArgumentValue@ opAssign(string& value){ // SET ARG_STRING
+		this._storage.store(value);
+		return this;
+	}
+	ArgumentValue@ opAssign(int& value){ // SET ARG_INT|ARG_STRING|ARG_CRITTER|ARG_ITEM|ARG_CUSTOM
+		this._storage.store(value);
+		return this;
+	}
+	ArgumentValue@ opAssign(uint& value){ // SET ARG_INT|ARG_STRING|ARG_CRITTER|ARG_ITEM|ARG_CUSTOM
+		this._storage.store(value);
+		return this;
+	}
+	ArgumentValue@ opAssign(int[]& values){ // SET ARG_INTS|ARG_CRITTERS|ARG_ITEMS
+		this._storage.store(values);
+		return this;	
+	}
+	ArgumentValue@ opAssign(uint[]& values){ // SET ARG_INTS|ARG_CRITTERS|ARG_ITEMS
+		this._storage.store(values);
+		return this;	
+	}
+	ArgumentValue@ opAssign(uint16[]& values){ // SET ARG_HEX|ARG_PATH
+		this._storage.store(values);
+		return this;		
+	}
+	string opImplConv(){ // SET ARG_STRING
+		string value;
+		this._storage.retrieve(value);
+		return value;
+	}
+	int opImplConv() { // GET ARG_INT|ARG_STRING|ARG_CRITTER|ARG_ITEM|ARG_CUSTOM
+		int value;
+		this._storage.retrieve(value);
+		return value;
+	}
+	int[] opImplConv() { // GET ARG_INTS|ARG_CRITTERS|ARG_ITEMS
+		int[] value;
+		this._storage.retrieve(value);
+		return value;
+	}
+	uint16[] opImplConv() { // GET ARG_HEX|ARG_PATH
+		uint16[] value;
+		this._storage.retrieve(value);
+		return value;
+	}
+	Critter@ opImplConv() { // GET ARG_CRITTER
+		int value;
+		this._storage.retrieve(value);
+		return GetCritter(value);
+	}
+	Item@ opImplConv() { // GET ARG_ITEM
+		int value;
+		this._storage.retrieve(value);
+		return GetItem(value);	
+	}
+	Critter@[] opImplConv() { // GET ARG_CRITTERS
+		Critter@[] result;
+		int[] value;
+		this._storage.retrieve(value);
+		for(uint pos = 0, len = value.length; pos < len; pos++) 
+			result.insertLast(GetCritter(value[pos]));
+		return result;
+	}
+	Item@[] opImplConv() { // GET ARG_ITEMS
+		Item@[] result;
+		int[] value;
+		this._storage.retrieve(value);
+		for(uint pos = 0, len = value.length; pos < len; pos++) 
+			result.insertLast(GetItem(value[pos]));
+		return result;
+	}
+}
+
+// Universal arguments storage (<string & int[]>) serializer
+shared class ArgumentSerializer{
+	protected ArgumentValue@[] Arg;
+	protected int[] ArgTypes;
+	ArgumentSerializer(){
+		return;
+	}
+	ArgumentSerializer@ Add(int argType, ArgumentValue@ value){
+		value.Type = argType;
+		this.ArgTypes.insertLast(argType);
+		this.Arg.insertLast(value);
+		return this;
+	}
+	ArgumentSerializer@ Add(int argType, int& value){
+		ArgumentValue container = value;
+		return this.Add(argType,container);
+	}
+	ArgumentSerializer@ Add(int argType, int[]& value){
+		ArgumentValue container = value;
+		return this.Add(argType,container);
+	}
+	ArgumentSerializer@ Add(int argType, uint16[]& value){
+		ArgumentValue container = value;
+		return this.Add(argType,container);
+	}
+	ArgumentSerializer@ Add(int argType, string& value){
+		ArgumentValue container = value;
+		return this.Add(argType,container);
+	}
+	ArgumentSerializer@ Serialize(string& argString, int[]& argInt){
+		// First element indicates that data array matches universal argument storage type
+		argInt.insertLast(ARG_STORAGE_FLAG);
+		for(uint pos = 0, length = this.ArgTypes.length; pos < length; pos++){
+			// Frame starts with argument type declaration
+			argInt.insertLast(this.ArgTypes[pos]);
+			switch(this.ArgTypes[pos]){
+				// 1 <int> arguments that are copied "as-is"
+				case ARG_INT:
+				case ARG_CUSTOM:
+				case ARG_ITEM: 
+				case ARG_CRITTER: {
+					int value = this.Arg[pos];
+					argInt.insertLast(value);
+				} break;
+
+				// For strings - argInt stores string length, argString - string itself
+				case ARG_STRING: {
+					string value = this.Arg[pos];
+					argString += value;
+					argInt.insertLast(value.length());
+				} break;
+
+				// <int>-array (first element == array length, all the rest are elements)
+				case ARG_INTS:
+				case ARG_CRITTERS:
+				case ARG_ITEMS: {
+					int[] value = this.Arg[pos];
+					argInt.insertLast(value.length);
+					for(uint i = 0, l = value.length; i < l; i++){
+						argInt.insertLast(value[i]);
+					}
+				} break;
+
+				// Hex coordinates - two numbers one after another
+				case ARG_HEX: {
+					uint16[] value = this.Arg[pos];
+					argInt.insertLast(int(value[0]));
+					argInt.insertLast(int(value[1]));
+				} break;
+
+				// Path - two hexes (four numbers one after another) 
+				case ARG_PATH: {
+					uint16[] value = this.Arg[pos];
+					argInt.insertLast(int(value[0]));
+					argInt.insertLast(int(value[1]));
+					argInt.insertLast(int(value[2]));
+					argInt.insertLast(int(value[3]));
+				} break;
+
+				// ARG_VOID, missing argument
+				default: continue;
+			}
+		}
+		return this;
+	}
+}
+
+// Universal argument storage (<string & int[]>) parser
+shared class ArgumentParser
+{
+	protected ArgumentValue[] Arg;
+	protected int[] ArgTypes;
+	// Amount of arguments <.length>
+	uint length{
+		get const{
+			return this.ArgTypes.length;
+		}
+	}
+	// Getting argument #
+	ArgumentValue@ opIndex(int index){
+		if(this.Arg.length <= index){
+			ArgumentValue emptyness;
+			emptyness.Type = ARG_VOID;
+			return emptyness;
+		} else {
+			return this.Arg[index];
+		}
+	}
+	// Checks if argument <argPos> matches type <argType>
+	bool MatchType(uint argPos, int argType){
+		if(this.ArgTypes.length <= argPos) return argType == ARG_VOID; 
+		return this.ArgTypes[argPos] == argType;
+	}
+	// Same, but for arguments pattern in one call (up to 10 arguments)
+	bool MatchPattern(
+		int arg0Type = ARG_VOID,
+		int arg1Type = ARG_VOID,
+		int arg2Type = ARG_VOID,
+		int arg3Type = ARG_VOID,
+		int arg4Type = ARG_VOID,
+		int arg5Type = ARG_VOID,
+		int arg6Type = ARG_VOID,
+		int arg7Type = ARG_VOID,
+		int arg8Type = ARG_VOID,
+		int arg9Type = ARG_VOID
+	){
+		return this.MatchType(0,arg0Type)
+			&& this.MatchType(1,arg1Type)
+			&& this.MatchType(2,arg2Type)
+			&& this.MatchType(3,arg3Type)
+			&& this.MatchType(4,arg4Type)
+			&& this.MatchType(5,arg5Type)
+			&& this.MatchType(6,arg6Type)
+			&& this.MatchType(7,arg7Type)
+			&& this.MatchType(8,arg8Type)
+			&& this.MatchType(9,arg9Type);
+	}
+	ArgumentParser(string argString, int[]@ argInt){
+		int sPos = 0, iPos = 0, aPos = 0; // Current position in argString, argInt and Arg|ArgTypes;
+		if(argInt.length < 2) { // Arguments array is too small or empty
+			return; 
+		}
+		if(argInt[iPos++] != ARG_STORAGE_FLAG) {  // Indicates that frame is actial universal arguments storage
+			Message("ERROR: Frame type can not be parsed!");
+			return;
+		}
+		// Processing each array value
+		for( uint pos = 0, length = argInt.length; iPos < length; pos++ ){
+			// First frame element == argument type
+			this.ArgTypes.resize(aPos + 1); 
+			this.Arg.resize(aPos + 1);
+			this.Arg[aPos].Type = this.ArgTypes[aPos] = argInt[iPos++]; 
+			// Setting value according to the type
+			switch( ArgTypes[aPos] ){
+				// 1 <int> arguments that are copied "as-is"
+				case ARG_INT:
+				case ARG_CUSTOM:
+				case ARG_ITEM: 
+				case ARG_CRITTER: {
+					this.Arg[aPos++] = argInt[iPos++];
+				} break;
+
+				// For strings - argInt stores string length, argString - string itself
+				case ARG_STRING: {
+					int strLength = argInt[iPos++];
+					this.Arg[aPos++] = substring(argString, sPos, strLength); 
+					sPos += strLength;
+				} break;
+
+				// <int>-array (first element == array length, all the rest are elements)
+				case ARG_INTS:
+				case ARG_CRITTERS:
+				case ARG_ITEMS: {
+					int intLength = argInt[iPos++]; 
+					int[] arr;
+					for(int endPos = iPos+intLength; iPos < endPos; iPos++){
+						arr.insertLast( argInt[iPos] );
+					}
+					this.Arg[aPos++] = arr;
+				} break;
+
+				// Hex coordinates - two numbers one after another
+				case ARG_HEX: {
+					uint16[] arr = { uint16(argInt[iPos++]), uint16(argInt[iPos++]) };
+					this.Arg[aPos] = arr;
+				} break;
+
+				// Path - two hexes (four numbers one after another) 
+				case ARG_PATH: {
+					uint16[] arr = { uint16(argInt[iPos++]), uint16(argInt[iPos++]), uint16(argInt[iPos++]), uint16(argInt[iPos++]) };
+					this.Arg[aPos] = arr;
+				} break;
+
+				// ARG_VOID, missing argument
+				default: {
+					int temp = 0;
+					this.Arg[aPos++] = temp;
+				} continue; 
+			}
+		}
+	}
+}

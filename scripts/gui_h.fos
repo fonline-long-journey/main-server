@@ -1498,8 +1498,8 @@ shared class GUIScreen : GUIPanel
     bool _IsMoveIgnoreBorders;
 
     // Workaround for input state accessing from shared code
-    bool[] @ _InputKeyPressed;
-    bool[] @ _InputMousePressed;
+    string @ _InputKeyPressed;
+    string @ _InputMousePressed;
 
     void _Show( dictionary@ params ) override
     {
@@ -2156,14 +2156,15 @@ shared class GUIConsole : GUITextInput
         }
 
         // Send
-        bool[] @ keyPressed = Screen._InputKeyPressed;
+        string @ keyPressed = Screen._InputKeyPressed;
+        /* @@todo chat mode hotkeys
         if( keyPressed[ DIK_LCONTROL ] || keyPressed[ DIK_RCONTROL ] )
             CustomCall( "ConsoleMessage\n/s" + _Text, "\n" );
         else if( keyPressed[ DIK_LMENU ] || keyPressed[ DIK_RMENU ] )
             CustomCall( "ConsoleMessage\n/w" + _Text, "\n" );
         else if( keyPressed[ DIK_LSHIFT ] || keyPressed[ DIK_RSHIFT ] )
             CustomCall( "ConsoleMessage\n/r" + _Text, "\n" );
-        else
+        else*/
             CustomCall( "ConsoleMessage\n" + _Text, "\n" );
 
         // Clear text

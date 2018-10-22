@@ -1,0 +1,237 @@
+#include "input_h.fos"
+#include "gui_h.fos"
+
+import void TryExit() from "gui_screens";
+import void NextCursor() from "gui_screens";
+
+void InputGlobalInit()
+{
+    // GLOBAL:EXIT
+	RegisterCommand("GLOBAL:EXIT",@__GlobalExit);
+    LimitCommand("GLOBAL:EXIT",300); // Can be executed once per 300 ticks
+    RegisterHotkey("ESCAPE; GLOBAL:EXIT");
+
+    // GLOBAL:DATE
+	RegisterCommand("GLOBAL:DATE",@__GlobalDate);
+    LimitCommand("GLOBAL:DATE",500); // Can be executed once per 500 ticks  
+    RegisterHotkey("SLASH; GLOBAL:DATE");
+
+    // CAMERA:MOVE
+    RegisterCommand(
+        "CAMERA:MOVE",
+        @__CameraMove,
+        ARG_CRITTER|ARG_CRITTERS|ARG_VOID,
+        ARG_HEX|ARG_CRITTER|ARG_CUSTOM|ARG_VOID
+    );
+	RegisterArgument("N",   "CAMERA:MOVE", 0);
+    RegisterArgument("NE",  "CAMERA:MOVE", 1);
+    RegisterArgument("E",   "CAMERA:MOVE", 2);
+    RegisterArgument("SE",  "CAMERA:MOVE", 3);
+    RegisterArgument("S",   "CAMERA:MOVE", 4);
+    RegisterArgument("SW",  "CAMERA:MOVE", 5);
+    RegisterArgument("W",   "CAMERA:MOVE", 6);
+    RegisterArgument("NW",  "CAMERA:MOVE", 7);
+    RegisterHotkey("UP;         CAMERA:MOVE; SELF, N");
+    RegisterHotkey("UP + RIGHT; CAMERA:MOVE; SELF, NE");
+    RegisterHotkey("RIGHT;      CAMERA:MOVE; SELF, E");
+    RegisterHotkey("DOWN+RIGHT; CAMERA:MOVE; SELF, SE");
+    RegisterHotkey("DOWN;       CAMERA:MOVE; SELF, S");
+    RegisterHotkey("DOWN+LEFT;  CAMERA:MOVE; SELF, SW");
+    RegisterHotkey("LEFT;       CAMERA:MOVE; SELF, W");
+    RegisterHotkey("UP + LEFT;  CAMERA:MOVE; SELF, NW");
+
+    // CAMERA:FOCUS
+    RegisterCommand(
+        "CAMERA:FOCUS",
+        @__CameraFocus,
+        ARG_CRITTER|ARG_CRITTERS|ARG_HEX
+    );
+    LimitCommand("CAMERA:FOCUS",500); // Can be executed once per 500 ticks
+    RegisterHotkey("HOME; CAMERA:FOCUS; SELF");
+
+    // CAMERA:FOLLOW
+    RegisterCommand(
+        "CAMERA:FOLLOW",
+        @__CameraFollow,
+        ARG_CRITTER|ARG_CRITTERS|ARG_HEX
+    );
+    LimitCommand("CAMERA:FOLLOW",500); // Can be executed once per 500 ticks
+    RegisterHotkey("SCROLL; CAMERA:FOLLOW; SELF");
+
+    // CAMERA:ZOOM
+    RegisterCommand(
+        "CAMERA:ZOOM",
+        @__CameraZoom,
+        ARG_CRITTER,
+        ARG_CUSTOM
+    );
+    LimitCommand("CAMERA:ZOOM",10);
+    RegisterArgument("DEFAULT", "CAMERA:ZOOM", 0 );
+    RegisterArgument("IN",      "CAMERA:ZOOM", 1 );
+    RegisterArgument("OUT",     "CAMERA:ZOOM", 2 );
+    RegisterHotkey("Z + MWU; CAMERA:ZOOM; SELF, IN");
+    RegisterHotkey("Z + MMB; CAMERA:ZOOM; SELF, DEFAULT");
+    RegisterHotkey("Z + MWD; CAMERA:ZOOM; SELF, OUT");
+
+    // GLOBAL:SCREEN
+    RegisterCommand(
+        "GLOBAL:SCREEN",
+        @__GlobalScreen,
+        ARG_CRITTER|ARG_CRITTERS,
+        ARG_CUSTOM
+    );
+    LimitCommand("GLOBAL:SCREEN",200); // Can be executed once per 500 ticks
+    RegisterArgument("CHARACTER", "GLOBAL:SCREEN", CLIENT_SCREEN_CHARACTER );
+    RegisterArgument("INVENTORY", "GLOBAL:SCREEN", CLIENT_SCREEN_INVENTORY );
+    RegisterArgument("PIP_BOY",   "GLOBAL:SCREEN", CLIENT_SCREEN_PIP_BOY );
+    RegisterArgument("FIX_BOY",   "GLOBAL:SCREEN", CLIENT_SCREEN_FIX_BOY );
+    RegisterArgument("MENU",      "GLOBAL:SCREEN", CLIENT_SCREEN_MENU );
+    RegisterArgument("SKILLBOX",  "GLOBAL:SCREEN", CLIENT_SCREEN_SKILLBOX );
+    RegisterArgument("MINIMAP",   "GLOBAL:SCREEN", CLIENT_SCREEN_MINIMAP );
+    RegisterHotkey("C;  GLOBAL:SCREEN;  SELF, CHARACTER");
+    RegisterHotkey("I;  GLOBAL:SCREEN;  SELF, INVENTORY");
+    RegisterHotkey("P;  GLOBAL:SCREEN;  SELF, PIP_BOY");
+    RegisterHotkey("F;  GLOBAL:SCREEN;  SELF, FIX_BOY");
+    RegisterHotkey("O;  GLOBAL:SCREEN;  SELF, MENU");  
+    RegisterHotkey("U;  GLOBAL:SCREEN;  SELF, SKILLBOX");  
+    RegisterHotkey("M;  GLOBAL:SCREEN;  SELF, MINIMAP");
+}
+
+// CAMERA:MOVE 
+void __CameraMove(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER,ARG_CUSTOM) ){
+        CritterCl@ player = Arguments[0];
+        int direction = Arguments[1];
+
+        if( player is GetChosen() && IsWithoutConsole() ){
+            switch(direction){
+                case 0: __ScrollKeybUp = true;                      break;
+                case 1: __ScrollKeybUp = __ScrollKeybRight = true;  break;
+                case 2: __ScrollKeybRight = true;                   break;
+                case 3: __ScrollKeybRight = __ScrollKeybDown = true;break;
+                case 4: __ScrollKeybDown = true;                    break;
+                case 5: __ScrollKeybDown = __ScrollKeybLeft = true; break;
+                case 6: __ScrollKeybLeft = true;                    break;
+                case 7: __ScrollKeybUp = __ScrollKeybLeft = true;   break;
+            }
+        }
+    }
+}
+
+// CAMERA:ZOOM
+void __CameraZoom(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER,ARG_CUSTOM) ){
+        CritterCl@ player = Arguments[0];
+        uint direction = Arguments[1];
+
+        if( player is GetChosen() && IsWithoutConsole() ){
+            switch(direction){
+                case 0:
+                    ChangeZoom( 1.0 );
+                break;
+                case 1:
+                    ChangeZoom( __SpritesZoom - 0.01 );
+                break;
+                case 2:
+                    ChangeZoom( __SpritesZoom + 0.01 );
+                break;
+            }
+        }
+    }
+}
+
+// CAMERA:FOCUS
+void __CameraFocus(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER) ){
+        CritterCl@ player = Arguments[0];
+
+        if( player is GetChosen() && IsWithoutConsole() ){
+            MoveScreen( player.HexX, player.HexY, 100, true );
+        }
+    }
+}
+
+// CAMERA:FOLLOW
+void __CameraFollow(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER) ){
+        CritterCl@ player = Arguments[0];
+
+        if( player is GetChosen() && IsWithoutConsole() ){
+            LockScreenScroll( player, true );
+        }
+    }
+}
+
+// GLOBAL:SCREEN
+void __GlobalScreen(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER,ARG_CUSTOM) ){
+        CritterCl@ player = Arguments[0];
+        int key = Arguments[1];
+
+        if( player is GetChosen() ){
+            GUIScreen@ screen = GUI_GetActiveScreen();
+            if( key == CLIENT_SCREEN_CHARACTER && ( screen.Index == CLIENT_MAIN_SCREEN_GAME || screen.Index == CLIENT_MAIN_SCREEN_GLOBAL_MAP ) )
+            {
+                ShowScreen( CLIENT_SCREEN_CHARACTER );
+                CritterCl@ chosen = GetChosen();
+                if( chosen !is null && chosen.ParamBase[ ST_UNSPENT_PERKS ] > 0 )
+                    ShowScreen( CLIENT_SCREEN_PERK );
+            }
+            else if( key == CLIENT_SCREEN_INVENTORY && ( screen.Index == CLIENT_MAIN_SCREEN_GAME || screen.Index == CLIENT_MAIN_SCREEN_GLOBAL_MAP ) )
+                ShowScreen( CLIENT_SCREEN_INVENTORY );
+            else if( key == CLIENT_SCREEN_PIP_BOY && ( screen.Index == CLIENT_MAIN_SCREEN_GAME || screen.Index == CLIENT_MAIN_SCREEN_GLOBAL_MAP ) )
+                ShowScreen( CLIENT_SCREEN_PIP_BOY );
+            else if( key == CLIENT_SCREEN_FIX_BOY && ( screen.Index == CLIENT_MAIN_SCREEN_GAME || screen.Index == CLIENT_MAIN_SCREEN_GLOBAL_MAP ) )
+                ShowScreen( CLIENT_SCREEN_FIX_BOY );
+            else if( key == CLIENT_SCREEN_MENU && ( screen.Index == CLIENT_MAIN_SCREEN_GAME || screen.Index == CLIENT_MAIN_SCREEN_GLOBAL_MAP ) )
+                ShowScreen( CLIENT_SCREEN_MENU );
+            else if( key == CLIENT_SCREEN_SKILLBOX && screen.Index == CLIENT_MAIN_SCREEN_GAME )
+                ShowScreen( CLIENT_SCREEN_SKILLBOX );
+            else if( key == CLIENT_SCREEN_MINIMAP && screen.Index == CLIENT_MAIN_SCREEN_GAME )
+                ShowScreen( CLIENT_SCREEN_MINIMAP );
+            // Close opened screen
+            else if(    
+                ( key == CLIENT_SCREEN_CHARACTER && screen.Index == CLIENT_SCREEN_CHARACTER ) 
+                || ( key == CLIENT_SCREEN_INVENTORY && screen.Index == CLIENT_SCREEN_INVENTORY ) 
+                || ( key == CLIENT_SCREEN_PIP_BOY && screen.Index == CLIENT_SCREEN_PIP_BOY ) 
+                || ( key == CLIENT_SCREEN_FIX_BOY && screen.Index == CLIENT_SCREEN_FIX_BOY ) 
+                || ( key == CLIENT_SCREEN_MENU && screen.Index == CLIENT_SCREEN_MENU ) 
+                || ( key == CLIENT_SCREEN_SKILLBOX && screen.Index == CLIENT_SCREEN_SKILLBOX ) 
+                || ( key == CLIENT_SCREEN_MINIMAP && screen.Index == CLIENT_SCREEN_MINIMAP ) 
+            ) TryExit();
+        }
+    }
+}
+
+// GLOBAL:EXIT (and game menu)
+void __GlobalExit(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+    TryExit();
+}
+
+// GLOBAL:SHUTDOWN 
+void __GlobalShutdown(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+	__Quit = true;
+}
+
+// GLOBAL:DUMP 
+void __GlobalDump(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+	CustomCall( "DumpAtlases" );
+}
+
+// GLOBAL:DATE
+void __GlobalDate(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){
+    string str = "Time: ";
+    str += ( __Day < 10 ? "0" : "" ) + __Day + ".";
+    str += ( __Month < 10 ? "0" : "" ) + __Month + ".";
+    str += __Year + " ";
+    str += ( __Hour < 10 ? "0" : "" ) + __Hour + ":";
+    str += ( __Minute < 10 ? "0" : "" ) + __Minute + ":";
+    str += ( __Second < 10 ? "0" : "" ) + __Second;
+    str += " x" + __TimeMultiplier;
+    Message( str, FOMB_GAME );
+}
