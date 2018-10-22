@@ -237,63 +237,70 @@ void __CritterMove(int arg0, int arg1, int arg2, string@ argString, int[]@ argIn
             // WASD movement
             uint[] currentAction;
             GetChosenActions(currentAction);
-            if( // Do not break unconventional movement
-                __geometryViolation 
-                && currentAction.length == 7 
-                && currentAction[0] == CHOSEN_MOVE
-            ) return;
             uint16 HexX = player.HexX, HexY = player.HexY;
-            if( __wasdAnchor >= 0 ) switch( (direction + __wasdAnchor) % 8 ){ // Match to camera direction
-                case 0: { // N
-                    __geometryViolation = true;
-                    MoveHexByDir(HexX,HexY,5,1);
-                    MoveHexByDir(HexX,HexY,0,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 1: { // NE
-                    __geometryViolation = false;
-                    MoveHexByDir(HexX,HexY,0,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 2: { // E
-                    __geometryViolation = false;
-                    MoveHexByDir(HexX,HexY,1,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 3: { // SE
-                    __geometryViolation = false;
-                    MoveHexByDir(HexX,HexY,2,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 4: { // S
-                    __geometryViolation = true;
-                    MoveHexByDir(HexX,HexY,3,1);
-                    MoveHexByDir(HexX,HexY,2,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 5: { // SW
-                    __geometryViolation = false;
-                    MoveHexByDir(HexX,HexY,3,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 6: { // W
-                    __geometryViolation = false;
-                    MoveHexByDir(HexX,HexY,4,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
-                case 7: { // NW
-                    __geometryViolation = false;
-                    MoveHexByDir(HexX,HexY,5,1);
-                    uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
-                    SetChosenActions(action);
-                } return;
+            if( __wasdAnchor >= 0 ) {
+                // Match to camera direction
+                int realDirection = (direction + __wasdAnchor) % 8;
+                switch( realDirection ){ 
+                    case 1: { // NE
+                        __geometryViolation = false;
+                        MoveHexByDir(HexX,HexY,0,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                    case 2: { // E
+                        __geometryViolation = false;
+                        MoveHexByDir(HexX,HexY,1,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                    case 3: { // SE
+                        __geometryViolation = false;
+                        MoveHexByDir(HexX,HexY,2,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                    case 5: { // SW
+                        __geometryViolation = false;
+                        MoveHexByDir(HexX,HexY,3,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                    case 6: { // W
+                        __geometryViolation = false;
+                        MoveHexByDir(HexX,HexY,4,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                    case 7: { // NW
+                        __geometryViolation = false;
+                        MoveHexByDir(HexX,HexY,5,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                }
+                if( // Avoid breaking unconventional movement by N/S moves
+                    __geometryViolation 
+                    && currentAction.length == 7 
+                    && currentAction[0] == CHOSEN_MOVE
+                ){  
+                    return; 
+                } else switch (realDirection) {
+                    case 0: { // N
+                        __geometryViolation = true;
+                        MoveHexByDir(HexX,HexY,5,1);
+                        MoveHexByDir(HexX,HexY,0,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                    case 4: { // S
+                        __geometryViolation = true;
+                        MoveHexByDir(HexX,HexY,3,1);
+                        MoveHexByDir(HexX,HexY,2,1);
+                        uint[] action = {CHOSEN_MOVE, int(HexX), int(HexY), isRun, 0, 0, 0};
+                        SetChosenActions(action);
+                    } return;
+                }
             } else { // Match to cursor position
                 Message("@@todo");
                 return;
