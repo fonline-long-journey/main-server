@@ -1,0 +1,183 @@
+#include "_defines.fos"
+
+#ifdef __SERVER
+// Function that is called each time the projectile collides with critter
+// If it returns TRUE, projectile gets destroyed, false - flies on further
+// Use it to apply damage, explosions and other stuff
+funcdef bool CollisionCallback(Critter@,Critter@,ProtoItem@,uint8,ProtoItem@);
+#endif
+
+
+Projectile@[] projectiles;
+
+class Projectile{
+	// Common area
+	float Lifespan;  // Cached lifespan in ticks
+	float Distance; // Cached lifespan in distance
+	uint16 FromX, FromY, ToX, ToY; // Start & finish positions
+	uint Timeout; // Tick in which projectile reaches destination point
+	bool IsValid = true; // If false, projectile is dead and can be overriden
+	float LastProgress = 0.0; // Cached progress
+	float Progress{get{ // Current progress in range 0.0 ... 1.0
+		this.LastProgress = (this.Lifespan-int(this.Timeout - GetTick())) / this.Lifespan;
+		return this.LastProgress;
+	}} 
+
+	#ifdef __SERVER
+	uint MapId;
+
+	CollisionCallback@ Collider; // Boolean function that is called each time projectile collides critter
+	ProtoItem@ Weapon;
+	uint8 WeaponMode;
+	ProtoItem@ Ammo;
+	uint ShooterId = 0; // Critter.Id
+
+	void ApplyProgress(float progress, uint16& currentX, uint16& currentY){
+		currentX = uint16(floor( this.FromX + progress * (this.ToX - this.FromX) ));
+		currentY = uint16(floor( this.FromY + progress * (this.ToY - this.FromY) ));
+	}
+
+	Projectile(
+		uint mapId, 	// this.MapId
+		uint shooterId, // Critter.Id
+		uint16 fromX,   // this.FromX
+		uint16 fromY, 	// this.FromY
+		uint16 toX,		// this.ToX
+		uint16 toY,		// this.ToY
+		float speed,	// Hexes per 1000 ticks (1 second)
+		ProtoItem@ weapon,
+		uint8 weaponMode,
+		ProtoItem@ ammo
+	) {
+		// Override expired projectile in registry if exists
+		bool overrides = false;
+		for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(!projectiles[pos].IsValid){
+			overrides = true;
+			@projectiles[pos] = this;
+			break;
+		}
+		// Else just append it to registry
+		if(!overrides) projectiles.insertLast(this);
+		// Distance calculation
+		this.Distance = sqrt(pow(toX - fromX,2) + pow(toY - fromY,2));
+		// Calculate timestamp for the moment when projectile is up to reach the destination point
+		uint tick = GetTick();
+		this.Timeout = uint(floor( tick + ( this.Distance / speed * 1000 ) ));
+		this.Lifespan = float(this.Timeout - tick);
+		// Cache the rest of arguments
+		this.MapId = mapId;
+		this.ShooterId = shooterId;
+		this.FromX = fromX;
+		this.FromY = fromY;
+		this.ToX = toX;
+		this.ToY = toY;
+		@this.Weapon = weapon;
+		this.WeaponMode = weaponMode;
+		@this.Ammo = ammo;
+	}
+	void Loop(Critter@[]& critters){ // Should be called in loop, used to check collisions
+		float lastProgress = this.LastProgress;
+		float currentProgress = this.Progress;
+
+		// If destination is reached, invalidate the projectile
+		if(currentProgress >= 1.0) this.IsValid = false;
+
+		// Get the path projectile flied past last loop call
+		uint16 fromX=0, fromY=0, toX=0, toY=0; 
+		this.ApplyProgress(lastProgress,fromX,fromY);
+		this.ApplyProgress(currentProgress,toX,toY);
+		uint distance = uint(ceil( (currentProgress - lastProgress) * this.Distance ));
+
+		// Now we have to find all critters between these points and call Collider function for 'em
+		Map@ map = GetMap(this.MapId);
+		if(map is null){
+			this.IsValid = false;
+			return;
+		}
+
+		Critter@ shooter = GetCritter(this.ShooterId);
+		for(uint pos = 0, length = critters.length; pos < length; pos++) if(critters[pos] !is null){  
+			// critters contain all critters along full path, need to check which were crossed during this loop
+			if(
+				critters[pos].HexX >= fromX &&
+				critters[pos].HexX <= toX 	&&
+				critters[pos].HexY >= fromY &&
+				critters[pos].HexY <= toY 
+			) {
+				// Critters gets shot
+				if(this.Collider is null) {
+					critters[pos].Say(SAY_NORM_ON_HEAD,"!"); // Debug
+				} else {
+					this.Collider(shooter,critters[pos],this.Weapon,this.WeaponMode,this.Ammo);
+				}
+			}
+		}
+	}
+	#endif
+}
+
+#ifdef __SERVER
+void ProjectileLoop(){ // Export
+	dictionary critters;
+	for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(projectiles[pos].IsValid) {
+		string key = projectiles[pos].FromX+":"+projectiles[pos].FromY+":"+projectiles[pos].ToX+":"+projectiles[pos].ToY;
+		if( !critters.exists(key) ){
+			Critter@[] result;
+			Map@ map = GetMap(projectiles[pos].MapId);
+			map.GetCrittersPath(
+				projectiles[pos].FromX,
+				projectiles[pos].FromY,
+				projectiles[pos].ToX,
+				projectiles[pos].ToY,
+				0.0f,
+				GetDistantion(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY),
+				FIND_LIFE_AND_KO,
+				result
+			);
+			critters.set(key,result);
+			projectiles[pos].Loop( result );
+
+		} else projectiles[pos].Loop( cast<Critter@[]>(critters[key]) );
+	}
+}
+void AddProjectile( // Export
+	uint mapId, 	// this.MapId
+	uint shooterId, // Critter.Id
+	uint16 fromX,   // this.FromX
+	uint16 fromY, 	// this.FromY
+	uint16 toX,		// this.ToX
+	uint16 toY,		// this.ToY
+	float speed,	// Hexes per 1000 ticks (1 second)
+	ProtoItem@ weapon,
+	uint8 weaponMode,
+	ProtoItem@ ammo
+) {
+	Projectile@ projectile = Projectile(mapId,shooterId,fromX,fromY,toX,toY,speed,weapon,weaponMode,ammo);
+}
+// ~run
+void Test(Critter& player, int xx, int yy, int speedD){
+	Map@ map =  player.GetMap();
+	uint mapId = map.Id;
+	uint shooterId = player.Id;
+	uint16 fromX = player.HexX;
+	uint16 fromY = player.HexY;
+	uint16 toX = uint16(fromX + xx);
+	uint16 toY = uint16(fromY + yy);
+	map.GetHexCoord(fromX,fromY,toX,toY,0.0f,100);
+	float speed = speedD / 10.0;
+	ProtoItem@ weapon = null;
+	uint8 weaponMode = 0;
+	ProtoItem@ ammo = null;
+	map.SetText(fromX, fromY, 0x99ff9999, "@");
+	map.SetText(toX, toY, 0x99ff99ff, "#");
+	player.Say(1,fromX+":"+fromY+"/"+toX+":"+toY);
+
+	Projectile@ projectile = Projectile(mapId,shooterId,fromX,fromY,toX,toY,speed,weapon,weaponMode,ammo);
+}
+#endif
+
+#ifdef __CLIENT
+void __Register(int param0, int param1, int param2, string@ param3, int[]@ param4){
+	// 
+}
+#endif

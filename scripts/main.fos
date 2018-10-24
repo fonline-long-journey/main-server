@@ -67,6 +67,7 @@ import void logger( Critter& cr, int type, string@ message ) from "logger";
 import void refreshnames(Critter& player) from "gm";
 import void InitCritterTypes() from "critter_types";
 import void WeatherInit() from "weather";
+import void ProjectileLoop() from "projectile";
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Called before world generation.
@@ -210,10 +211,10 @@ void finish()
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call every returned value, in milliseconds.
 // Return next call in milliseconds or zero to disable loop.
-int loopturn = 0;
+//int loopturn = 0; @@todo fix this shit
 uint loop()
 {
-	Critter@[] crs;
+	/*Critter@[] crs;
 	GetAllPlayers(crs);
 	for(uint i = 0; i < crs.length; ++i)
 		crs[i].RunClientScript("rp_client@AccessCallback", crs[i].GetAccess(), 0, 0, null, null);
@@ -224,10 +225,14 @@ uint loop()
 		if(crs[f].ParamBase[ ST_MODER ] > 0 && crs[f].GetAccess() >= ACCESS_MODER && !FLAG(crs[f].Flags, CRITTER_DISCONNECT) )
 			refreshnames(crs[f]);
 	loopturn = 0;
-	}
+	}*/
+
+    if(GetTick() % 10 == 0){ // Projectiles collision calculation (smaller === more load & more accuracy)
+        ProjectileLoop();
+    }
 	
-	++loopturn;
-    return 1000;
+	//++loopturn;
+    return 1;
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
