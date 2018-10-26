@@ -1,0 +1,31 @@
+// By Erandelax aka Sjaman 26/10/2018
+
+#ifdef __SERVER
+
+	// Collision function runs where bullet collides with a critter on its way
+	// If it returns TRUE, projectile dies, else - continues its flight
+	funcdef bool CollisionCallback(Map@ map, Critter@ shooter,Critter@ target,Item@ weapon, ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo);
+	// Dropper function runs where bullet hits a wall or flies out into the space (when nothing was hit in time)
+	funcdef void DropCallback(Map@ map, Critter@ shooter,uint16 targetHexX,uint16 targetHexY,Item@ weapon,ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo);
+	// These functions can be used to spawn grenades, other projectiles, explosions and of course, for damage application
+
+	#ifndef __PROJECTILE__
+		import uint8[]@ AddProjectile(
+			Map& map,
+			Critter@ shooter,
+			uint16 fromX,
+			uint16 fromY,
+			uint16 toX,
+			uint16 toY,
+			Item@ weapon,
+			ProtoItem& weaponProto,
+			uint8 weaponMode,
+			ProtoItem@ ammo,
+			uint timestamp, 			// Tick when projectile should start its flight
+			float speed,				// Hexes per second
+			CollisionCallback@ collider,
+			DropCallback@ dropper
+		) from "projectile";
+	#endif
+
+#endif

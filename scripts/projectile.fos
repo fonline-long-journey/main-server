@@ -1,183 +1,267 @@
+// By Erandelax aka Sjaman 26/10/2018
+
+// @@todo клиентская часть, оптимизиация, проблема GetTick overflow (UINT_MAX -> UINT_MIN)
+
 #include "_defines.fos"
+#define __PROJECTILE__
+#include "projectile_h.fos"
 
 #ifdef __SERVER
-// Function that is called each time the projectile collides with critter
-// If it returns TRUE, projectile gets destroyed, false - flies on further
-// Use it to apply damage, explosions and other stuff
-funcdef bool CollisionCallback(Critter@,Critter@,ProtoItem@,uint8,ProtoItem@);
+	Projectile@[] projectiles; // Server-wide registry of projectiles
+
+	// Export -> combat.fos
+	// Registers new server side projectile
+	// @return serialized projectile info for RunClientScripts
+	uint8[]@ AddProjectile(
+		Map& map,
+		Critter@ shooter,
+		uint16 fromX,
+		uint16 fromY,
+		uint16 toX,
+		uint16 toY,
+		Item@ weapon,
+		ProtoItem& weaponProto,
+		uint8 weaponMode,
+		ProtoItem@ ammo,
+		uint timestamp, 		// Tick when projectile should start its flight
+		float speed,				// Hexes per second
+		CollisionCallback@ collider,
+		DropCallback@ dropper
+	) { 
+		// Create new projectile
+		Projectile@ projectile = Projectile(
+			map,
+			@shooter,
+			fromX,
+			fromY,
+			toX,
+			toY,
+			@weapon,
+			weaponProto,
+			weaponMode,
+			ammo,
+			timestamp, 			// Tick when projectile should start its flight
+			speed,				// Hexes per second
+			@collider,
+			@dropper
+		);
+
+		// Add projectile to registry
+		bool appendToRegistry = true;
+		for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(!projectiles[pos].IsValid){
+			appendToRegistry = false;
+			@projectiles[pos] = projectile;
+			break;
+		}
+		if(appendToRegistry) projectiles.insertLast(@projectile);
+
+		// Return serialized projectile for passage to clients
+		return projectile.Serialize();
+	}
+
+	// Export -> main.fos::loop()
+	// Projectile flight processor (run every N ticks, more ticks - less lags, less collision detection accuracy) 
+	void ProjectileLoop(){
+		dictionary critterCache; // Cached list of critters within projectile flight trajectory
+
+		for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(projectiles[pos] !is null && projectiles[pos].IsValid) {
+			// Key of current projectile trajectory inside "critterStorage" dictionary
+			string key = projectiles[pos].MapId+"."+projectiles[pos].FromX+"."+projectiles[pos].FromY+"."+projectiles[pos].ToX+"."+projectiles[pos].ToY;
+			
+			// If there is no cached list for it, create it
+			if( !critterCache.exists(key) ){ 
+				Critter@[] result;
+				Map@ map = GetMap(projectiles[pos].MapId);
+				map.GetCrittersPath(
+					projectiles[pos].FromX,
+					projectiles[pos].FromY,
+					projectiles[pos].ToX,
+					projectiles[pos].ToY,
+					0.0f,
+					GetDistantion(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY),
+					FIND_ALL,
+					result
+				);
+				@critterCache[key] = result;
+				projectiles[pos].Loop(@result);
+
+			// If there is cached list of trajectory critter collisions, use it
+			} else {
+				Critter@[]@ result = cast<Critter@[]@>(@critterCache[key]);
+				projectiles[pos].Loop( @result );
+			}
+		}
+	}
 #endif
 
+class Projectile {
+	// __SERVER + __CLIENT definitions
+	bool IsValid = true; 		   			// When FALSE, projectile is not processed & will be garbage-collected
+	uint16 FromX, FromY, ToX, ToY;			// Start & finish positions
+	protected bool  IsInstant;				// If TRUE, projectile flies all the path in one loop (for lasers, etc)
+	protected uint  Lifespan; 	   			// [CACHE] How many ticks should our projectile live after the launch
+	protected uint  Distance; 	   			// [CACHE] How many hexes should it fly after the launch
+	protected uint  Timestamp;				// Tick, when projectile should start its flight
+	protected uint  Timeout;				// Tick, in which projectile should arrive at its destination point
+	protected float LastProgress = 0.0; 	// [CACHE] Cached progress
+	protected float Progress{get{ 			// Current progress (in range <0.0 ... 1.0> projectile is flying)
+		uint tick = GetTick();
+		if(this.Timestamp > tick) return 0.0;
+		else if(this.Timeout < tick) return 1.0;
 
-Projectile@[] projectiles;
-
-class Projectile{
-	// Common area
-	float Lifespan;  // Cached lifespan in ticks
-	float Distance; // Cached lifespan in distance
-	uint16 FromX, FromY, ToX, ToY; // Start & finish positions
-	uint Timeout; // Tick in which projectile reaches destination point
-	bool IsValid = true; // If false, projectile is dead and can be overriden
-	float LastProgress = 0.0; // Cached progress
-	float Progress{get{ // Current progress in range 0.0 ... 1.0
-		this.LastProgress = (this.Lifespan-int(this.Timeout - GetTick())) / this.Lifespan;
+		this.LastProgress = float(this.Lifespan-int(this.Timeout - tick)) / this.Lifespan;
 		return this.LastProgress;
 	}} 
 
 	#ifdef __SERVER
-	uint MapId;
+		uint ShooterId; 
+		uint MapId;		
+		uint WeaponId;
+		ProtoItem@ WeaponProto;
+		uint8 WeaponMode;
+		ProtoItem@ Ammo;
+		protected uint[] CritterHit;
+		protected CollisionCallback@ Collider;
+		protected DropCallback@	     Dropper;
 
-	CollisionCallback@ Collider; // Boolean function that is called each time projectile collides critter
-	ProtoItem@ Weapon;
-	uint8 WeaponMode;
-	ProtoItem@ Ammo;
-	uint ShooterId = 0; // Critter.Id
-
-	void ApplyProgress(float progress, uint16& currentX, uint16& currentY){
-		currentX = uint16(floor( this.FromX + progress * (this.ToX - this.FromX) ));
-		currentY = uint16(floor( this.FromY + progress * (this.ToY - this.FromY) ));
-	}
-
-	Projectile(
-		uint mapId, 	// this.MapId
-		uint shooterId, // Critter.Id
-		uint16 fromX,   // this.FromX
-		uint16 fromY, 	// this.FromY
-		uint16 toX,		// this.ToX
-		uint16 toY,		// this.ToY
-		float speed,	// Hexes per 1000 ticks (1 second)
-		ProtoItem@ weapon,
-		uint8 weaponMode,
-		ProtoItem@ ammo
-	) {
-		// Override expired projectile in registry if exists
-		bool overrides = false;
-		for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(!projectiles[pos].IsValid){
-			overrides = true;
-			@projectiles[pos] = this;
-			break;
-		}
-		// Else just append it to registry
-		if(!overrides) projectiles.insertLast(this);
-		// Distance calculation
-		this.Distance = sqrt(pow(toX - fromX,2) + pow(toY - fromY,2));
-		// Calculate timestamp for the moment when projectile is up to reach the destination point
-		uint tick = GetTick();
-		this.Timeout = uint(floor( tick + ( this.Distance / speed * 1000 ) ));
-		this.Lifespan = float(this.Timeout - tick);
-		// Cache the rest of arguments
-		this.MapId = mapId;
-		this.ShooterId = shooterId;
-		this.FromX = fromX;
-		this.FromY = fromY;
-		this.ToX = toX;
-		this.ToY = toY;
-		@this.Weapon = weapon;
-		this.WeaponMode = weaponMode;
-		@this.Ammo = ammo;
-	}
-	void Loop(Critter@[]& critters){ // Should be called in loop, used to check collisions
-		float lastProgress = this.LastProgress;
-		float currentProgress = this.Progress;
-
-		// If destination is reached, invalidate the projectile
-		if(currentProgress >= 1.0) this.IsValid = false;
-
-		// Get the path projectile flied past last loop call
-		uint16 fromX=0, fromY=0, toX=0, toY=0; 
-		this.ApplyProgress(lastProgress,fromX,fromY);
-		this.ApplyProgress(currentProgress,toX,toY);
-		uint distance = uint(ceil( (currentProgress - lastProgress) * this.Distance ));
-
-		// Now we have to find all critters between these points and call Collider function for 'em
-		Map@ map = GetMap(this.MapId);
-		if(map is null){
-			this.IsValid = false;
-			return;
+		Projectile(
+			Map& map,
+			Critter@ shooter,
+			uint16 fromX,
+			uint16 fromY,
+			uint16 toX,
+			uint16 toY,
+			Item@ weapon,
+			ProtoItem& weaponProto,
+			uint8 weaponMode,
+			ProtoItem@ ammo,
+			uint timestamp, 			// Tick when projectile should start its flight
+			float speed,				// Hexes per second
+			CollisionCallback@ collider,
+			DropCallback@ dropper
+		) {
+			uint tick = GetTick();
+			this.Distance = GetDistantion(fromX,fromY,toX,toY); //sqrt(pow(toX - fromX,2) + pow(toY - fromY,2));
+			this.Timestamp = timestamp;
+			if(speed < 0.0f) speed = (-1) * speed; // Shit happens
+			if(speed != 0 && this.Distance > 2.0){
+				this.Timeout = uint(floor( timestamp + ( this.Distance / speed * 1000 ) ));
+				this.Lifespan = this.Timeout - timestamp;
+				this.IsInstant = false;
+			} else {
+				this.Timeout  = timestamp;
+				this.Lifespan = 0.0f;
+				this.IsInstant = true;
+			}
+			this.MapId = map.Id;
+			this.ShooterId = shooter is null ? 0 : shooter.Id;
+			this.FromX = fromX;
+			this.FromY = fromY;
+			this.ToX = toX;
+			this.ToY = toY;
+			this.WeaponId = weapon is null ? 0 : weapon.Id;
+			@this.WeaponProto = weaponProto;
+			this.WeaponMode = weaponMode;
+			@this.Ammo = ammo;
+			@this.Collider = collider;
+			@this.Dropper = dropper;
 		}
 
-		Critter@ shooter = GetCritter(this.ShooterId);
-		for(uint pos = 0, length = critters.length; pos < length; pos++) if(critters[pos] !is null){  
-			// critters contain all critters along full path, need to check which were crossed during this loop
-			if(
-				critters[pos].HexX >= fromX &&
-				critters[pos].HexX <= toX 	&&
-				critters[pos].HexY >= fromY &&
-				critters[pos].HexY <= toY 
-			) {
-				// Critters gets shot
-				if(this.Collider is null) {
-					critters[pos].Say(SAY_NORM_ON_HEAD,"!"); // Debug
+		uint8[]@ Serialize(){ // CLIENT EXPORT @@todo
+			return null;
+		}
+
+		void ApplyProgress(float progress, uint16& currentX, uint16& currentY){
+			if (progress <= 0.0) {
+				currentX = this.FromX;
+				currentY = this.FromY;
+			} else if(progress >= 1.0) {
+				currentX = this.ToX;
+				currentY = this.ToY;
+			} else {
+				currentX = uint16(floor( int(this.FromX) + progress * (int(this.ToX) - int(this.FromX)) ));
+				currentY = uint16(floor( int(this.FromY) + progress * (int(this.ToY) - int(this.FromY)) ));
+			}
+		}
+
+		void Loop(Critter@[]@ critters){
+			if( this.Timestamp > GetTick() ) return; // skip loop if is not yet ready to fire
+
+			uint16 fromX=this.FromX, fromY=this.FromY, toX=this.ToX, toY=this.ToY; 
+			float lastProgress = 0.0, currentProgress = 1.0;
+
+			// Pick just a part/segment of the full path if it takes few loops to fly through
+			if( !this.IsInstant ){
+				lastProgress = this.LastProgress;
+				currentProgress = this.Progress;
+
+				// If final destination point is reached, invalidate
+				if(currentProgress >= 1.0) this.IsValid = false;
+
+				// Get the path projectile flied past the last loop call
+				this.ApplyProgress(lastProgress,fromX,fromY);
+				this.ApplyProgress(currentProgress,toX,toY);
+			}
+
+			// Now we 'll find all critters it collided with during that flight and apply Collider function to them
+			Map@ map = GetMap(this.MapId);
+			if(map is null){ this.IsValid = false; return; } // Not likely to happen, but still probable
+
+			for(uint pos = 0, length = critters.length; pos < length; pos++) if( critters[pos] !is null ) {
+				uint16 x = critters[pos].HexX, y = critters[pos].HexY;
+				if(
+					(( x >= fromX && x <= toX ) || (x <= fromX && x >= toX)) &&
+					(( y >= fromY && y <= toY ) || (y <= fromY && y >= toY))
+				){
+					// Skip if this is shooter himself
+					if( critters[pos].HexX == this.FromX && critters[pos].HexY == this.FromY ) continue;
+
+					// Skip if critter was already hit before @@todo optimize this ugly
+					if( this.CritterHit.find(critters[pos].Id) >= 0 ) continue;
+					
+					// Critter gets shot
+					if( this.Collider is null ) {
+						critters[pos].Say(SAY_SHOUT,(GetTick() - this.Timestamp)+"мс" ); // Debug
+						// Prevent further hits on this trajectory during this projectile
+						this.CritterHit.insertLast(critters[pos].Id);
+						return;
+					} else if( this.Collider(
+						GetMap(this.MapId),
+						this.ShooterId != 0 ? GetCritter(this.ShooterId) : null,
+						@critters[pos],
+						this.WeaponId != 0 ? GetItem(this.WeaponId) : null,
+						this.WeaponProto,
+						this.WeaponMode,
+						this.Ammo
+					) ) {
+						this.IsValid = false;
+						// Prevent further hits on this trajectory during this projectile
+						this.CritterHit.insertLast(critters[pos].Id);
+						return;
+					}
+				}
+			}
+
+			map.SetText(fromX,fromY,0xFFFF9999,"+");
+
+			// If no collisions happened & flight is over, call dropper
+			if(currentProgress == 1.0){
+				if( this.Dropper is null ){ // Debug
+					map.SetText(this.ToX,this.ToY,0xFF999999,"...");
 				} else {
-					this.Collider(shooter,critters[pos],this.Weapon,this.WeaponMode,this.Ammo);
+					// DropCallback(Map@ map, Critter@ shooter,uint16 targetHexX,uint16 targetHexY,Item@ weapon,ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo);
+					this.Dropper(
+						GetMap(this.MapId),
+						this.ShooterId != 0 ? GetCritter(this.ShooterId) : null,
+						this.ToX,
+						this.ToY,
+						this.WeaponId != 0 ? GetItem(this.WeaponId) : null,
+						this.WeaponProto,
+						this.WeaponMode,
+						this.Ammo
+					);
 				}
 			}
 		}
-	}
 	#endif
 }
-
-#ifdef __SERVER
-void ProjectileLoop(){ // Export
-	dictionary critters;
-	for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(projectiles[pos].IsValid) {
-		string key = projectiles[pos].FromX+":"+projectiles[pos].FromY+":"+projectiles[pos].ToX+":"+projectiles[pos].ToY;
-		if( !critters.exists(key) ){
-			Critter@[] result;
-			Map@ map = GetMap(projectiles[pos].MapId);
-			map.GetCrittersPath(
-				projectiles[pos].FromX,
-				projectiles[pos].FromY,
-				projectiles[pos].ToX,
-				projectiles[pos].ToY,
-				0.0f,
-				GetDistantion(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY),
-				FIND_LIFE_AND_KO,
-				result
-			);
-			critters.set(key,result);
-			projectiles[pos].Loop( result );
-
-		} else projectiles[pos].Loop( cast<Critter@[]>(critters[key]) );
-	}
-}
-void AddProjectile( // Export
-	uint mapId, 	// this.MapId
-	uint shooterId, // Critter.Id
-	uint16 fromX,   // this.FromX
-	uint16 fromY, 	// this.FromY
-	uint16 toX,		// this.ToX
-	uint16 toY,		// this.ToY
-	float speed,	// Hexes per 1000 ticks (1 second)
-	ProtoItem@ weapon,
-	uint8 weaponMode,
-	ProtoItem@ ammo
-) {
-	Projectile@ projectile = Projectile(mapId,shooterId,fromX,fromY,toX,toY,speed,weapon,weaponMode,ammo);
-}
-// ~run
-void Test(Critter& player, int xx, int yy, int speedD){
-	Map@ map =  player.GetMap();
-	uint mapId = map.Id;
-	uint shooterId = player.Id;
-	uint16 fromX = player.HexX;
-	uint16 fromY = player.HexY;
-	uint16 toX = uint16(fromX + xx);
-	uint16 toY = uint16(fromY + yy);
-	map.GetHexCoord(fromX,fromY,toX,toY,0.0f,100);
-	float speed = speedD / 10.0;
-	ProtoItem@ weapon = null;
-	uint8 weaponMode = 0;
-	ProtoItem@ ammo = null;
-	map.SetText(fromX, fromY, 0x99ff9999, "@");
-	map.SetText(toX, toY, 0x99ff99ff, "#");
-	player.Say(1,fromX+":"+fromY+"/"+toX+":"+toY);
-
-	Projectile@ projectile = Projectile(mapId,shooterId,fromX,fromY,toX,toY,speed,weapon,weaponMode,ammo);
-}
-#endif
-
-#ifdef __CLIENT
-void __Register(int param0, int param1, int param2, string@ param3, int[]@ param4){
-	// 
-}
-#endif

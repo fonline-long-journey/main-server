@@ -1,0 +1,7 @@
+// by Erandelax aka Sjaman 24/10/2018
+funcdef bool MenuActionCallback(int,int,string@);
+
+#ifndef __GUI_MENU__
+import void ShowMenu(dictionary@,int,int) from "gui_menu";
+import MenuActionCallback@ MenuAction(MenuActionCallback@) from "gui_menu";
+#endif

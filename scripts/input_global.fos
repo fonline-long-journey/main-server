@@ -1,5 +1,7 @@
 #include "input_h.fos"
 #include "gui_h.fos"
+#include "gui_menu_h.fos"
+#include "_client_defines.fos"
 
 import void TryExit() from "gui_screens";
 import void NextCursor() from "gui_screens";
@@ -95,6 +97,18 @@ void InputGlobalInit()
     RegisterHotkey("O;  GLOBAL:SCREEN;  SELF, MENU");  
     RegisterHotkey("U;  GLOBAL:SCREEN;  SELF, SKILLBOX");  
     RegisterHotkey("M;  GLOBAL:SCREEN;  SELF, MINIMAP");
+
+    RegisterCommand(
+        "GLOBAL:CURSOR",
+        @__GlobalCursor,
+        ARG_CRITTER,
+        ARG_CUSTOM
+    );
+    LimitCommand("GLOBAL:CURSOR",200);
+    RegisterArgument("ATTACK","GLOBAL:CURSOR",CURSOR_USE_WEAPON);
+    RegisterArgument("DEFAULT","GLOBAL:CURSOR",CURSOR_DEFAULT);
+    RegisterArgument("MOVE","GLOBAL:CURSOR",CURSOR_MOVE);
+    RegisterHotkey("E; GLOBAL:CURSOR; SELF, ATTACK");
 }
 
 // CAMERA:MOVE 
@@ -162,6 +176,20 @@ void __CameraFollow(int arg0, int arg1, int arg2, string@ argString, int[]@ argI
 
         if( player is GetChosen() && IsWithoutConsole() ){
             LockScreenScroll( player, true );
+        }
+    }
+}
+
+// GLOBAL:CURSOR
+void __GlobalCursor(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){ 
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER,ARG_CUSTOM) ){
+        CritterCl@ player = Arguments[0];
+        int newCursor = Arguments[1];
+
+        if( player is GetChosen() ){
+            int currentCursor = GetCurrentCursor();
+            ChangeCursor( currentCursor == newCursor ? CURSOR_DEFAULT : newCursor);
         }
     }
 }

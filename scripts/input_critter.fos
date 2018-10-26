@@ -7,6 +7,8 @@ import void ThrowingKeyUp( uint8 key ) from "throwing";
 import void ThrowingInputLost() from "throwing";
 import bool ThrowingMouseDown( int click ) from "throwing";
 
+import void Attack(int screenX, int screenY) from "combat";
+
 void InputCritterInit() // CRITTER:
 {
     // Critter movement
@@ -70,6 +72,30 @@ void InputCritterInit() // CRITTER:
     LimitCommand("CRITTER:PICKUP", 100);
     // Hotkeys
     RegisterHotkey("G; CRITTER:PICKUP; SELF");
+
+
+    RegisterCommand(
+        "CRITTER:ATTACK",
+        @__CritterAttack,
+        ARG_CRITTER|ARG_CRITTERS,
+        ARG_HEX|ARG_CRITTER|ARG_ITEM
+    );
+    LimitCommand("CRITTER:ATTACK",150);
+    RegisterHotkey("Q; CRITTER:ATTACK; SELF, TARGET");
+
+}
+
+// CRITTER:ATTACK
+void __CritterAttack(int arg0, int arg1, int arg2, string@ argString, int[]@ argInt){
+    ArgumentParser@ Arguments = ArgumentParser(argString,argInt);
+    if( Arguments.MatchPattern(ARG_CRITTER,ARG_HEX) ){
+        CritterCl@ player = Arguments[0];
+        uint16[] position = Arguments[1];
+
+        if(player is GetChosen()){
+            Attack(__MouseX,__MouseY);
+        }
+    }
 }
 
 // CRITTER:PICKUP

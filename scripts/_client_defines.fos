@@ -129,6 +129,7 @@
 #define CLIENT_SCREEN_TEST                 ( 40 ) // client_screen_test.fos
 #define CLIENT_SCREEN_RADIO                ( 41 ) // radio.fos
 #define CLIENT_SCREEN_CHARACTER_TLJ		   ( 42 ) // The Long Journey custom character screen.
+#define CLIENT_SCREEN_DYNAMIC_MENU		   ( 43 )
 
 // Cursors
 #define CURSOR_DEFAULT                     ( 0 )

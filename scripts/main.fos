@@ -214,6 +214,8 @@ void finish()
 //int loopturn = 0; @@todo fix this shit
 uint loop()
 {
+    uint tick = GetTick();
+
 	/*Critter@[] crs;
 	GetAllPlayers(crs);
 	for(uint i = 0; i < crs.length; ++i)
@@ -226,6 +228,7 @@ uint loop()
 			refreshnames(crs[f]);
 	loopturn = 0;
 	}*/
+
 
     if(GetTick() % 10 == 0){ // Projectiles collision calculation (smaller === more load & more accuracy)
         ProjectileLoop();
@@ -1650,6 +1653,8 @@ void karma_voting( Critter& crFrom, Critter& crTo, bool valUp )
 // Note: CRITTER_EVENT_SHOW_CRITTER_X, CRITTER_EVENT_HIDE_CRITTER_X is not processed.
 bool check_look( Map& map, Critter& cr, Critter& opponent )
 {
+    if( cr.IsPlayer() && cr.GetMap() is null ){ return true; }
+
     if( opponent.Mode[ MODE_HIDE ] > 0 && opponent.GetAccess() >= ACCESS_MODER )
         return false;
 

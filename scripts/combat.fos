@@ -1,6 +1,202 @@
-﻿// Author: Atom, cvet
-// 21-08-2010 05:09
-// vanilla
+﻿#define ALLOW_STEP_OUT_ATTACKS // Comment this out if you dont want critters to be able to shoot out of corners
+#define PROJECTILE_MAX_DISTANCE (500)
+
+#ifdef __CLIENT
+#define Critter CritterCl
+#define Item ItemCl
+
+// By Erandelax aka Sjaman 25/10/2018
+
+#include "_client_defines.fos"
+#include "_colors.fos"
+#include "gui_h.fos"
+#include "_macros.fos"
+#include "wait_time_h.fos"
+
+import uint GetMaxRange(CritterCl& cr, ItemCl@ item) from "throwing";
+import uint GetActiveItemAttackDistantion(CritterCl&) from "parameters";
+import bool check_interface_hit(int,int) from "client_main";
+import void critter_action(bool,CritterCl&,int,int,ItemCl@) from "client_main";
+
+// Draws custom combat effects
+void DrawCombat(){ // EXPORT -> client_main::render_iface
+    DrawAim();
+}
+
+// Draws a free aim mode aim highlight line
+void DrawAim(){
+    if(GetCurrentCursor() != CURSOR_USE_WEAPON) return;
+
+    CritterCl@ player = GetChosen();
+    if(player is null) return;
+    uint16 hexX = player.HexX, hexY = player.HexY;
+
+    ItemCl@ weapon = player.GetItem(0,SLOT_HAND1);
+    if(weapon is null) return;
+
+    uint16 targetHexX = 0, targetHexY = 0;
+    int  offsetX = 0,    offsetY = 0;
+    if( !GetMonitorAim(targetHexX,targetHexY,offsetX,offsetY,__MouseX,__MouseY) ) return;
+    const uint16 aimHexX = targetHexX, aimHexY = targetHexY;
+
+    uint dist = GetDistantion(hexX,hexY,targetHexX,targetHexY);
+    if( dist < 3 ) return;
+
+    // Limit distantion by obstacles
+    GetHexCoord(hexX, hexY, targetHexX, targetHexY, 0.0f, dist);
+    dist = GetDistantion(hexX, hexY,targetHexX,targetHexY);
+     
+    // Around the corner shooting support
+    bool doStepOut    = false;
+    #ifdef ALLOW_STEP_OUT_ATTACKS // Comment out #define ALLOW_STEP_OUT_ATTACKS in the beginning to disable this
+    if(dist == 1) {
+        targetHexX = aimHexX; targetHexY = aimHexY;
+        doStepOut = GetStepOutShift(hexX,hexY,targetHexX,targetHexY,player);
+    }
+    #endif
+
+    int fX = 0, fY = 0, tX = 0, tY = 0;
+    if( GetHexPos(hexX,hexY,fX,fY) && GetHexPos(targetHexX,targetHexY,tX,tY) ){
+        uint maxRange;
+
+        if(weapon.GetType() == ITEM_TYPE_WEAPON){
+            maxRange = GetActiveItemAttackDistantion(player);
+        }else{
+            maxRange = GetMaxRange(player,weapon);
+        }
+
+        uint color;
+        if (dist < maxRange) color = doStepOut ? COLOR_ARGB(200,120,120,120) : COLOR_ARGB(200,255,0,0); // In range color
+        else color = COLOR_ARGB(120,120,120,120); // Out of range color
+        uint fireAreaColor =  doStepOut ? COLOR_ARGB(120,120,120,120) : COLOR_ARGB(120,120,0,0); // Area outline color
+        uint offsetsColor = color & 0x00FFFFFF | (60 << 24); // Aiming offsets color
+
+        int[] points = {
+            fX,fY, color & 0x00FFFFFF, 
+            tX,tY,color,
+
+            tX,tY,color,
+            tX,__MouseY,offsetsColor,
+
+            tX,__MouseY,offsetsColor,
+            __MouseX,__MouseY,offsetsColor
+        };
+        DrawPrimitive(DRAW_PRIMITIVE_LINELIST ,points);
+
+        int[] area = {fX,fY,fireAreaColor & 0x00FFFFFF};
+        float recoil = GetRecoilAngle(player,weapon) ;
+
+        if(doStepOut) recoil = recoil > 20.0 ? recoil : 20.0;
+
+        for(float pos = -recoil, length = recoil; pos < length; pos+=1.0){
+            uint16 hX = targetHexX, hY = targetHexY;
+            GetHexCoord(hexX, hexY, hX, hY, pos, maxRange);
+            int rX=0, rY=0;
+             GetHexPos(hX,hY,rX,rY);
+             area.insertLast(rX);
+             area.insertLast(rY);
+             area.insertLast(fireAreaColor);
+        }
+        area.insertLast(fX);
+        area.insertLast(fY);
+        area.insertLast(fireAreaColor & 0x00FFFFFF);
+        DrawPrimitive(DRAW_PRIMITIVE_LINESTRIP,area);
+    }
+}
+
+
+int GetAimOffset(CritterCl@ critter){
+    if(critter is null) return 0;
+
+    CritterCl@ player = GetChosen();
+    if(player is null) return 0;
+
+    ItemCl@ weapon = player.GetItem( 0, SLOT_HAND1 );
+    if(weapon is null || weapon.GetType() != ITEM_TYPE_WEAPON) return 0;
+
+    switch(_WeaponModeAim(weapon.Mode)){
+        case HIT_LOCATION_EYES:
+        case HIT_LOCATION_HEAD:
+            return int(floor(70 / __SpritesZoom));;
+        case HIT_LOCATION_RIGHT_LEG:
+        case HIT_LOCATION_LEFT_LEG:
+            return int(floor(15 / __SpritesZoom));;
+        case HIT_LOCATION_GROIN:
+            return int(floor(20 / __SpritesZoom));;
+    }
+    return int(floor(40 / __SpritesZoom));
+}
+
+// Returns coordinates of free-aim targeted hex & screen offset between its center & cursor
+bool GetMonitorAim(uint16& hexX, uint16& hexY, int& offsetX, int& offsetY, int targetX, int targetY){ // EXPORT
+    if( check_interface_hit(targetX,targetY) ) return false;
+
+    CritterCl@ player = GetChosen();
+    if(player is null) return false;
+
+    if( GUI_GetActiveScreen().Index != CLIENT_MAIN_SCREEN_GAME ) return false;
+
+    CritterCl@ targetCritter = GetMonitorCritter(targetX,targetY);
+    if(targetCritter !is null) {
+        hexX = targetCritter.HexX;
+        hexY = targetCritter.HexY;
+    } else {
+        ItemCl@ targetItem = GetMonitorItem(targetX,targetY);
+        if(false && targetItem !is null ) { // temporary disabled
+            hexX = targetItem.HexX;
+            hexY = targetItem.HexY;
+        } else {
+            GetMonitorHex(targetX,targetY + GetAimOffset(player),hexX,hexY);
+        }
+    }
+
+    if(hexX == 0 && hexY == 0) return false;
+
+    int screenX = 0, screenY = 0;
+    GetHexPos(hexX,hexY,screenX,screenY);
+    offsetX = targetX - screenX;
+    offsetY = targetY - screenY;
+
+    return true;
+}
+
+// Calls a free-aim player' attack on screen coordinates
+void Attack(int screenX, int screenY){
+    // @@todo do not shoot with jammed or empty guns
+
+    uint16 hexX = 0, hexY = 0;
+    int offsetX = 0, offsetY = 0;
+    if(!GetMonitorAim(hexX, hexY, offsetX, offsetY, screenX, screenY)){
+        Message("ERROR: Attack is not available");
+        return;
+    }
+
+    int[] offsets = {offsetX,offsetY};
+    RunServerScriptUnsafe("combat@unsafe_Attack",int(hexX),int(hexY),0,null,offsets);
+}
+
+// Plays all required animations & feeds client side projectiles info
+void __AttackAck(int action, int actionExt, int itemPid, string@ mode, int[]@ projectiles){
+    // Play attack animation & sound (is supressed for sender in critter.Action)
+    CritterCl@ player = GetChosen();
+    if(action != 0) {
+        ItemCl@ item = player.GetItem(itemPid,SLOT_HAND1);
+        if(item is null){
+             @item = player.GetItem(itemPid,SLOT_HAND2);
+             if(item is null){
+                @item = player.GetItem(itemPid,SLOT_ARMOR);
+                if(item is null){
+                    @item = player.GetItem(itemPid,SLOT_INV);
+                }
+             }
+        }
+        critter_action(true,player,action,actionExt,@item);
+    }
+}
+
+#endif
+
+#ifdef __SERVER
 
 #include "_macros.fos"
 #include "critical_table.fos"
@@ -11,8 +207,7 @@
 #include "wait_time_h.fos"
 #include "hitchance_h.fos"
 #include "_colors.fos"
-
-//#define __DEBUG
+#include "projectile_h.fos"
 
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
@@ -21,6 +216,135 @@ import void QuakeScreen( Map& map ) from "effects";
 import uint GetSmokePenalty( Map@ map, Critter@ attacker, Critter@ target ) from "smoke_grenade";
 import void SmokeBlast( Map& map, uint16 hexX, uint16 hexY, uint16 smokePid, uint ownerId ) from "smoke_grenade";
 import void Explode( Map@ map, uint16 hexX, uint16 hexY, Critter@ cr, uint16 explodePid, uint ownerId, int bonusDamage, int bonusRadius ) from "explode";
+import void unsafe_Throw(Critter&,int,int,int,string@,int[]@) from "throwing";
+import uint GetMaxRange(Critter& cr, Item@ item) from "throwing";
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// By Erandelax aka Sjaman 25/10/2018
+
+// Unsafe call for Attack(...)
+void unsafe_Attack(Critter& player, int HexX, int HexY, int mode, string@ str, int[]@ offsets){
+    if(player.IsBusy()){
+        player.Say(SAY_NETMSG,"You are busy to do that.");
+        return;
+    }
+
+    Map@ map = player.GetMap();
+    if(map is null) return;
+
+    Item@ tool = player.GetItem(0,SLOT_HAND1);
+
+    int offsetX = 0, offsetY = 0;
+    if (offsets.length == 2) {
+        offsetX = offsets[0];
+        offsetY = offsets[1];
+    }
+
+    Attack(player,@tool,uint16(HexX),uint16(HexY),offsetX,offsetY,true);
+}
+
+// Forces critter to attack hex with selected weapon (or item used as a weapon)
+void Attack(Critter& cr, Item@ weapon,const uint16 hexX,const uint16 hexY,const int offsetX,const int offsetY,const bool isFreeAim = false){
+    const bool isPlayer = cr.IsPlayer();
+    Map@ map = cr.GetMap();
+    uint8 mode = weapon is null ? 0 : weapon.Mode;
+    uint8 useMode = _WeaponModeUse( mode );
+    uint8 aimMode = _WeaponModeAim( mode );
+    const ProtoItem@ weaponProto = weapon is null ? cr.GetSlotProto(SLOT_HAND1,useMode) : weapon.Proto;
+    const ProtoItem@ ammo = (weapon is null || weapon.GetType() != ITEM_TYPE_WEAPON) ? null : GetProtoItem(weapon.AmmoPid);
+    uint16 shooterHexX = cr.HexX, shooterHexY = cr.HexY, targetHexX = hexX, targetHexY = hexY;
+
+    // If attacker is NPC, let it shout its attack text
+    if( !isPlayer ) AI_TrySayCombatText( cr, COMBAT_TEXT_ATTACK );
+
+    // All the shit: failures, criticals, message sending, NPC aggro, etc ...
+    // @@todo MOVE TO PROJECTILE ATTACKED EVENT:  targetCritter.EventAttacked( cr );
+    // @@todo CriticalFailure( cr, weapon, use, ammo, critfailFlags, results );
+    
+    // Face attacker to target hex
+    cr.SetDir( GetDirection( shooterHexX, shooterHexY, targetHexX, targetHexY ) ); 
+    cr.RefreshVisible();
+
+    // Play attack animation & sound
+    int anim1 = ACTION_USE_WEAPON;
+    int anim2 = ( 0 << 8 ) | ( aimMode << 4 ) | useMode;
+    cr.Action( anim1, anim2, weapon );
+
+    // Shift aim to the maximum flight distance of the ingame projectile + collide it by walls
+    map.GetHexCoord(shooterHexX, shooterHexY, targetHexX, targetHexY, 0.0f, PROJECTILE_MAX_DISTANCE);
+    uint dist = GetDistantion(shooterHexX,shooterHexY,targetHexX,targetHexY);
+
+    // Step out fight (critter attemps to shoot around the corner if is covered)
+    #ifdef ALLOW_STEP_OUT_ATTACKS // Comment out #define ALLOW_STEP_OUT_ATTACKS in the beginning to disable this
+    if(dist == 0) {
+        targetHexX = hexX; targetHexY = hexY;
+        if( !GetStepOutShift(shooterHexX,shooterHexY,targetHexX,targetHexY,cr) ){
+            targetHexX = shooterHexX;
+            targetHexY = shooterHexY;
+        };
+        dist = GetDistantion(shooterHexX,shooterHexY,targetHexX,targetHexY);
+    }
+    #endif
+
+    // Apply horizontal recoil for distant fight
+    if(dist > 3){
+        float recoil = GetRecoilAngle(cr,weapon); // maximum horizontal deviation value
+        int rnd = Random(-100,100);
+        float angle = recoil * rnd / 100.0;
+        map.GetHexCoord(shooterHexX, shooterHexY, targetHexX, targetHexY, angle, PROJECTILE_MAX_DISTANCE);
+    }
+
+    // Generate server side projectile
+    AddProjectile(
+        map,
+        cr,
+        shooterHexX,
+        shooterHexY,
+        targetHexX,
+        targetHexY,
+        @weapon,
+        GetProtoItem(weaponProto.ProtoId),
+        mode,
+        ammo is null ? null : GetProtoItem(ammo.ProtoId),
+        GetTick(),            
+        float(10.0), // hex per second               
+        @DefaultRangedCollider,
+        null
+    );
+    //map.SetText(shooterHexX,shooterHexY,0xFF00FF00,shooterHexX+":"+shooterHexY+"/"+targetHexX+":"+targetHexY);
+
+    // Send projectile info & critter attack animation to sender
+    if(isFreeAim) cr.RunClientScript("combat@__AttackAck",anim1,anim2,weaponProto.ProtoId,null,null);
+    else          cr.RunClientScript("combat@__AttackAck",0,0,0,null,null);
+    // Broadcast projectiles info to all the rest guys around
+    Critter@[] critters;
+    uint count = map.GetCrittersWhoViewPath(shooterHexX,shooterHexY,targetHexX,targetHexY,FIND_LIFE_AND_KO|FIND_ONLY_PLAYERS,critters);
+    for(uint pos = 0; pos < count; pos++) if(critters[pos] !is cr){
+        cr.RunClientScript("combat@__AttackAck",0,0,0,null,null);
+    }
+}
+
+// Is called for melee attack hits (still with animation delay so can be blocked)
+bool DefaultMeleeCollider(Map@ map, Critter@ shooter,Critter@ target,Item@ weapon, ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo){
+    return true;
+}
+
+// Is called once projectile hits a critter
+bool DefaultRangedCollider(Map@ map, Critter@ shooter,Critter@ target,Item@ weapon, ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo){
+     target.EventAttacked( shooter );
+     target.Say(SAY_SHOUT,"Ouch!");
+     return true;
+}
+
+// Is called once projectile reaches flight destionation without hitting anything
+bool DefaultDropper(Map@ map, Critter@ shooter,uint16 targetHexX,uint16 targetHexY,Item@ weapon,ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo){
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Author: Atom, cvet
+// 21-08-2010 05:09
+// vanilla
 
 class AttackStruct
 {
@@ -79,6 +403,9 @@ class AttackStruct
 
 void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo ) // Export
 {
+    Attack(cr,_CritGetItemHand(cr),target.HexX,target.HexY,0,0,false);
+    return; // Legacy code here:
+
     uint8 use = _WeaponModeUse( weaponMode );
     uint8 aim = _WeaponModeAim( weaponMode );
     Item@ realWeapon = _CritGetItemHand( cr );
@@ -3052,3 +3379,65 @@ Critter@ ChooseRandomTarget( Map& map, Critter& cr, Critter& target, uint wpnMax
 
     return null;
 }
+#endif
+
+#ifndef __MAPPER // #ifdef (__SERVER + __CLIENT)
+
+float GetRecoilAngle(Critter& cr, Item@ weapon){
+    if( weapon is null ) return 0.0f; // melee attacks have not recoil
+    const ProtoItem@ proto    = weapon.Proto;
+    const uint8 useMode = _WeaponModeUse( weapon.Mode );
+    const uint8 aimMode = _WeaponModeAim( weapon.Mode );
+    const uint skillNum = _WeaponSkill( proto, useMode );
+    const int  skillVal = cr.Skill[ skillNum ];
+    const bool isAimed = (aimMode != HIT_LOCATION_UNCALLED && aimMode != HIT_LOCATION_NONE);
+    const bool isBurst = (useMode == 0 && proto.Weapon_Round_0 > 1) || (useMode == 1 && proto.Weapon_Round_1 > 1) || (useMode == 2 && proto.Weapon_Round_2 > 1);
+
+    float apMod = 30.0 * (1.0 - cr.StatBase[ ST_CURRENT_AP ]/10000.0);
+
+    #ifdef __SERVER
+    cr.StatBase[ ST_CURRENT_AP ]-=1000;
+    #endif
+    //return 30.0 - CLAMP(skillVal,0,100) * 3.0 / 10.0 * (isBurst ? 0.5 : 1.0) * (isAimed ? 2.0 : 1.0);
+    return apMod;
+
+    return 20.0;
+}
+
+// Changes <fHexX, fHexY> so that it becomes possible to shoot <tHexX,tHexY> from the neighboring hex
+bool GetStepOutShift(uint16& fHexX, uint16& fHexY, uint16& tHexX, uint16& tHexY, Critter& shooter){
+    // Cache current values in case if step-out is not possible or we mess up
+    const uint16 _fHexX = fHexX, _fHexY = fHexY, _tHexX = tHexX, _tHexY = tHexY;
+
+    bool result = false;
+    uint8 dir = GetDirection(fHexX,fHexY,tHexX,tHexY);
+    uint8[] offsets = {1,5,2,4,3};
+    for(uint8 pos = 0, length = offsets.length; pos < length; pos++){
+        fHexX = _fHexX; fHexY = _fHexY; tHexX = _tHexX; tHexY = _tHexY;
+
+        #ifdef __SERVER
+        Map@ map = shooter.GetMap();
+        map.MoveHexByDir(fHexX,fHexY,(dir + offsets[pos])%6,1);
+        if(!map.IsHexPassed(fHexX,fHexY)) continue; // Avoid shooting through walls
+        map.GetHexCoord(fHexX, fHexY, tHexX, tHexY, 0.0f, GetDistantion(fHexX,fHexY,tHexX,tHexY));
+        #endif 
+
+        #ifdef __CLIENT
+        MoveHexByDir(fHexX,fHexY,(dir + offsets[pos])%6,1);
+        if(GetPathLength(_fHexX,_fHexY,fHexX,fHexY,0) != 1) continue; // Avoid shooting through walls
+        GetHexCoord(fHexX, fHexY, tHexX, tHexY, 0.0f, GetDistantion(fHexX,fHexY,tHexX,tHexY));
+        #endif
+
+        if(GetDistantion(fHexX,fHexY,tHexX,tHexY) > 1) {
+            result = true;
+            break;
+        }
+    }
+    if(!result){
+        fHexX = _fHexX; fHexY = _fHexY; tHexX = _tHexX; tHexY = _tHexY;
+        return false;
+    }
+    return true;
+}
+
+#endif
