@@ -1,6 +1,8 @@
 ﻿#define ALLOW_STEP_OUT_ATTACKS // Comment this out if you dont want critters to be able to shoot out of corners
 #define PROJECTILE_MAX_DISTANCE (500)
 
+#include "projectile_h.fos"
+
 #ifdef __CLIENT
 #define Critter CritterCl
 #define Item ItemCl
@@ -21,6 +23,7 @@ import void critter_action(bool,CritterCl&,int,int,ItemCl@) from "client_main";
 // Draws custom combat effects
 void DrawCombat(){ // EXPORT -> client_main::render_iface
     DrawAim();
+    DrawProjectiles();
 }
 
 // Draws a free aim mode aim highlight line
@@ -176,7 +179,9 @@ void Attack(int screenX, int screenY){
 }
 
 // Plays all required animations & feeds client side projectiles info
-void __AttackAck(int action, int actionExt, int itemPid, string@ mode, int[]@ projectiles){
+void __AttackAck(int action, int actionExt, int itemPid, string@ mode, int[]@ projectileInfo){
+    // Add client-side projectile
+    AddProjectile(@projectileInfo);
     // Play attack animation & sound (is supressed for sender in critter.Action)
     CritterCl@ player = GetChosen();
     if(action != 0) {
@@ -207,7 +212,6 @@ void __AttackAck(int action, int actionExt, int itemPid, string@ mode, int[]@ pr
 #include "wait_time_h.fos"
 #include "hitchance_h.fos"
 #include "_colors.fos"
-#include "projectile_h.fos"
 
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
@@ -245,14 +249,16 @@ void unsafe_Attack(Critter& player, int HexX, int HexY, int mode, string@ str, i
 
 // Forces critter to attack hex with selected weapon (or item used as a weapon)
 void Attack(Critter& cr, Item@ weapon,const uint16 hexX,const uint16 hexY,const int offsetX,const int offsetY,const bool isFreeAim = false){
-    const bool isPlayer = cr.IsPlayer();
-    Map@ map = cr.GetMap();
-    uint8 mode = weapon is null ? 0 : weapon.Mode;
-    uint8 useMode = _WeaponModeUse( mode );
-    uint8 aimMode = _WeaponModeAim( mode );
+    const bool isPlayer          = cr.IsPlayer();
+    Map@ map                     = cr.GetMap();
+    uint8 mode                   = weapon is null ? 0 : weapon.Mode;
+    uint8 useMode                = _WeaponModeUse( mode );
+    uint8 aimMode                = _WeaponModeAim( mode );
     const ProtoItem@ weaponProto = weapon is null ? cr.GetSlotProto(SLOT_HAND1,useMode) : weapon.Proto;
-    const ProtoItem@ ammo = (weapon is null || weapon.GetType() != ITEM_TYPE_WEAPON) ? null : GetProtoItem(weapon.AmmoPid);
-    uint16 shooterHexX = cr.HexX, shooterHexY = cr.HexY, targetHexX = hexX, targetHexY = hexY;
+    const ProtoItem@ ammo        = (weapon is null || weapon.GetType() != ITEM_TYPE_WEAPON) ? null : GetProtoItem(weapon.AmmoPid);
+    uint16 shooterHexX           = cr.HexX, shooterHexY = cr.HexY, targetHexX = hexX, targetHexY = hexY;
+    CollisionCallback@ collider  = null;
+    DropCallback@ dropper        = null;
 
     // If attacker is NPC, let it shout its attack text
     if( !isPlayer ) AI_TrySayCombatText( cr, COMBAT_TEXT_ATTACK );
@@ -286,6 +292,10 @@ void Attack(Critter& cr, Item@ weapon,const uint16 hexX,const uint16 hexY,const 
     }
     #endif
 
+    // Apply colliders
+    @collider = @DefaultRangedCollider;
+    @dropper  = @DefaultDropper;
+
     // Apply horizontal recoil for distant fight
     if(dist > 3){
         float recoil = GetRecoilAngle(cr,weapon); // maximum horizontal deviation value
@@ -295,7 +305,7 @@ void Attack(Critter& cr, Item@ weapon,const uint16 hexX,const uint16 hexY,const 
     }
 
     // Generate server side projectile
-    AddProjectile(
+    int[]@ projectileInfo = AddProjectile(
         map,
         cr,
         shooterHexX,
@@ -307,20 +317,23 @@ void Attack(Critter& cr, Item@ weapon,const uint16 hexX,const uint16 hexY,const 
         mode,
         ammo is null ? null : GetProtoItem(ammo.ProtoId),
         GetTick(),            
-        float(10.0), // hex per second               
-        @DefaultRangedCollider,
-        null
+        float(30.0), // hex per second               
+        @collider,
+        @dropper
     );
-    //map.SetText(shooterHexX,shooterHexY,0xFF00FF00,shooterHexX+":"+shooterHexY+"/"+targetHexX+":"+targetHexY);
 
     // Send projectile info & critter attack animation to sender
-    if(isFreeAim) cr.RunClientScript("combat@__AttackAck",anim1,anim2,weaponProto.ProtoId,null,null);
-    else          cr.RunClientScript("combat@__AttackAck",0,0,0,null,null);
-    // Broadcast projectiles info to all the rest guys around
+    if (isPlayer) {
+        if(isFreeAim) cr.RunClientScript("combat@__AttackAck",anim1,anim2,weaponProto.ProtoId,null,projectileInfo);
+        else          cr.RunClientScript("combat@__AttackAck",0,0,0,null,projectileInfo);
+    }
+
+    // Broadcast projectile creation to all critters
     Critter@[] critters;
+    //uint count = map.GetCritters(0,FIND_LIFE_AND_KO|FIND_ONLY_PLAYERS,critters);
     uint count = map.GetCrittersWhoViewPath(shooterHexX,shooterHexY,targetHexX,targetHexY,FIND_LIFE_AND_KO|FIND_ONLY_PLAYERS,critters);
-    for(uint pos = 0; pos < count; pos++) if(critters[pos] !is cr){
-        cr.RunClientScript("combat@__AttackAck",0,0,0,null,null);
+    for(uint pos = 0; pos < count; pos++) if(critters[pos].IsPlayer() && critters[pos] !is cr){
+        critters[pos].RunClientScript("combat@__AttackAck",0,0,0,null,projectileInfo);
     }
 }
 
@@ -332,13 +345,14 @@ bool DefaultMeleeCollider(Map@ map, Critter@ shooter,Critter@ target,Item@ weapo
 // Is called once projectile hits a critter
 bool DefaultRangedCollider(Map@ map, Critter@ shooter,Critter@ target,Item@ weapon, ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo){
      target.EventAttacked( shooter );
-     target.Say(SAY_SHOUT,"Ouch!");
+     target.Say(SAY_SHOUT,"HIT");
      return true;
 }
 
 // Is called once projectile reaches flight destionation without hitting anything
-bool DefaultDropper(Map@ map, Critter@ shooter,uint16 targetHexX,uint16 targetHexY,Item@ weapon,ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo){
-    return true;
+void DefaultDropper(Map@ map, Critter@ shooter,uint16 targetHexX,uint16 targetHexY,Item@ weapon,ProtoItem@ weaponProto,uint8 weaponMode,ProtoItem@ ammo){
+    //shooter.GetMap().SetText(targetHexX,targetHexY,0xFFFFFFFF,"DROP");
+    return;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -403,7 +417,10 @@ class AttackStruct
 
 void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weaponMode, ProtoItem@ ammo ) // Export
 {
-    Attack(cr,_CritGetItemHand(cr),target.HexX,target.HexY,0,0,false);
+    uint16 hexX = target.HexX, hexY = target.HexY;
+    // Shooting ahead of the moving curve
+    //if( target.IsRuning ) target.GetMap().MoveHexByDir(hexX,hexY,target.Dir,Random(1,3));
+    Attack(cr,_CritGetItemHand(cr),hexX,hexY,0,0,false);
     return; // Legacy code here:
 
     uint8 use = _WeaponModeUse( weaponMode );

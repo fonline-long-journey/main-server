@@ -1,18 +1,50 @@
 // By Erandelax aka Sjaman 26/10/2018
-
 // @@todo клиентская часть, оптимизиация, проблема GetTick overflow (UINT_MAX -> UINT_MIN)
 
 #include "_defines.fos"
 #define __PROJECTILE__
 #include "projectile_h.fos"
 
-#ifdef __SERVER
-	Projectile@[] projectiles; // Server-wide registry of projectiles
+// Adds <Projectile> into <projectiles> registry, replacing inactive items if possible
+ void RegisterProjectile(Projectile@ projectile){
+	bool appendToRegistry = true;
+	for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(!projectiles[pos].IsValid){
+		appendToRegistry = false;
+		@projectiles[pos] = projectile;
+		break;
+	}
+	if(appendToRegistry) projectiles.insertLast(@projectile);
+} Projectile@[] projectiles;
 
+#ifdef __CLIENT
+	#include "_client_defines.fos"
+	#include "gui_utils_h.fos"
+
+	// EXPORT -> combat.fos
+	// Registers new client side projectile
+	void AddProjectile(int[]@ projectileInfo){ 
+		if(projectileInfo is null) return;
+
+		Projectile@ projectile = Projectile(@projectileInfo);
+
+		RegisterProjectile(@projectile);
+	}
+
+	// EXPORT -> combat.fos::DrawCombat()
+	// Draws all the projectiles available
+	void DrawProjectiles(){
+		for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(projectiles[pos] !is null && projectiles[pos].IsValid) {
+			projectiles[pos].Draw();
+		}
+	}
+
+#endif
+
+#ifdef __SERVER
 	// Export -> combat.fos
 	// Registers new server side projectile
 	// @return serialized projectile info for RunClientScripts
-	uint8[]@ AddProjectile(
+	int[]@ AddProjectile(
 		Map& map,
 		Critter@ shooter,
 		uint16 fromX,
@@ -23,7 +55,7 @@
 		ProtoItem& weaponProto,
 		uint8 weaponMode,
 		ProtoItem@ ammo,
-		uint timestamp, 		// Tick when projectile should start its flight
+		uint timestamp, 			// Tick when projectile should start its flight
 		float speed,				// Hexes per second
 		CollisionCallback@ collider,
 		DropCallback@ dropper
@@ -47,13 +79,7 @@
 		);
 
 		// Add projectile to registry
-		bool appendToRegistry = true;
-		for(uint pos = 0, length = projectiles.length; pos < length; pos++) if(!projectiles[pos].IsValid){
-			appendToRegistry = false;
-			@projectiles[pos] = projectile;
-			break;
-		}
-		if(appendToRegistry) projectiles.insertLast(@projectile);
+		RegisterProjectile(@projectile);
 
 		// Return serialized projectile for passage to clients
 		return projectile.Serialize();
@@ -72,16 +98,13 @@
 			if( !critterCache.exists(key) ){ 
 				Critter@[] result;
 				Map@ map = GetMap(projectiles[pos].MapId);
-				map.GetCrittersPath(
-					projectiles[pos].FromX,
-					projectiles[pos].FromY,
-					projectiles[pos].ToX,
-					projectiles[pos].ToY,
-					0.0f,
-					GetDistantion(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY),
-					FIND_ALL,
-					result
-				);
+				uint dist = GetDistantion(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY);
+				map.GetCrittersPath(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY,0.0f,dist,FIND_ALL,result);
+
+				// DEBUG @@todo remove it or replace by less expensive extender
+				//map.GetCrittersPath(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY,2.0f,dist,FIND_ALL,result);
+				//map.GetCrittersPath(projectiles[pos].FromX,projectiles[pos].FromY,projectiles[pos].ToX,projectiles[pos].ToY,-2.0f,dist,FIND_ALL,result);
+
 				@critterCache[key] = result;
 				projectiles[pos].Loop(@result);
 
@@ -97,12 +120,18 @@
 class Projectile {
 	// __SERVER + __CLIENT definitions
 	bool IsValid = true; 		   			// When FALSE, projectile is not processed & will be garbage-collected
+	int Id = 0;
 	uint16 FromX, FromY, ToX, ToY;			// Start & finish positions
 	protected bool  IsInstant;				// If TRUE, projectile flies all the path in one loop (for lasers, etc)
 	protected uint  Lifespan; 	   			// [CACHE] How many ticks should our projectile live after the launch
 	protected uint  Distance; 	   			// [CACHE] How many hexes should it fly after the launch
 	protected uint  Timestamp;				// Tick, when projectile should start its flight
 	protected uint  Timeout;				// Tick, in which projectile should arrive at its destination point
+
+	ProtoItem@ WeaponProto;
+	uint8 WeaponMode;
+	ProtoItem@ Ammo;
+
 	protected float LastProgress = 0.0; 	// [CACHE] Cached progress
 	protected float Progress{get{ 			// Current progress (in range <0.0 ... 1.0> projectile is flying)
 		uint tick = GetTick();
@@ -113,13 +142,85 @@ class Projectile {
 		return this.LastProgress;
 	}} 
 
+	#ifdef __CLIENT
+		Projectile(int[]@ projectileInfo){ // See [SERVER]Projectile::Serialize()
+			if(projectileInfo.length < 9) { 
+				Message("ERROR: Projectile info size is not valid.");
+				this.IsValid = false;
+				return;
+			}
+
+			uint tick = GetTick();
+			this.Timestamp 	  = tick + (uint(projectileInfo[0]) - uint(__Ping / uint(2)));
+			this.Timeout 	  = this.Timestamp + uint(projectileInfo[1]);
+			this.IsInstant    = (projectileInfo[1] < 50);
+			this.FromX 		  = uint16(projectileInfo[2]);
+			this.FromY 		  = uint16(projectileInfo[3]);
+			this.ToX   		  = uint16(projectileInfo[4]);
+			this.ToY   		  = uint16(projectileInfo[5]);
+			@this.WeaponProto = GetProtoItem(uint16(projectileInfo[6]));
+			this.WeaponMode   = uint8(projectileInfo[7]);
+			@this.Ammo 		  = GetProtoItem(uint16(projectileInfo[8]));
+
+			this.Lifespan 	  =  this.Timeout - this.Timestamp;
+			this.Distance     =  GetDistantion(this.FromX,this.FromY,this.ToX,this.ToY);
+
+			this.IsValid 	  = true;
+		}
+
+		void ApplyProgress(float progress, int& fromX, int& fromY, int& curX, int& curY, int& toX, int& toY){
+			GetHexPos(this.FromX,this.FromY,fromX,fromY);
+			GetHexPos(this.ToX,this.ToY,toX,toY);
+			if (progress <= 0.0f) {
+				curX = fromX;
+				curY = fromY;
+			} else if (progress >= 1.0f) {
+				curX = toX;
+				curY = toY;
+			} else {
+				curX = int( floor( fromX + progress * float(toX - fromX) ) );
+				curY = int( floor( fromY + progress * float(toY - fromY) ) );
+			}
+		}
+
+		void Draw(){
+			if( this.Timestamp > GetTick() ) return; // Not yet fired
+
+			float currentProgress = 1.0, lastProgress = 0.0;
+			int fromX = 0, fromY = 0, curX = 0, curY = 0, toX = 0, toY = 0;
+			
+			if(!this.IsInstant){
+				lastProgress = this.LastProgress;
+				currentProgress = this.Progress;
+			}
+
+			if(currentProgress >= 1.0) this.IsValid = false;
+			this.ApplyProgress(currentProgress,fromX,fromY,curX,curY,toX,toY);
+			uint16 curHexX = uint16(floor( int(this.FromX) + currentProgress * (int(this.ToX) - int(this.FromX)) ));
+			uint16 curHexY = uint16(floor( int(this.FromY) + currentProgress * (int(this.ToY) - int(this.FromY)) ));
+
+			if(GetCurrentCursor() == CURSOR_USE_WEAPON){
+				DrawPrimitive(DRAW_PRIMITIVE_LINELIST, array<int> = {curX, curY, 0x22FF9900, toX, toY, 0x00FF0000});
+			}
+
+			ItemCl@ item = GetMonitorItem(curX,curY-35);
+			if(item !is null && item.GetType() >= 9){
+				if(item.HexY > curHexY) return;
+			}
+
+			uint8 dir = GetDirection(this.FromX,this.FromY,this.ToX,this.ToY);
+			float[]@ bullet = VgArc();
+			VgRotate(bullet,60.0*dir+90.0);
+			VgShift(bullet,curX,curY-35);
+			int[]@ points = VgRender(bullet,0xFFFF9900);
+			DrawPrimitive(DRAW_PRIMITIVE_LINELIST, points);
+		}
+	#endif
+
 	#ifdef __SERVER
 		uint ShooterId; 
 		uint MapId;		
 		uint WeaponId;
-		ProtoItem@ WeaponProto;
-		uint8 WeaponMode;
-		ProtoItem@ Ammo;
 		protected uint[] CritterHit;
 		protected CollisionCallback@ Collider;
 		protected DropCallback@	     Dropper;
@@ -141,7 +242,8 @@ class Projectile {
 			DropCallback@ dropper
 		) {
 			uint tick = GetTick();
-			this.Distance = GetDistantion(fromX,fromY,toX,toY); //sqrt(pow(toX - fromX,2) + pow(toY - fromY,2));
+			this.Id = int(uint(( tick + fromX + fromY + toX + toY ) % 4294967295 ) - 2147483648);
+			this.Distance = GetDistantion(fromX,fromY,toX,toY);
 			this.Timestamp = timestamp;
 			if(speed < 0.0f) speed = (-1) * speed; // Shit happens
 			if(speed != 0 && this.Distance > 2.0){
@@ -167,17 +269,25 @@ class Projectile {
 			@this.Dropper = dropper;
 		}
 
-		uint8[]@ Serialize(){ // CLIENT EXPORT @@todo
-			return null;
+		int[]@ Serialize(){ 
+			return array<int> = {
+				int( this.Timestamp - GetTick()					), // 0: Time left before flight starts
+				int( this.Timeout - this.Timestamp 				), // 1: Duration of the flight in ticks
+				int( this.FromX									), // 2
+				int( this.FromY									), // 3
+				int( this.ToX									), // 4
+				int( this.ToY									), // 5
+				int( this.WeaponProto.ProtoId					), // 6: Weapon Pid
+				int( this.WeaponMode 							), // 7: Weapon.Mode
+				int( this.Ammo is null ? 0 : this.Ammo.ProtoId  )  // 8: Ammo.Pid
+			};
 		}
 
 		void ApplyProgress(float progress, uint16& currentX, uint16& currentY){
 			if (progress <= 0.0) {
-				currentX = this.FromX;
-				currentY = this.FromY;
+				currentX = this.FromX; currentY = this.FromY;
 			} else if(progress >= 1.0) {
-				currentX = this.ToX;
-				currentY = this.ToY;
+				currentX = this.ToX; currentY = this.ToY;
 			} else {
 				currentX = uint16(floor( int(this.FromX) + progress * (int(this.ToX) - int(this.FromX)) ));
 				currentY = uint16(floor( int(this.FromY) + progress * (int(this.ToY) - int(this.FromY)) ));
@@ -241,8 +351,6 @@ class Projectile {
 					}
 				}
 			}
-
-			map.SetText(fromX,fromY,0xFFFF9999,"+");
 
 			// If no collisions happened & flight is over, call dropper
 			if(currentProgress == 1.0){

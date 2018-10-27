@@ -1,0 +1,184 @@
+// By Erandelax aka Sjaman 27/10/2018
+// File contains supplementary drawing functionality
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Vector graphics
+// VG-image is a vertices  array<float>{x,y,x,y,x,y,...} that is fit in (-1;-1)^(1;1) unit square
+// CVG-image is a vertices array<float>{x,y,color,x,y,color,...} of the same size
+
+#include "_client_defines.fos"
+// Rescales VG-image according to <zoom>
+void VgScale(float[]& image, float zoom){
+	for(uint pos = 0, length = image.length; pos < length; pos++) 
+		image[pos] *= zoom;
+}
+// The same, but to separately per axis
+void VgScale(float[]& image, float xZoom, float yZoom){
+	for(uint pos = 0, length = image.length; pos < length; pos++)
+		image[pos] = pos % 2 == 0 ? image[pos] * xZoom : image[pos] * yZoom;
+}
+// Shifts VG-image according to <x> <y> vector
+void VgShift(float[]& image, float xShift, float yShift){
+	for(uint pos = 0, length = image.length; pos < length; pos++)
+		image[pos] = (pos % 2 == 0) ? image[pos] + xShift : image[pos] + yShift;
+}
+// Rotates vector coordinates to <angle>
+void VgRotatePoint(float& x, float& y, float angle){
+	float nx = x * cos(angle) - y * sin(angle);
+	float ny = x * sin(angle) + y * cos(angle);
+	x = nx; y = ny;
+}
+// Rotates VG-image according to <angle>
+void VgRotate(float[]& image, float angle){
+	for(uint pos = 0, length = image.length; pos < length; pos+=2)
+		VgRotatePoint(image[pos],image[pos+1],angle);
+}
+// Skews VG-image along X and Y axis [WARNING: Use BEFORE any other modifier, xSkew&ySkew == 0.0..1.0]
+void VgSkew(float[]& image, float xSkew, float ySkew){
+	for(uint pos = 0, length = image.length; pos < length; pos+=2){
+		image[pos]   = image[pos] + xSkew * image[pos+1];
+		image[pos+1] = image[pos+1] + ySkew * image[pos];
+	}
+}
+
+// Renders VG-image into DrawPrimitive-compatible array of points
+int[]@ VgRender(float[]& image, int color, int primitiveType = DRAW_PRIMITIVE_POINTLIST){
+	int[] result;
+	switch(primitiveType){
+		case DRAW_PRIMITIVE_LINELIST: {
+			for(uint pos = 0, length = image.length; pos < length; pos+=2){
+				int x = int( fraction(image[pos]) >= 0.5 ? ceil(image[pos]) : floor(image[pos]) );
+				int y = int( fraction(image[pos+1]) >= 0.5 ? ceil(image[pos+1]) : floor(image[pos+1]) );
+				result.insertLast(x); result.insertLast(y); result.insertLast(color);
+				if(pos != 0){
+					result.insertLast(x); result.insertLast(y); result.insertLast(color);
+				}
+			}
+		} break;
+
+		default: { // DRAW_PRIMITIVE_POINTLIST
+			for(uint pos = 0, length = image.length; pos < length; pos++){
+				result.insertLast( int( fraction(image[pos]) >= 0.5 ? ceil(image[pos]) : floor(image[pos]) ) );
+				if(pos % 2 == 1){
+					result.insertLast(color);
+				}
+			}
+		} break;
+	}
+	return result;
+}
+
+
+// Prefabs
+float[]@ VgSquare(){
+	return array<float> = {
+		-1.0f,	-1.0f,
+		-1.0f,	1.0f,
+		1.0f,	1.0f,
+		1.0f,	-1.0f,
+		-1.0f,	-1.0f
+	};
+}
+
+float[]@ VgRingContour(int segments = 30, float innerWidth = 0.5, float pie = 360.0f){ // @@todo #wip (no fill mode)
+	float[] result;
+	float step = 6.28318530718f / float(segments);
+	float max = (pie/360.0f) * 6.28318530718f;
+
+	for(float angle = 0; angle <= max; angle += step){
+		result.insertLast(sin(angle)); result.insertLast(cos(angle));
+	}
+
+	if(pie != 360.0f){
+		result.insertLast(sin(max)); result.insertLast(cos(max));
+	}
+
+	for(float angle = max; angle >= 0; angle -= step){
+		result.insertLast(innerWidth * sin(angle));
+		result.insertLast(innerWidth * cos(angle));
+	}
+
+	if(pie != 360.0f){
+		result.insertLast(sin(0)); result.insertLast(innerWidth * cos(0));
+		result.insertLast(sin(0)); result.insertLast(cos(0));
+	}
+
+	return result;
+}
+
+float[]@ VgCircle(int segments = 30, float pie = 360.0f){
+	float[] result;
+	float step = 6.28318530718f / float(segments);
+	float max = (pie/360.0f) * 6.28318530718f;
+	if(pie != 360.0){
+		result.insertLast(0);
+		result.insertLast(0);
+	}
+	for(float angle = 0; angle <= max; angle += step){
+		result.insertLast(sin(angle));
+		result.insertLast(cos(angle));
+	}
+	if(pie != 360.0){
+		result.insertLast(0);
+		result.insertLast(0);
+	}
+	return result;
+}
+
+float[]@ VgStar(int segments = 30, float pie = 360.0f){
+	float[] result;
+	float step = 6.28318530718f / float(segments);
+	float max = (pie/360.0f) * 6.28318530718f;
+	for(float angle = 0; angle < max; angle += step){
+		result.insertLast(sin(angle));
+		result.insertLast(cos(angle));
+		result.insertLast(0);
+		result.insertLast(0);
+	}
+	return result;
+}
+
+float[]@ VgDrop(int segments = 60){ // https://math.stackexchange.com/a/51556
+	float[] result;
+	float a = 0.77f; // width multiplier
+	float b = 1.0f; // height multiplier
+	float step = 6.28318530718f / float(segments);
+	for(float angle = 0; angle < 6.28318530718f; angle += step){
+		result.insertLast( a * (1 - sin(angle)) * cos(angle) );
+		result.insertLast( - 1.0 - b * (sin(angle) - 1) );
+	}
+	return result;
+}
+
+float[]@ VgArc(int segments = 60, bool isClosed = true){ // if segments == 3, you'll get a triangle
+	float[] result;
+	float step = 3.14159265359 / float(segments);
+	for(float angle = -1.5707963268f; angle <= 1.5707963268f; angle += step){
+		result.insertLast(sin(angle));
+		result.insertLast(-cos(angle) * 2.0f + 1.0);
+	}
+	if(isClosed) {
+		result.insertLast(sin(-1.5707963268f));
+		result.insertLast(-cos(-1.5707963268f) * 2.0f + 1.0);	
+	}
+	return result;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Debug call
+float param = 0.0;
+void VgDebug(){ // Export -> client_main::render_iface
+	param = (param + 1.0) % 360.0;
+
+	float[]@ vgLimit = VgSquare();
+	VgSkew(vgLimit,0.1,0.1);
+	VgScale(vgLimit,200,200);
+	VgShift(vgLimit,500,300);
+	int[]@ limit = VgRender(vgLimit,0x33FF0000,DRAW_PRIMITIVE_LINELIST );
+	DrawPrimitive(DRAW_PRIMITIVE_LINELIST ,limit);
+
+	float[]@ vgImage = VgDrop();
+	VgScale(vgImage,200,200);
+	VgShift(vgImage,500,300);
+	int[]@ image = VgRender(vgImage,0xFFFFFF00,DRAW_PRIMITIVE_LINELIST );
+	DrawPrimitive(DRAW_PRIMITIVE_LINELIST ,image);
+}

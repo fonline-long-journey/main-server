@@ -1,5 +1,16 @@
 // By Erandelax aka Sjaman 26/10/2018
 
+#ifdef __CLIENT
+
+	#ifndef __PROJECTILE__
+		
+		import void DrawProjectiles() 						from "projectile";
+		import void AddProjectile(int[]@ projectileInfo) 	from "projectile";
+
+	#endif
+
+#endif
+
 #ifdef __SERVER
 
 	// Collision function runs where bullet collides with a critter on its way
@@ -10,7 +21,7 @@
 	// These functions can be used to spawn grenades, other projectiles, explosions and of course, for damage application
 
 	#ifndef __PROJECTILE__
-		import uint8[]@ AddProjectile(
+		import int[]@ AddProjectile(
 			Map& map,
 			Critter@ shooter,
 			uint16 fromX,

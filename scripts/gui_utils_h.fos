@@ -1,0 +1,19 @@
+// By Erandelax aka Sjaman 27/10/2018
+// See <gui_utils.fos>
+#ifdef __CLIENT
+
+import void VgScale(float[]& image, float zoom) 													from "gui_utils";
+import void VgScale(float[]& image, float xZoom, float yZoom)										from "gui_utils";
+import void VgShift(float[]& image, float xShift, float yShift)										from "gui_utils";
+import void VgRotatePoint(float& x, float& y, float angle)											from "gui_utils";
+import void VgRotate(float[]& image, float angle)													from "gui_utils";
+import int[]@ VgRender(float[]& image, int color, int primitiveType = DRAW_PRIMITIVE_POINTLIST)		from "gui_utils";
+import void VgSkew(float[]& image, float xSkew, float ySkew)										from "gui_utils";
+
+import float[]@ VgSquare()																			from "gui_utils";
+import float[]@ VgCircle(int segments = 30, float pie = 360.0f)										from "gui_utils";
+import float[]@ VgStar(int segments = 30, float pie = 360.0f)										from "gui_utils";
+import float[]@ VgDrop(int segments = 60)															from "gui_utils";
+import float[]@ VgArc(int segments = 60, bool isClosed = true)										from "gui_utils";
+
+#endif
