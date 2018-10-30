@@ -8,7 +8,7 @@
 [Proto] # PID_EXPLOSIVE_ROCKET {Разрывная ракета}
 ProtoId=14
 Type=4
-PicMap=art\items\new\ammo\rocket1.png
+PicMap=art\items\ammo\rocket1.png
 PicInv=art\inven\shell2.frm
 Flags=134217756
 DisableEgg=1
@@ -25,7 +25,7 @@ Ammo_DmgDiv=5
 [Proto] # PID_10MM_JHP {10mm JHP}
 ProtoId=29
 Type=4
-PicMap=art\items\new\ammo\10jhp.png
+PicMap=art\items\ammo\10jhp.png
 PicInv=art\inven\10mmjhp.frm
 Flags=134250556
 DisableEgg=1
@@ -44,7 +44,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_10MM_AP {10mm AP}
 ProtoId=30
 Type=4
-PicMap=art\items\new\ammo\10ap.png
+PicMap=art\items\ammo\10ap.png
 PicInv=art\inven\10mmap.frm
 Flags=134250524
 DisableEgg=1
@@ -64,7 +64,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_44_MAGNUM_JHP {0,44 JHP}
 ProtoId=31
 Type=4
-PicMap=art\items\new\ammo\44jhp.png
+PicMap=art\items\ammo\44jhp.png
 PicInv=art\inven\44jhp.frm
 Flags=134250524
 DisableEgg=1
@@ -83,7 +83,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_FLAMETHROWER_FUEL {Топливо}
 ProtoId=32
 Type=4
-PicMap=art\items\new\ammo\fuelmk1.FRM
+PicMap=art\items\ammo\fuelmk1.FRM
 PicInv=art\inven\tank.frm
 Flags=134217756
 DisableEgg=1
@@ -101,7 +101,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_14MM_AP {14mm}
 ProtoId=33
 Type=4
-PicMap=art\items\new\ammo\14ap.png
+PicMap=art\items\ammo\14ap.png
 PicInv=art\inven\14mmap.frm
 Flags=134250524
 DisableEgg=1
@@ -120,7 +120,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_223_FMJ {.223 FMJ military}
 ProtoId=34
 Type=4
-PicMap=art\items\new\ammo\223.png
+PicMap=art\items\ammo\223.png
 PicInv=art\inven\223fmj.frm
 Flags=134250524
 DisableEgg=1
@@ -139,7 +139,7 @@ Ammo_DmgDiv=5
 [Proto] # PID_5MM_JHP {5mm JHP}
 ProtoId=35
 Type=4
-PicMap=art\items\new\ammo\5jhp.png
+PicMap=art\items\ammo\5jhp.png
 PicInv=art\inven\5mmjhp.frm
 Flags=134217756
 DisableEgg=1
@@ -157,7 +157,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_5MM_AP {5mm AP}
 ProtoId=36
 Type=4
-PicMap=art\items\new\ammo\5ap.png
+PicMap=art\items\ammo\5ap.png
 PicInv=art\inven\5mmap.frm
 Flags=134250524
 DisableEgg=1
@@ -177,7 +177,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_ROCKET_AP {Бронебойная ракета}
 ProtoId=37
 Type=4
-PicMap=art\items\new\ammo\rocket2.png
+PicMap=art\items\ammo\rocket2.png
 PicInv=art\inven\rshell.frm
 Flags=134217756
 DisableEgg=1
@@ -195,7 +195,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_SMALL_ENERGY_CELL {Батарейка}
 ProtoId=38
 Type=4
-PicMap=art\items\new\ammo\battery.frm
+PicMap=art\items\ammo\battery.frm
 PicInv=art\inven\ccells.frm
 Flags=134217756
 DisableEgg=1
@@ -214,7 +214,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_MICRO_FUSION_CELL {Микрореактор}
 ProtoId=39
 Type=4
-PicMap=art\items\new\ammo\dcells.png
+PicMap=art\items\ammo\dcells.png
 PicInv=art\inven\dcells.frm
 Flags=134217756
 DisableEgg=1
@@ -232,7 +232,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_SHOTGUN_SHELLS {12G military}
 ProtoId=95
 Type=4
-PicMap=art\items\new\ammo\sshells.png
+PicMap=art\items\ammo\sshells.png
 PicInv=art\inven\ssshells.frm
 Flags=134217756
 DisableEgg=1
@@ -250,7 +250,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_44_FMJ_MAGNUM {0,44 FMJ Magnum}
 ProtoId=111
 Type=4
-PicMap=art\items\new\ammo\44fmj.png
+PicMap=art\items\ammo\44fmj.png
 PicInv=art\inven\44fmj.frm
 Flags=134217756
 DisableEgg=1
@@ -268,7 +268,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_9MM_BALL {9x19mm "Luger"}
 ProtoId=121
 Type=4
-PicMap=art\items\new\ammo\9luger.FRM
+PicMap=art\items\ammo\9luger.FRM
 PicInv=art\inven\bullet.frm
 Flags=134217756
 DisableEgg=1
@@ -287,7 +287,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_BBS {BB}
 ProtoId=163
 Type=4
-PicMap=art\items\new\ammo\bb.png
+PicMap=art\items\ammo\bb.png
 PicInv=art\inven\bbs.frm
 Flags=134217756
 DisableEgg=1
@@ -305,7 +305,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_ROBO_ROCKET_AMMO {Ракета робота}
 ProtoId=274
 Type=4
-PicMap=art\items\robtroc2.frm
+PicMap=art\items\ammo\robtroc2.frm
 PicInv=art\inven\robtroc2.frm
 Flags=134217757
 DisableEgg=1
@@ -322,7 +322,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_45_CALIBER_AMMO {.45APC civilian shot}
 ProtoId=357
 Type=4
-PicMap=art\items\new\ammo\45ap.frm
+PicMap=art\items\ammo\45ap.frm
 PicInv=art\inven\45cal.frm
 Flags=134217756
 DisableEgg=1
@@ -340,7 +340,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_2MM_EC_AMMO {2mm EC}
 ProtoId=358
 Type=4
-PicMap=art\items\new\ammo\2mmec.png
+PicMap=art\items\ammo\2mmec.png
 PicInv=art\inven\2mmec.frm
 Flags=134217756
 DisableEgg=1
@@ -359,7 +359,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_4_7MM_CASELESS {4,7mm UNI}
 ProtoId=359
 Type=4
-PicMap=art\items\new\ammo\47mm.png
+PicMap=art\items\ammo\47mm.png
 PicInv=art\inven\4_7mm.frm
 Flags=134217756
 DisableEgg=1
@@ -378,7 +378,7 @@ Ammo_DmgDiv=10
 [Proto] # PID_9MM_AMMO {9x19mm}
 ProtoId=360
 Type=4
-PicMap=art\items\new\ammo\9mm.FRM
+PicMap=art\items\ammo\9mm.FRM
 PicInv=art\inven\9mm.frm
 Flags=134217756
 DisableEgg=1
@@ -397,7 +397,7 @@ Ammo_DmgDiv=10
 [Proto] # PID_HN_NEEDLER_CARTRIDGE {Пластиковые дротики}
 ProtoId=361
 Type=4
-PicMap=art\items\new\ammo\hncart.frm
+PicMap=art\items\ammo\hncart.frm
 PicInv=art\inven\hncart.frm
 Flags=134217756
 DisableEgg=1
@@ -415,7 +415,7 @@ Ammo_DmgDiv=1
 [Proto] # PID_HN_AP_NEEDLER_CARTRIDGE {FM бронебойные дротики}
 ProtoId=362
 Type=4
-PicMap=art\items\new\ammo\hnap.png
+PicMap=art\items\ammo\hnap.png
 PicInv=art\inven\hnapcart.frm
 Flags=134217756
 DisableEgg=1
@@ -433,7 +433,7 @@ Ammo_DmgDiv=5
 [Proto] # PID_7_62MM_AMMO {.308 military}
 ProtoId=363
 Type=4
-PicMap=art\items\new\ammo\762.png
+PicMap=art\items\ammo\762.png
 PicInv=art\inven\762mm.frm
 Flags=134217756
 DisableEgg=1
@@ -452,7 +452,7 @@ Ammo_DmgDiv=5
 [Proto] # PID_FLAMETHROWER_FUEL_MK_II {Горючая смесь}
 ProtoId=382
 Type=4
-PicMap=art\items\new\ammo\fuelmk2.png
+PicMap=art\items\ammo\fuelmk2.png
 PicInv=art\inven\flmfuel2.frm
 Flags=134217756
 DisableEgg=1
@@ -471,7 +471,7 @@ Ammo_DmgDiv=5
 [Proto] # PID_700_NITRO_EXPRESS {.700 Nitro Express}
 ProtoId=591
 Type=4
-PicMap=art\items\new\ammo\40mm2.png
+PicMap=art\items\ammo\40mm2.png
 PicInv=art\inven\nitroexpressr.png
 Flags=134250524
 DisableEgg=1
@@ -490,7 +490,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=611
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\signal_rocket.png
 Flags=134250524
 DisableEgg=1
@@ -508,7 +508,7 @@ Ammo_DmgDiv=0
 [Proto] # 
 ProtoId=612
 Type=4
-PicMap=art\items\rshell.frm
+PicMap=art\items\ammo\rshell.frm
 PicInv=art\inven\emp_rocket.png
 Flags=134217756
 DisableEgg=1
@@ -526,7 +526,7 @@ Ammo_Caliber=1
 [Proto] # 
 ProtoId=10023
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\14mm_low.png
 Flags=134250556
 DisableEgg=1
@@ -545,7 +545,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10030
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\10mmap2.frm
 Flags=134250524
 DisableEgg=1
@@ -565,7 +565,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10031
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\10mmap3.frm
 Flags=134250524
 DisableEgg=1
@@ -584,7 +584,7 @@ Ammo_DmgDiv=2
 [Proto] # 
 ProtoId=10032
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\ssshells3.frm
 Flags=134250524
 DisableEgg=1
@@ -604,7 +604,7 @@ Ammo_DmgDiv=3
 [Proto] # 
 ProtoId=10033
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\ssshells2.frm
 Flags=134250524
 DisableEgg=1
@@ -624,7 +624,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10034
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\ssshells4.png
 Flags=134250524
 DisableEgg=1
@@ -643,7 +643,7 @@ Ammo_DmgDiv=2
 [Proto] # 
 ProtoId=10035
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\5mmjhp2.frm
 Flags=134250524
 DisableEgg=1
@@ -662,7 +662,7 @@ Ammo_DmgDiv=2
 [Proto] # 
 ProtoId=10036
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\223FMJ2.frm
 Flags=134250524
 DisableEgg=1
@@ -682,7 +682,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10037
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\45cal2.frm
 Flags=134250524
 DisableEgg=1
@@ -702,7 +702,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10038
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\762mm2.frm
 Flags=134250524
 DisableEgg=1
@@ -722,7 +722,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10039
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\FLMFUEL2_2.FRM
 Flags=134250524
 DisableEgg=1
@@ -742,7 +742,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10040
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\4_7mm2.frm
 Flags=134250524
 DisableEgg=1
@@ -761,7 +761,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10041
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\CCELLS2.png
 Flags=134250524
 DisableEgg=1
@@ -785,7 +785,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10056
 Type=4
-PicMap=art\items\rshell.frm
+PicMap=art\items\ammo\rshell.frm
 PicInv=art\inven\onehand_bazooka_ammo.png
 Flags=134217756
 DisableEgg=1
@@ -802,7 +802,7 @@ Ammo_DmgDiv=5
 [Proto] # 
 ProtoId=10057
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\s_2.png
 Flags=134250524
 DisableEgg=1
@@ -821,7 +821,7 @@ Ammo_DmgDiv=1
 [Proto] # 
 ProtoId=10081
 Type=4
-PicMap=art\items\ammo.frm
+PicMap=art\items\ammo\ammo.frm
 PicInv=art\inven\Magazine.png
 Flags=134217756
 DisableEgg=1
@@ -840,7 +840,7 @@ Ammo_DmgDiv=10
 [Proto] # 
 ProtoId=10091
 Type=4
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\ammo\smalbox2.frm
 PicInv=art\inven\40mm.png
 Flags=134217758
 DisableEgg=1

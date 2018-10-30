@@ -1233,18 +1233,6 @@ SoundId=66
 Material=1
 
 [Proto]
-ProtoId=4668
-Type=9
-PicMap=art\scenery\reserved.frm
-PicInv=art\inven\reserved.frm
-Corner=1
-Flags=268439580
-DisableEgg=1
-Weight=500000
-SoundId=66
-Material=1
-
-[Proto]
 ProtoId=4757
 Type=9
 PicMap=art\scenery\mntdoor2.frm

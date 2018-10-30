@@ -8,7 +8,7 @@
 [Proto] # PID_STEEL {Сложная стальная деталь}
 ProtoId=50
 Type=5
-PicMap=art\items\new\craft\metal_trash.png
+PicMap=art\items\craft\metal_trash.png
 PicInv=art\inven\metal_trash.frm
 Flags=134217758
 DisableEgg=1
@@ -24,7 +24,7 @@ ProtoId=75
 Type=5
 ScriptModule=resources
 ScriptFunc=_ToolInit
-PicMap=art\items\new\misc\mtool_gr.frm
+PicMap=art\items\misc\mtool_gr.frm
 PicInv=art\inven\cutter.frm
 Flags=150994974
 DisableEgg=1
@@ -38,7 +38,7 @@ Material=1
 [Proto] # PID_DEANS_ELECTRONICS {"Электроника Дина"}
 ProtoId=76
 Type=5
-PicMap=art\items\book.frm
+PicMap=art\items\generic\book.frm
 PicInv=art\inven\deans.frm
 Flags=402653214
 DisableEgg=1
@@ -52,7 +52,7 @@ Material=3
 [Proto] # PID_FIRST_AID_BOOK {Медицинский справочник}
 ProtoId=80
 Type=5
-PicMap=art\items\book.frm
+PicMap=art\items\generic\book.frm
 PicInv=art\inven\frst_bk.frm
 Flags=402653214
 DisableEgg=1
@@ -80,7 +80,7 @@ Material=1
 [Proto] # PID_SCORPION_TAIL {Хвост скорпиона}
 ProtoId=92
 Type=5
-PicMap=art\items\scorptal.frm
+PicMap=art\items\craft\scorptal.frm
 PicInv=art\inven\scorp.frm
 Flags=134217758
 DisableEgg=1
@@ -94,7 +94,7 @@ Material=1
 [Proto] # PID_PUMP_PARTS {Металлолом}
 ProtoId=98
 Type=5
-PicMap=art\items\pump.frm
+PicMap=art\items\craft\pump.frm
 PicInv=art\inven\scrapMetal02.png
 Flags=150994974
 DisableEgg=1
@@ -108,7 +108,7 @@ Material=1
 [Proto] # PID_LIGHTER {Зажигалка}
 ProtoId=101
 Type=5
-PicMap=art\items\new\misc\Zippo.png
+PicMap=art\items\misc\Zippo.png
 PicInv=art\inven\zip1.frm
 Flags=134217758
 DisableEgg=1
@@ -121,7 +121,7 @@ Material=1
 [Proto] # PID_GUNS_AND_BULLETS {"Пушки и Пули"}
 ProtoId=102
 Type=5
-PicMap=art\items\book.frm
+PicMap=art\items\generic\book.frm
 PicInv=art\inven\g&a.frm
 Flags=402653214
 DisableEgg=1
@@ -135,7 +135,7 @@ Material=7
 [Proto] # PID_MOTIVATOR {Орудийная аппаратура}
 ProtoId=229
 Type=5
-PicMap=art\items\new\craft\armoredsteel.frm
+PicMap=art\items\craft\armoredsteel.frm
 PicInv=art\inven\t8lis.png
 Flags=134217758
 DisableEgg=1
@@ -149,7 +149,7 @@ Material=1
 [Proto] # PID_CHEMISTRY_MANUAL {Химические журналы}
 ProtoId=237
 Type=5
-PicMap=art\items\new\craft\book_big.frm
+PicMap=art\items\craft\book_big.frm
 PicInv=art\inven\science.frm
 Flags=134217758
 DisableEgg=1
@@ -163,7 +163,7 @@ Material=1
 [Proto] # PID_GECKO_PELT {Шкура серебряного гекко}
 ProtoId=276
 Type=5
-PicMap=art\items\new\misc\pelt1itm.frm
+PicMap=art\items\misc\pelt1itm.frm
 PicInv=art\inven\pelt1.frm
 Flags=134217758
 DisableEgg=1
@@ -177,7 +177,7 @@ Material=7
 [Proto] # PID_GOLDEN_GECKO_PELT {Шкура золотого гекко}
 ProtoId=277
 Type=5
-PicMap=art\items\new\misc\pelt2itm.frm
+PicMap=art\items\misc\pelt2itm.frm
 PicInv=art\inven\pelt2.frm
 Flags=134217758
 DisableEgg=1
@@ -218,7 +218,7 @@ Material=3
 [Proto] # PID_PLANK {Железный кол}
 ProtoId=297
 Type=5
-PicMap=art\items\plank1.frm
+PicMap=art\items\craft\plank1.frm
 PicInv=art\inven\plank1.frm
 Flags=150994974
 DisableEgg=1
@@ -232,7 +232,7 @@ Material=3
 [Proto] # PID_PLASMA_TRANSFORMER {Плазменный трансформатор}
 ProtoId=307
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\trans01.frm
 Flags=150994974
 DisableEgg=1
@@ -260,7 +260,7 @@ Material=1
 [Proto] # PID_HYPODERMIC_NEEDLE {Пустой шприц}
 ProtoId=318
 Type=5
-PicMap=art\items\new\drugs\hypo.png
+PicMap=art\items\drugs\hypo.png
 PicInv=art\inven\hypo01.frm
 Flags=134217758
 DisableEgg=1
@@ -273,7 +273,7 @@ Cost=1
 [Proto] # PID_V15_COMPUTER_PART {Электроника}
 ProtoId=377
 Type=5
-PicMap=art\items\new\craft\v15comp.frm
+PicMap=art\items\craft\v15comp.frm
 PicInv=art\inven\v15comp.frm
 Flags=134217758
 DisableEgg=1
@@ -287,7 +287,7 @@ Material=1
 [Proto] # PID_OIL_CAN {Масленка}
 ProtoId=412
 Type=5
-PicMap=art\items\new\craft\oilcan.png
+PicMap=art\items\craft\oilcan.png
 PicInv=art\inven\oilcan.frm
 Flags=150994974
 DisableEgg=1
@@ -301,7 +301,7 @@ Material=1
 [Proto] # PID_MINE_PART {Система охлаждения}
 ProtoId=419
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\generic\box2.frm
 PicInv=art\inven\minepart.frm
 Flags=150994974
 DisableEgg=1
@@ -315,7 +315,7 @@ Material=1
 [Proto] # PID_EXCAVATOR_CHIP {Система разгрузки}
 ProtoId=422
 Type=5
-PicMap=art\items\chip.frm
+PicMap=art\items\generic\chip.frm
 PicInv=art\inven\exchip.frm
 Flags=150994974
 DisableEgg=1
@@ -329,7 +329,7 @@ Material=1
 [Proto] # PID_MEDICAL_SUPPLIES {Медицинский препарат}
 ProtoId=428
 Type=5
-PicMap=art\items\bpack2.frm
+PicMap=art\items\generic\bpack2.frm
 PicInv=art\inven\bagd.frm
 Flags=134217758
 DisableEgg=1
@@ -343,7 +343,7 @@ Material=7
 [Proto] # PID_POCKET_LINT {Нить}
 ProtoId=439
 Type=5
-PicMap=art\items\new\craft\pocketlint.png
+PicMap=art\items\craft\pocketlint.png
 PicInv=art\inven\pocklint.frm
 Flags=134217758
 DisableEgg=1
@@ -357,7 +357,7 @@ Material=7
 [Proto] # PID_BIO_GEL {Биогель}
 ProtoId=440
 Type=5
-PicMap=art\items\jar.frm
+PicMap=art\items\generic\jar.frm
 PicInv=art\inven\jar.frm
 Flags=150994974
 DisableEgg=1
@@ -370,7 +370,7 @@ Cost=500
 [Proto] # PID_BRAHMIN_SKIN {Шкура брамина}
 ProtoId=449
 Type=5
-PicMap=aart\items\new\craft\brahminskin.png
+PicMap=art\items\Craft\brahminskin.png
 PicInv=art\inven\brahmin_skin.frm
 Flags=134217758
 DisableEgg=1
@@ -384,7 +384,7 @@ Material=7
 [Proto] # PID_METAL_TRASH {Сложная железная деталь}
 ProtoId=475
 Type=5
-PicMap=art\items\new\craft\steel.png
+PicMap=art\items\craft\steel.png
 PicInv=art\inven\steel.frm
 Flags=134217758
 DisableEgg=1
@@ -400,7 +400,7 @@ ProtoId=532
 Type=5
 ScriptModule=resources
 ScriptFunc=_ToolInit
-PicMap=art\items\new\misc\BOTTLE.png
+PicMap=art\items\misc\BOTTLE.png
 PicInv=art\inven\bott_empty.frm
 Flags=134217758
 DisableEgg=1
@@ -413,7 +413,7 @@ Cost=1
 [Proto] # PID_GUNPOWDER {Порох}
 ProtoId=535
 Type=5
-PicMap=art\items\new\craft\gunpowder.png
+PicMap=art\items\craft\gunpowder.png
 PicInv=art\inven\gunpowder.frm
 Flags=134217758
 DisableEgg=1
@@ -427,7 +427,7 @@ Material=1
 [Proto] # PID_METAL_ORE {Железная руда}
 ProtoId=536
 Type=5
-PicMap=art\items\new\misc\met_ore_gr.frm
+PicMap=art\items\misc\met_ore_gr.frm
 PicInv=art\inven\metal_ore.frm
 Flags=134217758
 DisableEgg=1
@@ -441,7 +441,7 @@ Material=5
 [Proto] # PID_MINERAL {Минеральная руда}
 ProtoId=537
 Type=5
-PicMap=art\items\new\craft\minerals.png
+PicMap=art\items\craft\minerals.png
 PicInv=art\inven\mineral.frm
 Flags=134217758
 DisableEgg=1
@@ -469,7 +469,7 @@ Material=1
 [Proto] # PID_MOUSE_SKIN {Грибы}
 ProtoId=540
 Type=5
-PicMap=art\items\new\craft\mush_ground.png
+PicMap=art\items\craft\mush_ground.png
 PicInv=art\inven\mush_low.png
 Flags=134217758
 DisableEgg=1
@@ -483,7 +483,7 @@ Material=7
 [Proto] # PID_BOTTLE_GLASS {Бутылка}
 ProtoId=542
 Type=5
-PicMap=art\items\new\misc\glassbottle.png
+PicMap=art\items\misc\glassbottle.png
 PicInv=art\inven\glassbottle.frm
 Flags=402653214
 DisableEgg=1
@@ -498,7 +498,7 @@ ProtoId=543
 Type=5
 ScriptModule=resources
 ScriptFunc=_ToolInit
-PicMap=art\items\shovel2.frm
+PicMap=art\items\craft\axe.frm
 PicInv=art\inven\axe1.frm
 Flags=419430430
 DisableEgg=1
@@ -512,7 +512,7 @@ Material=1
 [Proto] # PID_FIRE_GECKO_PELT
 ProtoId=556
 Type=5
-PicMap=art\items\new\craft\fireg.frm
+PicMap=art\items\craft\fireg.frm
 PicInv=art\inven\fireg.frm
 Flags=134217758
 DisableEgg=1
@@ -540,7 +540,7 @@ Material=1
 [Proto] # PID_RAGS {Лоскут ткани}
 ProtoId=572
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\l3lis.png
 Flags=134217758
 DisableEgg=1
@@ -554,7 +554,7 @@ Material=7
 [Proto] # PID_NITROGLYCERIN {Нитроглицерин}
 ProtoId=573
 Type=5
-PicMap=art\items\new\misc\poizon.png
+PicMap=art\items\misc\poizon.png
 PicInv=art\inven\nitroglyc.frm
 Flags=134217758
 DisableEgg=1
@@ -567,7 +567,7 @@ Cost=50
 [Proto] # PID_CHEMICALS {Химикаты}
 ProtoId=574
 Type=5
-PicMap=art\items\new\misc\poizon.png
+PicMap=art\items\misc\poizon.png
 PicInv=art\inven\poizon.frm
 Flags=402653214
 DisableEgg=1
@@ -580,7 +580,7 @@ Cost=220
 [Proto] # PID_TNT {Тротил}
 ProtoId=575
 Type=5
-PicMap=art\items\new\craft\tnt.png
+PicMap=art\items\craft\tnt.png
 PicInv=art\inven\tnt.frm
 Flags=150994974
 DisableEgg=1
@@ -593,7 +593,7 @@ Cost=120
 [Proto] # PID_HEXOGEN {Гексоген}
 ProtoId=576
 Type=5
-PicMap=art\items\new\craft\gunpowder.png
+PicMap=art\items\craft\gunpowder.png
 PicInv=art\inven\hexogen.frm
 Flags=150994974
 DisableEgg=1
@@ -606,7 +606,7 @@ Cost=100
 [Proto] # PID_VACCINE {Хитин}
 ProtoId=593
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\mantis_shell.png
 Flags=134217758
 DisableEgg=1
@@ -619,7 +619,7 @@ Cost=3
 [Proto] #
 ProtoId=10044
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\s14lis.png
 Flags=134217756
 Stackable=1
@@ -630,7 +630,7 @@ Cost=6
 [Proto] #
 ProtoId=10061
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m4lis.png
 Flags=134217758
 DisableEgg=1
@@ -644,7 +644,7 @@ Material=1
 [Proto] #
 ProtoId=10062
 Type=5
-PicMap=art\items\box2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m7lis.png
 Flags=134217758
 DisableEgg=1
@@ -658,7 +658,7 @@ Material=1
 [Proto] #
 ProtoId=10063
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m3lis.png
 Flags=134217758
 DisableEgg=1
@@ -672,7 +672,7 @@ Material=1
 [Proto] #
 ProtoId=10064
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m10lis.png
 Flags=134217758
 DisableEgg=1
@@ -686,7 +686,7 @@ Material=1
 [Proto] #
 ProtoId=10065
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m11lis.png
 Flags=134217758
 DisableEgg=1
@@ -700,7 +700,7 @@ Material=1
 [Proto] #
 ProtoId=10066
 Type=5
-PicMap=art\items\firewood.frm
+PicMap=art\items\craft\firewood.frm
 PicInv=art\inven\s13lis.png
 Flags=150994974
 DisableEgg=1
@@ -714,7 +714,7 @@ Material=3
 [Proto] #
 ProtoId=10067
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\l11lis.png
 Flags=134217758
 DisableEgg=1
@@ -728,7 +728,7 @@ Material=7
 [Proto] #
 ProtoId=10068
 Type=5
-PicMap=art\items\jar.frm
+PicMap=art\items\generic\jar.frm
 PicInv=art\inven\l16lis.png
 Flags=150994974
 DisableEgg=1
@@ -741,7 +741,7 @@ Cost=20
 [Proto] #
 ProtoId=10069
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m19lis.png
 Flags=134217758
 DisableEgg=1
@@ -755,7 +755,7 @@ Material=1
 [Proto] #
 ProtoId=10070
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\m18lis.png
 Flags=134217758
 DisableEgg=1
@@ -769,7 +769,7 @@ Material=1
 [Proto] #
 ProtoId=10071
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\s14lis.png
 Flags=134217756
 Stackable=1
@@ -778,9 +778,9 @@ Volume=1
 Cost=5
 
 [Proto] #
-ProtoId=10089
+ProtoId=10072
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\generic\smalbox2.frm
 PicInv=art\inven\l19lis.png
 Flags=134217758
 DisableEgg=1
@@ -792,9 +792,9 @@ Cost=125
 Material=1
 
 [Proto] #
-ProtoId=10090
+ProtoId=10073
 Type=5
-PicMap=art\items\Fix3.png
+PicMap=art\items\workbench\Fix3.png
 PicInv=art\inven\Fix2.png
 Flags=150994974
 DisableEgg=1
@@ -805,3 +805,30 @@ SoundId=48
 Cost=20000
 Material=1
 
+[Proto] #
+ProtoId=10074
+Type=5
+PicMap=art\items\craft\SHELL.frm
+PicInv=art\inven\shell2.frm
+Flags=134217758
+DisableEgg=1
+Stackable=1
+Weight=50
+Volume=1
+SoundId=48
+Cost=125
+Material=1
+
+[Proto] #
+ProtoId=10075
+Type=5
+PicMap=art\items\craft\ground_elparts.fofrm
+PicInv=art\inven\exchip.frm
+Flags=134217758
+DisableEgg=1
+Stackable=1
+Weight=50
+Volume=1
+SoundId=48
+Cost=125
+Material=1
