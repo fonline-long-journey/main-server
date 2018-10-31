@@ -73,6 +73,9 @@
 # define EXPORT_UNINITIALIZED       extern "C" __attribute__( ( visibility( "default" ) ) )
 #endif
 
+#define min(x,y) ((x)>(y)?(y):(x)) 
+#define max(x,y) ((x)>(y)?(x):(y))
+
 // STL
 #include <stdlib.h>
 #include <string.h>

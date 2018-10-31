@@ -1345,21 +1345,21 @@
 #define CRTYPE_DW_METAL_ARMOR_TESLA_M            ( 136 )
 #define CRTYPE_DW_METAL_ARMOR_TESLA_F            ( 137 )
 // Dweller Combat Armor Section
-#define CRTYPE_DW_COMBAT_ARMOR_BLUE			     ( 150 )
+//#define CRTYPE_DW_COMBAT_ARMOR_BLUE			     ( 150 )
 #define CRTYPE_DW_COMBAT_ARMOR_BLUE			     ( 151 )
-#define CRTYPE_DW_COMBAT_ARMOR_DARK			     ( 152 )
+//#define CRTYPE_DW_COMBAT_ARMOR_DARK			     ( 152 )
 #define CRTYPE_DW_COMBAT_ARMOR_DARK			     ( 153 )
-#define CRTYPE_DW_COMBAT_ARMOR_DESERT			 ( 154 )
+//#define CRTYPE_DW_COMBAT_ARMOR_DESERT			 ( 154 )
 #define CRTYPE_DW_COMBAT_ARMOR_DESERT			 ( 155 )
-#define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN	     ( 156 )
+//#define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN	     ( 156 )
 #define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN	     ( 157 )
-#define CRTYPE_DW_COMBAT_ARMOR_SAND			     ( 158 )
+//#define CRTYPE_DW_COMBAT_ARMOR_SAND			     ( 158 )
 #define CRTYPE_DW_COMBAT_ARMOR_SAND			     ( 159 )
-#define CRTYPE_DW_COMBAT_ARMOR_BLACK			 ( 160 )
+//#define CRTYPE_DW_COMBAT_ARMOR_BLACK			 ( 160 )
 #define CRTYPE_DW_COMBAT_ARMOR_BLACK			 ( 161 )
-#define CRTYPE_DW_COMBAT_ARMOR_SCOUT			 ( 162 )
+//#define CRTYPE_DW_COMBAT_ARMOR_SCOUT			 ( 162 )
 #define CRTYPE_DW_COMBAT_ARMOR_SCOUT			 ( 163 )
-#define CRTYPE_DW_COMBAT_ARMOR_RED		         ( 164 )
+//#define CRTYPE_DW_COMBAT_ARMOR_RED		         ( 164 )
 #define CRTYPE_DW_COMBAT_ARMOR_RED		         ( 165 )
 // Long Hair Dude. LHD_TRIBAL && LHD_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
 #define CRTYPE_LHD_TRIBAL                        ( 180 )
@@ -1802,6 +1802,11 @@
 # pragma bindfunc "void fonline_ext_dll() -> fonline_ext.dll SERVER"
 #endif
 
+// Load client extensions
+#ifdef __CLIENT
+# pragma bindfunc "void fonline_ext_dll() -> fonline_ext.dll CLIENT"
+#endif
+
 // /
 // / Item prototypes fields
 // /
@@ -1878,7 +1883,7 @@
 # ifdef __CLIENT
 // Next line produce error due to disabled AllowClientNativeCalls
 // #  pragma bindfunc "void TestFunc(string&) -> fonline_test_client.dll TestFunc"
-#  pragma bindfunc  "void dummy() -> fonline_tla_client.dll CLIENT"
+// #  pragma bindfunc  "void dummy() -> fonline_tla_client.dll CLIENT"
 # endif
 
 #endif // SKIP_PRAGMAS
