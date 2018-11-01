@@ -25,7 +25,7 @@
 
 import bool AddMiscPlane( Critter& npc, uint priority, uint waitSecond, string@ funcName ) from "npc_planes";
 import bool AddWalkPlane( Critter& npc, uint priority, int identifier, uint identifierExt, uint16 hexX, uint16 hexY, uint8 dir, bool run, uint cut ) from "npc_planes";
-import bool GetFreeHex( Map& map, uint radius, uint16& hx, uint16& hy ) from "caravan";
+//import bool GetFreeHex( Map& map, uint radius, uint16& hx, uint16& hy ) from "caravan";
 import bool AddAttackPlane( Critter& npc, uint priority, uint critId ) from "npc_planes";
 
 bool Map2Revenge( Map& map,  uint leaderRole, uint textMsg, uint strCall, uint strCallAns, uint strFirst, uint strLast, uint strAns, uint strKill, uint strEnter )
@@ -429,14 +429,14 @@ void _MapLoop0_LeaderCalls( Map& map )
                         cr.SayMsg( SAY_NORM, rm.TextMsg, rm.StrCallAnswer );                                                                                                                          // Относительная частота произнесения
                     uint16 hx = leader.HexX;
                     uint16 hy = leader.HexY;
-                    if( GetFreeHex( map, LEADER_RADIUS, hx, hy ) )
+                    /* if( GetFreeHex( map, LEADER_RADIUS, hx, hy ) )
                     {
                         if( AddWalkPlane( cr, 0, PLANE_MOVE2LEADER, 0, hx, hy, GetDirection( hx, hy, leader.HexX, leader.HexY ), ( ( Random( 1, 3 ) == 1 ) ? true : false ), Random( 0, 1 ) ) )
                         {
                             AddMiscPlane( cr, 0, 0, "npc_revenge@plane_WaitMeeting" );
                             cr.StatBase[ ST_VAR9 ] = 0;
                         }
-                    }
+                    } */
                 }
             }
             return;

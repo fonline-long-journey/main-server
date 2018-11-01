@@ -38,23 +38,23 @@ import bool AddAttackPlane( Critter& npc, uint priority, Critter& target, int mi
 import bool UseSkillOnLocker( Critter& cr, Item& locker, int skill ) from "lockers";
 import bool PerkCheck( Critter& cr, uint perk ) from "perks";
 import void CritterGenerate( Critter& cr ) from "parameters";
-import void CaravansInit() from "caravan";
+//import void CaravansInit() from "caravan";
 import int  GetDeteriorationProcent( Item& item ) from "repair";
 import void SetDeterioration( Item& item, int deteriorationProcent ) from "repair";
 import void NpcProcessLevel( Critter& npc ) from "parameters";
 import bool IsPermanentDeath( uint id ) from "replication";
-import bool SetPlayerStoryLineLocation( Critter& player )  from "q_main_intro";
+//import bool SetPlayerStoryLineLocation( Critter& player )  from "q_main_intro";
 import void EditRadioSettings( Critter& player, Item& radio ) from "radio";
-import void SetNoPvp() from "nopvp_maps";
-import void OnCritterMapOut( Critter& cr, Map& map ) from "nopvp_maps";
-import void OnCitterMapIn( Critter& cr, Map& map ) from "nopvp_maps";
-import void DeclareEvents() from "game_event";
-import void CheckAllGameEvents() from "game_event";
-import void PlaceLoot2Container( Map& map, Critter& cr ) from "game_event_caches";
-import void StartMessenger() from "bulletin_board";
-import void SaveMessengerData() from "bulletin_board";
-import void CountEmpRocketTests( Critter& player, Critter& target ) from "navarro";
-import void OnCritterKilled( Critter& cr, Critter@ killer ) from "q_hunter";
+//import void SetNoPvp() from "nopvp_maps";
+//import void OnCritterMapOut( Critter& cr, Map& map ) from "nopvp_maps";
+//import void OnCitterMapIn( Critter& cr, Map& map ) from "nopvp_maps";
+//import void DeclareEvents() from "game_event";
+//import void CheckAllGameEvents() from "game_event";
+//import void PlaceLoot2Container( Map& map, Critter& cr ) from "game_event_caches";
+//import void StartMessenger() from "bulletin_board";
+//import void SaveMessengerData() from "bulletin_board";
+//import void CountEmpRocketTests( Critter& player, Critter& target ) from "navarro";
+//import void OnCritterKilled( Critter& cr, Critter@ killer ) from "q_hunter";
 import bool BarterAllowed( int crId, Item@[]& buyItems,  Item@[]& saleItems ) from "limited_barter";
 import uint CheckPlayerName( const string& name ) from "parameters";
 import bool ProtoItem_Weapon_IsHtHAttack( ProtoItem& proto, uint8 mode ) from "parameters";
@@ -165,20 +165,20 @@ bool start()
     WorldmapInit();
 
     // Caravans initialization
-    CaravansInit();
+    //CaravansInit();
 
     // NoPvP initialization
-    SetNoPvp();
+    //SetNoPvp();
 
     // Game Events initialization
-    DeclareEvents();
-    CheckAllGameEvents();
+    //DeclareEvents();
+    //CheckAllGameEvents();
 
     // Weather system
     WeatherInit();
 
     // Bulletin boards
-    StartMessenger();
+    //StartMessenger();
     return true;
 }
 
@@ -1359,8 +1359,8 @@ void critter_init( Critter& cr, bool firstTime )
             SetStartLocation( cr );
 	
             // Main quest
-            if( __MainStoryLineActive )
-                SetPlayerStoryLineLocation( cr );
+            //if( __MainStoryLineActive )
+            //    SetPlayerStoryLineLocation( cr );
 				
 			cr.RunClientScript("rp_client@__reglog",0,0,0,null,null);
         }
@@ -1375,8 +1375,8 @@ void critter_init( Critter& cr, bool firstTime )
     else
     {
         // Main quest
-        if( cr.IsPlayer() && __MainStoryLineActive )
-            SetPlayerStoryLineLocation( cr );
+        //if( cr.IsPlayer() && __MainStoryLineActive )
+        //    SetPlayerStoryLineLocation( cr );
 
         // Current skin validation
         Item@ armor = cr.GetItem( 0, SLOT_ARMOR );
@@ -1584,7 +1584,7 @@ void critter_dead( Critter& cr, Critter@ killer )
         if( valid( blocker ) )
             cr.StatBase[ ST_DEAD_BLOCKER_ID ] = blocker.Id;
     }
-    OnCritterKilled( cr, killer );
+    //OnCritterKilled( cr, killer );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1604,7 +1604,7 @@ void critter_respawn( Critter& cr )
 // Call on something critter in to map.
 void map_critter_in( Map& map, Critter& cr )
 {
-    OnCitterMapIn( cr, map );
+    //OnCitterMapIn( cr, map );
     if( cr.IsPlayer() )
     {
         uint16 locPid = map.GetLocation().GetProtoId();
@@ -1616,7 +1616,7 @@ void map_critter_in( Map& map, Critter& cr )
             lastCityVar = locPid;
         }
 
-        PlaceLoot2Container( map, cr );
+    //    PlaceLoot2Container( map, cr );
     }
 }
 
@@ -1624,7 +1624,7 @@ void map_critter_in( Map& map, Critter& cr )
 // Call on something critter out from map.
 void map_critter_out( Map& map, Critter& cr )
 {
-    OnCritterMapOut( cr, map );
+   // OnCritterMapOut( cr, map );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1984,7 +1984,7 @@ void world_save( uint currentIndex, uint[]& deleteIndexes )
         deleteIndexes[ 0 ] = currentIndex - 5;
     }
     // bboards
-    SaveMessengerData();
+    //SaveMessengerData();
 }
 
 // Call on player try register

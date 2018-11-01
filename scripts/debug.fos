@@ -426,54 +426,54 @@ void SetMode( Critter& cr, int id, int mode, int value )
     Critter @ crit = GetCritter( id );
     crit.ModeBase[ mode ] = value;
 }
-import void AddWave( int waveNum, int mapId, int type ) from "mob_wave";
+/* import void AddWave( int waveNum, int mapId, int type ) from "mob_wave";
 import void AddSpawnStep( int waveNum, uint8 radius, uint timeNext, uint x, uint y ) from "mob_wave";
 import void AddMob( int waveNum, int pid, int team ) from "mob_wave";
 import void AddMoveStep( int waveNum, uint8 radius, uint timeNext, uint x, uint y ) from "mob_wave";
 import void AddAttackStep( int waveNum, uint8 radius, uint timeNext, uint timeRepeat, uint x, uint y ) from "mob_wave";
 import void AddDeleteStep( int waveNum, uint8 radius, uint timeNext ) from "mob_wave";
 import void _StartWave( int waveNum ) from "mob_wave";
-import void AddTransitStep( int waveNum, uint8 radius, uint timeNext, uint x, uint y, uint mapId ) from "mob_wave";
+import void AddTransitStep( int waveNum, uint8 radius, uint timeNext, uint x, uint y, uint mapId ) from "mob_wave"; */
 
 
 void NewWave( Critter& cr, int num, int type, int )
 {
-    AddWave( num, cr.GetMap().Id, type );
+ //   AddWave( num, cr.GetMap().Id, type );
 }
 
 void AddStepSpawn( Critter& cr, int num, int radius, int timeNext )
 {
-    AddSpawnStep( num, radius, timeNext, cr.HexX, cr.HexY );
+//    AddSpawnStep( num, radius, timeNext, cr.HexX, cr.HexY );
 }
 
 void AddStepMove( Critter& cr, int num, int radius, int timeNext )
 {
-    AddMoveStep( num, radius, timeNext, cr.HexX, cr.HexY );
+ //   AddMoveStep( num, radius, timeNext, cr.HexX, cr.HexY );
 }
 
 void AddStepAttack( Critter& cr, int num, int radius, int timeNext )
 {
-    AddAttackStep( num, radius, timeNext, 10, cr.HexX, cr.HexY );
+ //   AddAttackStep( num, radius, timeNext, 10, cr.HexX, cr.HexY );
 }
 
 void AddStepDelete( Critter& cr, int num, int radius, int timeNext )
 {
-    AddDeleteStep( num, radius, timeNext );
+ //   AddDeleteStep( num, radius, timeNext );
 }
 
 void AddMob( Critter& cr, int num, int pid, int team )
 {
-    AddMob( num, pid, team );
+  //  AddMob( num, pid, team );
 }
 
 void AddStepTransit( Critter& cr, int num, int radius, int timeNext )
 {
-    AddTransitStep( num, radius, timeNext, cr.HexX, cr.HexY, cr.GetMap().Id );
+ //   AddTransitStep( num, radius, timeNext, cr.HexX, cr.HexY, cr.GetMap().Id );
 }
 
 void BeginWave( Critter& cr, int num, int, int )
 {
-    _StartWave( num );
+ //   _StartWave( num );
 }
 
 /*
@@ -624,16 +624,16 @@ void AddNpc( Critter& cr, int pid, int dialog, int )
 
 void patchSalv( Critter& cr, int, int, int )
 {
-    Map@ map = GetMapByPid( MAP_newr3, 0 );
+/*     Map@ map = GetMapByPid( MAP_newr3, 0 );
     if( valid( map ) )
     {
         Critter@npc = map.AddNpc( 212, 63, 71, 2, null, null, "trader@_CashTraderInit" );
-    }
+    } */
 }
 
-import uint ProcessSubQuest1( Critter& player, int newVal ) from "quest_warehouse";
+//import uint ProcessSubQuest1( Critter& player, int newVal ) from "quest_warehouse";
 
 void QWHS1( Critter& player, int val, int, int )
 {
-    ProcessSubQuest1( player, val );
+ //   ProcessSubQuest1( player, val );
 }

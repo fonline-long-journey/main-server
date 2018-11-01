@@ -1444,8 +1444,6 @@ void drawTracers(Map@ map, uint16 hexX, uint16 hexY, uint16 tx, uint16 ty, int r
 			critters[i].RunClientScript ("client_main@__Draw", drawType, 0, 0, null, drawdata );
 		}
 	}
-	
-	
 }
 
 void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCritical, bool intentionally, CombatRes[]& results )
