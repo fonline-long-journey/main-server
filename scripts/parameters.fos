@@ -3,6 +3,10 @@
 #include "_msgstr.fos"
 #include "combat_h.fos"
 
+#ifdef __SERVER
+#include "critter_types_h.fos"
+#endif
+
 #ifdef __CLIENT
 # include "_client_defines.fos"
 # include "gui_h.fos"
@@ -27,6 +31,26 @@ void unsafe_changeSkills(Critter& player, int param0, int param1, int param2, st
             player.ParamBase[i] += skills[i - __SkillBegin];
         }
     }
+}
+
+void UpdateMovementSpeed(Critter& cr)
+{
+    ICritterType@ crType = GetCrType(cr.CrType); // script engine access
+
+    cr.StatBase[ST_RUN_TIME]  = crType.getRunTime();
+    cr.StatBase[ST_WALK_TIME] = crType.getWalkTime();
+    
+/*     if(cr.Trait[TRAIT_KAMIKAZE] != 0) // faster, 0 value will make engine to use CRTYPE table instead, but we need to know which values are we working with to predict the code
+    {
+		cr.StatBase[ST_RUN_TIME]  -= (cr.StatBase[ST_RUN_TIME]*15)/100;  //15%
+		cr.StatBase[ST_WALK_TIME] -= (cr.StatBase[ST_WALK_TIME]*15)/100;
+    }
+    
+    if(cr.Perk[PE_BONUS_MOVE] != 0)
+    {
+        cr.StatBase[ST_RUN_TIME]  -= (cr.StatBase[ST_RUN_TIME]*15*cr.Perk[PE_BONUS_MOVE])/100;  //15% for each stage
+        cr.StatBase[ST_WALK_TIME] -= (cr.StatBase[ST_WALK_TIME]*15*cr.Perk[PE_BONUS_MOVE])/100;
+    }  */
 }
 
 

@@ -14,16 +14,18 @@ void __attribute__( ( destructor ) )  DllUnload() {}
 #endif
 
 void RegisterASExtensions();
+void CheckASGlobals();
 
 void RegisterASExtensions()
 {
-	// ASEngine;
+	 //ASEngine;
 	#ifdef __SERVER
 	#define SCRIPT_ITEM_STR    "Item"
 	#endif
 	#ifdef __CLIENT
 	#define SCRIPT_ITEM_STR    "ItemCl"
 	#endif
+	
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val0_b0", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 3);
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val0_b1", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 2);
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val0_b2", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 1);
@@ -74,12 +76,56 @@ void RegisterASExtensions()
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val9_b2", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 37);
 		ASEngine->RegisterObjectProperty(SCRIPT_ITEM_STR, "int8 val9_b3", asOFFSET(Item, Data) + asOFFSET(Item::_Data, ScriptValues) + 36);
 		
-//		Log("Registered vals offsets on" + SCRIPT_ITEM_STR + "\n");
+		#ifdef __SERVER
+		Log("Registered vals offsets on Item  \n");
+		#endif
+		
+		#ifdef __CLIENT
+		Log("Registered vals offsets on Item  \n");
+		#endif
+}
+
+void CheckASGlobals()
+{
+	asUINT globalFuncsCount = ASEngine->GetGlobalFunctionCount();
+	asUINT globalPropsCount = ASEngine->GetGlobalPropertyCount();
+	asUINT globalTypesCount = ASEngine->GetObjectTypeCount();
+
+	Log("Global functions list : \n");
+	for(uint i = 0; i<globalFuncsCount; i++)
+	{
+		asIScriptFunction* currentFunction = ASEngine->GetGlobalFunctionByIndex(i);
+		Log(currentFunction->GetDeclaration());
+		Log(" \n");
+	}
+
+ 
+	Log("Global types list : \n");
+	for(uint i = 0; i<globalTypesCount; i++)
+	{
+		
+		asIObjectType* type = ASEngine->GetObjectTypeByIndex(i);
+		Log(type->GetName());
+		Log(" \n");
+		Log("  ");
+		for(uint j = 0; j<type->GetMethodCount(); j++)
+		{
+			asIScriptFunction* method = type->GetMethodByIndex(j);
+			if(method)
+			{
+				Log(" ");
+				Log(method->GetDeclaration());
+				Log(" \n");
+			}
+		}
+		Log(" \n");
+	} 
 }
 
 FONLINE_DLL_ENTRY( isCompiler )
 {
 	RegisterASExtensions();
+//	CheckASGlobals();
 }
 
 // Slot/parameters allowing

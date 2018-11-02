@@ -10,6 +10,7 @@
 #include "wait_time_h.fos"
 #include "critter_types_h.fos"
 #include "apregen_h.fos"
+#include "object_data_h.fos"
 #define __ACCESSNAMES
 
 // Imports
@@ -72,6 +73,7 @@ import void WeatherInit() from "weather";
 // Called before world generation.
 void init()
 {
+	InitDataPrefixes();
     InitializeGame();
 	InitCritterTypes();
 }
@@ -80,6 +82,7 @@ void init()
 // Call on start server.
 bool start()
 {
+	InitializeObjectsData();
     // Send info about others critters
     // Remember:
     // - all this info can be hacked in client;
@@ -205,6 +208,7 @@ void get_start_time( uint16& multiplier, uint16& year, uint16& month, uint16& da
 // Call on finish server.
 void finish()
 {
+	FinishObjectsData();
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1235,6 +1239,7 @@ void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 void critter_init( Critter& cr, bool firstTime )
 {
 
+	
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
 	{
 		#ifdef __ACCESSNAMES
@@ -1454,13 +1459,17 @@ void critter_init( Critter& cr, bool firstTime )
 // Call on critter exit from game.
 void critter_finish( Critter& cr, bool toDelete )
 {
-    if( toDelete && cr.Stat[ ST_DEAD_BLOCKER_ID ] != 0 )
-    {
-        Item@ block = ::GetItem( cr.Stat[ ST_DEAD_BLOCKER_ID ] );
-        if( valid( block ) )
-            DeleteItem( block );
-        cr.StatBase[ ST_DEAD_BLOCKER_ID ] = 0;
-    }
+    if( toDelete )
+	{
+		if(cr.Stat[ ST_DEAD_BLOCKER_ID ] != 0 )
+		{
+			Item@ block = ::GetItem( cr.Stat[ ST_DEAD_BLOCKER_ID ] );
+			if( valid( block ) )
+				DeleteItem( block );
+			cr.StatBase[ ST_DEAD_BLOCKER_ID ] = 0;
+		}
+		CleanCritterData(cr);
+	}
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1983,6 +1992,7 @@ void world_save( uint currentIndex, uint[]& deleteIndexes )
         deleteIndexes.resize( 1 );
         deleteIndexes[ 0 ] = currentIndex - 5;
     }
+	SaveObjectsData();
     // bboards
     //SaveMessengerData();
 }

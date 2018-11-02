@@ -1,0 +1,29 @@
+
+#ifndef GEOMETRY_MODULE
+
+#define GEOMETRY_MODULE
+#include "geometry_h.fos"
+
+float GetAngle(uint16 hx, uint16 hy, uint16 tx, uint16 ty) // i dont know how the f do this from .dll so i just took the code from it
+{
+  float nx=3*(float(tx) - float(hx));
+  float ny=SQRT3T2_FLOAT*(float(ty) - float(hy)) - (float(tx%2) - float(hx%2))*SQRT3_FLOAT;
+  return 180.0f + RAD2DEG*atan2(ny,nx); // in degrees, because cvet loves the degrees
+}
+
+uint HexToPixelSpeed(uint16 hx, uint16 hy, uint16 tx, uint16 ty, uint hexSpeed)
+{
+
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+	GetHexPos(hx,hy,x1,y1);
+	GetHexPos(tx,ty,x2,y2);
+	int xDist = abs(x2-x1);
+	int yDist = abs(y2-y1);
+	uint16 dist  = GetDistantion(hx, hy, tx, ty);
+	uint time = (dist*1000/hexSpeed);  // M S
+	//Message("time " + time + " speedh " + hexSpeed);
+	
+	return ((xDist+yDist)*__SpritesZoom)*1000/time;
+}
+
+#endif

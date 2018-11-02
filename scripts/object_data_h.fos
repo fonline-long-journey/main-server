@@ -1,0 +1,162 @@
+// The Last Stand
+// Vice Dice 2018
+
+// object_data_h.fos
+
+#ifndef OBJECT_DATA_H
+#define OBJECT_DATA_H
+
+
+
+funcdef bool TargetValidator(uint id);
+
+#define DATA_TYPE_BEGIN 	(0)
+
+#define DATA_TYPE_ITEM		(0)
+#define DATA_TYPE_CRITTER	(1)
+#define DATA_TYPE_MAP		(2)
+#define DATA_TYPE_LOCATION	(3)
+
+//#define DATA_TYPE_GENERIC	(4) // unnecessary
+
+#define DATA_TYPE_END		(3)
+
+#define DATA_ITEM_SIZE		(5)
+#define DATA_CRITTER_SIZE	(5)
+#define DATA_MAP_SIZE		(5)
+#define DATA_LOCATION_SIZE	(5)
+#define DATA_DEFAULT_SIZE	(5)
+
+//#define DATA_GENERIC_SIZE 	(5)
+
+// your index macro here
+
+#define DATA_ITEM_VALUE0	  (0)
+#define DATA_CRITTER_VALUE0   (0)
+
+#define DATA_CRITTER_FLAG_ISPLAYER	(0x01)
+
+#define PREFIX_DATA_ITEM	  ("ItemData:")
+#define PREFIX_DATA_CRITTER	  ("CritterData:")
+#define PREFIX_DATA_MAP		  ("MapData:")
+#define PREFIX_DATA_LOCATION  ("LocationData:")
+
+/* #define PREFIX_CLEANUP_ITEM 	("ItemCleanup:")
+#define PREFIX_CLEANUP_CRITTER	("CritterCleanup:")
+#define PREFIX_CLEANUP_MAP		("MapCleanup:")
+#define PREFIX_CLEANUP_LOCATION	("LocationCleanup:") */
+
+//#define PREFIX_DATA_GENERIC   ("GenericData:")
+
+
+shared class CObjectData
+{
+	
+	uint8 type;
+	uint hookId;
+	
+	array<int> data;
+	
+	uint8 flags;
+
+	CObjectData(uint8 type, uint hookId, array<int> datain)
+	{
+		this.type = type;
+		this.hookId = hookId;
+		this.data = datain;
+	}
+	
+	CObjectData(uint8 type, uint hookId)
+	{
+		this.type = type;
+		this.hookId = hookId;
+		uint arrlen = 0;
+		switch(type)
+		{
+			case DATA_TYPE_ITEM:
+				arrlen = DATA_ITEM_SIZE;
+				break;
+			case DATA_TYPE_CRITTER:
+				arrlen = DATA_CRITTER_SIZE;
+				break;
+			case DATA_TYPE_MAP:
+				arrlen = DATA_MAP_SIZE;
+				break;
+			case DATA_TYPE_LOCATION:
+				arrlen = DATA_LOCATION_SIZE;
+				break;
+			default:
+				arrlen = DATA_DEFAULT_SIZE;
+				break;
+		}
+		this.data.resize(arrlen);
+		for(uint i = 0, j = arrlen; i<j; i++)
+			data[i] = 0;
+	}
+	
+	CObjectData() // blank
+	{
+		this.type = 0xFF;
+		this.hookId = 0xFFFFFFFF;
+		this.data.resize(0);
+	}
+	
+	void SetData(array<int> datain)
+	{
+		this.data = datain;
+	}
+}
+
+#ifdef OBJECT_DATA_MODULE
+
+//#define __OLD_AS
+
+#include "_macros.fos"
+#include "serializator.fos"
+#include "_time.fos"
+
+#define CLEANUP_TIME 	(REAL_MINUTE(1))
+
+#endif
+
+// InitDataPrefixes goes to main.fos >> init() function // CRUCIAL !!!
+// InitializeObjectsData goes to main.fos >> start() function
+// SaveObjectsData goes to main.fos >> world_save function
+// FinishObjectsData goes to main.fos >> finish() function
+// or wherever those callbacks are binded for your sdk
+// usage : Include this header file anywhere you want to use the stuff
+// Call GetItemData or GetCritterData for target id or object type ( item/critter)
+// Recieve CObjectData object pointer, work with it.
+// Data will be saved and loaded automatically upon SaveObjectsData and InitializeObjectsData
+// If there is no data existing at the time of calling, the script will create it automatically and return a ready-to-use CObjectData pointer
+
+// example : CObjectData@ itemData = GetItemData(item);
+// 			 itemData.data[0] = Random(1,9999);
+
+#ifndef OBJECT_DATA_MODULE
+import void InitDataPrefixes() from "object_data";
+import void InitializeObjectsData() from "object_data";
+import void SaveObjectsData() from "object_data";
+import void FinishObjectsData() from "object_data";
+import CObjectData@ GetItemData(uint id) from "object_data";
+import CObjectData@ GetItemData(Item& it) from "object_data";
+import CObjectData@ GetCritterData(uint id) from "object_data";
+import CObjectData@ GetCritterData(Critter& cr) from "object_data";
+import CObjectData@ GetMapDataExt(uint id) from "object_data";
+import CObjectData@ GetMapDataExt(Map& map) from "object_data";
+import CObjectData@ GetLocationData(uint id) from "object_data";
+import CObjectData@ GetLocationData(Location& loc) from "object_data";
+import CObjectData@ GetData(uint8 type, uint id) from "object_data";
+import void CleanCritterData(uint id) from "object_data";
+import void CleanCritterData(Critter& cr) from "object_data";
+import void CleanItemData(uint id) from "object_data";
+import void CleanItemData(Item& it) from "object_data";
+import void CleanMapDataExt(uint id) from "object_data";
+import void CleanMapDataExt(Map& map) from "object_data";
+import void CleanLocationData(uint id) from "object_data";
+import void CleanLocationData(Location& loc) from "object_data";
+import void CleanData(uint8 type, uint id) from "object_data";
+#endif
+
+
+#endif
