@@ -1,4 +1,4 @@
-// CARAVAN_WADE_REDD_VC
+/* // CARAVAN_WADE_REDD_VC
 
 _SetupCaravan( CARAVAN_WADE_REDD_VC, CRV_TYPE_TWOWAY, 2, LVAR_q_redd_wade_caravan_escort, 5 );
 _SetupCaravanLeader( CARAVAN_WADE_REDD_VC, DIALOG_redd_wade, NPC_PID_Wade, BAG_VaultCity_Military, TEAM_QuestNpc, AIPACKET_PEASANTS, 8 );
@@ -371,3 +371,4 @@ _AddGuardInfo( CARAVAN_HOSE_MOD_GECKO,  NPC_PID_ToughMaleThug, DIALOG_crvg_bombe
 _AddGuardInfo( CARAVAN_HOSE_MOD_GECKO, NPC_PID_MaleGunThug, DIALOG_crvg_common_male, "caravan@_BHCaravanGuardInit", AIPACKET_BOUNTY_HUNTER, BAG_VaultCity_Military, TEAM_QuestNpc, 10, 0, 0, 100, false );
 _AddGuardInfo( CARAVAN_HOSE_MOD_GECKO, NPC_PID_FemaleGunThug, DIALOG_crvg_common_female, "caravan@_BHCaravanGuardInit", AIPACKET_BOUNTY_HUNTER, BAG_VaultCity_Military, TEAM_QuestNpc, 10, 0, 0, 65, false );
 _SheduleCaravan( CARAVAN_HOSE_MOD_GECKO, 0, 8, 0, 12 );
+ */

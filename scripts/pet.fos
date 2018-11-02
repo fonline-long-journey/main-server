@@ -111,7 +111,7 @@ void _PetHideCritter( Critter& cr, Critter& hideCrit )
 }
 
 #define MAX_DISTANCE     ( 40 ) // При превышении этого значения пет удаляется
-import bool GetFreeHex( Map& map, uint radius, uint16& hx, uint16& hy ) from "caravan";
+//import bool GetFreeHex( Map& map, uint radius, uint16& hx, uint16& hy ) from "caravan";
 import bool AddWalkPlane( Critter& npc, uint priority, uint16 hexX, uint16 hexY, uint8 dir, bool run, uint cut ) from "npc_planes";
 
 bool FollowMaster( Critter& pet, uint idMaster )
@@ -132,11 +132,11 @@ bool FollowMaster( Critter& pet, uint idMaster )
             {
                 uint16 x = cr.HexX;
                 uint16 y = cr.HexY;
-                if( GetFreeHex( mapCr, 2, x, y ) )
+/*                 if( GetFreeHex( mapCr, 2, x, y ) )
                 {
                     AddWalkPlane( pet, 0, x, y, Random( 0, 5 ), true, 0 );
                     return true;
-                }
+                } */
             }
         }
     }
@@ -186,7 +186,7 @@ bool _BoxUse( Item& item, Critter& cr, Critter@ onCritter, Item@ onItem, Scenery
         {
             uint16 x = cr.HexX;
             uint16 y = cr.HexY;
-            if( GetFreeHex( map, 2, x, y ) )
+/*             if( GetFreeHex( map, 2, x, y ) )
             {
                 int[] params = { ST_NPC_ROLE, ROLE_PET, ST_VAR2, cr.Id, ST_VAR1, __FullSecond };
                 @pet = map.AddNpc( item.PetProto, x, y, GetDirection( x, y, cr.HexX, cr.HexY ), params, null, "_PetInit" );
@@ -196,7 +196,7 @@ bool _BoxUse( Item& item, Critter& cr, Critter@ onCritter, Item@ onItem, Scenery
                     pet.OwnerId = cr.Id;
                     return true;
                 }
-            }
+            } */
         }
     }
     return false;

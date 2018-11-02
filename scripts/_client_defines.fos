@@ -1,19 +1,6 @@
 #ifndef __CLIENT_DEFINES__
 #define __CLIENT_DEFINES__
 
-#pragma globalvar "bool __IsCtrlHot						 = false"
-#pragma globalvar "bool __waiting 					  	 = false"
-#pragma globalvar "bool __mobhotkeys					 = false"
-#pragma globalvar "string __nameView"
-#pragma globalvar "int AccessLevel						 = 0"
-#pragma globalvar "bool __ConfigDrawRays                 = true" // default, overriden from fonline 2238 config
-#pragma globalvar "bool __ConfigDrawWMZones              = true"
-#pragma globalvar "uint __ConfigWeaponDistColor          = 0"
-#pragma globalvar "bool __ConfigDrawWeaponDist           = false"
-#pragma globalvar "bool __ConfigDrawMuzzles              = true" 
-#pragma globalvar "bool __ShootBordersEnabled            = false"
-#pragma globalvar "int __BordersMode                    = 0"
-
 #define BORDERS_OFF                        ( 0 )
 #define BORDERS_ATTACK_RANGE               ( 1 )
 #define BORDERS_EFF_RANGE                  ( 2 )

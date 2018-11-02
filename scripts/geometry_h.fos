@@ -1,0 +1,15 @@
+
+
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
+
+
+#define SQRT3T2_FLOAT                ( 3.4641016151f )
+#define SQRT3_FLOAT                  ( 1.732050807568877f )
+#define RAD2DEG                      ( 57.29577951f )
+
+#ifndef GEOMETRY_MODULE
+import uint HexToPixelSpeed(uint16 hx, uint16 hy, uint16 tx, uint16 ty, uint hexSpeed) from "geometry";
+#endif
+
+#endif

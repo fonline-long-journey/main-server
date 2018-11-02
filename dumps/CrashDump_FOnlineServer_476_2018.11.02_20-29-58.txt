@@ -1,0 +1,108 @@
+Application
+	Name        FOnlineServer
+	Version     476
+	OS          6.1.7601 (Service Pack 1)
+	Timestamp   2018.11.02 20:29:58
+
+Exception
+	Code      EXCEPTION_ACCESS_VIOLATION
+	Address   0x005B9363
+	Flags     0x0
+	Info      Attempted to read to an 0x09EC0B2C
+
+Thread 'Main' (3440, current)
+	FOnlineServer, _output_l + 271, output.c (1069)
+	FOnlineServer, _vsnprintf_l + 131, vsprintf.c (138)
+	FOnlineServer, _vsnprintf + 24, vsprintf.c (190)
+	FOnlineServer, WriteLogInternal + 610, log.cpp (153)
+	FOnlineServer, WriteLog + 25, log.cpp (93)
+	fonline_tla, (function-name not available) + 0
+	FOnlineServer, Script::LoadDynamicLibrary + 933, script.cpp (552)
+	FOnlineServer, BindFuncPragma::Call + 650, scriptpragmas.cpp (333)
+	FOnlineServer, ScriptPragmaCallback::CallPragma + 801, scriptpragmas.cpp (551)
+	FOnlineServer, Preprocessor::CallPragma + 130, preprocessor.cpp (289)
+	FOnlineServer, Script::LoadScript + 1559, script.cpp (1402)
+	FOnlineServer, Script::ReloadScripts + 570, script.cpp (618)
+	FOnlineServer, FOServer::InitScriptSystem + 43055, serverscript.cpp (137)
+	FOnlineServer, FOServer::InitReal + 880, server.cpp (3480)
+	FOnlineServer, FOServer::Init + 22, server.cpp (3389)
+	FOnlineServer, GameLoopThread + 10, mainserver.cpp (691)
+	FOnlineServer, ThreadBeginExecution + 44, common.cpp (1546)
+	FOnlineServer, ptw32_threadStart + 119, ptw32_threadstart.c (225)
+	FOnlineServer, _callthreadstartex + 27, threadex.c (314)
+	FOnlineServer, _threadstartex + 100, threadex.c (292)
+	kernel32, BaseThreadInitThunk + 18
+	ntdll, RtlInitializeExceptionChain + 99
+	ntdll, RtlInitializeExceptionChain + 54
+
+Thread 'GUI' (864)
+	ntdll, NtWaitForSingleObject + 21
+	ntdll, RtlRandomEx + 458
+	FOnlineServer, LogGetBuffer + 14, log.cpp (205)
+	FOnlineServer, UpdateLog + 43, mainserver.cpp (644)
+	FOnlineServer, main + 1189, mainserver.cpp (216)
+	FOnlineServer, WinMain + 402, fl_call_main.c (115)
+	FOnlineServer, __tmainCRTStartup + 282, crt0.c (275)
+	kernel32, BaseThreadInitThunk + 18
+	ntdll, RtlInitializeExceptionChain + 99
+	ntdll, RtlInitializeExceptionChain + 54
+
+Thread 'GUIUpdate' (3260)
+	ntdll, NtDelayExecution + 21
+	KERNELBASE, Sleep + 15
+	FOnlineServer, Thread::Sleep + 13, common.cpp (1638)
+	FOnlineServer, GUIUpdate + 17, mainserver.cpp (525)
+	FOnlineServer, ThreadBeginExecution + 44, common.cpp (1546)
+	FOnlineServer, ptw32_threadStart + 119, ptw32_threadstart.c (225)
+	FOnlineServer, _callthreadstartex + 27, threadex.c (314)
+	FOnlineServer, _threadstartex + 100, threadex.c (292)
+	kernel32, BaseThreadInitThunk + 18
+	ntdll, RtlInitializeExceptionChain + 99
+	ntdll, RtlInitializeExceptionChain + 54
+
+Thread 'ScriptTimeout' (3752)
+	ntdll, NtDelayExecution + 21
+	KERNELBASE, Sleep + 15
+	FOnlineServer, Thread::Sleep + 13, common.cpp (1638)
+	FOnlineServer, RunTimeout + 1400, script.cpp (1225)
+	FOnlineServer, ThreadBeginExecution + 44, common.cpp (1546)
+	FOnlineServer, ptw32_threadStart + 119, ptw32_threadstart.c (225)
+	FOnlineServer, _callthreadstartex + 27, threadex.c (314)
+	FOnlineServer, _threadstartex + 100, threadex.c (292)
+	kernel32, BaseThreadInitThunk + 18
+	ntdll, RtlInitializeExceptionChain + 99
+	ntdll, RtlInitializeExceptionChain + 54
+
+Loaded modules
+	D:\Games\FOF\TLS476\main-server\FOnlineServer.exe (00400000)
+	C:\Windows\SysWOW64\ntdll.dll (77980000)
+	C:\Windows\syswow64\kernel32.dll (76F30000)
+	C:\Windows\syswow64\KERNELBASE.dll (76EC0000)
+	C:\Windows\syswow64\USER32.dll (752A0000)
+	C:\Windows\syswow64\GDI32.dll (76660000)
+	C:\Windows\syswow64\LPK.dll (76F10000)
+	C:\Windows\syswow64\USP10.dll (77070000)
+	C:\Windows\syswow64\msvcrt.dll (76210000)
+	C:\Windows\syswow64\ADVAPI32.dll (762C0000)
+	C:\Windows\SysWOW64\sechost.dll (754B0000)
+	C:\Windows\syswow64\RPCRT4.dll (76120000)
+	C:\Windows\syswow64\SspiCli.dll (75220000)
+	C:\Windows\syswow64\CRYPTBASE.dll (75210000)
+	C:\Windows\syswow64\WS2_32.dll (763E0000)
+	C:\Windows\syswow64\NSI.dll (77570000)
+	C:\Windows\system32\dbghelp.dll (73E20000)
+	C:\Windows\syswow64\PSAPI.DLL (754A0000)
+	C:\Windows\system32\WINMM.dll (73F10000)
+	C:\Windows\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_5.82.7601.18837_none_ec86b8d6858ec0bc\COMCTL32.dll (6D700000)
+	C:\Windows\syswow64\SHELL32.dll (754D0000)
+	C:\Windows\syswow64\SHLWAPI.dll (75440000)
+	C:\Windows\syswow64\ole32.dll (76D60000)
+	C:\Windows\system32\IMM32.DLL (76380000)
+	C:\Windows\syswow64\MSCTF.dll (76930000)
+	C:\Windows\syswow64\CLBCatQ.DLL (76750000)
+	C:\Windows\syswow64\OLEAUT32.dll (753A0000)
+	C:\Windows\system32\msimtf.dll (6E1B0000)
+	C:\Windows\system32\VERSION.dll (75130000)
+	D:\Games\FOF\TLS476\main-server\scripts\fonline_tla.dll (6E150000)
+
+AngelScript

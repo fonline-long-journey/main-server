@@ -18,7 +18,6 @@ import ICritterType@ GetCrType(uint16 crtype) from "critter_types";
 #ifdef _CRITTER_TYPES_MODULE_
 #include "_defines.fos"
 #include "_macros.fos"
-// #include "utils_h.fos"
 #include "strtoint_h.fos"
 #endif
 

@@ -1,0 +1,483 @@
+
+
+
+
+
+#ifndef OBJECT_DATA_MODULE
+#define OBJECT_DATA_MODULE
+
+#include "object_data_h.fos"
+
+uint itemLoadCnt = 0;
+uint critterLoadCnt = 0;
+uint mapLoadCnt = 0;
+uint locationLoadCnt = 0;
+
+array<TargetValidator@> TargetValidators = {@ItemValidator, @CritterValidator, @MapValidator, @LocationValidator};
+
+bool Init = false;
+dictionary DataPrefixes;
+array<dictionary> Containers(DATA_TYPE_END+1);
+
+
+CObjectData@ AddData(uint8 type, uint id)
+{
+	CObjectData@ ptr = LoadObjectData(type, id);
+	if(!valid(ptr))
+	{
+		@ptr = CObjectData(type, id);
+		Containers[type].set(""+id, @ptr);
+		
+		if(type == DATA_TYPE_CRITTER)
+		{
+			if(GetCritter(id).IsPlayer())
+				SETFLAG(ptr.flags, DATA_CRITTER_FLAG_ISPLAYER);
+		}
+		
+	}
+	return ptr;
+}
+
+CObjectData@ SetItemData(CObjectData& data)
+{
+	Containers[DATA_TYPE_ITEM].set(""+data.hookId,  @data);
+	return data;
+}
+
+CObjectData@ SetCritterData(CObjectData& data)
+{
+	Containers[DATA_TYPE_CRITTER].set(""+data.hookId, @data);
+	return data;
+}
+
+CObjectData@ SetMapDataExt(CObjectData& data)
+{
+	Containers[DATA_TYPE_MAP].set(""+data.hookId, @data);
+	return data;
+}
+
+CObjectData@ SetLocationData(CObjectData& data)
+{
+	Containers[DATA_TYPE_LOCATION].set(""+data.hookId, @data);
+	return data;
+}
+
+CObjectData@ SetData(uint8 type, CObjectData& data)
+{
+	Containers[type].set(""+data.hookId, @data);
+	return data;
+}
+
+bool RemoveData(uint8 type, uint id)
+{
+	if(Containers[type].exists(""+id))
+	{
+		Containers[type].delete(""+id);
+		return true;
+	}
+	return false;
+}
+
+void InitializeObjectsData()
+{
+	Log("Loading objects data...");
+	InitDataPrefixes();
+	LoadObjectsData();
+	CreateTimeEvent(AFTER(CLEANUP_TIME), "e_Cleanup", false);
+	Log("Loaded objects data.");
+}
+
+void InitDataPrefixes()
+{
+	if(!Init)
+	{
+		DataPrefixes.set(""+DATA_TYPE_ITEM,     PREFIX_DATA_ITEM);
+		DataPrefixes.set(""+DATA_TYPE_CRITTER,  PREFIX_DATA_CRITTER);
+		DataPrefixes.set(""+DATA_TYPE_MAP, 	    PREFIX_DATA_MAP);
+		DataPrefixes.set(""+DATA_TYPE_LOCATION, PREFIX_DATA_LOCATION);
+		
+		
+		Init = true;
+	}
+}
+
+void FinishObjectsData()
+{
+	CleanupData();
+}
+
+void LoadObjectsData()
+{
+	Item@[] allItems;
+	uint globalItemsCount = GetAllItems(0,allItems);
+	Log("Items count " + globalItemsCount);
+	for(uint i = 0; i < globalItemsCount; i++)
+	{
+		if(!Containers[DATA_TYPE_ITEM].exists(""+allItems[i].Id))
+			if(valid(LoadObjectData(DATA_TYPE_ITEM, allItems[i].Id)))
+				itemLoadCnt++;
+	}
+	
+	Critter@[] allNpc;
+	uint globalNpcCount = GetAllNpc(0, allNpc);
+	Log("Npc count " + globalNpcCount);
+	for(uint i = 0; i < globalNpcCount; i++)
+	{
+		if(!Containers[DATA_TYPE_CRITTER].exists(""+allNpc[i].Id))
+			if(valid(LoadObjectData(DATA_TYPE_CRITTER, allNpc[i].Id)))
+				critterLoadCnt++;
+	}
+	
+	Map@[] allMaps;
+	uint globalMapsCount = GetAllMaps(0, allMaps);
+	Log("Maps count " + globalMapsCount);
+	for(uint i = 0; i < globalMapsCount; i++)
+	{
+		if(!Containers[DATA_TYPE_MAP].exists(""+allMaps[i].Id))
+			if(valid(LoadObjectData(DATA_TYPE_MAP, allMaps[i].Id)))
+				mapLoadCnt++;
+	}
+	
+	Location@[] allLocations;
+	uint globalLocationsCount = GetAllLocations(0, allLocations);
+	Log("Locations count " + globalLocationsCount);
+	for(uint i = 0; i < globalLocationsCount; i++)
+	{
+		if(!Containers[DATA_TYPE_LOCATION].exists(""+allMaps[i].Id))
+			if(valid(LoadObjectData(DATA_TYPE_LOCATION, allMaps[i].Id)))
+				locationLoadCnt++;
+	}
+	
+	Log("Loaded " + itemLoadCnt + " item data extensions " + critterLoadCnt + " critter data extensions");
+	Log("Loaded " + mapLoadCnt  + " map data extensions " + locationLoadCnt + " location data extensions");
+}
+
+CObjectData@ LoadObjectData(uint8 type, uint id)
+{
+	CObjectData@ objectData;
+	Serializator@ serializer = @Serializator();
+	string prefix = "";
+	if(DataPrefixes.get(""+type, prefix))
+	{
+		@objectData = DeserializeObjectData(serializer, id, prefix);
+	}
+	return objectData;
+}
+
+CObjectData@ DeserializeObjectData(Serializator& serializer, uint id, string@ prefix)
+{
+	CObjectData@ ptr;
+	if(serializer.Load(prefix+id))
+	{
+		uint8 type  = 0;
+		uint hookId = 0;
+		array<int> data;
+		uint8 flags = 0;
+		serializer.Get(type);
+		serializer.Get(hookId);
+		serializer.Get(data);
+		serializer.Get(flags);
+		@ptr = CObjectData(type, hookId, data);
+		ptr.flags = flags;
+		SetData(type, ptr);
+	}
+	return ptr;
+}
+
+void SaveObjectsData()
+{
+	#ifdef __OLD_AS
+	string@[] keys;
+	#endif
+	#ifndef __OLD_AS
+	string[] keys;
+	#endif
+	string prefix = "";
+	uint size = 0;
+	Serializator@ serializer = @Serializator();
+	for(uint i = 0; i < DATA_TYPE_END; i++)
+	{
+		if(DataPrefixes.get(""+i, prefix))
+		{
+			keys.resize(0);
+			#ifdef __OLD_AS
+			size = Containers[i].keys(keys);
+			#endif
+			#ifndef __OLD_AS
+			keys = Containers[i].getKeys();
+			size = keys.length();
+			#endif
+			for(uint j = 0; j<size; j++)
+			{
+				CObjectData@ ptr;
+				Containers[i].get(keys[j], @ptr);
+				if(valid(ptr))
+				{
+					SerializeObjectData(serializer, ptr, prefix);
+				}
+			}
+		}
+	}
+}
+
+void SerializeObjectData(Serializator& serializer, CObjectData& objectData, string@ prefix)
+{
+	serializer.Set(objectData.type);
+	serializer.Set(objectData.hookId);
+	serializer.Set(objectData.data);
+	serializer.Set(objectData.flags);
+
+	serializer.Save(prefix+objectData.hookId);
+}
+
+uint e_Cleanup(uint[]@ values)
+{
+	Log("Cleaning objects data...");
+	CleanupData();
+	Log("Cleaned objects data...");
+	return CLEANUP_TIME;
+}
+
+// items arent removed until they're REMOVED, even in critter inventories, player critters inclusive.
+uint CleanupData()
+{
+	uint itemCleanCnt = 0;
+	uint critterCleanCnt = 0;
+	#ifdef __OLD_AS
+	string@[] keys;
+	#endif
+	#ifndef __OLD_AS
+	string[] keys;
+	#endif
+	uint size = 0;
+	uint targetId = 0;
+	for(uint i = 0; i < DATA_TYPE_END; i++)
+	{
+		keys.resize(0);
+		#ifdef __OLD_AS
+		size = Containers[i].keys(keys);
+		#endif
+		#ifndef __OLD_AS
+		keys = Containers[i].getKeys();
+		size = keys.length();
+		#endif
+		for(uint j = 0; j<size; j++)
+		{
+			CObjectData@ ptr;
+			Containers[i].get(keys[j], @ptr);
+			targetId = ptr.hookId;
+			bool validTarget = TargetValidators[i](targetId);
+			if(!validTarget)
+			{
+				switch(i)
+				{
+					case DATA_TYPE_ITEM:
+						CleanData(i, targetId);
+						itemCleanCnt++;
+						break;
+					case DATA_TYPE_CRITTER:
+						if(!FLAG(ptr.flags, DATA_CRITTER_FLAG_ISPLAYER))
+						{
+							CleanData(i, targetId);
+							critterCleanCnt++;
+						}
+						break;
+					case DATA_TYPE_MAP:
+						CleanData(i, targetId);
+						break;
+					case DATA_TYPE_LOCATION:
+						CleanData(i, targetId);
+						break;
+					default:
+						CleanData(i, targetId);
+						break;
+				}
+			}
+		}
+	}
+	
+	// TODO :: GENERIC CLEANUP, SOMEHOW ?
+	
+	Log("Cleaned " + itemCleanCnt + " item data");
+	Log("Cleaned " + critterCleanCnt + " critter data");
+	return itemCleanCnt + critterCleanCnt;
+}
+
+///API
+
+CObjectData@ GetItemData(uint id)
+{
+	CObjectData@ ptr;
+	if(!Containers[DATA_TYPE_ITEM].get(""+id, @ptr))
+	{
+		return AddData(DATA_TYPE_ITEM, id);
+	}
+	return ptr;
+}
+
+CObjectData@ GetCritterData(uint id)
+{
+	CObjectData@ ptr; 
+	if(!Containers[DATA_TYPE_CRITTER].get(""+id, @ptr))
+	{
+		return AddData(DATA_TYPE_CRITTER, id);
+	}
+	return ptr;
+}
+
+CObjectData@ GetMapDataExt(uint id)
+{
+	CObjectData@ ptr;
+	if(!Containers[DATA_TYPE_MAP].get(""+id, @ptr))
+	{
+		return AddData(DATA_TYPE_MAP, id);
+	}
+	return ptr;
+}
+
+
+CObjectData@ GetLocationData(uint id)
+{
+	CObjectData@ ptr;
+	if(!Containers[DATA_TYPE_LOCATION].get(""+id, @ptr))
+	{
+		return AddData(DATA_TYPE_LOCATION, id);
+	}
+	return ptr;
+}
+
+
+CObjectData@ GetItemData(Item& it)
+{
+	CObjectData@ ptr; 
+	if(!Containers[DATA_TYPE_ITEM].get(""+it.Id, @ptr))
+	{
+		return AddData(DATA_TYPE_ITEM, it.Id);
+	}
+	return ptr;
+}
+
+CObjectData@ GetCritterData(Critter& cr)
+{
+	CObjectData@ ptr;
+	if(!Containers[DATA_TYPE_CRITTER].get(""+cr.Id, @ptr))
+	{
+		return AddData(DATA_TYPE_CRITTER, cr.Id);
+	}
+	return ptr;
+}
+
+CObjectData@ GetMapDataExt(Map& map)
+{
+	CObjectData@ ptr;
+	if(!Containers[DATA_TYPE_MAP].get(""+map.Id, @ptr))
+	{
+		return AddData(DATA_TYPE_MAP, map.Id);
+	}
+	return ptr;
+}
+
+CObjectData@ GetLocationData(Location& loc)
+{
+	CObjectData@ ptr;
+	if(!Containers[DATA_TYPE_LOCATION].get(""+loc.Id, @ptr))
+	{
+		return AddData(DATA_TYPE_LOCATION, loc.Id);
+	}
+	return ptr;
+}
+
+CObjectData@ GetData(uint8 type, uint id)
+{
+	CObjectData@ ptr;
+	if(!Containers[type].get(""+id, @ptr))
+	{
+		return AddData(type, id);
+	}
+	return ptr;
+}
+
+void CleanCritterData(uint id)
+{
+	CleanData(DATA_TYPE_CRITTER, id);
+}
+
+void CleanCritterData(Critter& cr)
+{
+	CleanData(DATA_TYPE_CRITTER, cr.Id);
+}
+
+void CleanItemData(uint id)
+{
+	CleanData(DATA_TYPE_ITEM, id);
+}
+
+void CleanItemData(Item& it)
+{
+	CleanData(DATA_TYPE_ITEM, it.Id);
+}
+
+void CleanMapDataExt(uint id)
+{
+	CleanData(DATA_TYPE_MAP, id);
+}
+
+void CleanMapDataExt(Map& map)
+{
+	CleanData(DATA_TYPE_MAP, map.Id);
+}
+
+void CleanLocationData(uint id)
+{
+	CleanData(DATA_TYPE_LOCATION, id);
+}
+
+void CleanLocationData(Location& loc)
+{
+	CleanData(DATA_TYPE_LOCATION, loc.Id);
+}
+
+void CleanData(uint8 type, uint id)
+{
+	if(type>=DATA_TYPE_BEGIN && type<=DATA_TYPE_END)
+	{
+		string prefix = "";
+		if(DataPrefixes.get(""+type, prefix))
+		{
+			if(RemoveData(type, id)) // if data was found and removed
+			{
+				if(IsAnyData(prefix+id)) // remove anydata
+				{
+					//Log("anydata found, removing " + prefix + ":" +  id);
+					EraseAnyData(prefix+id);
+				}
+			}
+		}
+		
+	}
+	return;
+}
+
+// callbacks
+bool ItemValidator(uint id)
+{
+	return valid(GetItem(id));
+}
+
+bool CritterValidator(uint id)
+{
+	return valid(GetCritter(id));
+}
+
+bool MapValidator(uint id)
+{
+	return valid(GetMap(id));
+}
+
+bool LocationValidator(uint id)
+{
+	return valid(GetLocation(id));
+}
+
+
+#endif

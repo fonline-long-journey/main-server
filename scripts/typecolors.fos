@@ -28,29 +28,31 @@ result += item_info_color; */
 // ARA AYE COLORS
 // could be dictionary, but strToInt
 array<uint> typesColor;
+bool Init = false;
 
 
 void InitTypeColors()
 {
 	typesColor.resize(ITEM_TYPE_END+1);
-	typesColor[ITEM_TYPE_NONE] = COLOR_NONE;
-	typesColor[ITEM_TYPE_ARMOR] = COLOR_ARMOR;
-	typesColor[ITEM_TYPE_DRUG] = COLOR_DRUGS;
-	typesColor[ITEM_TYPE_WEAPON] = COLOR_WEAPON;
-	typesColor[ITEM_TYPE_AMMO] = COLOR_AMMO;
-	typesColor[ITEM_TYPE_MISC] = COLOR_MISC;
-	typesColor[ITEM_TYPE_KEY] = COLOR_KEY;
+	typesColor[ITEM_TYPE_NONE]    	= COLOR_NONE;
+	typesColor[ITEM_TYPE_ARMOR]   	= COLOR_ARMOR;
+	typesColor[ITEM_TYPE_DRUG]    	= COLOR_DRUGS;
+	typesColor[ITEM_TYPE_WEAPON]  	= COLOR_WEAPON;
+	typesColor[ITEM_TYPE_AMMO] 	  	= COLOR_AMMO;
+	typesColor[ITEM_TYPE_MISC] 	  	= COLOR_MISC;
+	typesColor[ITEM_TYPE_KEY] 	  	= COLOR_KEY;
 	typesColor[ITEM_TYPE_CONTAINER] = COLOR_CONTAINER;
-	typesColor[ITEM_TYPE_DOOR] = COLOR_DOOR;
-	typesColor[ITEM_TYPE_GRID] = COLOR_GRID;
-	typesColor[ITEM_TYPE_GENERIC] = COLOR_GENERIC;
-	typesColor[ITEM_TYPE_WALL] = COLOR_WALL;
-	typesColor[ITEM_TYPE_CAR] = COLOR_CAR;
+	typesColor[ITEM_TYPE_DOOR] 		= COLOR_DOOR;
+	typesColor[ITEM_TYPE_GRID] 		= COLOR_GRID;
+	typesColor[ITEM_TYPE_GENERIC]   = COLOR_GENERIC;
+	typesColor[ITEM_TYPE_WALL] 		= COLOR_WALL;
+	typesColor[ITEM_TYPE_CAR] 		= COLOR_CAR;
+	Init = true;
 }
 
 uint GetTypeColor(uint8 type)
 {
-	if (typesColor.length() != ITEM_TYPE_END)
+	if (!Init)
 		InitTypeColors();
 		
 	if (type < ITEM_TYPE_BEGIN || type > ITEM_TYPE_END)
