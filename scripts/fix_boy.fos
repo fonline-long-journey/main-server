@@ -5,7 +5,7 @@
 #define FIX_FAIL                   ( FIXBOY_DEFAULT ^ FIXBOY_ALLOW_CRAFT )
 #define GAME_DAY_MINUTES           # (days)   ( days * 60 * 24 )
 
-int fix_PowerArmor( Critter& player, int state, CraftItem& craft )
+/* int fix_PowerArmor( Critter& player, int state, CraftItem& craft )
 {
     GameVar@ canPA = GetLocalVar( LVAR_fixboy_power_armor, player.Id );
     if( not valid( canPA ) || canPA == 0 )
@@ -45,7 +45,7 @@ int fix_EmpRocket( Critter& player, int state, CraftItem& craft )
     if( !valid( canER ) || canER == 0 )
         return FIX_FAIL;
     return FIX_SUCCESS;
-}
+} */
 // Усложненный крафт
 // - для отображения в пипбое требуется знание рецепта
 // - для производства необходимо находиться рядом со специальным станком
@@ -84,12 +84,12 @@ int fix_AnyStuff( Critter& player, int state, CraftItem& craft )
     return fix_Something( player, SCENERY_WORKBENCH, DEFAULT_RADIUS, LVAR_fixboy_default, state, 120, 100 );
 }
 
-int fix_SuperSledge( Critter& player, int state, CraftItem& craft )  // Рецепт на изготовление суперкувалды. Ши.
+/* int fix_SuperSledge( Critter& player, int state, CraftItem& craft )  // Рецепт на изготовление суперкувалды. Ши.
 {
     return fix_Something( player, SCENERY_SHOE_WORKBENCH, DEFAULT_RADIUS, LVAR_sf_recipe_supersledge, state, DEFAULT_TIMEOUT_MINUTES( player ), DEFAULT_CHARGES );
-}
+} */
 
-int fix_ChitinArmor( Critter& player, int state, CraftItem& craft ) // Хитиновая броня
+/* int fix_ChitinArmor( Critter& player, int state, CraftItem& craft ) // Хитиновая броня
 {
     if( state == FIXBOY_LIST )
     {
@@ -120,9 +120,9 @@ int fix_ChitinArmor( Critter& player, int state, CraftItem& craft ) // Хити�
         }
     }
     return FIX_SUCCESS;
-}
+} */
 
-int fix_PlasmaGrenade( Critter& player, int state, CraftItem& craft ) // Рецепт на изготовление плазменных гранат. Хабологи.
+/* int fix_PlasmaGrenade( Critter& player, int state, CraftItem& craft ) // Рецепт на изготовление плазменных гранат. Хабологи.
 {
     return fix_Something( player, SCENERY_HUB_WORKBENCH, DEFAULT_RADIUS, LVAR_sf_recipe_plasmagrenades, state, DEFAULT_TIMEOUT_MINUTES( player ), 50 );
 }
@@ -140,7 +140,7 @@ int fix_NitroExpressRounds( Critter& player, int state, CraftItem& craft )
 int fix_AnyRounds( Critter& player, int state, CraftItem& craft )
 {
     return fix_Something( player, SCENERY_AMMO_PRESS, DEFAULT_RADIUS, LVAR_fixboy_ammo_press_operator, state, 120, 10 );
-}
+} */
 
 /*                РЕЦЕПТЫ                */
 

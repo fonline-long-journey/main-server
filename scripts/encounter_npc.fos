@@ -7,7 +7,7 @@
 import bool AddAttackPlane( Critter& npc, uint priority, Critter& target, bool run ) from "npc_planes";
 import bool AddWalkPlane( Critter& npc, uint priority, int identifier, uint identifierExt, uint16 hexX, uint16 hexY, uint8 dir, bool run, uint cut ) from "npc_planes";
 import void SetDeterioration( Item& item, int deteriorationProcent ) from "repair";
-import void SaveLoot2Storehouse( uint16 WorldX, uint16 WorldY, Item@[] items ) from "game_event_storehouse";
+//import void SaveLoot2Storehouse( uint16 WorldX, uint16 WorldY, Item@[] items ) from "game_event_storehouse";
 
 #define MESSAGE_COLLECT_NPC    ( 30 )
 #define MESSAGE_ATTACK_HIM     ( 31 )
@@ -150,50 +150,50 @@ void _NpcDead( Critter& npc, Critter@ killer )
     if( valid( killer ) && killer.IsPlayer() )
     {
         uint varId = 0;
-        switch( npc.Stat[ ST_TEAM_ID ] )
-        {
-        case TEAM_EncounterHubologist:
-            varId = LVAR_enc_loyality_hubologists;
-            break;
-        case TEAM_EncounterNCR:
-            varId = LVAR_enc_loyality_ncr;
-            break;
-        case TEAM_EncounterVC:
-            varId = LVAR_enc_loyality_vcity;
-            break;
-        case TEAM_EncounterRedding:
-            varId = LVAR_enc_loyality_redding;
-            break;
-        case TEAM_EncounterBroken:
-            varId = LVAR_enc_loyality_broken;
-            break;
-        case TEAM_EncounterGecko:
-            varId = LVAR_enc_loyality_gecko;
-            break;
-        case TEAM_EncounterArroyo:
-            varId = LVAR_enc_loyality_arroyo;
-            break;
-        case TEAM_EncounterKlamath:
-            varId = LVAR_enc_loyality_klamath;
-            break;
-        case TEAM_EncounterModoc:
-            varId = LVAR_enc_loyality_modoc;
-            break;
-        case TEAM_EncounterDen:
-            varId = LVAR_enc_loyality_den;
-            break;
-        case TEAM_EncounterReno:
-            varId = LVAR_enc_loyality_reno;
-            break;
-        case TEAM_EncounterEnclave:
-            varId = LVAR_enc_loyality_enclave;
-            break;
-        case TEAM_EncounterSF:
-            varId = LVAR_enc_loyality_sf;
-            break;
-        default:
-            break;
-        }
+        // switch( npc.Stat[ ST_TEAM_ID ] )
+        // {
+        // case TEAM_EncounterHubologist:
+            // varId = LVAR_enc_loyality_hubologists;
+            // break;
+        // case TEAM_EncounterNCR:
+            // varId = LVAR_enc_loyality_ncr;
+            // break;
+        // case TEAM_EncounterVC:
+            // varId = LVAR_enc_loyality_vcity;
+            // break;
+        // case TEAM_EncounterRedding:
+            // varId = LVAR_enc_loyality_redding;
+            // break;
+        // case TEAM_EncounterBroken:
+            // varId = LVAR_enc_loyality_broken;
+            // break;
+        // case TEAM_EncounterGecko:
+            // varId = LVAR_enc_loyality_gecko;
+            // break;
+        // case TEAM_EncounterArroyo:
+            // varId = LVAR_enc_loyality_arroyo;
+            // break;
+        // case TEAM_EncounterKlamath:
+            // varId = LVAR_enc_loyality_klamath;
+            // break;
+        // case TEAM_EncounterModoc:
+            // varId = LVAR_enc_loyality_modoc;
+            // break;
+        // case TEAM_EncounterDen:
+            // varId = LVAR_enc_loyality_den;
+            // break;
+        // case TEAM_EncounterReno:
+            // varId = LVAR_enc_loyality_reno;
+            // break;
+        // case TEAM_EncounterEnclave:
+            // varId = LVAR_enc_loyality_enclave;
+            // break;
+        // case TEAM_EncounterSF:
+            // varId = LVAR_enc_loyality_sf;
+            // break;
+        // default:
+            // break;
+        // }
         if( varId != 0 )
         {
             GameVar@ var = GetLocalVar( varId, killer.Id );
@@ -244,7 +244,7 @@ int _NpcPlaneEnd( Critter& npc, NpcPlane& plane, int reason, Critter@ someCr, It
             }
 
             MoveItems( items, npc );
-            SaveLoot2Storehouse( npc.WorldX, npc.WorldY, items );
+        //  SaveLoot2Storehouse( npc.WorldX, npc.WorldY, items );
             _CritAnimatePickup( npc );
             npc.Wait( __Breaktime );
         }

@@ -6,11 +6,15 @@
 // ************************************************************************/
 
 
-#define LOCATION_IS_CITY                       # (locPid)                 ( ( ( locPid ) >= LOCATION_WALLBRIDGE && ( locPid ) <= LOCATION_Vault13 && ( locPid ) != LOCATION_Cathedral && ( locPid ) != LOCATION_MilitaryBase && ( locPid ) != LOCATION_Sierra ) || ( locPid ) == LOCATION_ReplicationHell )
+#define LOCATION_IS_CITY                       # (locPid)                 ( ( ( locPid ) == LOCATION_WALLBRIDGE  || ( locPid ) == LOCATION_ReplicationHell ) )
 #define LOCATION_IS_OCEAN                      # (locPid)                 ( ( locPid ) >= LOCATION_OceanEncounter1 && ( locPid ) <= LOCATION_OceanTrader )
 
+/* #define LOCATION_IS_CITY                       # (locPid)                 ( ( ( locPid ) >= LOCATION_WALLBRIDGE && ( locPid ) <= LOCATION_Vault13 && ( locPid ) != LOCATION_Cathedral && ( locPid ) != LOCATION_MilitaryBase && ( locPid ) != LOCATION_Sierra ) || ( locPid ) == LOCATION_ReplicationHell )
+#define LOCATION_IS_OCEAN                      # (locPid)                 ( ( locPid ) >= LOCATION_OceanEncounter1 && ( locPid ) <= LOCATION_OceanTrader ) */
+
 #define LOCATION_WALLBRIDGE                    ( 1 )
-#define LOCATION_Klamath                       ( 2 )
+
+/* #define LOCATION_Klamath                       ( 2 )
 #define LOCATION_Modoc                         ( 3 )
 #define LOCATION_VaultCity                     ( 4 )
 #define LOCATION_Gecko                         ( 5 )
@@ -30,13 +34,15 @@
 #define LOCATION_Vault13                       ( 19 )
 #define LOCATION_BarterGround                  ( 22 )
 #define LOCATION_Atoll                         ( 23 )
-#define LOCATION_Raiders                       ( 24 )
+#define LOCATION_Raiders                       ( 24 ) */
+
 #define LOCATION_Replication1                  ( 40 )
 #define LOCATION_Replication2                  ( 41 )
 #define LOCATION_Replication3                  ( 42 )
 #define LOCATION_Replication4                  ( 43 )
 #define LOCATION_ReplicationHell               ( 44 )
-#define LOCATION_GeckCity                      ( 45 )
+
+/* #define LOCATION_GeckCity                      ( 45 )
 
 #define LOCATION_SpecialFirstSpecial           ( 50 )    // Todo
 #define LOCATION_SpecialToxicEncounter         ( 51 )
@@ -66,7 +72,8 @@
 #define LOCATION_SpecialAtomChurch             ( 75 )
 #define LOCATION_SpecialBaxChurch              ( 76 )
 #define LOCATION_SpecialAndroid                ( 77 )
-#define LOCATION_SpecialTim                    ( 78 )
+#define LOCATION_SpecialTim                    ( 78 ) 
+*/
 
 #define LOCATION_DesertEncounter1              ( 101 )
 #define LOCATION_DesertEncounter2              ( 102 )
@@ -124,7 +131,7 @@
 #define LOCATION_OceanTrader                   ( 197 )
 
 // #define LOCATION_BessDead                         (201)
-#define LOCATION_Wanamingo_Cavern              ( 202 )
+/* #define LOCATION_Wanamingo_Cavern              ( 202 )
 #define LOCATION_Quest_Dappo_Lost_Caravan      ( 203 )
 #define LOCATION_Quest_NCR_SIEGE1              ( 205 )
 #define LOCATION_Quest_NCR_SIEGE2              ( 206 )
@@ -141,8 +148,9 @@
 #define LOCATION_Quest_ModocVampireCave        ( 217 )
 #define LOCATION_Quest_HubJudgementFarm        ( 218 )
 #define LOCATION_Quest_Hub_Lab                 ( 219 )
+ */
 
-#define LOCATION_Warehouse                     ( 220 )
+/* #define LOCATION_Warehouse                     ( 220 )
 #define LOCATION_Warehouse1                    ( 221 )
 #define LOCATION_Warehouse2                    ( 222 )
 #define LOCATION_Warehouse3                    ( 223 )
@@ -150,8 +158,9 @@
 #define LOCATION_Warehouse5                    ( 225 )
 #define LOCATION_Warehouse6                    ( 226 )
 #define LOCATION_Warehouse_First               ( LOCATION_Warehouse )
-#define LOCATION_Warehouse_Last                ( LOCATION_Warehouse6 )
-
+#define LOCATION_Warehouse_Last                ( LOCATION_Warehouse6 ) 
+*/
+/* 
 #define LOCATION_WrightKidnap                  ( 227 )
 #define LOCATION_Quest_RacingCheckpoint        ( 228 )
 #define LOCATION_Quest_SiloAmbush              ( 229 )
@@ -162,7 +171,8 @@
 #define LOCATION_IntroMartin                   ( 260 )
 #define LOCATION_IntroInit                     ( 261 )
 #define LOCATION_inns                          ( 262 )
-#define LOCATION_raiderscave                   ( 263 )
+#define LOCATION_raiderscave                   ( 263 ) 
+*/
 #define LOCATION_immaterium                    ( 264 )
 
 #define LOCATION_creation					   ( 299 )
@@ -174,7 +184,7 @@
 // * Maps                                                                 */
 // ************************************************************************/
 
-
+/* 
 #define MAP_arroyo_temple_entrance             ( 1 )
 #define MAP_arroyo                             ( 2 )
 #define MAP_arroyo_garden                      ( 3 )
@@ -334,7 +344,8 @@
 #define MAP_se_doughnut_basement               ( 186 )
 #define MAP_se_android_ground                  ( 187 )
 #define MAP_se_android_basement                ( 188 )
-#define MAP_se_tim                             ( 189 )
+#define MAP_se_tim                             ( 189 ) 
+*/
 #define MAP_e_city1                            ( 190 )
 #define MAP_e_city2                            ( 191 )
 #define MAP_e_city3                            ( 192 )
@@ -344,13 +355,14 @@
 #define MAP_e_city7                            ( 196 )
 #define MAP_e_city8                            ( 197 )
 #define MAP_e_city4_sewer                      ( 198 )
-
+/* 
 #define MAP_raiders_enter                      ( 201 )
 #define MAP_raiders_cave1                      ( 202 )
 #define MAP_raiders_cave2                      ( 203 )
 #define MAP_raiders_cave3                      ( 204 )
 #define MAP_raiders_exit                       ( 205 )
-
+ */
+ 
 #define MAP_repl_bank_den                      ( 210 )
 #define MAP_repl_bank_klamath                  ( 211 )
 #define MAP_repl_bank_redding                  ( 212 )
@@ -380,7 +392,7 @@
 #define MAP_hell_burrow                        ( 236 )
 #define MAP_replication4_alternate             ( 237 )
 #define MAP_replication4_ground                ( 238 )
-
+/* 
 #define MAP_q_warehouse                        ( 240 )
 #define MAP_q_warehouse1                       ( 241 )
 #define MAP_q_warehouse2                       ( 242 )
@@ -401,7 +413,7 @@
 
 #define MAP_intro_martin                       ( 260 )
 #define MAP_intro_init                         ( 261 )
-
+ */
 #define MAP_e_desert1                          ( 301 )
 #define MAP_e_desert2                          ( 302 )
 #define MAP_e_desert3                          ( 303 )
@@ -454,7 +466,7 @@
 #define MAP_e_coast10                          ( 390 )
 #define MAP_e_coast11                          ( 391 )
 #define MAP_e_coast5_cave                      ( 392 )
-
+/* 
 #define MAP_atom_ground                        ( 400 )
 #define MAP_atom_level1                        ( 401 )
 #define MAP_atom_reactor                       ( 402 )
@@ -469,7 +481,7 @@
 #define MAP_purgatory1                         ( 412 )
 #define MAP_purgatory2                         ( 413 )
 #define MAP_purgatory3                         ( 414 )
-
+ */
 #define MAP_central_town                       ( 415 )
 #define MAP_central_town_cellars               ( 416 )
 #define MAP_inns                               ( 417 )
@@ -488,11 +500,11 @@
 #define MAP_fairfield_north_canal			   ( 428 )
 #define MAP_fairfield_south					   ( 429 )
 #define MAP_fairfield_south_canal			   ( 430 )
-
+/* 
 #define MAP_rocketsilo1                        ( 500 )
 #define MAP_rocketsilo2                        ( 501 )
 #define MAP_rocketsilo2                        ( 502 )
-
+ */
 #define MAP_creation						   ( 999 )		
 
 #define MAP_redbricks                          ( 1000 )

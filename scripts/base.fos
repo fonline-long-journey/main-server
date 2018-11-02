@@ -17,8 +17,8 @@
 
 import bool AddAttackPlane( Critter& npc, uint priority, Critter& target ) from "npc_planes";
 
-const       uint16[] CarMaps = { MAP_sad_enter, MAP_mariposa_enter, MAP_cath_enter };
-const       uint[] TerminalMaps = { MAP_sad_level4, MAP_mariposa_level4, MAP_cath_level3 };
+const       uint16[] CarMaps = { /* MAP_sad_enter, MAP_mariposa_enter, MAP_cath_enter */ };
+const       uint[] TerminalMaps = { /* MAP_sad_level4, MAP_mariposa_level4, MAP_cath_level3 */ };
 const       uint[] GvarRule = { GVAR_base_sierra_rule, GVAR_base_mariposa_rule, GVAR_base_cathedral_rule };
 const       uint[] GvarOrg = { GVAR_base_sierra_org, GVAR_base_mariposa_org, GVAR_base_cathedral_org };
 const       uint[] GvarTimeEvent = { GVAR_base_sierra_time_event_id, GVAR_base_mariposa_time_event_id, GVAR_base_cathedral_time_event_id };
