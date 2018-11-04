@@ -13140,1229 +13140,1229 @@ PicInv=art\inven\reserved.frm
 
 
 #---------------------------------------------------------------------------------------------
-# The Long Journey - Scenery + Tiles + Roofs + Vsya Huinya <16000 - 16999>
+# The Long Journey - Walls <16000 - 16200>
 #---------------------------------------------------------------------------------------------
 
 [Proto]
 ProtoId=16000
 Type=12
-PicMap=art\walls\new\st2_0.png
+PicMap=art\walls\TLJ\st2_0.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16001
 Type=12
-PicMap=art\walls\new\st2_1.png
+PicMap=art\walls\TLJ\st2_1.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16002
 Type=12
-PicMap=art\walls\new\st2_2.png
+PicMap=art\walls\TLJ\st2_2.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16003
 Type=12
-PicMap=art\walls\new\st2_3.png
+PicMap=art\walls\TLJ\st2_3.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16004
 Type=12
-PicMap=art\walls\new\stenanew.png
+PicMap=art\walls\TLJ\stenanew.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16005
 Type=12
-PicMap=art\walls\new\ldoorwall1.FRM
+PicMap=art\walls\TLJ\ldoorwall1.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16006
 Type=12
-PicMap=art\walls\new\ldoorwall2.FRM
+PicMap=art\walls\TLJ\ldoorwall2.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16007
 Type=12
-PicMap=art\walls\new\ldoorwall3.FRM
+PicMap=art\walls\TLJ\ldoorwall3.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16008
 Type=12
-PicMap=art\walls\new\ldoorwall4.FRM
+PicMap=art\walls\TLJ\ldoorwall4.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16009
 Type=12
-PicMap=art\walls\new\ldoorwall5.FRM
+PicMap=art\walls\TLJ\ldoorwall5.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16010
 Type=12
-PicMap=art\walls\new\ldoorwall6.FRM
+PicMap=art\walls\TLJ\ldoorwall6.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16011
 Type=12
-PicMap=art\walls\new\Red1.frm
+PicMap=art\walls\TLJ\Red1.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16012
 Type=12
-PicMap=art\walls\new\Red2.frm
+PicMap=art\walls\TLJ\Red2.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16013
 Type=12
-PicMap=art\walls\new\Red3.frm
+PicMap=art\walls\TLJ\Red3.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16014
 Type=12
-PicMap=art\walls\new\Red4.frm
+PicMap=art\walls\TLJ\Red4.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16015
 Type=12
-PicMap=art\walls\new\Red5.png
+PicMap=art\walls\TLJ\Red5.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16016
 Type=12
-PicMap=art\walls\new\Red6.png
+PicMap=art\walls\TLJ\Red6.png
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16017
 Type=12
-PicMap=art\walls\new\White1.frm
+PicMap=art\walls\TLJ\White1.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16018
 Type=12
-PicMap=art\walls\new\White2.frm
+PicMap=art\walls\TLJ\White2.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16019
 Type=12
-PicMap=art\walls\new\White3.frm
+PicMap=art\walls\TLJ\White3.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16020
 Type=12
-PicMap=art\walls\new\White4.frm
+PicMap=art\walls\TLJ\White4.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16021
 Type=12
-PicMap=art\walls\new\White5.frm
+PicMap=art\walls\TLJ\White5.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16022
 Type=12
-PicMap=art\walls\new\White6.frm
+PicMap=art\walls\TLJ\White6.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16023
 Type=12
-PicMap=art\walls\new\White7.frm
+PicMap=art\walls\TLJ\White7.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16024
 Type=12
-PicMap=art\walls\new\SteelWallO1.frm
+PicMap=art\walls\TLJ\SteelWallO1.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16025
 Type=12
-PicMap=art\walls\new\SteelWallO2.frm
+PicMap=art\walls\TLJ\SteelWallO2.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16026
 Type=12
-PicMap=art\walls\new\SteelWallO3.frm
+PicMap=art\walls\TLJ\SteelWallO3.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16027
 Type=12
-PicMap=art\walls\new\SteelWallO4.frm
+PicMap=art\walls\TLJ\SteelWallO4.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16028
 Type=12
-PicMap=art\walls\new\SteelWallO5.frm
+PicMap=art\walls\TLJ\SteelWallO5.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16029
 Type=12
-PicMap=art\walls\new\SteelWallO6.frm
+PicMap=art\walls\TLJ\SteelWallO6.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16030
 Type=12
-PicMap=art\walls\new\SteelWallO7.frm
+PicMap=art\walls\TLJ\SteelWallO7.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16031
 Type=12
-PicMap=art\walls\new\SteelWallO8.frm
+PicMap=art\walls\TLJ\SteelWallO8.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16032
 Type=12
-PicMap=art\walls\new\carhom01.FRM
+PicMap=art\walls\TLJ\carhom01.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16033
 Type=12
-PicMap=art\walls\new\carhom02.FRM
+PicMap=art\walls\TLJ\carhom02.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16034
 Type=12
-PicMap=art\walls\new\carhom03.FRM
+PicMap=art\walls\TLJ\carhom03.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16035
 Type=12
-PicMap=art\walls\new\carhom04.FRM
+PicMap=art\walls\TLJ\carhom04.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16036
 Type=12
-PicMap=art\walls\new\carhom05.FRM
+PicMap=art\walls\TLJ\carhom05.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16037
 Type=12
-PicMap=art\walls\new\carhom06.FRM
+PicMap=art\walls\TLJ\carhom06.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16038
 Type=12
-PicMap=art\walls\new\carhom07.FRM
+PicMap=art\walls\TLJ\carhom07.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16039
 Type=12
-PicMap=art\walls\new\carhom08.FRM
+PicMap=art\walls\TLJ\carhom08.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16040
 Type=12
-PicMap=art\walls\new\carhom09.FRM
+PicMap=art\walls\TLJ\carhom09.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16041
 Type=12
-PicMap=art\walls\new\carhom10.FRM
+PicMap=art\walls\TLJ\carhom10.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16042
 Type=12
-PicMap=art\walls\new\CARW101.FRM
+PicMap=art\walls\TLJ\CARW101.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16043
 Type=12
-PicMap=art\walls\new\CARW102.FRM
+PicMap=art\walls\TLJ\CARW102.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16044
 Type=12
-PicMap=art\walls\new\CARW103.FRM
+PicMap=art\walls\TLJ\CARW103.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16045
 Type=12
-PicMap=art\walls\new\CARW104.FRM
+PicMap=art\walls\TLJ\CARW104.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16046
 Type=12
-PicMap=art\walls\new\CARW105.FRM
+PicMap=art\walls\TLJ\CARW105.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16047
 Type=12
-PicMap=art\walls\new\CARW106.FRM
+PicMap=art\walls\TLJ\CARW106.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16048
 Type=12
-PicMap=art\walls\new\CARW107.FRM
+PicMap=art\walls\TLJ\CARW107.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16049
 Type=12
-PicMap=art\walls\new\CARW108.FRM
+PicMap=art\walls\TLJ\CARW108.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16050
 Type=12
-PicMap=art\walls\new\CARW109.FRM
+PicMap=art\walls\TLJ\CARW109.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16051
 Type=12
-PicMap=art\walls\new\CARW110.FRM
+PicMap=art\walls\TLJ\CARW110.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16052
 Type=12
-PicMap=art\walls\new\CARW111.FRM
+PicMap=art\walls\TLJ\CARW111.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16053
 Type=12
-PicMap=art\walls\new\CARW112.FRM
+PicMap=art\walls\TLJ\CARW112.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16054
 Type=12
-PicMap=art\walls\new\CARW113.FRM
+PicMap=art\walls\TLJ\CARW113.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16055
 Type=12
-PicMap=art\walls\new\CARW201.FRM
+PicMap=art\walls\TLJ\CARW201.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16056
 Type=12
-PicMap=art\walls\new\CARW202.FRM
+PicMap=art\walls\TLJ\CARW202.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16057
 Type=12
-PicMap=art\walls\new\CARW203.FRM
+PicMap=art\walls\TLJ\CARW203.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16058
 Type=12
-PicMap=art\walls\new\CARW204.FRM
+PicMap=art\walls\TLJ\CARW204.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16059
 Type=12
-PicMap=art\walls\new\CARW205.FRM
+PicMap=art\walls\TLJ\CARW205.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16060
 Type=12
-PicMap=art\walls\new\CARW206.FRM
+PicMap=art\walls\TLJ\CARW206.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16061
 Type=12
-PicMap=art\walls\new\CARW207.FRM
+PicMap=art\walls\TLJ\CARW207.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16062
 Type=12
-PicMap=art\walls\new\CARW208.FRM
+PicMap=art\walls\TLJ\CARW208.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16063
 Type=12
-PicMap=art\walls\new\CARW209.FRM
+PicMap=art\walls\TLJ\CARW209.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16064
 Type=12
-PicMap=art\walls\new\CARW210.FRM
+PicMap=art\walls\TLJ\CARW210.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16065
 Type=12
-PicMap=art\walls\new\CARW211.FRM
+PicMap=art\walls\TLJ\CARW211.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16066
 Type=12
-PicMap=art\walls\new\CARW212.FRM
+PicMap=art\walls\TLJ\CARW212.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16067
 Type=12
-PicMap=art\walls\new\CARW213.FRM
+PicMap=art\walls\TLJ\CARW213.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16068
 Type=12
-PicMap=art\walls\new\cavwall1.FRM
+PicMap=art\walls\TLJ\cavwall1.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16069
 Type=12
-PicMap=art\walls\new\cavwall2.FRM
+PicMap=art\walls\TLJ\cavwall2.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16070
 Type=12
-PicMap=art\walls\new\gPrv001.FRM
+PicMap=art\walls\TLJ\gPrv001.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16071
 Type=12
-PicMap=art\walls\new\gPrv002.FRM
+PicMap=art\walls\TLJ\gPrv002.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16072
 Type=12
-PicMap=art\walls\new\gPrv003.FRM
+PicMap=art\walls\TLJ\gPrv003.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16073
 Type=12
-PicMap=art\walls\new\gPrv004.FRM
+PicMap=art\walls\TLJ\gPrv004.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16074
 Type=12
-PicMap=art\walls\new\gPrv005.FRM
+PicMap=art\walls\TLJ\gPrv005.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16075
 Type=12
-PicMap=art\walls\new\gPrv006.FRM
+PicMap=art\walls\TLJ\gPrv006.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16076
 Type=12
-PicMap=art\walls\new\gPrv008.FRM
+PicMap=art\walls\TLJ\gPrv008.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16077
 Type=12
-PicMap=art\walls\new\gPrv009.FRM
+PicMap=art\walls\TLJ\gPrv009.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16078
 Type=12
-PicMap=art\walls\new\gPrv010.FRM
+PicMap=art\walls\TLJ\gPrv010.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16079
 Type=12
-PicMap=art\walls\new\gPrv011.FRM
+PicMap=art\walls\TLJ\gPrv011.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16080
 Type=12
-PicMap=art\walls\new\gPrv012.FRM
+PicMap=art\walls\TLJ\gPrv012.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16081
 Type=12
-PicMap=art\walls\new\gPrv013.FRM
+PicMap=art\walls\TLJ\gPrv013.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16082
 Type=12
-PicMap=art\walls\new\gPrv014.FRM
+PicMap=art\walls\TLJ\gPrv014.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16083
 Type=12
-PicMap=art\walls\new\gPrv015.FRM
+PicMap=art\walls\TLJ\gPrv015.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16084
 Type=12
-PicMap=art\walls\new\gPrv016.FRM
+PicMap=art\walls\TLJ\gPrv016.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16085
 Type=12
-PicMap=art\walls\new\gPrv017.FRM
+PicMap=art\walls\TLJ\gPrv017.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16086
 Type=12
-PicMap=art\walls\new\grdrb000.FRM
+PicMap=art\walls\TLJ\grdrb000.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16087
 Type=12
-PicMap=art\walls\new\grdrb000.FRM
+PicMap=art\walls\TLJ\grdrb000.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16088
 Type=12
-PicMap=art\walls\new\grdrb001.FRM
+PicMap=art\walls\TLJ\grdrb001.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16089
 Type=12
-PicMap=art\walls\new\grdrb002.FRM
+PicMap=art\walls\TLJ\grdrb002.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16090
 Type=12
-PicMap=art\walls\new\grdrb003.FRM
+PicMap=art\walls\TLJ\grdrb003.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16091
 Type=12
-PicMap=art\walls\new\grdrb004.FRM
+PicMap=art\walls\TLJ\grdrb004.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16092
 Type=12
-PicMap=art\walls\new\grdrb005.FRM
+PicMap=art\walls\TLJ\grdrb005.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16093
 Type=12
-PicMap=art\walls\new\grdrb006.FRM
+PicMap=art\walls\TLJ\grdrb006.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16094
 Type=12
-PicMap=art\walls\new\grdrb007.FRM
+PicMap=art\walls\TLJ\grdrb007.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16095
 Type=12
-PicMap=art\walls\new\grdrb008.FRM
+PicMap=art\walls\TLJ\grdrb008.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16096
 Type=12
-PicMap=art\walls\new\NEC164.FRM
+PicMap=art\walls\TLJ\NEC164.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16097
 Type=12
-PicMap=art\walls\new\NEC165.FRM
+PicMap=art\walls\TLJ\NEC165.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16098
 Type=12
-PicMap=art\walls\new\NEC166.FRM
+PicMap=art\walls\TLJ\NEC166.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16099
 Type=12
-PicMap=art\walls\new\NEC167.FRM
+PicMap=art\walls\TLJ\NEC167.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16101
 Type=12
-PicMap=art\walls\new\NEC168.FRM
+PicMap=art\walls\TLJ\NEC168.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16102
 Type=12
-PicMap=art\walls\new\NEC169.FRM
+PicMap=art\walls\TLJ\NEC169.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16103
 Type=12
-PicMap=art\walls\new\NEC170.FRM
+PicMap=art\walls\TLJ\NEC170.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16104
 Type=12
-PicMap=art\walls\new\NEC171.FRM
+PicMap=art\walls\TLJ\NEC171.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16105
 Type=12
-PicMap=art\walls\new\NEC180.FRM
+PicMap=art\walls\TLJ\NEC180.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16106
 Type=12
-PicMap=art\walls\new\NEC181.FRM
+PicMap=art\walls\TLJ\NEC181.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16107
 Type=12
-PicMap=art\walls\new\NEC182.FRM
+PicMap=art\walls\TLJ\NEC182.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16108
 Type=12
-PicMap=art\walls\new\NEC183.FRM
+PicMap=art\walls\TLJ\NEC183.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16109
 Type=12
-PicMap=art\walls\new\NEC184.FRM
+PicMap=art\walls\TLJ\NEC184.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16110
 Type=12
-PicMap=art\walls\new\NEC200.FRM
+PicMap=art\walls\TLJ\NEC200.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16111
 Type=12
-PicMap=art\walls\new\NEC201.FRM
+PicMap=art\walls\TLJ\NEC201.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16112
 Type=12
-PicMap=art\walls\new\NEC202.FRM
+PicMap=art\walls\TLJ\NEC202.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16113
 Type=12
-PicMap=art\walls\new\NEC203.FRM
+PicMap=art\walls\TLJ\NEC203.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16114
 Type=12
-PicMap=art\walls\new\NEC204.FRM
+PicMap=art\walls\TLJ\NEC204.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16115
 Type=12
-PicMap=art\walls\new\NEC205.FRM
+PicMap=art\walls\TLJ\NEC205.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16116
 Type=12
-PicMap=art\walls\new\NEC210.FRM
+PicMap=art\walls\TLJ\NEC210.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16117
 Type=12
-PicMap=art\walls\new\NEC211.FRM
+PicMap=art\walls\TLJ\NEC211.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16118
 Type=12
-PicMap=art\walls\new\NEC212.FRM
+PicMap=art\walls\TLJ\NEC212.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16119
 Type=12
-PicMap=art\walls\new\NEC213.FRM
+PicMap=art\walls\TLJ\NEC213.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16120
 Type=12
-PicMap=art\walls\new\NEC214.FRM
+PicMap=art\walls\TLJ\NEC214.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16121
 Type=12
-PicMap=art\walls\new\NEC220.FRM
+PicMap=art\walls\TLJ\NEC220.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16122
 Type=12
-PicMap=art\walls\new\NEC221.FRM
+PicMap=art\walls\TLJ\NEC221.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16123
 Type=12
-PicMap=art\walls\new\NEC222.FRM
+PicMap=art\walls\TLJ\NEC222.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16124
 Type=12
-PicMap=art\walls\new\NEC223.FRM
+PicMap=art\walls\TLJ\NEC223.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16125
 Type=12
-PicMap=art\walls\new\NEC224.FRM
+PicMap=art\walls\TLJ\NEC224.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16126
 Type=12
-PicMap=art\walls\new\NEC225.FRM
+PicMap=art\walls\TLJ\NEC225.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16127
 Type=12
-PicMap=art\walls\new\NEC226.FRM
+PicMap=art\walls\TLJ\NEC226.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16128
 Type=12
-PicMap=art\walls\new\NEC227.FRM
+PicMap=art\walls\TLJ\NEC227.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16129
 Type=12
-PicMap=art\walls\new\NEC228.FRM
+PicMap=art\walls\TLJ\NEC228.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16130
 Type=12
-PicMap=art\walls\new\NEC229.FRM
+PicMap=art\walls\TLJ\NEC229.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16131
 Type=12
-PicMap=art\walls\new\NEC230.FRM
+PicMap=art\walls\TLJ\NEC230.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16132
 Type=12
-PicMap=art\walls\new\NEC231.FRM
+PicMap=art\walls\TLJ\NEC231.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16133
 Type=12
-PicMap=art\walls\new\NEC232.FRM
+PicMap=art\walls\TLJ\NEC232.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16134
 Type=12
-PicMap=art\walls\new\nec241.FRM
+PicMap=art\walls\TLJ\nec241.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16135
 Type=12
-PicMap=art\walls\new\nec242.FRM
+PicMap=art\walls\TLJ\nec242.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16136
 Type=12
-PicMap=art\walls\new\nec243.FRM
+PicMap=art\walls\TLJ\nec243.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16137
 Type=12
-PicMap=art\walls\new\nec244.FRM
+PicMap=art\walls\TLJ\nec244.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16138
 Type=12
-PicMap=art\walls\new\nec245.FRM
+PicMap=art\walls\TLJ\nec245.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16139
 Type=12
-PicMap=art\walls\new\nec246.FRM
+PicMap=art\walls\TLJ\nec246.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16140
 Type=12
-PicMap=art\walls\new\nec247.FRM
+PicMap=art\walls\TLJ\nec247.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16141
 Type=12
-PicMap=art\walls\new\nec248.FRM
+PicMap=art\walls\TLJ\nec248.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16142
 Type=12
-PicMap=art\walls\new\nec250.FRM
+PicMap=art\walls\TLJ\nec250.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16143
 Type=12
-PicMap=art\walls\new\nec251.FRM
+PicMap=art\walls\TLJ\nec251.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16144
 Type=12
-PicMap=art\walls\new\nec252.FRM
+PicMap=art\walls\TLJ\nec252.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16145
 Type=12
-PicMap=art\walls\new\nec253.FRM
+PicMap=art\walls\TLJ\nec253.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16146
 Type=12
-PicMap=art\walls\new\nec254.FRM
+PicMap=art\walls\TLJ\nec254.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16147
 Type=12
-PicMap=art\walls\new\nec260.FRM
+PicMap=art\walls\TLJ\nec260.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16148
 Type=12
-PicMap=art\walls\new\nec261.FRM
+PicMap=art\walls\TLJ\nec261.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16149
 Type=12
-PicMap=art\walls\new\nec262.FRM
+PicMap=art\walls\TLJ\nec262.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16150
 Type=12
-PicMap=art\walls\new\nec263.FRM
+PicMap=art\walls\TLJ\nec263.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16151
 Type=12
-PicMap=art\walls\new\nec264.FRM
+PicMap=art\walls\TLJ\nec264.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16152
 Type=12
-PicMap=art\walls\new\nec265.FRM
+PicMap=art\walls\TLJ\nec265.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16153
 Type=12
-PicMap=art\walls\new\nec266.FRM
+PicMap=art\walls\TLJ\nec266.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16154
 Type=12
-PicMap=art\walls\new\nec267.FRM
+PicMap=art\walls\TLJ\nec267.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16155
 Type=12
-PicMap=art\walls\new\nec268.FRM
+PicMap=art\walls\TLJ\nec268.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16156
 Type=12
-PicMap=art\walls\new\nec271.FRM
+PicMap=art\walls\TLJ\nec271.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16157
 Type=12
-PicMap=art\walls\new\nec272.FRM
+PicMap=art\walls\TLJ\nec272.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16158
 Type=12
-PicMap=art\walls\new\nec273.FRM
+PicMap=art\walls\TLJ\nec273.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16159
 Type=12
-PicMap=art\walls\new\nec274.FRM
+PicMap=art\walls\TLJ\nec274.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16160
 Type=12
-PicMap=art\walls\new\nec275.FRM
+PicMap=art\walls\TLJ\nec275.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16161
 Type=12
-PicMap=art\walls\new\nec276.FRM
+PicMap=art\walls\TLJ\nec276.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16162
 Type=12
-PicMap=art\walls\new\nec277.FRM
+PicMap=art\walls\TLJ\nec277.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16163
 Type=12
-PicMap=art\walls\new\nec278.FRM
+PicMap=art\walls\TLJ\nec278.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16164
 Type=12
-PicMap=art\walls\new\nec279.FRM
+PicMap=art\walls\TLJ\nec279.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16165
 Type=12
-PicMap=art\walls\new\nec280.FRM
+PicMap=art\walls\TLJ\nec280.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16166
 Type=12
-PicMap=art\walls\new\nec281.FRM
+PicMap=art\walls\TLJ\nec281.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16167
 Type=12
-PicMap=art\walls\new\nec282.FRM
+PicMap=art\walls\TLJ\nec282.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16168
 Type=12
-PicMap=art\walls\new\nec283.FRM
+PicMap=art\walls\TLJ\nec283.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16169
 Type=12
-PicMap=art\walls\new\nec284.FRM
+PicMap=art\walls\TLJ\nec284.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16170
 Type=12
-PicMap=art\walls\new\nec285.FRM
+PicMap=art\walls\TLJ\nec285.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16171
 Type=12
-PicMap=art\walls\new\nec286.FRM
+PicMap=art\walls\TLJ\nec286.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16172
 Type=12
-PicMap=art\walls\new\nec287.FRM
+PicMap=art\walls\TLJ\nec287.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16173
 Type=12
-PicMap=art\walls\new\nec288.FRM
+PicMap=art\walls\TLJ\nec288.FRM
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16174
 Type=12
-PicMap=art\walls\new\oboi000.frm
+PicMap=art\walls\TLJ\oboi000.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16175
 Type=12
-PicMap=art\walls\new\oboi001.frm
+PicMap=art\walls\TLJ\oboi001.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16176
 Type=12
-PicMap=art\walls\new\oboi002.frm
+PicMap=art\walls\TLJ\oboi002.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16177
 Type=12
-PicMap=art\walls\new\oboi003.frm
+PicMap=art\walls\TLJ\oboi003.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16178
 Type=12
-PicMap=art\walls\new\oboi004.frm
+PicMap=art\walls\TLJ\oboi004.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16179
 Type=12
-PicMap=art\walls\new\oboi005.frm
+PicMap=art\walls\TLJ\oboi005.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16180
 Type=12
-PicMap=art\walls\new\oboi006.frm
+PicMap=art\walls\TLJ\oboi006.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16181
 Type=12
-PicMap=art\walls\new\oboi007.frm
+PicMap=art\walls\TLJ\oboi007.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16182
 Type=12
-PicMap=art\walls\new\oboi008.frm
+PicMap=art\walls\TLJ\oboi008.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16183
 Type=12
-PicMap=art\walls\new\oboi009.frm
+PicMap=art\walls\TLJ\oboi009.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16184
 Type=12
-PicMap=art\walls\new\oboi010.frm
+PicMap=art\walls\TLJ\oboi010.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16185
 Type=12
-PicMap=art\walls\new\oboi011.frm
+PicMap=art\walls\TLJ\oboi011.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16186
 Type=12
-PicMap=art\walls\new\oboi012.frm
+PicMap=art\walls\TLJ\oboi012.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16187
 Type=12
-PicMap=art\walls\new\oboi013.frm
+PicMap=art\walls\TLJ\oboi013.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16188
 Type=12
-PicMap=art\walls\new\oboi014.frm
+PicMap=art\walls\TLJ\oboi014.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16189
 Type=12
-PicMap=art\walls\new\oboi015.frm
+PicMap=art\walls\TLJ\oboi015.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16190
 Type=12
-PicMap=art\walls\new\oboi016.frm
+PicMap=art\walls\TLJ\oboi016.frm
 PicInv=art\inven\reserved.frm
 
 [Proto]
 ProtoId=16191
 Type=12
-PicMap=art\walls\new\oboi017.frm
+PicMap=art\walls\TLJ\oboi017.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16192
 Type=12
-PicMap=art\walls\new\oboi018.frm
+PicMap=art\walls\TLJ\oboi018.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16193
 Type=12
-PicMap=art\walls\new\oboi019.frm
+PicMap=art\walls\TLJ\oboi019.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16194
 Type=12
-PicMap=art\walls\new\oboi020.frm
+PicMap=art\walls\TLJ\oboi020.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16195
 Type=12
-PicMap=art\walls\new\oboi021.frm
+PicMap=art\walls\TLJ\oboi021.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16196
 Type=12
-PicMap=art\walls\new\oboi022.frm
+PicMap=art\walls\TLJ\oboi022.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16197
 Type=12
-PicMap=art\walls\new\oboi023.frm
+PicMap=art\walls\TLJ\oboi023.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16198
 Type=12
-PicMap=art\walls\new\oboi024.frm
+PicMap=art\walls\TLJ\oboi024.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16199
 Type=12
-PicMap=art\walls\new\oboi025.frm
+PicMap=art\walls\TLJ\oboi025.frm
 PicInv=art\inven\reserved.frm
 
 
 [Proto]
 ProtoId=16200
 Type=12
-PicMap=art\walls\new\oboi026.frm
+PicMap=art\walls\TLJ\oboi026.frm
 PicInv=art\inven\reserved.frm
