@@ -1820,7 +1820,8 @@
 # pragma bindfield "const int    ProtoItem::Armor_DRFire       -> 124"
 # pragma bindfield "const int    ProtoItem::Armor_DRPlasma     -> 128"
 # pragma bindfield "const int    ProtoItem::Armor_DRElectr     -> 132"
-# pragma bindfield "const int    ProtoItem::Armor_DRExplode	   -> 136"  // Former ProtoItem::Armor_DREmp
+# pragma bindfield "const int    ProtoItem::Armor_DRExplode	   -> 136"  
+// Former ProtoItem::Armor_DREmp
 // Armor_DRExplode
 //# pragma bindfield "const int    ProtoItem::Armor_DRExplode  -> 140"  // broken byte entry
 # pragma bindfield "const int    ProtoItem::Armor_DTNormal     -> 144"

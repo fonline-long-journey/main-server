@@ -37,7 +37,7 @@ import void CallTownSupply( Critter& victim, Critter& hostile ) from "town_suppl
 import bool AddAttackPlane( Critter& npc, uint priority, Critter& target ) from "npc_planes";
 import bool AddAttackPlane( Critter& npc, uint priority, Critter& target, int minHp ) from "npc_planes";
 import bool UseSkillOnLocker( Critter& cr, Item& locker, int skill ) from "lockers";
-import bool PerkCheck( Critter& cr, uint perk ) from "perks";
+import bool PerkCheck(Critter& cr, uint perk, bool always) from "perks";
 import void CritterGenerate( Critter& cr ) from "parameters";
 //import void CaravansInit() from "caravan";
 import int  GetDeteriorationProcent( Item& item ) from "repair";
@@ -1825,7 +1825,7 @@ void player_levelup( Critter& player, uint skillIndex, uint skillUp, uint perkIn
     }
     else if( perkIndex >= PERK_BEGIN && perkIndex <= PERK_END )
     {
-        if( PerkCheck( player, perkIndex ) )
+        if( PerkCheck( player, perkIndex, false) )
         {
             player.PerkBase[ perkIndex ]++;
             player.StatBase[ ST_UNSPENT_PERKS ]--;

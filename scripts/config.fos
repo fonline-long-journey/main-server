@@ -254,8 +254,8 @@ void InitializeGame()                    // Export
     // for(uint i = REPUTATION_BEGIN; i <= REPUTATION_END   ; i++) SetParameterChangeBehaviour(i, dllName + "changedParam_Reputation");
 
 	// Change of parameters
-	SetParameterChangeBehaviour( ST_CURRENT_AC,		"parameters@changedCurrentAc");
-	SetParameterChangeBehaviour( ST_ARMOR_CLASS,	"parameters@changedArmorClass");
+	SetParameterChangeBehaviour( ST_CURRENT_AC,		dllName + "chanedParam_CurrentAc");
+	SetParameterChangeBehaviour( ST_ARMOR_CLASS,	dllName	+ "changedParam_ArmorClass");
 	
     #  ifndef __CLIENT
 	SetParameterChangeBehaviour( ST_STRENGTH, 		"parameters@changedStrength");

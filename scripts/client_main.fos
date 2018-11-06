@@ -10,11 +10,12 @@
 #include "hitchance_h.fos"
 #include "mutual_h.fos"
 #include "typecolors_h.fos"
+#include "config_file_h.fos"
 
 import void InitializeGame() from "config";
 import void InitTestScreen() from "client_screen_test";
 import void InitRadioScreen() from "radio";
-import bool PerkCheck( CritterCl& cr, uint perk ) from "perks";
+import bool PerkCheck(Critter& cr, uint perk, bool always) from "perks";
 import void CritterGenerate( int[]& data ) from "parameters";
 import bool CritterGenerateCheck( const int[]& data ) from "parameters";
 import uint get_attack_distantion( CritterCl& cr, ItemCl& item, uint8 mode ) from "parameters";
@@ -551,7 +552,7 @@ void item_map_out( ItemCl& item )
 // Called on something critter in/out chosen inventory.
 void item_inv_in( ItemCl& item )
 {
-     GUI_EngineCallback_ItemChanged( false );
+    GUI_EngineCallback_ItemChanged( false );
 }
 
 void item_inv_changed( ItemCl& itemNow, ItemCl& itemBefore )
@@ -1969,7 +1970,7 @@ uint item_cost( ItemCl& item, CritterCl& chosen, CritterCl& npc, bool sell )
 // Call to determine perk availability.
 bool check_perk( CritterCl& cr, uint perk )
 {
-    return PerkCheck( cr, perk );
+    return PerkCheck( cr, perk, false );
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////

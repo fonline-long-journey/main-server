@@ -115,7 +115,7 @@ shared class CObjectData
 #include "serializator.fos"
 #include "_time.fos"
 
-#define CLEANUP_TIME 	(REAL_MINUTE(1))
+#define CLEANUP_TIME 	(REAL_MINUTE(30))
 
 #endif
 
