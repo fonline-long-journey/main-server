@@ -3,23 +3,22 @@
 #include "_msgstr.fos"
 #include "combat_h.fos"
 
-#ifdef __SERVER
-#include "critter_types_h.fos"
-#endif
-
 #ifdef __CLIENT
 # include "_client_defines.fos"
 # include "gui_h.fos"
 
 import void SetChosenTabLevelUp( bool enable )  from "chosen_tabs";
+
 #endif
 
-#ifndef __CLIENT
-import void PerkUp( Critter& cr, uint perk ) from "perks";
-import void PerkDown( Critter& cr, uint perk ) from "perks";
-#endif
+#ifdef __SERVER
 
-#ifndef __CLIENT
+#include "critter_types_h.fos"
+
+import void PerkUp(Critter& cr, uint perk, int fromlevel) from "perks";
+import void PerkDown(Critter& cr, uint perk, int tolevel) from "perks";
+
+
 void unsafe_changeSkills(Critter& player, int param0, int param1, int param2, string@ param3, int[]@ skills){
     if( skills.length == __SkillEnd - __SkillBegin + 1 ){
         for(uint i = __SkillBegin; i <= __SkillEnd && player.ParamBase[ST_UNSPENT_SKILL_POINTS] >= 0; i++){
@@ -133,13 +132,13 @@ void changedParam_Experience( Critter& cr, uint, int oldValue )
 
 void changedParam_Perks( Critter& cr, uint perk, int oldValue )
 {
-    int curValue = cr.Param[ perk ];
-    if( curValue > oldValue )
-        for( uint i = 0, j = curValue - oldValue; i < j; i++ )
-            PerkUp( cr, perk );
-    else if( curValue < oldValue )
-        for( uint i = 0, j = oldValue - curValue; i < j; i++ )
-            PerkDown( cr, perk );
+    int curValue = cr.Param[perk];
+    if(curValue > oldValue)
+        for(int i = oldValue; i < curValue; i++)
+            PerkUp(cr, perk, i);
+    else if(curValue < oldValue)
+        for(int i = oldValue - 1; i >= curValue; i--)
+            PerkDown(cr, perk, i);
 }
 
 void changedParam_Hide( Critter& cr, uint, int oldValue )
@@ -177,16 +176,6 @@ void changedStrength( Critter& cr, uint, int oldValue )
 void changedStrengthExt( Critter& cr, uint, int oldValue )
 {
 	updateCurrentAc(cr);
-}
-
-void changedArmorClass( Critter& cr, uint, int oldValue )
-{
-	int value = cr.Param[ ST_ARMOR_CLASS ];
-
-	cr.EraseTimeEvents(CTE_AC_REGEN);
-	cr.AddTimeEvent( "cte_armorRegeneration", 0, CTE_AC_REGEN);
-	
-	cr.ParamBase[ ST_CURRENT_AC ] = CLAMP(cr.ParamBase[ ST_CURRENT_AC ], 0, cr.Param[ ST_ARMOR_CLASS ]);
 }
 
 uint cte_armorRegeneration( Critter& cr, int identifier, uint& rate ){
@@ -250,6 +239,16 @@ int getParamDialog_Reputation( Critter@ master, Critter@ slave, uint index )
     }
     return 0;
 }
+
+void NpcProcessLevel( Critter& npc ) // Export
+{
+    for( int i = 0, j = npc.Stat[ ST_LEVEL ]; i < j; i++ )
+    {
+        // Todo: ...
+        // npc.StatBase[ST_MAX_LIFE]+=10;
+    }
+}
+
 #endif
 
 #ifdef __CLIENT
@@ -388,16 +387,7 @@ bool CritterGenerateCheck( const int[]& params ) // Export to client_main@player
 }
 #endif
 
-#ifndef __CLIENT
-void NpcProcessLevel( Critter& npc ) // Export
-{
-    for( int i = 0, j = npc.Stat[ ST_LEVEL ]; i < j; i++ )
-    {
-        // Todo: ...
-        // npc.StatBase[ST_MAX_LIFE]+=10;
-    }
-}
-#endif
+
 
 uint CheckPlayerName( const string& name )
 {
@@ -776,6 +766,32 @@ void changedParam_Reputation( Critter& cr, uint index, int oldValue )
         cr.ParamBase[ index ] += uint( value );
     }
     #endif
+}
+
+void chanedParam_CurrentAc( Critter& cr, uint, int oldValue )
+{
+	#ifdef __SERVER
+	int value = cr.Param[ ST_CURRENT_AC ];
+	if( value < oldValue )
+	{
+		cr.EraseTimeEvents(CTE_AC_REGEN);
+		cr.AddTimeEvent( "cte_armorRegeneration", 0, CTE_AC_REGEN);
+	}
+	
+	cr.ParamBase[ ST_CURRENT_AC ] = CLAMP(cr.ParamBase[ ST_CURRENT_AC ], 0, cr.Param[ ST_ARMOR_CLASS ]);
+	#endif
+}
+
+void changedParam_ArmorClass( Critter& cr, uint, int oldValue )
+{
+	#ifdef __SERVER
+	int value = cr.Param[ ST_ARMOR_CLASS ];
+
+	cr.EraseTimeEvents(CTE_AC_REGEN);
+	cr.AddTimeEvent( "cte_armorRegeneration", 0, CTE_AC_REGEN);
+	
+	cr.ParamBase[ ST_CURRENT_AC ] = CLAMP(cr.ParamBase[ ST_CURRENT_AC ], 0, cr.Param[ ST_ARMOR_CLASS ]);
+	#endif
 }
 
 // Extended methods

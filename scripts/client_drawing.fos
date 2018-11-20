@@ -48,6 +48,7 @@ uint burstMuzzles;
 // https://gyazo.com/1d99faa11f781ba4941f1a163d3441ac
 class WMZoneRender : IWMZoneRender
 {	
+	
 	int realx, realy, length;
 	uint color, layer;
 	uint8 drawType;
