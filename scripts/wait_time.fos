@@ -30,16 +30,18 @@
 uint GetProtoTime(ProtoItem& prot, uint8 mode, CritterMutual@ crit)
 {
 	uint time	 = _GetProtoWaitTime(prot, mode&0x0F); // 16 uses limit, more than enough
+	#ifdef __DEBUG
 	uint subtype = prot.Item_SubType;
 	switch(subtype)
     {
-        case ITEM_SUBTYPE_WEAPON_BALLISTIC_SNIPERRIFLE:
+        case ITEM_SUBTYPE_WEAPON_NORMAL_SNIPERRIFLE:
             if(crit.Perk[PE_TOUGHNESS]>0)
                 time /= 2;
             break;
         default :
             break;
     }
+	#endif
 	return time;
 }
 

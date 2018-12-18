@@ -507,6 +507,9 @@
 #define STR_CAR_CRIT_OVERLOAD                ( 10257 )
 #define STR_CRIT_BAD_CHARISMA                ( 10258 )
 #define STR_CANT_KICK_ON_WATER               ( 10259 )
+
+// Item Subtypes
+#define STR_ITEM_SUBTYPE                     # (subtype) (14500 + subtype)
 // Drugs
 #define STR_DRUG_STAT_GAIN                   ( 10300 )
 #define STR_DRUG_STAT_LOSE                   ( 10301 )

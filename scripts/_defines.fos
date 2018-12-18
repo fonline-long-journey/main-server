@@ -103,112 +103,140 @@
 // *****
 // Item: Weapon subtypes
 // *****
+// Zero type
+#define ITEM_SUBTYPE_UNDEFINED						 ( 0 )
 // Ballistic weaponry 1 <-> 15
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_BEGIN			 ( 1 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_PISTOL         ( 1 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_RIFLE          ( 2 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_SMG            ( 3 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_SNIPERRIFLE    ( 4 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_MARKSMANRIFLE  ( 5 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_SHOTGUN        ( 6 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_MACHINEGUN     ( 7 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_LMG            ( 8 )
-#define ITEM_SUBTYPE_WEAPON_BALLISTIC_END            ( 8 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_BEGIN	         ( 1 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_PISTOL            ( 1 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_PISTOL_REVOLVER   ( 2 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_SMG               ( 3 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_RIFLE             ( 4 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_ASSAULTRIFLE      ( 5 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_SNIPERRIFLE       ( 6 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_SHOTGUN           ( 7 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_AUTOSHOTGUN       ( 8 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_LMG               ( 9 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_MACHINEGUN        ( 10 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_NADELAUNCHER      ( 11 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_FLAMETHROWER      ( 12 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_MINIGUN   	     ( 13 )
+#define ITEM_SUBTYPE_WEAPON_NORMAL_END               ( 13 )
 // -----
 // Energy weaponry 15 <-> 45                         
-// Laser  15 <-> 25              
+// Laser  15 <-> 24              
 #define ITEM_SUBTYPE_WEAPON_LASER_BEGIN			 	 ( 15 )                       
 #define ITEM_SUBTYPE_WEAPON_LASER_PISTOL         	 ( 15 )
 #define ITEM_SUBTYPE_WEAPON_LASER_RIFLE          	 ( 16 )
 #define ITEM_SUBTYPE_WEAPON_LASER_SMG            	 ( 17 )
 #define ITEM_SUBTYPE_WEAPON_LASER_SNIPERRIFLE    	 ( 18 )
 #define ITEM_SUBTYPE_WEAPON_LASER_SHOTGUN        	 ( 19 )
-#define ITEM_SUBTYPE_WEAPON_LASER_END			 	 ( 20 )
-// Plasma 26 <-> 35
-#define ITEM_SUBTYPE_WEAPON_PLASMA_BEGIN		 	 ( 26 )                                         
-#define ITEM_SUBTYPE_WEAPON_PLASMA_PISTOL   	 	 ( 26 )     
-#define ITEM_SUBTYPE_WEAPON_PLASMA_RIFLE         	 ( 27 )
-#define ITEM_SUBTYPE_WEAPON_PLASMA_SMG           	 ( 28 )
-#define ITEM_SUBTYPE_WEAPON_PLASMA_SNIPERRIFLE   	 ( 29 )
-#define ITEM_SUBTYPE_WEAPON_PLASMA_SHOTGUN       	 ( 30 )
-#define ITEM_SUBTYPE_WEAPON_PLASMA_END           	 ( 30 )
-// Pulse 36 <-> 45
-#define ITEM_SUBTYPE_WEAPON_PULSE_BEGIN			 	 ( 36 )
-#define ITEM_SUBTYPE_WEAPON_PULSE_PISTOL		 	 ( 37 )
-#define ITEM_SUBTYPE_WEAPON_PULSE_RIFLE			 	 ( 38 )
-#define ITEM_SUBTYPE_WEAPON_PULSE_SMG            	 ( 39 )
-#define ITEM_SUBTYPE_WEAPON_PULSE_SNIPERRIFLE    	 ( 40 )
-#define ITEM_SUBTYPE_WEAPON_PULSE_SHOTGUN        	 ( 41 )
-#define ITEM_SUBTYPE_WEAPON_PULSE_END            	 ( 41 )
+#define ITEM_SUBTYPE_WEAPON_LASER_END			 	 ( 19 )
+// Plasma 26 <-> 34
+#define ITEM_SUBTYPE_WEAPON_PLASMA_BEGIN		 	 ( 25 )                                         
+#define ITEM_SUBTYPE_WEAPON_PLASMA_PISTOL   	 	 ( 25 )     
+#define ITEM_SUBTYPE_WEAPON_PLASMA_RIFLE         	 ( 26 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_SMG           	 ( 27 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_SNIPERRIFLE   	 ( 28 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_SHOTGUN       	 ( 29 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_END           	 ( 29 )
+// Pulse 35 <-> 44
+#define ITEM_SUBTYPE_WEAPON_PULSE_BEGIN			 	 ( 35 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_PISTOL		 	 ( 35 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_RIFLE			 	 ( 36 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_SMG            	 ( 37 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_SNIPERRIFLE    	 ( 38 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_SHOTGUN        	 ( 39 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_END            	 ( 39 )
 // -----
-// Grenades 46 <-> 50
-#define ITEM_SUBTYPE_WEAPON_GRENADE_BEGIN		 	 ( 46 )
-#define ITEM_SUBTYPE_WEAPON_GRENADE_CONVENTIONAL 	 ( 46 )
-#define ITEM_SUBTYPE_WEAPON_GRENADE_TACTICAL	 	 ( 47 )
-#define ITEM_SUBTYPE_WEAPON_GRENADE_HIGHTECH	 	 ( 48 )
-#define ITEM_SUBTYPE_WEAPON_GRENADE_END			 	 ( 48 )
+// Grenades 45 <-> 54
+#define ITEM_SUBTYPE_WEAPON_GRENADE_BEGIN		 	 ( 45 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_FRAG 	 		 ( 45 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_CONCUSSION	 	 ( 46 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_FLASH		 	 ( 47 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_SMOKE		 	 ( 48 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_PLASMA		 	 ( 49 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_ELECTRO		 	 ( 50 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_MOLOTOV		 	 ( 51 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_INCENDIARY		 ( 52 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_GAS				 ( 53 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_END			 	 ( 53 )
 // -----
-// Melee 51 <-> 59
-#define ITEM_SUBTYPE_WEAPON_MELEE_BEGIN			 	 ( 51 )
-#define ITEM_SUBTYPE_WEAPON_MELEE_KNIFE			 	 ( 52 )
-#define ITEM_SUBTYPE_WEAPON_MELEE_SPEAR          	 ( 53 )
-#define ITEM_SUBTYPE_WEAPON_MELEE_HAMMER         	 ( 54 )
-#define ITEM_SUBTYPE_WEAPON_MELEE_GLOVE          	 ( 55 )
-#define ITEM_SUBTYPE_WEAPON_MELEE_END          	 	 ( 55 )
+// Melee 55 <-> 69
+#define ITEM_SUBTYPE_WEAPON_MELEE_BEGIN			 	 ( 55 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_KNIFE			 	 ( 55 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_LONG_KNIFE	     ( 56 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_SPEAR          	 ( 57 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_HAMMER         	 ( 58 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_GLOVE          	 ( 59 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_CLUB          	 ( 60 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_END          	 	 ( 60 )
 // *****
-// Item: Armor subtypes 60 <-> 99
+// Item: Armor subtypes 70 <-> 99
 // Armor default subtypes. Might be folded into separate categories later.
-#define ITEM_SUBTYPE_ARMOR_BEGIN				     ( 60 )					     
-#define ITEM_SUBTYPE_ARMOR_NONE					     ( 60 )	
-#define ITEM_SUBTYPE_ARMOR_HIDDENVEST				 ( 61 )
-#define ITEM_SUBTYPE_ARMOR_LIGHT                     ( 62 )
-#define ITEM_SUBTYPE_ARMOR_MEDIUM                    ( 63 )
-#define ITEM_SUBTYPE_ARMOR_HEAVY                     ( 64 )
-#define ITEM_SUBTYPE_ARMOR_POWERED                   ( 65 )
-#define ITEM_SUBTYPE_ARMOR_ROBOSUIT                  ( 66 )
-#define ITEM_SUBTYPE_ARMOR_END               	     ( 66 )
+#define ITEM_SUBTYPE_ARMOR_BEGIN				     ( 70 )					     
+#define ITEM_SUBTYPE_ARMOR_NONE					     ( 70 )	
+#define ITEM_SUBTYPE_ARMOR_HIDDENVEST				 ( 71 )
+#define ITEM_SUBTYPE_ARMOR_LIGHT                     ( 72 )
+#define ITEM_SUBTYPE_ARMOR_MEDIUM                    ( 73 )
+#define ITEM_SUBTYPE_ARMOR_HEAVY                     ( 74 )
+#define ITEM_SUBTYPE_ARMOR_POWERED                   ( 75 )
+#define ITEM_SUBTYPE_ARMOR_ROBOSUIT                  ( 76 )
+#define ITEM_SUBTYPE_ARMOR_END               	     ( 76 )
 // *****
-// Item: Drug subtypes
+// Item: Drug subtypes 100 <-> 149
 // *****
-// Drugs
-#define ITEM_SUBTYPE_DRUG_BEGIN
-#define ITEM_SUBTYPE_DRUG_LIGHTLONG
-#define ITEM_SUBTYPE_DRUG_LIGHTSHORT
-#define ITEM_SUBTYPE_DRUG_HEAVYLONG
-#define ITEM_SUBTYPE_DRUG_HEAVYSHORT
-#define ITEM_SUBTYPE_DRUG_NONTRADITIONAL
-#define ITEM_SUBTYPE_DRUG_END
+// Drugs 100 <-> 109
+#define ITEM_SUBTYPE_DRUG_BEGIN						 ( 100 )
+#define ITEM_SUBTYPE_DRUG_LIGHT_LONG				 ( 100 )
+#define ITEM_SUBTYPE_DRUG_LIGHT_SHORT				 ( 101 )
+#define ITEM_SUBTYPE_DRUG_HEAVY_LONG                 ( 102 )
+#define ITEM_SUBTYPE_DRUG_HEAVY_SHORT                ( 103 )
+#define ITEM_SUBTYPE_DRUG_EXOTIC_SHORT            	 ( 104 )
+#define ITEM_SUBTYPE_DRUG_EXOTIC_LONG            	 ( 105 )
+#define ITEM_SUBTYPE_DRUG_END                        ( 105 )
 // -----
-// Stimpacks
-#define ITEM_SUBTYPE_DRUG_STIMPACK_BEGIN
-#define ITEM_SUBTYPE_DRUG_STIMPACK_SMALL
-#define ITEM_SUBTYPE_DRUG_STIMPACK_MEDIUM
-#define ITEM_SUBTYPE_DRUG_STIMPACK_LARGE
-#define ITEM_SUBTYPE_DRUG_STIMPACK_NONTRADITIONAL
-#define ITEM_SUBTYPE_DRUG_STIMPACK_END
+// Stimpacks 110 <-> 119
+#define ITEM_SUBTYPE_DRUG_STIMPACK_BEGIN			 ( 110 )
+#define ITEM_SUBTYPE_DRUG_STIMPACK_SMALL             ( 110 )
+#define ITEM_SUBTYPE_DRUG_STIMPACK_MEDIUM            ( 111 )
+#define ITEM_SUBTYPE_DRUG_STIMPACK_LARGE             ( 112 )
+#define ITEM_SUBTYPE_DRUG_STIMPACK_EXOTIC   		 ( 113 )
+#define ITEM_SUBTYPE_DRUG_STIMPACK_PRIMITIVE   		 ( 114 )
+#define ITEM_SUBTYPE_DRUG_STIMPACK_END               ( 114 )
 // -----
-// Alcohol
-#define ITEM_SUBTYPE_DRUG_ALCOHOL
-#define ITEM_SUBTYPE_DRUG_ALCOHOL_LIGHT
-#define ITEM_SUBTYPE_DRUG_ALCOHOL_MEDIUM
-#define ITEM_SUBTYPE_DRUG_ALCOHOL_HEAVY
+// Alcohol 120 <-> 129
+#define ITEM_SUBTYPE_DRUG_ALCOHOL					 ( 120 )
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_LIGHT				 ( 120 )
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_MEDIUM			 ( 121 )
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_HEAVY				 ( 122 )
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_LOW_QUALITY		 ( 123 )
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_BAD_BREW			 ( 124 )
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_END				 ( 124 )
 // -----
-// Drinks
-#define ITEM_SUBTYPE_DRUG_DRINK
-#define ITEM_SUBTYPE_DRUG_DRINK_WATER
-#define ITEM_SUBTYPE_DRUG_DRINK_WATER_BOILED
-#define ITEM_SUBTYPE_DRUG_DRINK_WATER_INFECTED
-#define ITEM_SUBTYPE_DRUG_DRINK_WATER_PURE
-#define ITEM_SUBTYPE_DRUG_DRINK_TEA
-#define ITEM_SUBTYPE_DRUG_DRINK_LEMONADE
-#define ITEM_SUBTYPE_DRUG_DRINK_SWEET_LEMONADE
-#define ITEM_SUBTYPE_DRUG_DRINK
+// Drinks 130 <-> 139
+#define ITEM_SUBTYPE_DRUG_DRINK_BEGIN				 ( 130 )			
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER				 ( 130 )
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER_BOILED		 ( 131 )
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER_INFECTED       ( 132 )
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER_PURE           ( 133 )
+#define ITEM_SUBTYPE_DRUG_DRINK_COLD                 ( 134 )
+#define ITEM_SUBTYPE_DRUG_DRINK_HOT            		 ( 135 )
+#define ITEM_SUBTYPE_DRUG_DRINK_SWEET_LEMONADE       ( 136 )
+#define ITEM_SUBTYPE_DRUG_DRINK_END                  ( 136 )
 // -----
-// Food
-#define ITEM_SUBTYPE_DRUG_FOOD
-#define ITEM_SUBTYPE_DRUG_FOOD_UNCOOKED
-#define ITEM_SUBTYPE_DRUG_FOOD_COOKED
-#define ITEM_SUBTYPE_DRUG_FOOD_RAW
+// Food 140 <-> 149
+#define ITEM_SUBTYPE_DRUG_FOOD_BEGIN				 ( 140 )
+#define ITEM_SUBTYPE_DRUG_FOOD_MEAT					 ( 140 )
+#define ITEM_SUBTYPE_DRUG_FOOD_MEAT_RAW		         ( 141 )
+#define ITEM_SUBTYPE_DRUG_FOOD_MEAT_COOKED           ( 142 )
+#define ITEM_SUBTYPE_DRUG_FOOD_MEAT_SPOILED          ( 143 )
+#define ITEM_SUBTYPE_DRUG_FOOD_EATABLE				 ( 144 )
+#define ITEM_SUBTYPE_DRUG_FOOD_INGRIDIENT            ( 145 )
+#define ITEM_SUBTYPE_DRUG_FOOD_END          	     ( 145 )
+// ----
+// Medical supplies 150 <-> 170
+#define ITEM_SUBTYPE_DRUG_MEDS_BEGIN				 ( 180 )
+#define ITEM_SUBTYPE_DRUG_MEDS_END				 	 ( 181 )
 
 
 // User types
