@@ -1,0 +1,68 @@
+// by Vice Dice, 16.12.2018.
+
+#ifndef RP_ELEMENTS_MODULE
+#define RP_ELEMENTS_MODULE
+
+#include "rp_elements_h.fos"
+
+
+void InitCritterRP(Critter& critter)
+{
+	// test stats initialize, decide where to do it anywhere else if you want.
+	critter.ParamBase[ST_HUNGER] = BASE_HUNGER_MAX;
+	critter.ParamBase[ST_THIRST] = BASE_THIRST_MAX;
+	uint count = critter.GetTimeEvents(CTE_HUNDER_DECAY, null, null, null);
+	if(count == 0)
+	{
+		critter.AddTimeEvent("cte_HungerDecay", 0, CTE_HUNDER_DECAY);
+	}
+	count = critter.GetTimeEvents(CTE_THIRST_DECAY, null, null, null);
+	if(count == 0)
+	{
+		critter.AddTimeEvent("cte_ThirstDecay", 0, CTE_THIRST_DECAY);
+	}
+	
+}
+
+uint cte_HungerDecay(Critter& critter, int identifier, uint& rate)
+{
+	if(critter.Param[ST_HUNGER] <= BASE_HUNGER_MIN)
+		return BASE_HUNGER_TIME*__TimeMultiplier;
+	
+	critter.ParamBase[ST_HUNGER] -= BASE_HUNGER_DECAY;
+	#ifdef __DEBUG
+	if(critter.IsPlayer())
+		Log("Damn i am hungry ! " + GetPlayerName(critter.Id) + " " + critter.Param[ST_HUNGER]);
+	#endif
+	if(critter.Param[ST_HUNGER] <= BASE_HUNGER_MIN)
+	{
+		#ifdef __DEBUG
+		critter.Say(SAY_NORM_ON_HEAD, "AAA suka i am dying of hunger !" );
+		#endif
+		// do something ! Maybe kill it ?
+	}
+	return BASE_HUNGER_TIME*__TimeMultiplier; // real second, example.
+}
+
+uint cte_ThirstDecay(Critter& critter, int identifier, uint& rate)
+{
+	if(critter.Param[ST_THIRST] <= BASE_THIRST_MIN)
+		return BASE_THIRST_TIME*__TimeMultiplier;
+	
+	critter.ParamBase[ST_THIRST] -= BASE_HUNGER_DECAY;
+	#ifdef __DEBUG
+	if(critter.IsPlayer())
+		Log("Damn i am thirsty ! " + GetPlayerName(critter.Id) + " " + critter.Param[ST_THIRST]);
+	#endif
+	if(critter.Param[ST_THIRST] <= BASE_THIRST_MIN)
+	{
+		#ifdef __DEBUG
+		critter.Say(SAY_NORM_ON_HEAD, "AAA suka i am dying of thirst !" );
+		#endif
+		// do something ! Maybe kill it ?
+	}
+	return BASE_THIRST_TIME*__TimeMultiplier; // real second, example.
+}
+
+
+#endif

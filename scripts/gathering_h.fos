@@ -1,0 +1,55 @@
+
+
+
+#ifndef GATHERING_HEADER
+#define GATHERING_HEADER
+
+#define TABLES_BEGIN			(0)
+
+#define TABLE_ALIAS_ITEMS		(0)
+#define TABLE_ALIAS_CRITTERS	(1)
+
+#define TABLES_END				(2)
+
+shared interface IGatheringTableLevel
+{
+	int  GetChance(Critter& critter, Item@ usedItem, int skill);
+	bool Satisfies(Critter@ target, Critter& critter, Item@ item, Item@ targetItem, int skill);
+	IGatheringTable@ GetParentTableInterface();
+}
+
+shared interface IGatheringTable
+{
+	uint GetId();
+	uint8 GetType();
+	uint8 GetLevels();
+	uint GetHookPid();
+	bool GiveItems(Critter@ target, Critter& critter, Item@ usedItem, Item@ targetItem, int skill);
+}
+
+#ifdef GATHERING_MODULE
+#include "_macros.fos"
+#include "_msgstr.fos"
+
+// dont define two of these at the same time, CHOOSE WISELY.
+//#define __DICT // Dictionary type of pid lookup
+#define __ARRAY  // Array type of pid lookup
+
+#ifndef __DICT 
+	#ifndef __ARRAY
+		#error __DICT or __ARRAY should be defined !
+	#endif
+#endif
+
+#endif
+
+#endif
+
+#ifndef GATHERING_MODULE	
+import bool InitGatheringTables() from "gathering";
+import bool TryGatherCritter(Critter& gatherer, Critter& target, Item@ item, int skill) from "gathering";
+import bool TryGatherItem(Critter& gatherer, Item& target, Item@ item, int skill) from "gathering";
+import IGatheringTable@ GetGatheringTable(uint8 aliasType, uint pid) from "gathering";
+#endif
+
+#endif

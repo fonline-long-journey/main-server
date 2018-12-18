@@ -21,7 +21,7 @@ void _TurretInit( Critter& turret, bool firstTime )
     turret.StatBase[ ST_MAX_LIFE ] = 1000;
     turret.StatBase[ ST_BONUS_LOOK ] = 300;
     turret.StatBase[ ST_STRENGTH ] = 10;
-    turret.StatBase[ ST_ENDURANCE ] = 10;
+    turret.StatBase[ ST_TOUGHNESS ] = 10;
     turret.SkillBase[ SK_BIG_GUNS ] = 300;
     turret.ModeBase[ MODE_NO_ENEMY_STACK ] = 1;
     turret.ModeBase[ MODE_UNLIMITED_AMMO ] = 1;

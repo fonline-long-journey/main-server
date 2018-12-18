@@ -50,7 +50,7 @@ const int[] DrugEffects =
     -1,         0,      0,      0,          0,     0,
 // PID_MENTATS
     ADDICTION_MENTATS,     0,          240,   0,       240, 2400,
-    ST_INTELLECT,         2,     -2,      0,         -1,     1,
+    ST_EDUCATION,         2,     -2,      0,         -1,     1,
     ST_PERCEPTION,         1,     -1,      0,          0,     0,
     ST_CHARISMA,         2,     -2,      0,          -1,     1,
     -1,         0,      0,      0,         0,     0,
@@ -182,7 +182,7 @@ const int[] DrugEffects =
     -1,         0,      0,      0,          0,     0,
 // PID_KITTY_SEX_DRUG_INTELLIGENCE
     -1,      0,            60,      0,          0,     0,
-    ST_INTELLECT,         1,     -1,      0,          0,     0,
+    ST_EDUCATION,         1,     -1,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,
     -1,         0,      0,      0,          0,     0,

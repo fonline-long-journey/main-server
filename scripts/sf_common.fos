@@ -687,7 +687,7 @@ bool _RecipeSkill( Item& item, Critter& cr, int skill )
         GameVar@ recipeKnown = GetLocalVar( LVAR_sf_chitin_armor_recipe_known, cr.Id );
         if( recipeKnown == 0 )
         {
-            if( cr.Stat[ ST_INTELLECT ] < 6 || cr.Skill[ SK_SCIENCE ] < 90 || cr.Skill[ SK_OUTDOORSMAN ] < 100 )
+            if( cr.Stat[ ST_EDUCATION ] < 6 || cr.Skill[ SK_SCIENCE ] < 90 || cr.Skill[ SK_OUTDOORSMAN ] < 100 )
             {
                 cr.SayMsg( SAY_NETMSG, TEXTMSG_TEXT, STR_CANT_LEARN );
                 return true;

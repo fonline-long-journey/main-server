@@ -6,6 +6,8 @@
 // #define PLAYERS_3D_NO_HEAD     // No head slot
 // #define PLAYERS_3D_VAULT_SUITE // Vault suite by default, not naked
 
+// Comment to turn off server DEBUG mode (log messages).
+#define __DEBUG									 ( 0 )
 
 // logger
 #define DEADLOG                                  ( 0 )
@@ -98,6 +100,117 @@
 #define ITEM_TYPE_WALL                           ( 12 )
 #define ITEM_TYPE_CAR                            ( 13 )
 #define ITEM_TYPE_END							 ( 13 )
+// *****
+// Item: Weapon subtypes
+// *****
+// Ballistic weaponry 1 <-> 15
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_BEGIN			 ( 1 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_PISTOL         ( 1 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_RIFLE          ( 2 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_SMG            ( 3 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_SNIPERRIFLE    ( 4 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_MARKSMANRIFLE  ( 5 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_SHOTGUN        ( 6 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_MACHINEGUN     ( 7 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_LMG            ( 8 )
+#define ITEM_SUBTYPE_WEAPON_BALLISTIC_END            ( 8 )
+// -----
+// Energy weaponry 15 <-> 45                         
+// Laser  15 <-> 25              
+#define ITEM_SUBTYPE_WEAPON_LASER_BEGIN			 	 ( 15 )                       
+#define ITEM_SUBTYPE_WEAPON_LASER_PISTOL         	 ( 15 )
+#define ITEM_SUBTYPE_WEAPON_LASER_RIFLE          	 ( 16 )
+#define ITEM_SUBTYPE_WEAPON_LASER_SMG            	 ( 17 )
+#define ITEM_SUBTYPE_WEAPON_LASER_SNIPERRIFLE    	 ( 18 )
+#define ITEM_SUBTYPE_WEAPON_LASER_SHOTGUN        	 ( 19 )
+#define ITEM_SUBTYPE_WEAPON_LASER_END			 	 ( 20 )
+// Plasma 26 <-> 35
+#define ITEM_SUBTYPE_WEAPON_PLASMA_BEGIN		 	 ( 26 )                                         
+#define ITEM_SUBTYPE_WEAPON_PLASMA_PISTOL   	 	 ( 26 )     
+#define ITEM_SUBTYPE_WEAPON_PLASMA_RIFLE         	 ( 27 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_SMG           	 ( 28 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_SNIPERRIFLE   	 ( 29 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_SHOTGUN       	 ( 30 )
+#define ITEM_SUBTYPE_WEAPON_PLASMA_END           	 ( 30 )
+// Pulse 36 <-> 45
+#define ITEM_SUBTYPE_WEAPON_PULSE_BEGIN			 	 ( 36 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_PISTOL		 	 ( 37 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_RIFLE			 	 ( 38 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_SMG            	 ( 39 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_SNIPERRIFLE    	 ( 40 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_SHOTGUN        	 ( 41 )
+#define ITEM_SUBTYPE_WEAPON_PULSE_END            	 ( 41 )
+// -----
+// Grenades 46 <-> 50
+#define ITEM_SUBTYPE_WEAPON_GRENADE_BEGIN		 	 ( 46 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_CONVENTIONAL 	 ( 46 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_TACTICAL	 	 ( 47 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_HIGHTECH	 	 ( 48 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_END			 	 ( 48 )
+// -----
+// Melee 51 <-> 59
+#define ITEM_SUBTYPE_WEAPON_MELEE_BEGIN			 	 ( 51 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_KNIFE			 	 ( 52 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_SPEAR          	 ( 53 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_HAMMER         	 ( 54 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_GLOVE          	 ( 55 )
+#define ITEM_SUBTYPE_WEAPON_MELEE_END          	 	 ( 55 )
+// *****
+// Item: Armor subtypes 60 <-> 99
+// Armor default subtypes. Might be folded into separate categories later.
+#define ITEM_SUBTYPE_ARMOR_BEGIN				     ( 60 )					     
+#define ITEM_SUBTYPE_ARMOR_NONE					     ( 60 )	
+#define ITEM_SUBTYPE_ARMOR_HIDDENVEST				 ( 61 )
+#define ITEM_SUBTYPE_ARMOR_LIGHT                     ( 62 )
+#define ITEM_SUBTYPE_ARMOR_MEDIUM                    ( 63 )
+#define ITEM_SUBTYPE_ARMOR_HEAVY                     ( 64 )
+#define ITEM_SUBTYPE_ARMOR_POWERED                   ( 65 )
+#define ITEM_SUBTYPE_ARMOR_ROBOSUIT                  ( 66 )
+#define ITEM_SUBTYPE_ARMOR_END               	     ( 66 )
+// *****
+// Item: Drug subtypes
+// *****
+// Drugs
+#define ITEM_SUBTYPE_DRUG_BEGIN
+#define ITEM_SUBTYPE_DRUG_LIGHTLONG
+#define ITEM_SUBTYPE_DRUG_LIGHTSHORT
+#define ITEM_SUBTYPE_DRUG_HEAVYLONG
+#define ITEM_SUBTYPE_DRUG_HEAVYSHORT
+#define ITEM_SUBTYPE_DRUG_NONTRADITIONAL
+#define ITEM_SUBTYPE_DRUG_END
+// -----
+// Stimpacks
+#define ITEM_SUBTYPE_DRUG_STIMPACK_BEGIN
+#define ITEM_SUBTYPE_DRUG_STIMPACK_SMALL
+#define ITEM_SUBTYPE_DRUG_STIMPACK_MEDIUM
+#define ITEM_SUBTYPE_DRUG_STIMPACK_LARGE
+#define ITEM_SUBTYPE_DRUG_STIMPACK_NONTRADITIONAL
+#define ITEM_SUBTYPE_DRUG_STIMPACK_END
+// -----
+// Alcohol
+#define ITEM_SUBTYPE_DRUG_ALCOHOL
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_LIGHT
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_MEDIUM
+#define ITEM_SUBTYPE_DRUG_ALCOHOL_HEAVY
+// -----
+// Drinks
+#define ITEM_SUBTYPE_DRUG_DRINK
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER_BOILED
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER_INFECTED
+#define ITEM_SUBTYPE_DRUG_DRINK_WATER_PURE
+#define ITEM_SUBTYPE_DRUG_DRINK_TEA
+#define ITEM_SUBTYPE_DRUG_DRINK_LEMONADE
+#define ITEM_SUBTYPE_DRUG_DRINK_SWEET_LEMONADE
+#define ITEM_SUBTYPE_DRUG_DRINK
+// -----
+// Food
+#define ITEM_SUBTYPE_DRUG_FOOD
+#define ITEM_SUBTYPE_DRUG_FOOD_UNCOOKED
+#define ITEM_SUBTYPE_DRUG_FOOD_COOKED
+#define ITEM_SUBTYPE_DRUG_FOOD_RAW
+
+
 // User types
 #define ITEM_TYPE_MAGIC                          ( 20 )
 
@@ -392,9 +505,9 @@
 #define STAT_EXT_END                             ( 63 )
 #define ST_STRENGTH                              ( 0 )  // Hardcoded
 #define ST_PERCEPTION                            ( 1 )  // Hardcoded
-#define ST_ENDURANCE                             ( 2 )  // Hardcoded
+#define ST_TOUGHNESS                             ( 2 )  // Hardcoded, former ST_ENDURANCE
 #define ST_CHARISMA                              ( 3 )  // Hardcoded
-#define ST_INTELLECT                             ( 4 )  // Hardcoded
+#define ST_EDUCATION                             ( 4 )  // Hardcoded, former ST_INTELLIGENCE
 #define ST_AGILITY                               ( 5 )  // Hardcoded
 #define ST_LUCK                                  ( 6 )  // Hardcoded
 #define ST_MAX_LIFE                              ( 7 )  // Hardcoded
@@ -424,9 +537,9 @@
 #define ST_POISON_RESISTANCE                     ( 31 ) // Hardcoded
 #define ST_STRENGTH_EXT                          ( 32 )
 #define ST_PERCEPTION_EXT                        ( 33 )
-#define ST_ENDURANCE_EXT                         ( 34 )
+#define ST_TOUGHNESS_EXT                         ( 34 )
 #define ST_CHARISMA_EXT                          ( 35 )
-#define ST_INTELLECT_EXT                         ( 36 )
+#define ST_EDUCATION_EXT                         ( 36 )
 #define ST_AGILITY_EXT                           ( 37 )
 #define ST_LUCK_EXT                              ( 38 )
 #define ST_MAX_LIFE_EXT                          ( 39 )
@@ -980,7 +1093,8 @@
 #define MERC_CANCEL_ON_GLOBAL                    ( 809 ) // Признак: мерк отменяет службу, если хозяин вышел на глобальную карту.
 #define MERC_WAIT_FOR_MASTER                     ( 810 ) // Признак: мерк ожидает хозяина на конкретном месте
 
-
+#define PARAM_FACTION_ID						 ( 998 ) // Переменная текущей фракции у криттера.
+#define PARAM_FACTION_RANK						 ( 999 ) // Текущий ранг внутри фракции у криттера.
 //
 //..999
 //
@@ -1300,8 +1414,8 @@
 
 // Critter base types
 #ifndef PLAYERS_3D
-# define CRTYPE_DEFAULT_M                        ( CRTYPE_LHD_JUMPSUIT )
-# define CRTYPE_DEFAULT_F                        ( CRTYPE_DW_JUMPSUIT_F )
+# define CRTYPE_DEFAULT_M                        ( CRTYPE_DW_TRIBAL_M )
+# define CRTYPE_DEFAULT_F                        ( CRTYPE_DW_TRIBAL_F )
 #endif
 #ifdef PLAYERS_3D
 # define CRTYPE_DEFAULT_M                        ( CRTYPE_3D_MALE_NORMAL )
@@ -1345,22 +1459,26 @@
 #define CRTYPE_DW_METAL_ARMOR_TESLA_M            ( 136 )
 #define CRTYPE_DW_METAL_ARMOR_TESLA_F            ( 137 )
 // Dweller Combat Armor Section
-#define CRTYPE_DW_COMBAT_ARMOR_BLUE			     ( 150 )
-#define CRTYPE_DW_COMBAT_ARMOR_BLUE_F		     ( 151 )
-#define CRTYPE_DW_COMBAT_ARMOR_DARK			     ( 152 )
-#define CRTYPE_DW_COMBAT_ARMOR_DARK_F		     ( 153 )
-#define CRTYPE_DW_COMBAT_ARMOR_DESERT			 ( 154 )
-#define CRTYPE_DW_COMBAT_ARMOR_DESERT_F			 ( 155 )
-#define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN	     ( 156 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLUE_M			       ( 150 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLUE_F			       ( 151 )
+#define CRTYPE_DW_COMBAT_ARMOR_DARK_M		         ( 152 )
+#define CRTYPE_DW_COMBAT_ARMOR_DARK_F		         ( 153 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT_M			     ( 154 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT_F			     ( 155 )
+#define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN_M	     ( 156 )
 #define CRTYPE_DW_COMBAT_ARMOR_DESERT_TAN_F	     ( 157 )
-#define CRTYPE_DW_COMBAT_ARMOR_SAND			     ( 158 )
-#define CRTYPE_DW_COMBAT_ARMOR_SAND_F		     ( 159 )
-#define CRTYPE_DW_COMBAT_ARMOR_BLACK			 ( 160 )
-#define CRTYPE_DW_COMBAT_ARMOR_BLACK_F			 ( 161 )
-#define CRTYPE_DW_COMBAT_ARMOR_SCOUT			 ( 162 )
-#define CRTYPE_DW_COMBAT_ARMOR_SCOUT_F			 ( 163 )
-#define CRTYPE_DW_COMBAT_ARMOR_RED		         ( 164 )
-#define CRTYPE_DW_COMBAT_ARMOR_RED_F	         ( 165 )
+#define CRTYPE_DW_COMBAT_ARMOR_SAND_M		         ( 158 )
+#define CRTYPE_DW_COMBAT_ARMOR_SAND_F			       ( 159 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLACK_M			     ( 160 )
+#define CRTYPE_DW_COMBAT_ARMOR_BLACK_F			     ( 161 )
+#define CRTYPE_DW_COMBAT_ARMOR_SCOUT_M			     ( 162 )
+#define CRTYPE_DW_COMBAT_ARMOR_SCOUT_F			     ( 163 )
+#define CRTYPE_DW_COMBAT_ARMOR_RED_M		         ( 164 )
+#define CRTYPE_DW_COMBAT_ARMOR_RED_F		         ( 165 )
+#define CRTYPE_DW_COMBAT_ARMOR_DARK_GREEN_M		   ( 166 )
+#define CRTYPE_DW_COMBAT_ARMOR_DARK_GREEN_F		   ( 167 )
+#define CRTYPE_DW_COMBAT_ARMOR_GREY_M			       ( 168 )
+#define CRTYPE_DW_COMBAT_ARMOR_GREY_F		 	       ( 169 )
 // Long Hair Dude. LHD_TRIBAL && LHD_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
 #define CRTYPE_LHD_TRIBAL                        ( 180 )
 #define CRTYPE_LHD_JUMPSUIT                      ( 181 )
@@ -1374,7 +1492,7 @@
 #define CRTYPE_LHD_METAL_ARMOR                   ( 189 )
 #define CRTYPE_LHD_METAL_ARMOR_MK2               ( 190 )
 #define CRTYPE_LHD_METAL_ARMOR_TESLA             ( 191 )
-#define CRTYPE_LHD_KHAN              			 ( 209 )
+#define CRTYPE_LHD_KHAN              			       ( 209 )
 // Long Hair Blonde Dude. LHD_BLONDE_TRIBAL && LHD_BLONDE_JUMPSUIT = ST_BASE_CRTYPE for the skinset.
 //#define CRTYPE_LHD_BLONDE_TRIBAL                 ( 210 )
 //#define CRTYPE_LHD_BLONDE_JUMPSUIT               ( 211 )
@@ -1710,7 +1828,8 @@
 #define LIGHT_GLOBAL                             ( 0x40 )
 #define LIGHT_INVERSE                            ( 0x80 )
 
-// New defaults of war! Without registration and SMS.
+// The Long Journey defines section.
+// New defaults of war! Without registration and SMS. 
 #define DEFAULT_WAIT_TIME						 ( 1200 )
 #define DEFAULT_AP_SKILL						 ( 2 )
 #define DEFAULT_AP_USE							 ( 3 )
@@ -1719,14 +1838,37 @@
 #define AP_DIVIDER                               ( 100 )
 #define AP_REGEN_TIME							 ( 1000 )
 // client side cached sprites to work with ( non-dynamically loaded ones )
-#define CACHED_SPRITES_COUNT                     (500) // just for now
-#define CACHED_MAIN_MENU_SPRITE                  (0)
-#define CACHED_REG_SPRITE                        (1)
-
-//
-#define REG_STAT_MINIMUM						 ( 1 )
+#define CACHED_SPRITES_COUNT                     ( 500 ) // just for now
+#define CACHED_MAIN_MENU_SPRITE                  ( 0 )
+#define CACHED_REG_SPRITE                        ( 1 )
+// Registration defines
+#define REG_STAT_MINIMUM						 ( 0 )
 #define REG_STAT_MAXIMUM						 ( 5 )
 #define REG_STAT_COUNT							 ( 6 )
+// Formulas.fos + Parameters.fos
+// ASPECT-independent stats
+#define APPOINTS_BASE							 ( 100 )
+#define ARMOR_CLASS_BASE						 ( 0 )
+#define NORMAL_RESIST_BASE						 ( 0 )
+// Agility
+#define APREGEN_BASE							 ( 150 )
+#define APREGEN_PER_AGI							 ( 50 )
+// Strength
+#define CARRYWEIGHT_BASE						 ( 40 )
+#define CARRYWEIGHT_PER_STR						 ( 10 )
+#define MELEE_DAMAGE_BASE						 ( 0 )
+#define MELEE_DAMAGE_PER_STR 				     ( 5 )
+#define ARMOR_CLASS_PER_STR						 ( 5 )
+// Endurance
+#define HITPOINTS_BASE							 ( 200 )
+#define HITPOINTS_PER_END						 ( 20 )
+#define HEALINGRATE_BASE						 ( 3 )
+#define HEALINGRATE_PER_END						 ( 1 )
+#define POISON_RESIST_PER_END					 ( 4 )
+#define RADIATION_RESIST_PER_END				 ( 2 )
+// Perception
+#define SEQUENCE_PER_PE							 ( 2 )
+#define FIELDOFVIEW_PER_PE						 ( 4 ) //getParam_BonusLook in parameters.fos
 
 
 //Drawing types
@@ -1820,8 +1962,7 @@
 # pragma bindfield "const int    ProtoItem::Armor_DRFire       -> 124"
 # pragma bindfield "const int    ProtoItem::Armor_DRPlasma     -> 128"
 # pragma bindfield "const int    ProtoItem::Armor_DRElectr     -> 132"
-# pragma bindfield "const int    ProtoItem::Armor_DRExplode	   -> 136"  
-// Former ProtoItem::Armor_DREmp
+# pragma bindfield "const int    ProtoItem::Armor_DRExplode	   -> 136"  // Former ProtoItem::Armor_DREmp
 // Armor_DRExplode
 //# pragma bindfield "const int    ProtoItem::Armor_DRExplode  -> 140"  // broken byte entry
 # pragma bindfield "const int    ProtoItem::Armor_DTNormal     -> 144"
@@ -1861,12 +2002,13 @@
 # pragma bindfield "const bool   ProtoItem::Weapon_Sniper 	  -> 273"
 # pragma bindfield "const int    ProtoItem::Weapon_HearRadius -> 277"
 # pragma bindfield "const int	 ProtoItem::Weapon_MinRadius -> 281"
-# pragma bindfield "const uint   ProtoItem::Weapon_Type 	 -> 285"
 // Ammo
 # pragma bindfield "const int    ProtoItem::Ammo_ACMod   -> 300"
 # pragma bindfield "const int    ProtoItem::Ammo_DrMod   -> 304"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgMult -> 308"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgDiv  -> 312"
+// Item subtype proto macros
+# pragma bindfield "const uint8  ProtoItem::Item_SubType -> 352"
 // Time is running...
 # pragma bindfield "const uint16 ProtoItem::Wait_Time_0      -> 400"
 # pragma bindfield "const uint16 ProtoItem::Wait_Time_1      -> 402"

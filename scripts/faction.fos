@@ -1,0 +1,49 @@
+#ifndef FACTION_MODULE
+#define FACTION_MODULE
+
+// The class construction declaration.
+class Faction
+{
+	// Massives of players and non-playable characters.
+	array<uint> Players;
+	array<uint> Npc;
+	
+	// Faction members attachment.
+	// int AddFactionMember (Critter& critter)
+	// {
+	// if(Success(critter))
+        // return ADDFACTIONMEMBER_RESULT_SUCCESS;
+	// if(Occupied(critter))
+        // return ADDFACTIONMEMBER_RESULT_OCCUPIED;
+    // if(Error(critter))
+        // return ADDFACTIONMEMBER_RESULT_ERROR;
+	// }
+	
+	// void TryAddFactionMember(Critter& critter)
+	// {
+    // int result = AddFactionMember(critter);
+    // if(result != ADDFACTIONMEMBER_RESULT_SUCCESS)
+        // Log("Failed to add a faction member! The reason is: " + result + ".");
+	// }
+	
+	
+    // Default faction constructor.
+    Faction()
+    {
+		
+    }
+	// Copy-paste factions constructor.
+	Faction(const Faction& something)
+	{
+	}
+    // Factions with different properties.
+    Faction(int a, string b) 
+	{
+	}
+    Faction(float x, float y)
+	{
+	}
+}
+
+#endif
+

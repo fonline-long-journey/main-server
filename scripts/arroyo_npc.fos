@@ -48,7 +48,7 @@ void _ChildInit( Critter& npc, bool firstTime )
 void _WarriorInit( Critter& npc, bool firstTime )
 {
     npc.StatBase[ ST_STRENGTH ] = 8;
-    npc.StatBase[ ST_ENDURANCE ] = 8;
+    npc.StatBase[ ST_TOUGHNESS ] = 8;
     npc.StatBase[ ST_LUCK ] = 6;
     npc.StatBase[ ST_ACTION_POINTS ] = 10;
     npc.StatBase[ ST_CRITICAL_CHANCE ] = 20;
@@ -66,7 +66,7 @@ void _WarriorInit( Critter& npc, bool firstTime )
 void _CoolWarriorInit( Critter& npc, bool firstTime )
 {
     npc.StatBase[ ST_STRENGTH ] = 8;
-    npc.StatBase[ ST_ENDURANCE ] = 10;
+    npc.StatBase[ ST_TOUGHNESS ] = 10;
     npc.StatBase[ ST_LUCK ] = 8;
     npc.StatBase[ ST_ACTION_POINTS ] = 12;
     npc.StatBase[ ST_CRITICAL_CHANCE ] = 90;
@@ -105,7 +105,7 @@ void _TempleDwellerInit( Critter& npc, bool firstTime )
 
 void _GuardInit( Critter& npc, bool firstTime )
 {
-    npc.StatBase[ ST_ENDURANCE ] = 8;
+    npc.StatBase[ ST_TOUGHNESS ] = 8;
     npc.StatBase[ ST_AGILITY ] = 8;
     npc.StatBase[ ST_LUCK ] = 6;
     npc.StatBase[ ST_MAX_LIFE ] += 20;
@@ -122,7 +122,7 @@ void _GuardInit( Critter& npc, bool firstTime )
 
 void _CoolGuardInit( Critter& npc, bool firstTime )
 {
-    npc.StatBase[ ST_ENDURANCE ] = 8;
+    npc.StatBase[ ST_TOUGHNESS ] = 8;
     npc.StatBase[ ST_AGILITY ] = 8;
     npc.StatBase[ ST_LUCK ] = 8;
     npc.StatBase[ ST_MAX_LIFE ] = 150;
@@ -148,7 +148,7 @@ void _MynocInit( Critter& npc, bool firstTime )
 {
     npc.StatBase[ ST_STRENGTH ] = 9;
     npc.StatBase[ ST_PERCEPTION ] = 8;
-    npc.StatBase[ ST_ENDURANCE ] = 10;
+    npc.StatBase[ ST_TOUGHNESS ] = 10;
     npc.StatBase[ ST_AGILITY ] = 8;
     npc.StatBase[ ST_LUCK ] = 8;
     npc.StatBase[ ST_MAX_LIFE ] = 200;

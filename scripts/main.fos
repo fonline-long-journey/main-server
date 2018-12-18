@@ -10,6 +10,7 @@
 #include "wait_time_h.fos"
 #include "critter_types_h.fos"
 #include "apregen_h.fos"
+#include "gathering_h.fos"
 #include "object_data_h.fos"
 #define __ACCESSNAMES
 
@@ -105,7 +106,7 @@ bool start()
     // Battle timeout
     SetSendParameter( TO_BATTLE, true );
     // Endurance
-    SetSendParameter( ST_ENDURANCE, true );
+    SetSendParameter( ST_TOUGHNESS, true );
     // Injures
     SetSendParameter( DAMAGE_EYE, true );
     SetSendParameter( DAMAGE_RIGHT_ARM, true );
@@ -179,10 +180,14 @@ bool start()
 
     // Weather system
     WeatherInit();
-
+	
+	// Gathering module
+	InitGatheringTables();
+	
     // Bulletin boards
     //StartMessenger();
     return true;
+	
 }
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -436,12 +441,23 @@ bool critter_stealing( Critter& cr, Critter& thief, Item& item, uint count )
 // //////////////////////////////////////////////////////////////////////////////////////////////////
 // Call on something critter use item.
 bool critter_use_item( Critter& cr, Item& item, Critter@ targetCr, Item@ targetItem, Scenery@ targetScen, uint param )
-{
+{	
+	bool   validCritter = valid(targetCr);
+	bool   validItem = valid(targetItem);
     bool   isPlayer = cr.IsPlayer();
     uint16 pid = item.GetProtoId();
     bool   useOnSelf = ( not valid( targetCr ) && not valid( targetItem ) && not valid( targetScen ) );
 	cr.Wait(GetProtoTime(item.Proto, 0, cr));
+	
+	// Gathering
+	if(validCritter)
+        if(TryGatherCritter(cr, targetCr, item, 0))
+            return true;
 
+    if(valid(targetItem))
+        if(TryGatherItem(cr, targetItem, item , 0))
+            return true;
+	
     // Radio
     if( FLAG( item.Flags, ITEM_RADIO ) && useOnSelf )
     {
@@ -1238,8 +1254,6 @@ void critter_reload_weapon( Critter& cr, Item& weapon, Item@ ammo )
 // Default start position for players is center of global map.
 void critter_init( Critter& cr, bool firstTime )
 {
-
-	
 	if( cr.IsPlayer() && !FLAG(cr.Flags, CRITTER_DISCONNECT) )
 	{
 		#ifdef __ACCESSNAMES
@@ -1286,8 +1300,8 @@ void critter_init( Critter& cr, bool firstTime )
 				cr.StatBase[ ST_HUNGER ] = 700;
 				cr.StatBase[ ST_THIRST ] = 700;
 
-            if( ( cr.StatBase[ ST_STRENGTH ] + cr.StatBase[ ST_PERCEPTION ] + cr.StatBase[ ST_ENDURANCE ] +
-                  cr.StatBase[ ST_CHARISMA ] + cr.StatBase[ ST_INTELLECT ] + cr.StatBase[ ST_AGILITY ]  ) != __StartSpecialPoints + (REG_STAT_COUNT * REG_STAT_MINIMUM) )  // + cr.StatBase[ ST_LUCK ]
+            if( ( cr.StatBase[ ST_STRENGTH ] + cr.StatBase[ ST_PERCEPTION ] + cr.StatBase[ ST_TOUGHNESS ] +
+                  cr.StatBase[ ST_CHARISMA ] + cr.StatBase[ ST_EDUCATION ] + cr.StatBase[ ST_AGILITY ]  ) != __StartSpecialPoints + (REG_STAT_COUNT * REG_STAT_MINIMUM) )  // + cr.StatBase[ ST_LUCK ]
             {
                 for( uint i = ST_STRENGTH; i <= ST_LUCK; i++ )
                     cr.StatBase[ i ] = 0;
@@ -1344,9 +1358,10 @@ void critter_init( Critter& cr, bool firstTime )
             cr.TagSkillBase[ TAG_SKILL3 ] = 0;
 
         CritterGenerate( cr );
-        cr.StatBase[ ST_CURRENT_HP ] = cr.Stat[ ST_MAX_LIFE ];
-        cr.StatBase[ ST_CURRENT_AP ] = cr.Stat[ ST_ACTION_POINTS ] * 100;
-		cr.ParamBase[ ST_STAMINA ] = 100;
+        cr.StatBase [ ST_CURRENT_HP ] = cr.Stat[ ST_MAX_LIFE ];
+        cr.StatBase [ ST_CURRENT_AP ] = cr.Stat[ ST_ACTION_POINTS ] * 100;
+		//cr.StatBase [ ST_APREGEN ] 	  = (cr.Stat[ ST_AGILITY ] * APREGEN_PER_AGI) + APREGEN_BASE;
+		cr.ParamBase[ ST_STAMINA ]    = 100;
 
         // for(int i=REPUTATION_BEGIN;i<=599;i++) cr.ParamBase[i]=int(0x80000000); // 599 is last number processed in client
 

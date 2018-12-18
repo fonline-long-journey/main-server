@@ -1174,9 +1174,9 @@ string generic_description( int descType, int& offsX, int& offsY )
 		result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_AGILITY ) )    + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_STRENGTH ) )   + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_PERCEPTION ) ) + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_ENDURANCE ) )  + "\n";
+		result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_EDUCATION ) )  + "\n";
         result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_CHARISMA ) )   + "\n";
-        result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_INTELLECT ) )  + "\n";
+		result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_TOUGHNESS ) )  + "\n";
         // result += GetMsgStr( TEXTMSG_GAME, STR_INV_SHORT_SPECIAL( ST_LUCK ) )       + "\n";
 		result += "\n";
         result += "---------------------\n";
@@ -1318,9 +1318,9 @@ string generic_description( int descType, int& offsX, int& offsY )
 		result += chosen.Stat[ ST_AGILITY ]    + "\n";
         result += chosen.Stat[ ST_STRENGTH ]   + "\n";
         result += chosen.Stat[ ST_PERCEPTION ] + "\n";
-        result += chosen.Stat[ ST_ENDURANCE ]  + "\n";
+        result += chosen.Stat[ ST_TOUGHNESS ]  + "\n";
         result += chosen.Stat[ ST_CHARISMA ]   + "\n";
-        result += chosen.Stat[ ST_INTELLECT ]  + "\n";
+        result += chosen.Stat[ ST_EDUCATION ]  + "\n";
         // result += chosen.Stat[ ST_LUCK ];
     }
     else if( descType == DESC_INVENTORY_STATS )
@@ -1733,9 +1733,9 @@ string critter_description( CritterCl& cr, int lookType )
 			int survhealth1 = 10;
 			if( cr.PerkBase[ PE_SCOUT ] > 0 )
 				survhealth1 += 5;
-			int hpamountlol = cr.ParamBase[ ST_MAX_LIFE ] + cr.ParamBase[ ST_MAX_LIFE_EXT ] + 50 + cr.ParamBase[ ST_ENDURANCE ] * survhealth1;
+			int hpamountlol = cr.ParamBase[ ST_MAX_LIFE ] + cr.ParamBase[ ST_MAX_LIFE_EXT ] + 50 + cr.ParamBase[ ST_TOUGHNESS ] * survhealth1;
 			if( cr.PerkBase[ PE_TOUGHNESS ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
-				hpamountlol += cr.ParamBase[ ST_ENDURANCE ] * survhealth1 * 2;
+				hpamountlol += cr.ParamBase[ ST_TOUGHNESS ] * survhealth1 * 2;
 			if( cr.PerkBase[ PE_CULT_OF_PERSONALITY ] > 0 && cr.PerkBase[ PE_SCOUT ] > 0 )
 				hpamountlol += cr.ParamBase[ ST_CHARISMA ] * survhealth1;
             
@@ -1985,9 +1985,9 @@ void player_data_generate( int[]& params )
 
         __RegParams[ ST_STRENGTH ] = REG_STAT_MINIMUM; // 0
         __RegParams[ ST_PERCEPTION ] = REG_STAT_MINIMUM; // 1
-        __RegParams[ ST_ENDURANCE ] = REG_STAT_MINIMUM; // 2
+        __RegParams[ ST_TOUGHNESS ] = REG_STAT_MINIMUM; // 2
         __RegParams[ ST_CHARISMA ] = REG_STAT_MINIMUM; // 3
-        __RegParams[ ST_INTELLECT ] = REG_STAT_MINIMUM; // 4
+        __RegParams[ ST_EDUCATION ] = REG_STAT_MINIMUM; // 4
         __RegParams[ ST_AGILITY ] = REG_STAT_MINIMUM; // 5
         //__RegParams[ ST_LUCK ] = 0;
         __RegParams[ ST_AGE ] = Random( AGE_MIN, AGE_MAX > 100 ? 60 : AGE_MAX );

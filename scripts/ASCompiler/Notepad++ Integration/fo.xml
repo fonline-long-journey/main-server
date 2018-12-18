@@ -4293,8 +4293,8 @@
 		<KeyWord name="ST_EMP_ABSORB_EXT" />
 		<KeyWord name="ST_EMP_RESIST" />
 		<KeyWord name="ST_EMP_RESIST_EXT" />
-		<KeyWord name="ST_ENDURANCE" />
-		<KeyWord name="ST_ENDURANCE_EXT" />
+		<KeyWord name="ST_TOUGHNESS" />
+		<KeyWord name="ST_TOUGHNESS_EXT" />
 		<KeyWord name="ST_EXPERIENCE" />
 		<KeyWord name="ST_EXPLODE_ABSORB" />
 		<KeyWord name="ST_EXPLODE_ABSORB_EXT" />
@@ -4310,8 +4310,8 @@
 		<KeyWord name="ST_HANDS_ITEM_AND_MODE" />
 		<KeyWord name="ST_HEALING_RATE" />
 		<KeyWord name="ST_HEALING_RATE_EXT" />
-		<KeyWord name="ST_INTELLECT" />
-		<KeyWord name="ST_INTELLECT_EXT" />
+		<KeyWord name="ST_EDUCATION" />
+		<KeyWord name="ST_EDUCATION_EXT" />
 		<KeyWord name="ST_KARMA" />
 		<KeyWord name="ST_KILL_EXPERIENCE" />
 		<KeyWord name="ST_LASER_ABSORB" />

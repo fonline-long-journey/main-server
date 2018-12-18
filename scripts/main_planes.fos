@@ -479,7 +479,7 @@ bool npc_plane_run( Critter& npc, NpcPlane& plane, int reason, uint& r0, uint& r
             {
                 if( weapon.Weapon_Aim_0 )
                 {
-                    uint reduction = ( r0 * 3 * npc.Stat[ ST_INTELLECT ] ) / 100;
+                    uint reduction = ( r0 * 3 * npc.Stat[ ST_EDUCATION ] ) / 100;
                     reduction = MIN( 15, reduction );
                     r0 -= reduction;
                 }
@@ -558,7 +558,7 @@ bool npc_plane_run( Critter& npc, NpcPlane& plane, int reason, uint& r0, uint& r
 
 bool CogitateFiring( Critter& cr, uint& mode, uint& aim ) // in: targetId, 0; out: mode, aim
 {
-    if( Random( 1, 10 ) > cr.Stat[ ST_INTELLECT ] )
+    if( Random( 1, 10 ) > cr.Stat[ ST_EDUCATION ] )
         return false;                                     // too stupid to think about this
 
     Critter@ target = GetCritter( mode );

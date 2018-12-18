@@ -1,0 +1,23 @@
+// blood.fos header file.
+// Requires "mutual_h.fos" to work.
+// Provides the ability to spawn and de-spawn blood splatters below critically wounded critters.
+// Supports both Critter & CritterCl - means it can be both or separate __SERVER or __CLIENT.
+
+#ifndef BLOOD_H
+#define BLOOD_H
+
+#include "mutual_h.fos"
+
+	#ifndef BLOOD_MODULE
+	// Imports - here, example
+	// import int GetProtoApCost(ProtoItem& prot, uint8 mode, CritterMutual@ crit) from "dummy";
+	// import int GetSkillApCost( int sk, CritterMutual@ crit ) from "apcost";
+	// import int GetActionApCost( int action, CritterMutual@ crit ) from "apcost";
+	#endif
+
+	#ifdef BLOOD_MODULE
+	// Includes - here
+	// #include "_macros.fos"
+	#endif
+
+#endif

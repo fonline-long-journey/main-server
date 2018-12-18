@@ -66,7 +66,7 @@ void TryReadBook( Critter& cr, Item& book ) // Export
         return;
     }
 
-    int readTime = ( 50 / cr.Stat[ ST_INTELLECT ] ) * 60;
+    int readTime = ( 50 / cr.Stat[ ST_EDUCATION ] ) * 60;
     int sp = 250 / cr.Skill[ skillNum ];
 	sp = CLAMP( sp, 0, 5 );
 	if( cr.Perk[ PE_EDUCATED ] != 0 )

@@ -20,3 +20,4 @@ FOnlineServer.cfg
 /maps/*.fomapb
 /scripts/*.fosb
 /scripts/*.fosp
+/scripts/ASCompiler/*.bat
