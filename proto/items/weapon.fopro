@@ -4,6 +4,11 @@
 #   Чтобы добавить новые файлы сценери (дженериков) идите в конец файла.    #
 #   Видеоинструкция: https://youtu.be/m4yWbPWXNgI                           #
 #############################################################################
+#############################################################################
+#   17.12.2018, current version 3.2.1                                       #
+#   Тип оружия заменен на сабтип, для гибкости системы перков.              #
+#   Weapon Type changed to SubType, for perk system flexibility.            # 
+#############################################################################
 
 [Proto] # PID_KNIFE {Железный нож}
 ProtoId=4
@@ -44,7 +49,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_CLUB {Дубинка}
 ProtoId=5
@@ -77,7 +82,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=54
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_SLEDGEHAMMER {Кувалда}
 ProtoId=6
@@ -121,7 +126,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=55
 Weapon_SoundId_1=55
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_SPEAR {Железное копье}
 ProtoId=7
@@ -164,7 +169,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=56
 Weapon_SoundId_1=56
-Weapon_Type=11
+Item_SubType=11
 
 [Proto] # PID_10MM_PISTOL {Colt6520}
 ProtoId=8
@@ -202,7 +207,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=65
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_10MM_SMG {H&K MP9}
 ProtoId=9
@@ -248,7 +253,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=68
 Weapon_SoundId_1=68
 Weapon_HearRadius=35
-Weapon_Type=3
+Item_SubType=3
 
 [Proto] # PID_HUNTING_RIFLE {Colt Rangemaster}
 ProtoId=10
@@ -286,7 +291,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=71
-Weapon_Type=5
+Item_SubType=5
 Weapon_HearRadius=55
 
 [Proto] # PID_FLAMER {LFT Sick E33}
@@ -325,7 +330,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=7
 Weapon_SoundId_0=73
 Weapon_HearRadius=30
-Weapon_Type=9
+Item_SubType=9
 
 [Proto] # PID_MINIGUN {CZ53 Minigun}
 ProtoId=12
@@ -363,7 +368,7 @@ Weapon_Round_0=40
 Weapon_ApCost_0=7
 Weapon_SoundId_0=76
 Weapon_HearRadius=60
-Weapon_Type=8
+Item_SubType=8
 Weapon_MinRadius=2
 
 [Proto] # PID_ROCKET_LAUNCHER {M3-R "BigBazooka"}
@@ -442,7 +447,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=75
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_LASER_PISTOL {LP-1000W}
 ProtoId=16
@@ -481,7 +486,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=67
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_DESERT_EAGLE {Desert Eagle}
 ProtoId=18
@@ -520,7 +525,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_ROCK {Камень}
 ProtoId=19
@@ -562,7 +567,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=50
 Weapon_SoundId_1=50
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_CROWBAR {Монтировка}
 ProtoId=20
@@ -595,7 +600,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=53
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_BRASS_KNUCKLES {Железный кастет}
 ProtoId=21
@@ -627,7 +632,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=49
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_14MM_PISTOL {SIG Sauer 260A}
 ProtoId=22
@@ -666,7 +671,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=69
 Weapon_HearRadius=50
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_ASSAULT_RIFLE {AK112}
 ProtoId=23
@@ -713,7 +718,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=50
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_PLASMA_PISTOL {Glock 86}
 ProtoId=24
@@ -889,7 +894,7 @@ Weapon_Round_0=25
 Weapon_ApCost_0=8
 Weapon_SoundId_0=77
 Weapon_HearRadius=70
-Weapon_Type=8
+Item_SubType=8
 
 [Proto] # PID_THROWING_KNIFE {Метательный нож}
 ProtoId=45
@@ -932,7 +937,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=52
 Weapon_SoundId_1=52
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_FLARE {Фонарик}
 ProtoId=79
@@ -966,7 +971,7 @@ Weapon_MaxDist_0=15
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=52
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_SHOTGUN {Winchester Widowmaker}
 ProtoId=94
@@ -1013,7 +1018,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=45
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_SUPER_SLEDGE {Stomper Supersledge}
 ProtoId=115
@@ -1057,7 +1062,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=55
 Weapon_SoundId_1=55
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_RIPPER {Ripper}
 ProtoId=116
@@ -1100,7 +1105,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=48
 Weapon_SoundId_1=48
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_LASER_RIFLE {ALR-1000W}
 ProtoId=118
@@ -1149,7 +1154,7 @@ Weapon_Aim_1=1
 Weapon_SoundId_0=77
 Weapon_SoundId_1=67
 Weapon_HearRadius=45
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_ALIEN_LASER_PISTOL {LPP Cobus}
 ProtoId=120
@@ -1189,7 +1194,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=70
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_9MM_MAUSER {Mauser M/96}
 ProtoId=122
@@ -1228,7 +1233,7 @@ Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_SNIPER_RIFLE {DKS-501}
 ProtoId=143
@@ -1267,7 +1272,7 @@ Weapon_ApCost_0=7
 Weapon_Aim_0=1
 Weapon_SoundId_0=71
 Weapon_HearRadius=85
-Weapon_Type=4
+Item_SubType=4
 
 [Proto] # PID_MOLOTOV_COCKTAIL {Взрывчатая смесь}
 ProtoId=159
@@ -1345,7 +1350,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=57
 Weapon_SoundId_1=57
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_RED_RYDER_BB_GUN {Пневматическое ружье Ред Райдер}
 ProtoId=161
@@ -1382,7 +1387,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=85
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_RED_RYDER_LE_BB_GUN {Эксклюзивное пневморужье Ред Райдер}
 ProtoId=162
@@ -1420,7 +1425,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=85
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_ACTIVE_FLARE {Фонарик}
 ProtoId=205
@@ -1496,7 +1501,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=75
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_SPIKED_KNUCKLES {Стальной кастет}
 ProtoId=234
@@ -1528,7 +1533,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=49
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_POWER_FIST {PF "Ram"}
 ProtoId=235
@@ -1562,7 +1567,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=49
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_COMBAT_KNIFE {Стальной нож}
 ProtoId=236
@@ -1603,7 +1608,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_223_PISTOL {Steyr M2019}
 ProtoId=241
@@ -1650,7 +1655,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=69
 Weapon_SoundId_1=69
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_COMBAT_SHOTGUN {Winchester 12G City-Killer}
 ProtoId=242
@@ -1697,7 +1702,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=50
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_JONNY_BB_GUN {Пневматическое ружье Джонни}
 ProtoId=261
@@ -1734,7 +1739,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=85
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_HK_CAWS {H&K CAWS}
 ProtoId=268
@@ -1780,7 +1785,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=50
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_ROBO_ROCKET_LAUNCHER {Гранатомет робота}
 ProtoId=270
@@ -1858,7 +1863,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=56
 Weapon_SoundId_1=56
-Weapon_Type=11
+Item_SubType=11
 
 [Proto] # PID_TOMMY_GUN {Thompson M1928}
 ProtoId=283
@@ -1904,7 +1909,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=40
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_SCOPED_HUNTING_RIFLE {Colt Rangemaster (+)}
 ProtoId=287
@@ -1943,7 +1948,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=71
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_EYEBALL_FIST_1 {Электрооружие робота 1}
 ProtoId=290
@@ -2107,7 +2112,7 @@ Weapon_ApCost_1=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
-Weapon_Type=3
+Item_SubType=3
 Weapon_HearRadius=40
 
 [Proto] # PID_SPRINGER_RIFLE {Самодельная винтовка}
@@ -2147,7 +2152,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=86
 Weapon_HearRadius=20
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_ZIP_GUN {Самодельный пистолет}
 ProtoId=300
@@ -2187,7 +2192,7 @@ Weapon_ReloadAp=8
 Weapon_Aim_0=1
 Weapon_SoundId_0=86
 Weapon_HearRadius=15
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_44_MAGNUM_REVOLVER {S&W M29}
 ProtoId=313
@@ -2225,7 +2230,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=69
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_SWITCHBLADE {Выкидной нож}
 ProtoId=319
@@ -2264,7 +2269,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_SHARPENED_POLE {Кол}
 ProtoId=320
@@ -2308,7 +2313,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=56
 Weapon_SoundId_1=56
-Weapon_Type=11
+Item_SubType=11
 
 [Proto] # PID_GREASE_GUN {M3A1 Grease Gun}
 ProtoId=332
@@ -2354,7 +2359,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=68
 Weapon_SoundId_1=68
 Weapon_HearRadius=40
-Weapon_Type=3
+Item_SubType=3
 
 [Proto] # PID_BOZAR {Bozar}
 ProtoId=350
@@ -2399,7 +2404,7 @@ Weapon_ApCost_1=6
 Weapon_SoundId_0=76
 Weapon_SoundId_1=76
 Weapon_HearRadius=65
-Weapon_Type=7
+Item_SubType=7
 
 [Proto] # PID_FN_FAL {FN FAL}
 ProtoId=351
@@ -2446,7 +2451,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=55
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_HK_G11 {H&K G11}
 ProtoId=352
@@ -2492,7 +2497,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=50
-Weapon_Type=3
+Item_SubType=3
 
 [Proto] # PID_INDEPENDENT {XL70E3}
 ProtoId=353
@@ -2539,7 +2544,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=45
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_PANCOR_JACKHAMMER {Pancor Jackhammer}
 ProtoId=354
@@ -2586,7 +2591,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=50
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_LIGHT_SUPPORT_WEAPON {LSW "Cityscape"}
 ProtoId=355
@@ -2632,7 +2637,7 @@ Weapon_ApCost_1=6
 Weapon_SoundId_0=76
 Weapon_SoundId_1=76
 Weapon_HearRadius=50
-Weapon_Type=7
+Item_SubType=7
 
 [Proto] # PID_PLANT_SPIKE {Ўип растени€}
 ProtoId=365
@@ -2775,7 +2780,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_WRENCH {Гаечный ключ}
 ProtoId=384
@@ -2808,7 +2813,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=53
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_SAWED_OFF_SHOTGUN {Winchester Widowmaker (+)}
 ProtoId=385
@@ -2855,7 +2860,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=55
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_LOUISVILLE_SLUGGER {Луисвилльская бита}
 ProtoId=386
@@ -2889,7 +2894,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=54
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_M60 {М60}
 ProtoId=387
@@ -2933,7 +2938,7 @@ Weapon_ApCost_1=7
 Weapon_SoundId_0=76
 Weapon_SoundId_1=76
 Weapon_HearRadius=55
-Weapon_Type=7
+Item_SubType=7
 
 [Proto] # PID_NEEDLER_PISTOL {Bringham Needler}
 ProtoId=388
@@ -2971,7 +2976,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=90
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_AVENGER_MINIGUN {CZ53 "Avenger"}
 ProtoId=389
@@ -3009,7 +3014,7 @@ Weapon_Round_0=45
 Weapon_ApCost_0=8
 Weapon_SoundId_0=76
 Weapon_HearRadius=60
-Weapon_Type=8
+Item_SubType=8
 Weapon_MinRadius=2
 
 [Proto] # PID_SOLAR_SCORCHER {Scorcher}
@@ -3047,7 +3052,7 @@ Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=67
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_HK_G11E {H&K G11E}
 ProtoId=391
@@ -3093,7 +3098,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=45
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_M72_GAUSS_RIFLE {M72}
 ProtoId=392
@@ -3132,7 +3137,7 @@ Weapon_ApCost_0=7
 Weapon_Aim_0=1
 Weapon_SoundId_0=87
 Weapon_HearRadius=65
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_PHAZER {Tazer}
 ProtoId=393
@@ -3206,7 +3211,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=89
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_VINDICATOR_MINIGUN {"Vindicator"}
 ProtoId=395
@@ -3244,7 +3249,7 @@ Weapon_Round_0=30
 Weapon_ApCost_0=7
 Weapon_SoundId_0=76
 Weapon_MinRadius=0
-Weapon_Type=8
+Item_SubType=8
 Weapon_HearRadius=65
 
 [Proto] # PID_YK32_PULSE_PISTOL {YK32}
@@ -3284,7 +3289,7 @@ Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=48
 Weapon_HearRadius=50
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_YK42B_PULSE_RIFLE {YK42B}
 ProtoId=397
@@ -3323,7 +3328,7 @@ Weapon_ApCost_0=7
 Weapon_Aim_0=1
 Weapon_SoundId_0=88
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_44_MAGNUM_SPEEDLOADER {S&W M29 (+)}
 ProtoId=398
@@ -3362,7 +3367,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=69
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_SUPER_CATTLE_PROD {Электрокнут (+)}
 ProtoId=399
@@ -3409,7 +3414,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=57
 Weapon_SoundId_1=57
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_IMPROVED_FLAMETHROWER {FT Freepunk Mk.II}
 ProtoId=400
@@ -3447,7 +3452,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=8
 Weapon_SoundId_0=73
 Weapon_HearRadius=30
-Weapon_Type=9
+Item_SubType=9
 
 [Proto] # PID_LASER_RIFLE_EXT_CAP {HLR-2000W}
 ProtoId=401
@@ -3487,7 +3492,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=74
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_MAGNETO_LASER_PISTOL {MLP-1000W}
 ProtoId=402
@@ -3527,7 +3532,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=67
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_FN_FAL_NIGHT_SCOPE {FN FAL (+)}
 ProtoId=403
@@ -3574,7 +3579,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=55
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_DESERT_EAGLE_EXT_MAG {Desert Eagle (+)}
 ProtoId=404
@@ -3613,7 +3618,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_HearRadius=40
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_ASSAULT_RIFLE_EXT_MAG {AK112 (+)}
 ProtoId=405
@@ -3660,7 +3665,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=72
 Weapon_SoundId_1=72
 Weapon_HearRadius=50
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_PLASMA_PISTOL_EXT_CART {Glock 86 (+)}
 ProtoId=406
@@ -3700,7 +3705,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=70
 Weapon_HearRadius=45
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_MEGA_POWER_FIST {APF "Charger"}
 ProtoId=407
@@ -3734,7 +3739,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=49
-Weapon_Type=12
+Item_SubType=12
 
 [Proto] # PID_HOLY_HAND_GRENADE {Святая граната}
 ProtoId=421
@@ -4109,7 +4114,7 @@ Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_SoundId_2=48
 Weapon_HearRadius=60
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_LIL_JESUS_WEAPON {Нож гангстера}
 ProtoId=517
@@ -4151,7 +4156,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_DUAL_MINIGUN {Спаренный миниган}
 ProtoId=518
@@ -4262,7 +4267,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_END_BOSS_KIFE {Нож Главного Гада}
 ProtoId=530
@@ -4303,7 +4308,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=36
 Weapon_SoundId_1=36
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_END_BOSS_PLASMA_GUN {Плазменная пушка Главного Гада}
 ProtoId=531
@@ -4347,7 +4352,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=64
 Weapon_SoundId_1=64
 Weapon_HearRadius=100
-Weapon_Type=7
+Item_SubType=7
 
 [Proto] # PID_HEAVY_DUAL_MINIGUN_LONG_RANGE {Тяжелый спаренный миниган повышенной дальности}
 ProtoId=546
@@ -4427,7 +4432,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_SoundId_1=68
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_ELEPHANT_GUN {Слонобой}
 ProtoId=592
@@ -4468,7 +4473,7 @@ Weapon_ApCost_0=8
 Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_HearRadius=80
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_ELI_KNIFE {Нож Илая}
 ProtoId=595
@@ -4509,7 +4514,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=51
 Weapon_SoundId_1=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_DOG_GRENADE {Собака}
 ProtoId=602
@@ -4588,7 +4593,7 @@ Weapon_ApCost_1=5
 Weapon_SoundId_0=71
 Weapon_SoundId_1=72
 Weapon_HearRadius=20
-Weapon_Type=3
+Item_SubType=3
 
 [Proto] # PID_METAL_STORM {MSP}
 ProtoId=604
@@ -4627,7 +4632,7 @@ Weapon_ApCost_0=8
 Weapon_SoundId_0=76
 Weapon_HearRadius=70
 Weapon_MinRadius=2
-Weapon_Type=8
+Item_SubType=8
 
 [Proto] # PID_SMOKE_GRENADE {Дымовая граната}
 ProtoId=608
@@ -5179,7 +5184,7 @@ Weapon_ApCost_1=6
 Weapon_SoundId_0=66
 Weapon_SoundId_1=72
 Weapon_HearRadius=60
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_SCISSORS {Ножницы}
 ProtoId=10015
@@ -5213,7 +5218,7 @@ Weapon_MaxDist_1=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_CUTTHROAT {Бритва}
 ProtoId=10016
@@ -5248,7 +5253,7 @@ Weapon_MaxDist_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=51
-Weapon_Type=10
+Item_SubType=10
 
 [Proto] # PID_ANACONDA {Colt Python}
 ProtoId=10020
@@ -5282,7 +5287,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=69
 Weapon_HearRadius=45
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_MAUSER_SILENCE {Automag .44}
 ProtoId=10021
@@ -5314,7 +5319,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=69
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_ERROR!!! {Baneblade}
 ProtoId=10022
@@ -5344,7 +5349,7 @@ Weapon_ApCost_0=10
 Weapon_Aim_0=1
 Weapon_SoundId_0=88
 Weapon_HearRadius=100
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_BROWNING {M1928 BAR}
 ProtoId=10024
@@ -5389,7 +5394,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=60
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_ERROR!!! {SM "Starburst"}
 ProtoId=10026
@@ -5455,7 +5460,7 @@ Weapon_ApCost_0=7
 Weapon_Aim_0=1
 Weapon_SoundId_0=74
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_LASER_SNIPER {SLR 2000W}
 ProtoId=10042
@@ -5494,7 +5499,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=74
 Weapon_HearRadius=85
-Weapon_Type=4
+Item_SubType=4
 
 [Proto] # PID_TMS {TM-S Melter}
 ProtoId=10045
@@ -5541,7 +5546,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=70
 Weapon_SoundId_1=72
 Weapon_HearRadius=40
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_TMDXL {TMD-XL PowerMelter}
 ProtoId=10046
@@ -5589,7 +5594,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=75
 Weapon_SoundId_1=72
 Weapon_HearRadius=50
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_SHIT_AUTORIFLE {Самодельный автомат}
 ProtoId=10047
@@ -5635,7 +5640,7 @@ Weapon_ApCost_1=5
 Weapon_SoundId_0=68
 Weapon_SoundId_1=68
 Weapon_HearRadius=20
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_GECKO_SAR {Gecko PAR}
 ProtoId=10048
@@ -5682,7 +5687,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=71
 Weapon_SoundId_1=72
 Weapon_HearRadius=40
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_STRIKER {M3 E.M. Striker}
 ProtoId=10049
@@ -5729,7 +5734,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=71
 Weapon_SoundId_1=72
 Weapon_HearRadius=45
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_BPA {BPA}
 ProtoId=10050
@@ -5776,7 +5781,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_SoundId_1=72
 Weapon_HearRadius=65
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_SHITCANNON {Самодельная пушка}
 ProtoId=10051
@@ -5815,7 +5820,7 @@ Weapon_ApCost_0=5
 Weapon_Aim_0=1
 Weapon_SoundId_0=86
 Weapon_HearRadius=35
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_JAEGER {SW Jaeger}
 ProtoId=10052
@@ -5862,7 +5867,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=71
 Weapon_SoundId_1=72
 Weapon_HearRadius=90
-Weapon_Type=4
+Item_SubType=4
 
 [Proto] # PID_ERROR!!! {L-39}
 ProtoId=10053
@@ -5907,7 +5912,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=66
 Weapon_SoundId_1=72
 Weapon_HearRadius=100
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_CRAPSHOTGUN {Самодельный дробовик}
 ProtoId=10054
@@ -5946,7 +5951,7 @@ Weapon_ApCost_0=6
 Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_HearRadius=25
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_M1911 {Colt М1911}
 ProtoId=10055
@@ -5985,7 +5990,7 @@ Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=65
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_MGL {M32 Milkor MGL}
 ProtoId=10058
@@ -6153,7 +6158,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=68
 Weapon_SoundId_1=68
 Weapon_HearRadius=35
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_REMMINGTON {Remmington 870}
 ProtoId=10075
@@ -6200,7 +6205,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=82
 Weapon_SoundId_1=82
 Weapon_HearRadius=45
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_BERETTA {Beretta M92}
 ProtoId=10076
@@ -6238,7 +6243,7 @@ Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=68
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_9K_APL {"Cinder" QUAD-cannon}
 ProtoId=10086
@@ -6283,7 +6288,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=64
 Weapon_SoundId_1=64
 Weapon_HearRadius=60
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_G219P {UP-4k}
 ProtoId=10087
@@ -6330,7 +6335,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=64
 Weapon_SoundId_1=64
 Weapon_HearRadius=45
-Weapon_Type=3
+Item_SubType=3
 
 [Proto] # PID_RAPTOR_J {Raptor-J}
 ProtoId=10092
@@ -6370,7 +6375,7 @@ Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=75
 Weapon_HearRadius=40
-Weapon_Type=2
+Item_SubType=2
 
 [Proto] # PID_HEAVY_LASER_ASSAULT {HALR-2000W}
 ProtoId=10093
@@ -6412,7 +6417,7 @@ Weapon_ApCost_0=6
 Weapon_SoundId_0=77
 Weapon_SoundId_1=67
 Weapon_HearRadius=45
-Weapon_Type=6
+Item_SubType=6
 
 [Proto] # PID_CLOCKWORK_RIFLE {.308 Revolver Rifle}
 ProtoId=10094
@@ -6459,7 +6464,7 @@ Weapon_Aim_0=1
 Weapon_SoundId_0=71
 Weapon_SoundId_1=72
 Weapon_HearRadius=55
-Weapon_Type=5
+Item_SubType=5
 
 [Proto] # PID_ERROR!!! {Glock 17m}
 ProtoId=10095
@@ -6496,7 +6501,7 @@ Weapon_ApCost_0=3
 Weapon_Aim_0=1
 Weapon_SoundId_0=68
 Weapon_HearRadius=35
-Weapon_Type=1
+Item_SubType=1
 
 [Proto] # PID_TURBOTHRUST {"Turbothrust"}
 ProtoId=10096
@@ -6539,7 +6544,7 @@ Weapon_Aim_0=1
 Weapon_Aim_1=1
 Weapon_SoundId_0=56
 Weapon_SoundId_1=56
-Weapon_Type=11
+Item_SubType=11
 
 [Proto] # PID_ERROR!!! {"Desert Heat" EBR}
 ProtoId=10101
@@ -6575,7 +6580,7 @@ Weapon_Round_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=82
-Weapon_Type=5
+Item_SubType=5
 Weapon_HearRadius=55
 
 [Proto] # PID_ERROR!!! {Спаренная гаусс-пушка}

@@ -1,13 +1,16 @@
-// ADD DESCRIPTION
+// Passive action points regeneration module
+// by Vice Dice, 2018.
 
-// Inside "macros.fos":
-// #define _GetApRegen                   # (cr)            ( (cr.Stat[ST_AGILITY] * 70)) //test
+// Installation:
 
-// Inside "defines.fos":
-// #define CTE_AP_REGEN							 ( 154 )
+// Add the line below inside "macros.fos":
+// #define _GetApRegen                   			# (cr)            ( (cr.Stat[ST_AGILITY] * 70)) //test
 
-// Inside "client_defines.fos":
-// #define AP_REGEN_TIME							 ( 1000 )
+// Add the line below inside "defines.fos":
+// #define CTE_AP_REGEN							 	( 154 )
+
+// Add the line below inside "client_defines.fos":
+// #define AP_REGEN_TIME							( 1000 )
 
 #define APREGEN_MODULE
 #include "apregen_h.fos"

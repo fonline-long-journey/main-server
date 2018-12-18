@@ -135,7 +135,7 @@ bool IsHitRangedSingle(Critter& cr, Critter& target, ProtoItem& weapon, uint8 we
 	toHit += cr.SkillBase[skill];
 	
 	
-	if( weapon.Weapon_Type == WT_PISTOL && dist > 10 )
+	if( weapon.Item_SubType == WT_PISTOL && dist > 10 )
 		toHit /= 2;
 	else if( dist > 20)
 		toHit /= 2;
@@ -181,7 +181,7 @@ bool IsHitRangedSingle(Critter& cr, Critter& target, ProtoItem& weapon, uint8 we
 	if( dist  == 1 ){
 		int parry = target.SkillBase[SK_UNARMED] + Random(0, 30);
 		parry -= cr.SkillBase[SK_UNARMED] + Random(0,30);
-		switch(weapon.Weapon_Type){
+		switch(weapon.Item_SubType){
 		case WT_PISTOL:
 			parry += 10;
 			break;

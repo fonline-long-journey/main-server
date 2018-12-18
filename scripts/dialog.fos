@@ -348,15 +348,15 @@ void dlg_TrySpy( Critter& player, Critter@ banker, string@ playerName )
             lexems += "$Perception @msg dlg " + DLGSTR( BankerDialog, DlgStr + 21 ) + "@";
         }
         // Выносливость.
-        if( cr.StatBase[ ST_ENDURANCE ] < 4 )
+        if( cr.StatBase[ ST_TOUGHNESS ] < 4 )
         {
             lexems += "$Endurance @msg dlg " + DLGSTR( BankerDialog, DlgStr + 22 ) + "@";
         }
-        else if( cr.StatBase[ ST_ENDURANCE ] >= 4 && cr.StatBase[ ST_ENDURANCE ] < 7 )
+        else if( cr.StatBase[ ST_TOUGHNESS ] >= 4 && cr.StatBase[ ST_TOUGHNESS ] < 7 )
         {
             lexems += "$Endurance" + "";
         }
-        else if( cr.StatBase[ ST_ENDURANCE ] >= 7 && cr.StatBase[ ST_ENDURANCE ] <= 8 )
+        else if( cr.StatBase[ ST_TOUGHNESS ] >= 7 && cr.StatBase[ ST_TOUGHNESS ] <= 8 )
         {
             lexems += "$Endurance @msg dlg " + DLGSTR( BankerDialog, DlgStr + 23 ) + "@";
         }
@@ -382,15 +382,15 @@ void dlg_TrySpy( Critter& player, Critter@ banker, string@ playerName )
             lexems += "$Charisma @msg dlg " + DLGSTR( BankerDialog, DlgStr + 27 ) + "@";
         }
         // Интеллект.
-        if( cr.StatBase[ ST_INTELLECT ] < 4 )
+        if( cr.StatBase[ ST_EDUCATION ] < 4 )
         {
             lexems += "$Intellect @msg dlg " + DLGSTR( BankerDialog, DlgStr + 28 ) + "@";
         }
-        else if( cr.StatBase[ ST_INTELLECT ] >= 4 && cr.StatBase[ ST_INTELLECT ] < 7 )
+        else if( cr.StatBase[ ST_EDUCATION ] >= 4 && cr.StatBase[ ST_EDUCATION ] < 7 )
         {
             lexems += "$Intellect" + "";
         }
-        else if( cr.StatBase[ ST_INTELLECT ] >= 7 && cr.StatBase[ ST_INTELLECT ] <= 8 )
+        else if( cr.StatBase[ ST_EDUCATION ] >= 7 && cr.StatBase[ ST_EDUCATION ] <= 8 )
         {
             lexems += "$Intellect @msg dlg " + DLGSTR( BankerDialog, DlgStr + 29 ) + "@";
         }

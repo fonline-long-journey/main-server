@@ -1,3 +1,4 @@
+#include "_defines.fos"
 dictionary formulas;
 
 // < import string FormatFormulas(string@ text, bool updateList = true) from "formulas"; >
@@ -8,7 +9,41 @@ string FormatFormulas(string@ text, bool updateList = true){
 
 		// Server + Client replacements setup
 		// formulas.set(<string:Tag>,<string:Replacement>) ...
-
+		float apRegenTime = __ApRegeneration / 1000;
+		float apPerSec  = floor((APPOINTS_BASE / apRegenTime) * 10) / 10;
+		float passiveApRegen = floor(APREGEN_BASE * 10) / 1000;
+		float passiveApRegenPerSec = floor(APREGEN_PER_AGI * 10) / 1000;
+		// int fov = getParam_BonusLook;
+		formulas.set ("baseap", APPOINTS_BASE );
+		formulas.set ("apregentime", apRegenTime );
+		formulas.set ("appersec", apPerSec );
+		formulas.set ("apcombatruncost", (__RtApCostCritterRun / AP_DIVIDER) );
+		formulas.set ("meleedamagebase", MELEE_DAMAGE_BASE);
+		// Agility
+		formulas.set ("basepassiveap", passiveApRegen);
+		formulas.set ("passiveap", passiveApRegenPerSec);
+		// Strength
+		formulas.set ("carryweightbase", CARRYWEIGHT_BASE );
+		formulas.set ("carryweight", CARRYWEIGHT_PER_STR );
+		formulas.set ("meleedamage", MELEE_DAMAGE_PER_STR );
+		formulas.set ("acprocent", ARMOR_CLASS_PER_STR );
+		// Perception
+		formulas.set ("basefov", __LookNormal );
+		formulas.set ("fov", FIELDOFVIEW_PER_PE );
+		formulas.set ("sequence", SEQUENCE_PER_PE );
+		// Endurance
+		formulas.set ("basehp", HITPOINTS_BASE );
+		formulas.set ("hpprocent", HITPOINTS_PER_END );
+		formulas.set ("basehr", HEALINGRATE_BASE );
+		formulas.set ("healingrate", HEALINGRATE_PER_END );
+		formulas.set ("poisonresist", POISON_RESIST_PER_END );
+		formulas.set ("radiationresist", RADIATION_RESIST_PER_END );
+		// Charisma
+		// Technology
+		
+		// Skills
+		
+		
 		#ifdef __CLIENT
 		// Client-only replacements setup
 		// formulas.set(<string:Tag>,<float|int|uint|string:Replacement>) ...

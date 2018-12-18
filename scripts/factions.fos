@@ -1,0 +1,7 @@
+#ifndef FACTIONS_MODULE
+#define FACTIONS_MODULE
+
+#include "factions_h.fos"
+
+
+#endif

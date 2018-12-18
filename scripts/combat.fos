@@ -2,6 +2,10 @@
 // 21-08-2010 05:09
 // vanilla
 
+// Combat system updates and tweaks for FOnline: The Long Journey
+// by PigBoss aka Joestar Johnson, Randaru, Vice Dice, VVish.
+// 19.12.2018
+
 #include "_macros.fos"
 #include "critical_table.fos"
 #include "combat_msg.fos"
@@ -11,8 +15,6 @@
 #include "wait_time_h.fos"
 #include "hitchance_h.fos"
 #include "_colors.fos"
-
-//#define __DEBUG
 
 import void DeteriorateItem( Critter& cr, Item& item, int deteriorateCount ) from "repair";
 import void AffectPoison( Critter& cr, int value ) from "poison";
@@ -101,14 +103,20 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     uint16 ty = target.HexY;
     uint16 weapPid = weapon.ProtoId;
     uint16 ammoPid = 0;
-    if( valid( ammo ) )
+	int    dmgType = _WeaponDmgType(weapon, use);
+    if(valid(ammo))
+    {
         ammoPid = ammo.ProtoId;
+        
+        int ammoDmgType = _GetAmmoProtoDmgType(ammo);
+        if(ammoDmgType!=0)
+            dmgType = ammoDmgType;
+    }
     bool isBurst = ( ammoRound > 1 ); // will suffice for now
     if( isBurst )
         aim = HIT_LOCATION_UNCALLED;
-    int      dmgType = _WeaponDmgType( weapon, use );
 
-    bool     isGrenade = weaponSubtype == WS_THROWING && ( dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_EMP || dmgType == DAMAGE_EXPLODE ); // like in fo2
+    bool     isGrenade = weaponSubtype == WS_THROWING && ( dmgType == DAMAGE_FIRE || dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_EXPLODE || dmgType == DAMAGE_ELECTR || dmgType == DAMAGE_ACID); // like in fo2
     bool     isFlamethrower = ( weapPid == PID_FLAMER ) || ( weapPid == PID_IMPROVED_FLAMETHROWER ) || ( weapPid == PID_FIRE_GECKO_FLAME_WEAPON );
     bool     isRocket = ( ammoPid == PID_EXPLOSIVE_ROCKET ) || ( ammoPid == PID_ROCKET_AP ) || ( ammoPid == PID_ROBO_ROCKET_AMMO ) || ( ammoPid == PID_EMP_ROCKET );
 
@@ -227,30 +235,30 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		
     if( valid( weapon ) )
     {
-		if( cr.Perk[ PE_BONUS_RANGED_DAMAGE ] > 0 && weapon.Weapon_Type == WT_SMG || weapon.Weapon_Type == WT_ASSAULT_RIFLE || weapon.Weapon_Type == WT_MACHINE_GUN )
+		if( cr.Perk[ PE_BONUS_RANGED_DAMAGE ] > 0 && weapon.Item_SubType == WT_SMG || weapon.Item_SubType == WT_ASSAULT_RIFLE || weapon.Item_SubType == WT_MACHINE_GUN )
 			attack.BonusDmg += 2;
 		
 		if( cr.Perk[ PE_CUT_OFF_LINE ] > 0 )
 		{
 		
-			if( weapon.Weapon_Type == WT_SMG )
+			if( weapon.Item_SubType == WT_SMG )
 				attack.BonusDmg += 1;
 			
-			if( weapon.Weapon_Type == WT_ASSAULT_RIFLE )
+			if( weapon.Item_SubType == WT_ASSAULT_RIFLE )
 				attack.BonusDmg += 1;
 		
 		}
 		
-		if( cr.Perk[ PE_ONE_HANDER ] > 0 && ( weapon.Weapon_Type == WT_SMG || weapon.Weapon_Type == WT_PISTOL ) )
+		if( cr.Perk[ PE_ONE_HANDER ] > 0 && ( weapon.Item_SubType == WT_SMG || weapon.Item_SubType == WT_PISTOL ) )
 			attack.BonusDmg += 1;
 		
 		if( cr.Perk[ PE_SUPRESSIVE_FIRE ] > 0)
 		{
 			
-			if(weapon.Weapon_Type == WT_MACHINE_GUN)
+			if(weapon.Item_SubType == WT_MACHINE_GUN)
 				attack.BonusDmg += 1;
 				
-			if( weapon.Weapon_Type == WT_MINIGUN )
+			if( weapon.Item_SubType == WT_MINIGUN )
 				attack.BonusDmg += 0;
 		}
 		
@@ -262,7 +270,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
     attack.DmgMul = 2;
     // Ammo
 	if( valid( weapon ))
-	switch(weapon.Weapon_Type){
+	switch(weapon.Item_SubType){
 		case WT_BLADE:
 			attack.DRMod += -0;
 			break;
@@ -284,7 +292,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         attack.DMMod = ammo.Ammo_DmgMult;
         attack.DDMod = ammo.Ammo_DmgDiv;
         if( valid( weapon ) )
-            if( cr.Perk[ PE_LIBERATOR ] > 0  && weapon.Weapon_Type == WT_SHOTGUN )
+            if( cr.Perk[ PE_LIBERATOR ] > 0  && weapon.Item_SubType == WT_SHOTGUN )
                 attack.DRMod += -5;
 		if( cr.Perk[ PE_BRUISER ] > 0  )
                 attack.DRMod += -10;
@@ -404,15 +412,15 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
         isHit = true;
         uint critmod = 0;
         if( valid( realWeapon ) ){
-        if( realWeapon.Proto.Weapon_Type == WT_SNIPER_RIFLE && cr.Perk[ PE_SNIPER ] != 0 )
+        if( realWeapon.Proto.Item_SubType == WT_SNIPER_RIFLE && cr.Perk[ PE_SNIPER ] != 0 )
             critmod += 20;
 		
-		if( realWeapon.Proto.Weapon_Type == WT_SHOTGUN && cr.Perk[ PE_LIBERATOR ] > 0)
+		if( realWeapon.Proto.Item_SubType == WT_SHOTGUN && cr.Perk[ PE_LIBERATOR ] > 0)
 			critmod += 5;
 			
 		int vietnamcrit = 25 - cr.Param[ST_CRITICAL_CHANCE];
 		CLAMP(vietnamcrit, 0, 10);
-		if( realWeapon.Proto.Weapon_Type == WT_ASSAULT_RIFLE && cr.Perk[ PE_FIRE_STORM ] != 0)
+		if( realWeapon.Proto.Item_SubType == WT_ASSAULT_RIFLE && cr.Perk[ PE_FIRE_STORM ] != 0)
 			critmod += vietnamcrit;
 			
 		if( dist <= 10 && cr.Perk[ PE_SCHADENFREUDE ] > 0 )
@@ -423,7 +431,7 @@ void CombatAttack( Critter& cr, Critter& target, ProtoItem& weapon, uint8 weapon
 		}
 		
 		
-        if( isHthAttack && cr.Perk[ PE_SLAYER ] != 0 ) //( attack.RealWeapon.Proto.Weapon_Type == WT_BLADE || attack.RealWeapon.Proto.Weapon_Type == WT_PENETRATION || attack.RealWeapon.Proto.Weapon_Type == WT_BLUNT )
+        if( isHthAttack && cr.Perk[ PE_SLAYER ] != 0 ) //( attack.RealWeapon.Proto.Item_SubType == WT_BLADE || attack.RealWeapon.Proto.Item_SubType == WT_PENETRATION || attack.RealWeapon.Proto.Item_SubType == WT_BLUNT )
             isCritical = true;
         /*else
             isCritical = ( Random( 1, 100 ) <= cr.Stat[ ST_CRITICAL_CHANCE ] + GetHitAim( aim ) + critmod );*/
@@ -1526,7 +1534,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
     if( target.Mode[ MODE_INVULNERABLE ] != 0 )
         isCritical = false;
 		
-	if( isCritical && valid(attack.RealWeapon) && ( attack.RealWeapon.Proto.Weapon_Type == WT_MINIGUN || attack.RealWeapon.Proto.Weapon_Type == WT_FLAMER ) )
+	if( isCritical && valid(attack.RealWeapon) && ( attack.RealWeapon.Proto.Item_SubType == WT_MINIGUN || attack.RealWeapon.Proto.Item_SubType == WT_FLAMER ) )
 		isCritical = false;
 		
     if( isCritical && ( target.Perk[ PE_TERMINATOR ] != 0 || target.Perk[ PE_SWAN_SONG ] != 0 ) && Random( 1, 4 ) == 1 ) 
@@ -1543,7 +1551,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
             aim_--;
             int roll = Random( 0, 90 ) + ( validAttacker ? ( ( attacker.Perk[ PE_MORE_CRITICALS ] != 0 ? 10 : 0 ) + ( attacker.Perk[ PE_BETTER_CRITICALS ] != 0 ? -100 : 0 ) + attacker.Stat[ ST_LUCK ] ) : 0 );
 			uint8  mode = 0;
-			uint16 isrifle = target.GetSlotProto( SLOT_HAND1, mode ).Weapon_Type;
+			uint16 isrifle = target.GetSlotProto( SLOT_HAND1, mode ).Item_SubType;
 			if ( target.Perk [PE_SURVIVALIST] != 0 && isrifle == WT_RIFLE )
 				roll = CLAMP( roll, 0, 80 );
 			if ( target.Perk [PE_SWAN_SONG] != 0 )
@@ -1651,7 +1659,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 			//attacker.Say( SAY_NETMSG, "+" + 5 );
 		}
 		
-	/*if ( valid( attack.RealWeapon ) && isCritical && ( attacker.Perk[ PE_VAMPIRE ] != 0 ) && ( attacker.Stat[ST_CURRENT_HP] < attacker.Stat[ST_MAX_LIFE] ) && attack.RealWeapon.Proto.Weapon_Type == WT_BLADE )
+	/*if ( valid( attack.RealWeapon ) && isCritical && ( attacker.Perk[ PE_VAMPIRE ] != 0 ) && ( attacker.Stat[ST_CURRENT_HP] < attacker.Stat[ST_MAX_LIFE] ) && attack.RealWeapon.Proto.Item_SubType == WT_BLADE )
 		attacker.StatBase[ST_CURRENT_HP] += 2;*/
 
     if( weaponPerk == WEAPON_PERK_ENHANCED_KNOCKOUT )
@@ -1666,7 +1674,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 	target.Say
 	(SAY_NETMSG, 
 	"----------------------------" + "\n" + 
-	"Тип урона: "  + dmgType + "." //+ "\n" + 
+	"Тип урона, расчет первый: "  + dmgType + "." //+ "\n" + 
 	//"-----------------------------"
 	);
 	#endif
@@ -1692,21 +1700,21 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
         //targetDR -= ( valid( attacker ) ? ( attacker.Trait[ TRAIT_FINESSE ] != 0 ? 30 : 0 ) : 0 );
     }
 	
-	if( valid( attack.RealWeapon ) && attack.RealWeapon.Proto.Weapon_Type == WT_BLUNT )
+	if( valid( attack.RealWeapon ) && attack.RealWeapon.Proto.Item_SubType == WT_BLUNT )
 		targetDR /= 3;
 		
-	if( valid( attack.RealWeapon ) && attack.RealWeapon.Proto.Weapon_Type == WT_PENETRATION )
+	if( valid( attack.RealWeapon ) && attack.RealWeapon.Proto.Item_SubType == WT_PENETRATION )
 		targetDR /= 2;
 		
 	/*if ( weaponPerk == WEAPON_PERK_PENETRATE )
 		targetDR -= 5;*/
 		
 	uint8  mode = 0;
-    uint16 isrifle = target.GetSlotProto( SLOT_HAND1, mode ).Weapon_Type;
-	if ( target.Perk [PE_SURVIVALIST] != 0 && isrifle == WT_RIFLE )	//target.weapon.Weapon_Type == WT_RIFLE && 
+    uint16 isrifle = target.GetSlotProto( SLOT_HAND1, mode ).Item_SubType;
+	if ( target.Perk [PE_SURVIVALIST] != 0 && isrifle == WT_RIFLE )	//target.weapon.Item_SubType == WT_RIFLE && 
 		targetDT += 1;
 
-    uint16 isknight = target.GetSlotProto( SLOT_HAND1, mode ).Weapon_Type;
+    uint16 isknight = target.GetSlotProto( SLOT_HAND1, mode ).Item_SubType;
 	if ( target.Perk [PE_CLOSE_COMBAT] != 0 && ( isknight == WT_BLADE || isknight == WT_BLUNT || isknight == WT_PENETRATION ) )
 		targetDR += 10;
 		
@@ -1744,13 +1752,13 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 	int dist = GetDistantion( hx, hy, target.HexX, target.HexY );
     dmgMul *= attack.DMMod;
     int dmgDiv = 2 * attack.DDMod;
-	bool     isGrenade = attack.WeaponSubtype == WS_THROWING && ( dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_EMP || dmgType == DAMAGE_EXPLODE );
+	bool     isGrenade = attack.WeaponSubtype == WS_THROWING && ( dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_ELECTR || dmgType == DAMAGE_ACID || dmgType == DAMAGE_EXPLODE );
 	
 	if( validAttacker ){ 	
 		
 	int vanishAP = -500;
 	
-	if( valid( attack.RealWeapon ) && attack.Attacker.Perk[ PE_SHOT_OF_RELIEF ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_SNIPER_RIFLE )
+	if( valid( attack.RealWeapon ) && attack.Attacker.Perk[ PE_SHOT_OF_RELIEF ] != 0 && attack.RealWeapon.Proto.Item_SubType == WT_SNIPER_RIFLE )
 		{
 		target.StatBase[ ST_CURRENT_AP ] += vanishAP;
 		target.Say( SAY_NETMSG, "Вы дезориентированы выстрелом снайпера!" );
@@ -1758,7 +1766,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 
 		int smashAP = -200;
 	
-	if( valid( attack.RealWeapon ) && attack.Attacker.Perk[ PE_PECHUSCHKIN ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_BLUNT )
+	if( valid( attack.RealWeapon ) && attack.Attacker.Perk[ PE_PECHUSCHKIN ] != 0 && attack.RealWeapon.Proto.Item_SubType == WT_BLUNT )
 		{
 		target.StatBase[ ST_CURRENT_AP ] += smashAP;
 		//target.Say( SAY_NETMSG, "MOVE, BITCH!" );
@@ -1801,7 +1809,7 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 			
         if( valid( attack.RealWeapon ) )
         {
-            if( attack.Attacker.Perk[ PE_COWBOY ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_PISTOL )
+            if( attack.Attacker.Perk[ PE_COWBOY ] != 0 && attack.RealWeapon.Proto.Item_SubType == WT_PISTOL )
 				totalDmg += 1;
 				
 		//if( attack.Attacker.Perk[ PE_LIGHT_STEP ] != 0 && ( dmgType == DAMAGE_EXPLODE ) && attack.Attacker.Id == target.Id )
@@ -1816,13 +1824,13 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
 			if( target.Perk[ PE_COLDBLOOD ] != 0 )
 				totalDmg -= 1;
 			
-			if( dist != 0 && attack.Attacker.Perk[ PE_SHOTGUN_TIME ] != 0 && ( attack.RealWeapon.Proto.Weapon_Type == WT_SHOTGUN || attack.RealWeapon.Proto.Weapon_Type == WT_MACHINE_GUN ) )
+			if( dist != 0 && attack.Attacker.Perk[ PE_SHOTGUN_TIME ] != 0 && ( attack.RealWeapon.Proto.Item_SubType == WT_SHOTGUN || attack.RealWeapon.Proto.Item_SubType == WT_MACHINE_GUN ) )
 				totalDmg += ( 6 / dist );
 				
-            //if( attack.Attacker.Perk[ PE_SHARPSHOT ] != 0 && ( attack.RealWeapon.Proto.Weapon_Type == WT_RIFLE || attack.RealWeapon.Proto.Weapon_Type == WT_SNIPER_RIFLE ) )
+            //if( attack.Attacker.Perk[ PE_SHARPSHOT ] != 0 && ( attack.RealWeapon.Proto.Item_SubType == WT_RIFLE || attack.RealWeapon.Proto.Item_SubType == WT_SNIPER_RIFLE ) )
                 //totalDmg += isCritical ? 2 : 0;
 
-            //if( attack.Attacker.Perk[ PE_SHOT_OF_RELIEF ] != 0 && attack.RealWeapon.Proto.Weapon_Type == WT_SNIPER_RIFLE && _CritIsInjured( target ) )
+            //if( attack.Attacker.Perk[ PE_SHOT_OF_RELIEF ] != 0 && attack.RealWeapon.Proto.Item_SubType == WT_SNIPER_RIFLE && _CritIsInjured( target ) )
                 //totalDmg += attack.Attacker.Stat[ ST_PERCEPTION ];
         }
 		
@@ -1998,23 +2006,23 @@ void ApplyDamage( AttackStruct& attack, Critter& target, uint rounds, bool isCri
     {
         if( target.Mode[ MODE_INVULNERABLE ] == 0 ) 
         { 	
-			if (target.IsPlayer())
-			{	
-				#ifdef __DEBUG
-				target.Say
-				(SAY_NETMSG, 
-				"----------------------------" 						     + "\n" +
-				"Текущий Класс Брони: " 	+ target.Stat[ST_CURRENT_AC] + "."  + "\n" + 
-				"Поглощенный броней урон: " + armorDmg               	 + "."  + "\n" + 
-				"-----------------------------"
-				);
-				#endif
-			}
 			//Урон по броне
 			if ( target.Stat[ ST_CURRENT_AC ] <= armorDmg )
 				{
 				totalDmg += armorDmg - target.Stat[ ST_CURRENT_AC ];
 				target.StatBase[ ST_CURRENT_AC ] = 0;
+					if (target.IsPlayer())
+						{	
+						#ifdef __DEBUG
+						target.Say
+						(SAY_NETMSG, 
+						"----------------------------" 						     + "\n" +
+						"Текущий Класс Брони: " 	+ target.Stat[ST_CURRENT_AC] + "."  + "\n" + 
+						"Поглощенный броней урон: " + armorDmg               	 + "."  + "\n" + 
+						"-----------------------------"
+						);
+						#endif
+						}
 				}
 			else
 				target.StatBase[ ST_CURRENT_AC ] -= armorDmg;
@@ -2372,6 +2380,7 @@ void CommenceExplosion( AttackStruct& attack, Map@ map, uint16 tx, uint16 ty, Cr
 }
 void CommenceExplosionEx( Critter@ attacker, Map@ map, uint16 tx, uint16 ty, Critter@ target, uint weapPid, bool isCritical, uint intentionallyId, bool isRocket )   // export
 {
+	uint16 ammoPid = 0;
     array< CombatRes > results;
     AttackStruct       attack;
     @attack.Attacker = attacker;
@@ -2379,7 +2388,26 @@ void CommenceExplosionEx( Critter@ attacker, Map@ map, uint16 tx, uint16 ty, Cri
     ProtoItem@ proto = GetProtoItem( weapPid );
     attack.DmgMin = _WeaponDmgMin( proto, 0 );
     attack.DmgMax = _WeaponDmgMax( proto, 0 );
-    attack.DmgType = _WeaponDmgType( proto, 0 );
+	attack.DmgType = _WeaponDmgType( proto, 0 );
+	ProtoItem@ ammo = GetProtoItem( ammoPid );
+     if(valid(ammo))
+     {
+         ammoPid = ammo.ProtoId;
+        
+         int ammoDmgType = _GetAmmoProtoDmgType(ammo);
+         if(ammoDmgType!=0)
+           dmgType = ammoDmgType;
+		
+		 #ifdef __DEBUG
+		 target.Say
+		 (SAY_NETMSG, 
+		 "----------------------------" + "\n" + 
+		 "Тип урона, расчет второй: "  + ammoDmgType + "." + "\n" + 
+		 "-----------------------------"
+		 );
+		 #endif
+		
+     }
     attack.WeaponPerk = proto.Weapon_Perk;
     CommenceExplosion( attack, map, tx, ty, target, weapPid, isCritical, intentionallyId, isRocket, results );
     FlushResults( results );
@@ -2485,23 +2513,23 @@ void CriticalFailure( Critter& cr, ProtoItem& weapon, uint8 weaponUse, ProtoItem
 		if( cr.Perk[ PE_CUT_OFF_LINE ] > 0)
 		{
 		
-			if( weapon.Weapon_Type == WT_SMG )
+			if( weapon.Item_SubType == WT_SMG )
 				totalDmg += 1;
 			
-			if( weapon.Weapon_Type == WT_ASSAULT_RIFLE )
+			if( weapon.Item_SubType == WT_ASSAULT_RIFLE )
 				totalDmg += 1;
 		
 		}
 		
-		if( cr.Perk[ PE_ONE_HANDER ] > 0 && ( weapon.Weapon_Type == WT_SMG || weapon.Weapon_Type == WT_PISTOL ) )
+		if( cr.Perk[ PE_ONE_HANDER ] > 0 && ( weapon.Item_SubType == WT_SMG || weapon.Item_SubType == WT_PISTOL ) )
 				totalDmg += 1;
 		
 		if( cr.Perk[ PE_SUPRESSIVE_FIRE ] > 0){
 			
-			if(weapon.Weapon_Type == WT_MACHINE_GUN)
+			if(weapon.Item_SubType == WT_MACHINE_GUN)
 				totalDmg += 1;
 				
-			if( weapon.Weapon_Type == WT_MINIGUN )
+			if( weapon.Item_SubType == WT_MINIGUN )
 				totalDmg += 0;
         }
 		}
@@ -2524,19 +2552,19 @@ void CriticalFailure( Critter& cr, ProtoItem& weapon, uint8 weaponUse, ProtoItem
 			if( cr.Perk[ PE_COLDBLOOD ] != 0 )
 				totalDmg += 1;
 		
-            //if( cr.Perk[ PE_COWBOY ] != 0 && weapon.Weapon_Type == WT_PISTOL )
+            //if( cr.Perk[ PE_COWBOY ] != 0 && weapon.Item_SubType == WT_PISTOL )
                 //totalDmg += 1;
 				
 			if( cr.Perk[ PE_KILLER_BEE ] != 0 )
 				totalDmg += ( FLAG( weapon.Flags, ITEM_TWO_HANDS ) ? 0 : 2 );
 
-            //if( cr.Perk[ PE_SHARPSHOT ] != 0 && ( weapon.Weapon_Type == WT_RIFLE || weapon.Weapon_Type == WT_SNIPER_RIFLE ) )
+            //if( cr.Perk[ PE_SHARPSHOT ] != 0 && ( weapon.Item_SubType == WT_RIFLE || weapon.Item_SubType == WT_SNIPER_RIFLE ) )
                 //totalDmg += cr.ParamBase[ ST_PERCEPTION ] * 2 + 8;
 			
-			//if( cr.Perk[ PE_SHOTGUN_TIME ] != 0 && ( weapon.Weapon_Type == WT_SHOTGUN || weapon.Weapon_Type == WT_MACHINE_GUN ) )
+			//if( cr.Perk[ PE_SHOTGUN_TIME ] != 0 && ( weapon.Item_SubType == WT_SHOTGUN || weapon.Item_SubType == WT_MACHINE_GUN ) )
                 //totalDmg += 6 / dist;
 
-            //if( cr.Perk[ PE_SHOT_OF_RELIEF ] != 0 && weapon.Weapon_Type == WT_SNIPER_RIFLE && _CritIsInjured( cr ) )
+            //if( cr.Perk[ PE_SHOT_OF_RELIEF ] != 0 && weapon.Item_SubType == WT_SNIPER_RIFLE && _CritIsInjured( cr ) )
                 //totalDmg += cr.Stat[ ST_PERCEPTION ];
         }
         tookDamage = true;

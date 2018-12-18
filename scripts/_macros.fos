@@ -92,6 +92,10 @@
 #define _WeaponModeAim               # (weaponMode) ( ( ( weaponMode ) >> 4 ) & 0xF )
 #define _WeaponModeMake              # ( use, aim )( ( ( ( aim ) << 4 ) | ( ( use ) & 0xF ) ) & 0xFF )
 
+// Ammo
+#define _GetAmmoDmgType              # (pid)  (GetProtoItem(pid).Weapon_DmgType_0)
+#define _GetAmmoProtoDmgType         # (proto) (proto.Weapon_DmgType_0)
+
 // Time is running...
 #define _GetProtoTime                 # (prot, use)     (use == 0 ? prot.Wait_Time_0 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_0  \
                                                         : use == 1 ? prot.Wait_Time_1 == 0 ? DEFAULT_WAIT_TIME : prot.Wait_Time_1 \

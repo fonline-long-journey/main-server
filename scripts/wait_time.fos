@@ -29,21 +29,30 @@
 // the mode is actual mode, means 4 high bits are aim, 4 low bits are use mode (to use it for both weapons and other items)
 uint GetProtoTime(ProtoItem& prot, uint8 mode, CritterMutual@ crit)
 {
-	uint time = _GetProtoWaitTime(prot, mode&0x0F); // 16 uses limit, more than enough
-	
+	uint time	 = _GetProtoWaitTime(prot, mode&0x0F); // 16 uses limit, more than enough
+	uint subtype = prot.Item_SubType;
+	switch(subtype)
+    {
+        case ITEM_SUBTYPE_WEAPON_BALLISTIC_SNIPERRIFLE:
+            if(crit.Perk[PE_TOUGHNESS]>0)
+                time /= 2;
+            break;
+        default :
+            break;
+    }
 	return time;
 }
 
 uint GetSkillTime(int sk, CritterMutual@ crit)
 {
-	uint time = _GetSkillWaitTime(sk);
+	uint time	= _GetSkillWaitTime(sk);
 
 	return time;
 }
 
 uint GetActionTime(int action, CritterMutual@ crit)
 {
-	uint time = _GetActionWaitTime(action);
+	uint time	= _GetActionWaitTime(action);
 
 	return time;
 }

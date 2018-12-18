@@ -1,0 +1,23 @@
+// factions.fos
+// Factions header file.
+
+#ifndef FACTIONS_H
+#define FACTIONS_H
+
+#define ADDFACTIONMEMBER_RESULT_SUCCESS		( 0 )
+#define ADDFACTIONMEMBER_RESULT_OCCUPIED	( 1 )
+#define ADDFACTIONMEMBER_RESULT_ERROR		( 2 )
+
+#include "mutual_h.fos"
+	
+	#ifdef FACTIONS_MODULE
+	// Includes - here
+	#include "_macros.fos"
+	#include "faction.fos"
+	#endif
+
+	#ifndef FACTIONS_MODULE
+	// Imports - here
+	#endif
+
+#endif

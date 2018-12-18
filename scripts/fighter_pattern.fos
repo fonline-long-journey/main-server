@@ -129,7 +129,7 @@ class FighterPattern
         {
             cr.PerkBase[ PE_TERMINATOR ] = 1;
             cr.StatBase[ ST_STRENGTH ] = 10;
-            cr.StatBase[ ST_ENDURANCE ] = Random( 9, 10 );
+            cr.StatBase[ ST_TOUGHNESS ] = Random( 9, 10 );
             DL( "Terminator" );
         }
 

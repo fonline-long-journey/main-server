@@ -206,7 +206,7 @@ bool IsGrenade( Item& item )
         return false;
     uint8 use = _WeaponModeUse( item.Mode );
     uint8 dmgType = _WeaponDmgType( item.Proto, use );
-    return dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_EMP || dmgType == DAMAGE_EXPLODE;
+    return dmgType == DAMAGE_FIRE || dmgType == DAMAGE_PLASMA || dmgType == DAMAGE_EXPLODE || dmgType == DAMAGE_ELECTR || dmgType == DAMAGE_ACID;
 }
 
 void CommenceThrowing( Critter& cr, Map& map, Item& item, uint16 tx, uint16 ty )

@@ -1,0 +1,30 @@
+#ifndef RP_ELEMENTS_H
+#define RP_ELEMENTS_H
+
+
+#ifdef RP_ELEMENTS_MODULE
+#define ST_HUNGER								 ( 980 ) // EXAMPLE should be in _defines.fos
+#define ST_THIRST								 ( 981 ) // EXAMPLE should be in _defines.fos
+#define CTE_THIRST_DECAY						 ( 38 )	 // EXAMPLE should be in _defines.fos 
+#define CTE_HUNDER_DECAY						 ( 39 )	 // EXAMPLE should be in _defines.fos 
+#define BASE_HUNGER_DECAY						 ( 250 ) // EXAMPLE
+#define BASE_THIRST_DECAY						 ( 250 ) // EXAMPLE
+#define BASE_THIRST_TIME						 ( 1 )	 // EXAMPLE
+#define BASE_HUNGER_TIME						 ( 1 )	 // EXAMPLE
+#define BASE_HUNGER_MAX							 ( 2500 ) // EXAMPLE
+#define BASE_THIRST_MAX							 ( 2500 ) // EXAMPLE
+#define BASE_THIRST_MIN							 ( int(0) ) // EXAMPLE
+#define BASE_HUNGER_MIN							 ( int(0) ) // EXAMPLE
+
+#include "_macros.fos"
+#include "_time.fos"
+
+#define __DEBUG
+
+#endif
+
+#ifndef RP_ELEMENTS_MODULE
+import void InitCritterRP(Critter& critter) from "rp_elements";
+#endif
+
+#endif

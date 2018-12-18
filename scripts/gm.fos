@@ -1516,7 +1516,7 @@ void answer_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL( Critter& player )
 	string ASPECT = "ASPECT отклонения (Текущий/Базовый): "+( Aspect-15 )+"/"+( AspectBase-15 );
 
 	string[] List = { "Ловкость", "Сила", "Восприятие", "Выносливость", "Обаяние", "Технократизм", "???" };
-	int[] ListX = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT, ST_LUCK };
+	int[] ListX = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_TOUGHNESS, ST_CHARISMA, ST_EDUCATION, ST_LUCK };
 	MenuMakerCheck( player, List, "answer_SPECIAL_INPUT", ASPECT, ListX, 1 );
 }
 
@@ -1527,7 +1527,7 @@ void answer_SPECIAL_INPUT( Critter& player, uint answerI, string& answerS )
 	if( answerI == 7 ) { GM_PANNEL_CRITTER_PLAYER( player, targetCr.Id, 0, 0, null, null ); return; }
 
 	string[] List = { "Ловкость", "Сила", "Восприятие", "Выносливость", "Обаяние", "Технократизм", "???" };
-	int[] ListX = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT, ST_LUCK };
+	int[] ListX = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_TOUGHNESS, ST_CHARISMA, ST_EDUCATION, ST_LUCK };
 	player.ParamBase[ ST_VAR1 ] = ListX[ answerI ];
 	MenuInputMaker( player, "ask_GM_PANNEL_CRITTER_PLAYER_STATS_SPECIAL", List[ answerI ] );
 }

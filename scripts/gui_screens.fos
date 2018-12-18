@@ -375,9 +375,9 @@ namespace Register_TLJ
     import void player_data_generate( int[]& params ) from "client_main";
     import bool player_data_check( int[]& params ) from "client_main";
     
-            int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_ENDURANCE, ST_CHARISMA, ST_INTELLECT};
+            int[] ShowBaseStats = { ST_AGILITY, ST_STRENGTH, ST_PERCEPTION, ST_EDUCATION, ST_CHARISMA, ST_TOUGHNESS};
             int[] ShowHealthStats = { ST_MAX_LIFE, DAMAGE_POISONED, DAMAGE_RADIATED, DAMAGE_EYE, DAMAGE_RIGHT_ARM, DAMAGE_LEFT_ARM, DAMAGE_RIGHT_LEG, DAMAGE_LEFT_LEG };
-            int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE, ST_APREGEN };
+            int[] ShowExtendedStats = { ST_ARMOR_CLASS, ST_APREGEN, ST_ACTION_POINTS, ST_CARRY_WEIGHT, ST_MELEE_DAMAGE, ST_POISON_RESISTANCE, ST_RADIATION_RESISTANCE, ST_SEQUENCE, ST_HEALING_RATE };
             int[] ShowTraitsLeft = { TRAIT_FAST_METABOLISM, TRAIT_BRUISER, TRAIT_SMALL_FRAME, TRAIT_ONE_HANDER, TRAIT_FINESSE, TRAIT_KAMIKAZE, TRAIT_HEAVY_HANDED, TRAIT_FAST_SHOT };
             int[] ShowTraitsRight = { TRAIT_BLOODY_MESS, TRAIT_JINXED, TRAIT_GOOD_NATURED, TRAIT_CHEM_RELIANT, TRAIT_CHEM_RESISTANT, TRAIT_SEX_APPEAL, TRAIT_SKILLED, TRAIT_NIGHT_PERSON };
             int[] ShowSkills = { SK_SMALL_GUNS, SK_ENERGY_WEAPONS, SK_UNARMED, SK_THROWING, SK_DOCTOR, SK_SNEAK, SK_SCIENCE, SK_REPAIR, SK_BARTER, SK_OUTDOORSMAN };
@@ -5295,9 +5295,9 @@ namespace Character_TLJ
         ST_AGILITY,
         ST_STRENGTH, 
         ST_PERCEPTION, 
-        ST_ENDURANCE, 
+        ST_EDUCATION, 
         ST_CHARISMA, 
-        ST_INTELLECT
+        ST_TOUGHNESS
     };
     int[] ShowHealthStats = { 
         ST_MAX_LIFE, 
@@ -5311,14 +5311,14 @@ namespace Character_TLJ
     };
     int[] ShowExtendedStats = { 
         ST_ARMOR_CLASS, 
-        ST_ACTION_POINTS, 
+        ST_ACTION_POINTS,
+        ST_APREGEN,
         ST_CARRY_WEIGHT, 
         ST_MELEE_DAMAGE, 
         ST_POISON_RESISTANCE, 
         ST_RADIATION_RESISTANCE, 
-        ST_SEQUENCE, 
         ST_HEALING_RATE,
-        ST_APREGEN
+        ST_SEQUENCE
     };
     int[] ShowSkills = { 
         SK_SMALL_GUNS, 
@@ -5581,7 +5581,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 195, 175 );
+            SetPosition( 192, 177 );
             SetCellPrototype( "ExtStatsPanel" );
             SetGridSize( ShowExtendedStats.length() );
         }
@@ -5623,7 +5623,7 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 102, 0 );
+            SetPosition( 102, 1 );
             SetSize( 25, 13 );
         }
 
@@ -5971,8 +5971,8 @@ namespace Character_TLJ
     {
         void OnConstruct() override
         {
-            SetPosition( 12, 37 );
-            SetSize( 158, 140 );
+            SetPosition( 12, 39 );
+            SetSize( 158, 138 );
         }
     }
 

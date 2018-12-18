@@ -1,0 +1,379 @@
+// server module gathering <- scripts.cfg
+// include "gathering_h.fos" <- inside "main.fos"
+
+#ifndef GATHERING_MODULE
+#define GATHERING_MODULE
+
+#include "gathering_h.fos"
+
+funcdef bool GatheringSatisfy(Critter@ target, Critter& critter, Item@ item, Item@ targetItem, int skill);
+funcdef int  LootChanceFunc	 (Critter& critter, Item@ item, int skill);
+
+
+class CGatheringTableLevel : IGatheringTableLevel
+{
+	int baseChance = 0;
+	uint msgStr = 0;
+	
+	CGatheringTable@  parentTable = null;
+	
+	GatheringSatisfy@ satisfyFunc = null;
+	LootChanceFunc@   chanceFunc  = null;
+	
+	array<uint16> itemPids;
+	array<uint>	  itemCounts;
+	
+	
+	CGatheringTableLevel(CGatheringTable@ parent)
+	{
+		@this.parentTable = parent;
+	}
+	
+	CGatheringTable@ GetParentTable()
+	{
+		return this.parentTable;
+	}
+	
+	CGatheringTableLevel@  SetMessage(uint msgstr)
+	{
+		this.msgStr = msgstr;
+		return this;
+	}
+	
+	bool Satisfies(Critter@ target, Critter& critter, Item@ item, Item@ targetItem, int skill)
+	{	
+		if(valid(this.satisfyFunc))
+		{
+			return this.satisfyFunc(target, critter, item, targetItem, skill);
+		}
+		else
+			return false;
+	}
+	
+	int GetChance(Critter& critter, Item@ item, int skill)
+	{
+		if(valid(chanceFunc))
+		{
+			return baseChance + chanceFunc(critter, item, skill);
+		}
+		else
+			return baseChance;
+	}
+	
+	CGatheringTableLevel@ SetChance(int newChance)
+	{
+		this.baseChance = newChance;
+		return this;
+	}
+	
+	CGatheringTableLevel@ AddItem(uint16 pid, uint count)
+	{
+		itemPids.insertLast(pid);
+		itemCounts.insertLast(count);
+		return this;
+	}
+	
+	CGatheringTableLevel@ SetSatisfyFunc(GatheringSatisfy@ funcIn)
+	{
+		@this.satisfyFunc = funcIn;
+		return this;
+	}
+	
+	CGatheringTableLevel@ SetChanceFunc(LootChanceFunc@ funcIn)
+	{
+		@this.chanceFunc = funcIn;
+		return this;
+	}
+	
+	
+	// interface
+	
+	IGatheringTable@ GetParentTableInterface()
+	{
+		return this.parentTable;
+	}
+}
+
+
+class CGatheringTable : IGatheringTable
+{
+	uint8 type;
+	uint hookPid, id;
+	array<CGatheringTableLevel> levels;
+	
+	CGatheringTableLevel@ AddLevel()
+	{
+		levels.insertLast(CGatheringTableLevel(this));
+		return levels[levels.length()-1];
+	}
+	
+	CGatheringTable(uint hookPid)
+	{
+		this.hookPid = hookPid;
+	}
+	
+	uint GetId()
+	{
+		return this.id;
+	}
+	
+	uint8 GetType()
+	{
+		return this.type;
+	}
+	
+	uint8 GetLevels()
+	{
+		return this.levels.length();
+	}
+	
+	uint GetHookPid()
+	{
+		return this.hookPid;
+	}
+	
+	void SetId(uint id)
+	{
+		this.id = id;
+	}
+	
+	void SetType(uint8 type)
+	{
+		this.type = type;
+	}
+	
+	bool GiveItems(Critter@ target, Critter& critter, Item@ usedItem, Item@ targetItem, int skill)
+	{
+		uint satisfyCount = 0;
+		
+		for(uint i = 0, j = levels.length(); i<j; i++)
+		{
+			if(levels[i].Satisfies(target, critter, usedItem, targetItem, skill))
+			{
+				satisfyCount++;
+				int chance = levels[i].GetChance(critter, usedItem, skill);
+				
+				for(uint k = 0, m = levels[i].itemPids.length(); k<m; k++)
+				{
+					if(chance >= Random(1,100))
+					{
+						//string@ success = MSG_GAME(levels[i].msgStr);
+						int rnd = Random(0, levels[i].itemCounts[k]);					
+						critter.AddItem(levels[i].itemPids[k], rnd );
+						critter.SayMsg(SAY_NETMSG, TEXTMSG_GAME, STR_GATHERING_SUCCESS, "$count" + rnd);
+					}
+					else
+						critter.SayMsg(SAY_NETMSG, TEXTMSG_GAME, STR_GATHERING_FAIL);
+				}
+			}
+		}
+
+		return satisfyCount>0;
+		
+	}
+	
+}
+
+
+bool Initialized = false;
+
+array<CGatheringTable@> Tables;
+
+#ifdef __ARRAY
+array<array<uint>> TablesAliasUint;;
+#endif
+
+#ifdef __DICT
+// PID to INDEX dictionaries
+dictionary ItemTablesAlias;
+dictionary CritterTablesAlias;
+#endif
+
+#ifdef __DICT
+#define ADD_CRITTER_GATHERING_TABLE    # (_name, _hookPid, _prop) CGatheringTable@ _name = @CGatheringTable(_hookPid); \\
+										  _name._prop; Tables.insertLast(_name); _name.SetId(Tables.length()-1);	   \\
+										  CritterTablesAlias.set( ""+_hookPid, _name.GetId() )				       
+										  
+										  
+#define ADD_ITEM_GATHERING_TABLE       # (_name, _hookPid, _prop) CGatheringTable@ _name = @CGatheringTable(_hookPid); \\
+										  _name._prop; Tables.insertLast(_name); _name.SetId(Tables.length()-1);	   \\
+										  ItemTablesAlias.set( ""+_hookPid, _name.GetId() )				     	   										  
+										 
+#endif
+
+#ifdef __ARRAY
+#define ADD_CRITTER_GATHERING_TABLE    # (_name, _hookPid, _prop) CGatheringTable@ _name = @CGatheringTable(_hookPid); \\
+										  _name._prop; Tables.insertLast(_name); _name.SetId(Tables.length()-1);	   \\
+										  FillGatheringAlias(TABLE_ALIAS_CRITTERS, _hookPid, _name.GetId() )		   
+										  
+										  
+#define ADD_ITEM_GATHERING_TABLE       # (_name, _hookPid, _prop) CGatheringTable@ _name = @CGatheringTable(_hookPid); \\
+										  _name._prop; Tables.insertLast(_name); _name.SetId(Tables.length()-1);	   \\
+										  FillGatheringAlias(TABLE_ALIAS_ITEMS, _hookPid, _name.GetId() )		       
+										  
+										  
+#endif										  
+	
+
+#ifdef __ARRAY
+
+void FillGatheringAlias(uint8 aliasType, uint pid, uint index)
+{
+	uint len = TablesAliasUint[aliasType].length();
+	if(len <= pid)
+		TablesAliasUint[aliasType].resize(pid+1);
+	
+	TablesAliasUint[aliasType][pid] = index;
+}
+
+
+#endif
+
+bool GeckoSkinningSatisfy(Critter@ target, Critter& critter, Item@ item, Item@ targetItem, int skill)
+{
+	bool validtarget = valid(target);
+	uint16 pid = item.GetProtoId();
+	if (validtarget)
+	{	
+		if (!target.IsDead())
+		{
+			critter.SayMsg(SAY_NETMSG, TEXTMSG_GAME, STR_GATHERING_GECKO_IS_ALIVE);
+			return false;
+		}
+		return  critter.Perk[PE_GECKO_SKINNING]>0 && pid == PID_KNIFE;
+		//critter.SayMsg(SAY_NETMSG, TEXTMSG_GAME, STR_GATHERING_GECKO_TRUE);
+	}
+	return false;
+}
+
+// API
+
+// If system will be reuquired, its better to create some file with proper formatting to support it instead of hardcoing the init.
+bool InitGatheringTables()
+{
+	if(!Initialized)
+	{
+		Log("Initializing gathering tables...");
+		
+		#ifdef __ARRAY
+		TablesAliasUint.resize(TABLES_END);
+		TablesAliasUint[TABLE_ALIAS_ITEMS].resize(0);
+		TablesAliasUint[TABLE_ALIAS_CRITTERS].resize(0);
+		#endif
+		
+		ADD_CRITTER_GATHERING_TABLE(Gecko, 80, AddLevel().AddItem(PID_GECKO_PELT, 1).SetChance(100).SetSatisfyFunc(@GeckoSkinningSatisfy).SetMessage(STR_GATHERING_GECKO_SUCCESS).
+		GetParentTable().AddLevel().AddItem(PID_FIREWOOD, 1).SetChance(100).SetSatisfyFunc(@GeckoSkinningSatisfy)		 													    ); // test
+		
+		
+		ADD_ITEM_GATHERING_TABLE(Knife, PID_KNIFE, AddLevel().AddItem(PID_FIREWOOD, 1).SetChance(100) ); // test
+		
+		Log("Gathering tables initialized.");
+		return Initialized = true;
+	}
+	return Initialized;
+}
+
+bool TryGatherCritter(Critter& gatherer, Critter& target, Item@ item, int skill)
+{
+	#ifdef __DICT
+	
+	string pid = target.GetProtoId();
+	uint index = 0;
+	if(CritterTablesAlias.get(pid, index))
+	{
+		if(Tables[index].GiveItems(target, gatherer, item, null, skill))
+		{
+			if(target.IsNpc())
+				DeleteNpc(target);
+		}
+		return true;
+	}
+	return false;
+	
+	#endif
+	
+	#ifdef __ARRAY
+	
+	uint pid   = target.GetProtoId();
+	uint len   = TablesAliasUint[TABLE_ALIAS_CRITTERS].length();
+	
+	if(pid>=len)
+		return false;
+	
+	uint index = TablesAliasUint[TABLE_ALIAS_CRITTERS][pid];
+
+	if(Tables[index].GiveItems(target, gatherer, item, null, skill))
+	{
+		if(target.IsNpc())
+			DeleteNpc(target);
+		return true;
+	}
+
+	return false;
+	
+	#endif
+}
+
+bool TryGatherItem(Critter& gatherer, Item& target, Item@ item, int skill)
+{
+	#ifdef __DICT
+	
+	string pid = target.GetProtoId();
+	uint index = 0;
+	if(ItemTablesAlias.get(pid, index))
+	{
+		if(Tables[index].GiveItems(null, gatherer, item, target, skill))
+		{
+			return true;
+		}
+		
+	}
+	return false;
+	
+	#endif
+	
+	#ifdef __ARRAY
+	
+	uint pid   = target.GetProtoId();
+	uint len   = TablesAliasUint[TABLE_ALIAS_ITEMS].length();
+	
+	if(pid>=len)
+		return false;
+	
+	uint index = TablesAliasUint[TABLE_ALIAS_ITEMS][pid];
+
+	if(Tables[index].GiveItems(null, gatherer, item, target, skill))
+	{
+		return true;
+	}
+
+	return false;
+	
+	#endif
+}
+
+
+IGatheringTable@ GetGatheringTable(uint8 aliasType, uint pid)
+{
+	#ifdef __ARRAY
+	if(pid < TablesAliasUint[aliasType].length())
+	{
+		return Tables[TablesAliasUint[aliasType][pid]];
+	}
+	else
+		return null;
+	#endif
+	
+	#ifdef __DICT
+	string targetPid = pid;
+	uint index = 0;
+	if(CritterTablesAlias.get(targetPid, index))
+	{
+		return Tables[index];
+	}
+	else
+		return null;
+	#endif
+}
+
+#endif

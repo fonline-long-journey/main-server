@@ -385,6 +385,15 @@
 #define STR_UPDATE_LOG_LATEST				 ( 1211 )
 #define STR_UPDATE_LOG_MAX					 ( 1500 )
 
+// TLJ Gathering Module
+#define STR_GATHERING_TARGET_IS_ALIVE		 ( 1501 )
+#define STR_GATHERING_TARGET_IS_DEAD		 ( 1502 )
+#define STR_GATHERING_SUCCESS				 ( 1503 )
+#define STR_GATHERING_FAIL					 ( 1504 )
+#define STR_GATHERING_GECKO_SUCCESS			 ( 1505 )
+#define STR_GATHERING_GECKO_FAIL			 ( 1506 )
+#define STR_GATHERING_GECKO_IS_ALIVE		 ( 1507 )
+
 // Error replacer
 #define STR_CUSTOM_ERROR					 # (input,message)   (input == "error" ? message : input)
 
@@ -472,6 +481,9 @@
 
 #define STR_ADDICT_TITLE_NAME                ( 6900 )
 #define STR_ADDICT_TITLE_DESC                ( 6901 )
+
+// Factions
+#define STR_FACTION_NAME 					 #(fid) (110000 + fid)
 
 // Kills
 #define STR_KILL_NAME                        # (num)            ( 8000 + ( num ) )

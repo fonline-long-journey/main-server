@@ -1,0 +1,156 @@
+//Mercs attacked a caravan - first use.
+//probably might be used for any other team based npc fights
+//Vice Dice 2011+6
+//FOnline Forever
+// USES TEAM_ID TO DISTINGUISH ENEMIES AND FRIENDLIES
+//Mostly look for critters that arent in the same team > 
+//attack them, Help your teammates if they are attacked and attacker is not a teammate too >
+//help you teammates attack targets if targets arent your teammates >
+//if someone dies in sight - loot them after the fights done.
+//if some critter have beem seen and not your teammate - add this critter to targets list.
+
+
+
+
+#include "_defines.fos"
+#include "_macros.fos"
+#include "npc_planes_h.fos"
+#include "npc_roles_h.fos"
+
+
+void critter_guard_init(Critter& mob, bool firstTime) // used this to test and on caravan guards that are ambushed, they dont survive, so they dont loot, and dont search for targets, only help each other against attackers
+{
+	mob.StatBase[ST_PERCEPTION] = 10;
+	mob.ParamBase[MODE_UNLIMITED_AMMO] = 1;
+	//mob.SetEvent(CRITTER_EVENT_IDLE, "_MobIdle");
+    //mob.SetEvent(CRITTER_EVENT_DEAD, "_MobDead");
+    // mob.SetEvent(CRITTER_EVENT_SHOW_CRITTER, "_MobShowCritter");
+    // mob.SetEvent(CRITTER_EVENT_HIDE_CRITTER, "_MobHideCritter");
+	mob.SetEvent(CRITTER_EVENT_SMTH_ATTACKED, "_SomeCritterAttacked");
+    mob.SetEvent(CRITTER_EVENT_SMTH_ATTACK, "_SomeCritterAttack");
+	mob.SetEvent(CRITTER_EVENT_SMTH_USE_SKILL , "_SomeCritterUseSkill");
+    _CritSetExtMode(mob, MODE_EXT_MOB);
+}
+
+void critter_attackers_init(Critter& mob, bool firstTIme) // better use this one, more options and more aggresive, feel free to create your own inits also. SUPER DUPER STRONK NPCS THAT LOOT AND HUNT THE WHOLE MAP
+{
+	mob.StatBase[ST_PERCEPTION] = 10;
+	mob.StatBase[ST_CURRENT_HP]= mob.Stat[ST_MAX_LIFE];
+	mob.ParamBase[MODE_UNLIMITED_AMMO] = 1;
+	mob.ShowCritterDist1 = 100;
+	mob.SetEvent(CRITTER_EVENT_IDLE, "_AttackerIdle");
+    //mob.SetEvent(CRITTER_EVENT_DEAD, "_MobDead");
+    // mob.SetEvent(CRITTER_EVENT_SHOW_CRITTER, "_MobShowCritter");
+    // mob.SetEvent(CRITTER_EVENT_HIDE_CRITTER, "_MobHideCritter");
+	mob.SetEvent(CRITTER_EVENT_SMTH_DEAD, "_SomeCritterDied");
+	mob.SetEvent(CRITTER_EVENT_SMTH_ATTACKED, "_SomeCritterAttacked");
+    mob.SetEvent(CRITTER_EVENT_SMTH_ATTACK, "_SomeCritterAttack");
+	mob.SetEvent(CRITTER_EVENT_SHOW_CRITTER_1, "_SomeCritterShow");
+	mob.SetEvent(CRITTER_EVENT_SMTH_USE_SKILL , "_SomeCritterUseSkill");
+    _CritSetExtMode(mob, MODE_EXT_MOB);
+	mob.Wait(200);
+}
+
+
+
+void _AttackerIdle(Critter& cr)
+{
+    if(!cr.IsLife())
+    {
+        return;
+    }
+	
+	cr.ClearEnemyStack();
+    array<Critter@> crits;
+
+    uint            num = cr.GetCritters(false, FIND_LIFE, crits);
+	for(uint i =0; i<num;i++)
+	{
+		if(!_SameFaction(cr,crits[i]) && !crits[i].IsDead())
+		{
+			cr.AddEnemyInStack(crits[i].Id);
+
+		}
+	}
+	cr.Wait(1500);
+}
+
+void _SomeCritterAttacked(Critter& cr, Critter& fromCr, Critter& attacker)   
+{
+	if(!cr.IsLife())
+    {
+        return;
+    }
+	
+	if(_SameFaction(cr,fromCr) && !_SameFaction(cr,attacker))
+	{
+		StopWalkingAndAttack(cr,attacker);
+	}
+	
+}
+
+
+void _SomeCritterAttack(Critter& cr, Critter& fromCr, Critter& target)
+{
+	if(!cr.IsLife())
+    {
+        return;
+    }
+	
+	if((_SameFaction(cr,fromCr) && !_SameFaction(cr,target)))
+	{
+		StopWalkingAndAttack(cr,target);
+	}
+}
+
+
+void _SomeCritterShow(Critter& cr, Critter& showCr)
+{
+	if(!cr.IsLife())
+    {
+        return;
+    }
+	
+	if(!_SameFaction(cr,showCr))
+	{
+		StopWalkingAndAttack(cr,showCr);
+	}
+}
+
+void _SomeCritterDied(Critter& cr, Critter& fromCr, Critter@ killer)
+{
+	if(!cr.IsLife())
+    {
+        return;
+    }
+	//CreateLootPlane(cr,fromCr);
+	if(fromCr.Mode[MODE_NO_LOOT]!=0)
+		AddWalkPlane(cr, AI_PLANE_WALK_PRIORITY, PLANE_LOOT_EX, fromCr.Id, fromCr.HexX, fromCr.HexY, 6, true, 1);
+	//cr.Say(SAY_NORM_ON_HEAD, "GONNA LOOT UR STUFFE !");
+}
+
+void _SomeCritterUseSkill(Critter& cr, Critter& fromCr, int skill, Critter@ onCritter, Item@ onItem, Scenery@ onScenery)
+{
+	if(!cr.IsLife())
+    {
+        return;
+    }
+	
+	if(fromCr.IsPlayer() && !_SameFaction(cr,fromCr) && (skill==SK_LOCKPICK) && (onItem.GetType()==ITEM_TYPE_CONTAINER))
+	{
+		cr.DropPlanes();
+		cr.ClearEnemyStack();
+		cr.Wait(100);
+		cr.AddEnemyInStack(fromCr.Id);
+		cr.Say(SAY_NORM_ON_HEAD, "We've got a smartass over here !");
+	}
+}
+
+
+
+void StopWalkingAndAttack(Critter& cr, Critter& target)
+{
+	cr.ErasePlane( AI_PLANE_WALK , false );
+	if(!cr.CheckEnemyInStack(target.Id))
+		cr.AddEnemyInStack(target.Id);
+}

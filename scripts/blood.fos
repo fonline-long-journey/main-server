@@ -1,0 +1,31 @@
+// Immersion module. Code author and idea - VVish, techical advices and help - Vice Dice. Produced in 2018, for FOnline: The Long Journey project.
+//
+// Main idea - to handle creating and disappearance of the blood splatters after critter being hit.
+// Should be called in "combat.fos", after ApplyDamage.
+
+#ifndef BLOOD_MODULE
+#define BLOOD_MODULE
+
+#include "blood_h.fos"
+// #define YOUR_DEFINES
+
+
+// Functions section
+int BloodCreate(CritterMutual@ cr)
+{
+	// int bloodCreate = map.AddItem;
+	// return bloodCreate;
+	// else
+	return 0;
+}
+
+
+int BloodDry(CritterMutual@ cr)
+{
+	// int bloodDry = _GetActionAp ( action );
+	// return bloodDry;
+	// else
+	return 0;
+}
+
+#endif

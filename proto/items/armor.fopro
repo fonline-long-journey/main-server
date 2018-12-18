@@ -1,8 +1,13 @@
 # 3.1.8
 ###############################################################
 # 			armor prototypes revision by Gasai,               #
-#	3.2.0 	added /armor/*.fofrm paths to \art\items\armour\*        #
+#	3.2.0 	added /armor/*.fofrm paths to \art\items\*        #
 #			added PID_NAME & {OBJECT NAME} to proto headlines #
+###############################################################
+###############################################################
+# 			armor prototypes revision by VVish,               #
+#	3.2.1 	changed Armor_CrTypeMale&Female to new values     #
+#			added new armors 								  #
 ###############################################################
 
 [Proto] # PID_LEATHER_ARMOR {Кожаная броня}
@@ -30,10 +35,10 @@ Armor_DREmp=30
 Armor_DTNormal=0
 Armor_Perk=8
 Weapon_MinStrength=3
-Armor_DRElectro=55
+Armor_DTElectr=55
 Armor_DTLaser=0
 Armor_DTFire=1
-Armor_DTElectro=2
+Armor_DTElectr=2
 Armor_DTExplode=2
 Armor_DTPlasma=0
 
@@ -126,8 +131,8 @@ Armor_DTPlasma=1
 Armor_DTExplode=3
 Armor_Perk=8
 Weapon_MinStrength=3
-Armor_DRElectro=15
-Armor_DTElectro=1
+Armor_DTElectr=15
+Armor_DTElectr=1
 Armor_DTEmp=0
 
 [Proto] # PID_LEATHER_JACKET {Кожаная куртка}
@@ -157,8 +162,8 @@ Weapon_MinStrength=1
 Armor_DTNormal=0
 Armor_DTPlasma=0
 Armor_DTFire=1
-Armor_DRElectro=40
-Armor_DTElectro=1
+Armor_DTElectr=40
+Armor_DTElectr=1
 
 [Proto] # PID_PURPLE_ROBE {Мантия}
 ProtoId=113
@@ -227,8 +232,8 @@ Volume=11
 SoundId=48
 Cost=9500
 Material=1
-Armor_CrTypeMale=142
-Armor_CrTypeFemale=141
+Armor_CrTypeMale=158
+Armor_CrTypeFemale=159
 Armor_AC=5
 Armor_DRNormal=45
 Armor_DRLaser=55
@@ -242,8 +247,8 @@ Armor_DTFire=3
 Armor_DTPlasma=2
 Armor_DTExplode=3
 Armor_Perk=9
-Armor_DRElectro=35
-Armor_DTElectro=1
+Armor_DTElectr=35
+Armor_DTElectr=1
 Armor_DTEmp=0
 Weapon_MinStrength=6
 
@@ -260,8 +265,8 @@ Volume=10
 SoundId=48
 Cost=500
 Material=1
-Armor_CrTypeMale=14
-Armor_CrTypeFemale=7
+Armor_CrTypeMale=136
+Armor_CrTypeFemale=137
 Armor_AC=0
 Armor_DRNormal=15
 Armor_DRLaser=75
@@ -275,8 +280,8 @@ Armor_DTFire=0
 Armor_DTPlasma=3
 Armor_DTExplode=0
 Armor_Perk=7
-Armor_DRElectro=150
-Armor_DTElectro=5
+Armor_DTElectr=150
+Armor_DTElectr=5
 Armor_DTEmp=0
 Weapon_MinStrength=6
 
@@ -308,8 +313,8 @@ Armor_DTLaser=0
 Armor_Perk=6
 Weapon_MinStrength=1
 Armor_DTPlasma=0
-Armor_DRElectro=50
-Armor_DTElectro=2
+Armor_DTElectr=50
+Armor_DTElectr=2
 
 [Proto] # PID_ADVANCED_POWER_ARMOR {Улучш. силовая броня}
 ProtoId=348
@@ -339,8 +344,8 @@ Armor_DTFire=20
 Armor_DTPlasma=20
 Armor_DTExplode=20
 Armor_Perk=3
-Armor_DTElectro=5
-Armor_DRElectro=10
+Armor_DTElectr=5
+Armor_DTElectr=10
 Weapon_MinStrength=3
 
 [Proto] # PID_ADVANCED_POWER_ARMOR_MK2 {Улучш. силовая броня мод. II}
@@ -372,8 +377,8 @@ Armor_DTPlasma=21
 Armor_DTExplode=21
 Armor_Perk=4
 Weapon_MinStrength=3
-Armor_DRElectro=40
-Armor_DTElectro=10
+Armor_DTElectr=40
+Armor_DTElectr=10
 
 [Proto] # PID_LEATHER_ARMOR_MK_II {Кожаная броня МК2}
 ProtoId=379
@@ -388,8 +393,8 @@ Volume=10
 SoundId=48
 Cost=175
 Material=7
-Armor_CrTypeMale=12
-Armor_CrTypeFemale=5
+Armor_CrTypeMale=114
+Armor_CrTypeFemale=115
 Armor_AC=5
 Armor_DRNormal=20
 Armor_DRLaser=15
@@ -404,8 +409,8 @@ Armor_DTPlasma=0
 Armor_DTExplode=1
 Armor_Perk=6
 Weapon_MinStrength=1
-Armor_DRElectro=60
-Armor_DTElectro=2
+Armor_DTElectr=60
+Armor_DTElectr=2
 Armor_DTEmp=0
 
 [Proto] # PID_METAL_ARMOR_MK_II {Металлическая броня МК2}
@@ -426,8 +431,8 @@ Weapon_Skill_0=205
 Weapon_Skill_1=204
 Weapon_Anim2_0=Anim2Throw
 Weapon_Anim2_1=Anim2Swing1H
-Armor_CrTypeMale=14
-Armor_CrTypeFemale=7
+Armor_CrTypeMale=134
+Armor_CrTypeFemale=135
 Armor_AC=0
 Armor_DRNormal=30
 Armor_DRLaser=60
@@ -456,9 +461,9 @@ Volume=10
 SoundId=48
 Cost=1450
 Material=1
-Armor_CrTypeMale=112
-Armor_CrTypeFemale=111
-Armor_AC=0
+Armor_CrTypeMale=166
+Armor_CrTypeFemale=167
+Armor_AC=200
 Armor_DRNormal=40
 Armor_DRLaser=35
 Armor_DRFire=35
@@ -473,8 +478,8 @@ Armor_DTExplode=4
 Armor_Perk=9
 Weapon_MinStrength=5
 Armor_DTEmp=1
-Armor_DRElectro=20
-Armor_DTElectro=1
+Armor_DTElectr=20
+Armor_DTElectr=1
 
 [Proto] # PID_KEEPBRIGE_ROBE {Мантия Стража моста}
 ProtoId=524
@@ -503,8 +508,8 @@ Armor_DTLaser=100
 Armor_DTFire=100
 Armor_DTPlasma=100
 Armor_DTExplode=100
-Armor_DRElectro=100
-Armor_DTElectro=100
+Armor_DTElectr=100
+Armor_DTElectr=100
 Armor_DTEmp=100
 
 [Proto] # PID_BLACK_COMBAT_ARMOR {Черная боевая броня}
@@ -520,8 +525,8 @@ Volume=10
 SoundId=48
 Cost=4000
 Material=1
-Armor_CrTypeMale=138
-Armor_CrTypeFemale=137
+Armor_CrTypeMale=168
+Armor_CrTypeFemale=169
 Armor_AC=0
 Armor_DRNormal=50
 Armor_DRLaser=40
@@ -537,8 +542,8 @@ Armor_DTExplode=3
 Armor_Perk=8
 Weapon_MinStrength=8
 Armor_DTEmp=0
-Armor_DRElectro=20
-Armor_DTElectro=1
+Armor_DTElectr=20
+Armor_DTElectr=1
 
 [Proto] # PID_JUMPSUIT {Костюм Убежища}
 ProtoId=558
@@ -611,8 +616,8 @@ Volume=10
 SoundId=48
 Cost=300
 Material=1
-Armor_CrTypeMale=112
-Armor_CrTypeFemale=111
+Armor_CrTypeMale=114
+Armor_CrTypeFemale=115
 Armor_AC=0
 Armor_DRNormal=30
 Armor_DRLaser=20
@@ -641,8 +646,8 @@ Volume=10
 SoundId=48
 Cost=700
 Material=1
-Armor_CrTypeMale=112
-Armor_CrTypeFemale=111
+Armor_CrTypeMale=114
+Armor_CrTypeFemale=115
 Armor_AC=0
 Armor_DRNormal=35
 Armor_DRLaser=25
@@ -685,8 +690,8 @@ Weight=500
 Volume=8
 SoundId=48
 Cost=40
-Armor_CrTypeMale=122
-Armor_CrTypeFemale=122
+Armor_CrTypeMale=650
+Armor_CrTypeFemale=650
 Armor_AC=20
 Armor_DRNormal=5
 Armor_DRLaser=5
@@ -718,10 +723,10 @@ Armor_DREmp=35
 Armor_DTFire=3
 Weapon_MinStrength=1
 Armor_DTLaser=1
-Armor_DTElectro=1
+Armor_DTElectr=1
 Armor_DTExplode=1
 Armor_Perk=6
-Armor_DRElectro=20
+Armor_DTElectr=20
 Armor_DTPlasma=2
 
 [Proto] # PID_BLUE_COMBAT_ARMOR {Парадная боевая броня}
@@ -736,8 +741,8 @@ Weight=5000
 Volume=10
 SoundId=48
 Cost=10000
-Armor_CrTypeMale=104
-Armor_CrTypeFemale=105
+Armor_CrTypeMale=150
+Armor_CrTypeFemale=151
 Armor_AC=0
 Armor_Perk=9
 Armor_DRNormal=40
@@ -750,11 +755,11 @@ Armor_DTNormal=2
 Armor_DTLaser=1
 Armor_DTFire=1
 Armor_DTPlasma=1
-Armor_DTElectro=1
+Armor_DTElectr=1
 Weapon_MinStrength=4
 Armor_DTEmp=0
 Armor_DTExplode=3
-Armor_DRElectro=15
+Armor_DTElectr=15
 
 [Proto] # PID_DESERT_COMBAT_ARMOR   {Боевая броня разведчика}
 ProtoId=10017
@@ -768,8 +773,8 @@ Weight=7000
 Volume=10
 SoundId=48
 Cost=10000
-Armor_CrTypeMale=136
-Armor_CrTypeFemale=135
+Armor_CrTypeMale=162
+Armor_CrTypeFemale=163
 Armor_AC=5
 Armor_Perk=8
 Armor_DRNormal=35
@@ -785,8 +790,8 @@ Armor_DTPlasma=2
 Weapon_MinStrength=3
 Armor_DTEmp=1
 Armor_DTExplode=4
-Armor_DRElectro=20
-Armor_DTElectro=1
+Armor_DTElectr=20
+Armor_DTElectr=1
 
 [Proto] # PID_BROWN_COMBAT_ARMOR  {Штурмовая боевая броня}
 ProtoId=10018
@@ -800,24 +805,27 @@ Weight=9500
 Volume=10
 SoundId=48
 Cost=1850
-Armor_CrTypeMale=114
-Armor_CrTypeFemale=113
+Armor_CrTypeMale=154
+Armor_CrTypeFemale=155
 Armor_AC=0
 Armor_Perk=9
-Armor_DRNormal=45
-Armor_DRLaser=45
-Armor_DRFire=45
-Armor_DRPlasma=45
-Armor_DRExplode=0
-Armor_DREmp=45
-Armor_DTNormal=2
-Armor_DTLaser=2
-Armor_DTFire=2
-Armor_DTPlasma=2
-Armor_DTElectro=2
+Armor_DRNormal=		15
+Armor_DRLaser=		25
+Armor_DRFire=		35
+Armor_DRPlasma=		45
+Armor_DRElectr=		55
+Armor_DREmp=		101
+Armor_DRExplode=65
+Armor_DRAcid=		75
+Armor_DTNormal=		1
+Armor_DTLaser=		2
+Armor_DTFire=		3
+Armor_DTPlasma=		4
+Armor_DTElectr=		5
+Armor_DTExplode=	6
+#Armor_DTEmp=		66
+Armor_DTAcid=		7
 Weapon_MinStrength=6
-Armor_DTExplode=2
-Armor_DRElectro=45
 
 [Proto] # PID_KEVLAR_JACKET {Кевларовый костюм}
 ProtoId=10072
@@ -846,9 +854,9 @@ Weapon_MinStrength=1
 Armor_DTNormal=1
 Armor_DTPlasma=1
 Armor_DTFire=1
-Armor_DRElectro=15
+Armor_DRElectr=15
 Armor_DTLaser=1
-Armor_DTElectro=1
+Armor_DTElectr=1
 Armor_DTExplode=2
 
 [Proto]  # PID_CHITIN_VEST {Кираса-карапакс}
@@ -876,13 +884,47 @@ Armor_DREmp=30
 Armor_DTNormal=1
 Armor_Perk=8
 Weapon_MinStrength=3
-Armor_DRElectro=10
+Armor_DRElectr=10
 Armor_DTLaser=0
 Armor_DTFire=1
-Armor_DTElectro=1
+Armor_DTElectr=1
 Armor_DTExplode=2
 Armor_DTPlasma=2
 
 #---------------------------------------------------------------------------------------------
 # The Long Journey - Armors <13000 - 13999>
 #---------------------------------------------------------------------------------------------
+
+[Proto] # PID_LEATHER_ARMOR_GREY {Серая кожаная броня}
+ProtoId=13000
+Type=1
+PicMap=art\items\armor\ltharmorgrey.fofrm
+PicInv=art\inven\armor\ltharmorgrey.fofrm
+Flags=134217758
+DisableEgg=1
+Deteriorable=1
+Weight=3250
+Volume=10
+SoundId=48
+Cost=125
+Material=7
+Armor_CrTypeMale=124
+Armor_CrTypeFemale=125
+Armor_AC=150
+Armor_DRNormal=15
+Armor_DRLaser=20
+Armor_DRFire=35
+Armor_DRPlasma=10
+Armor_DRExplode=20
+Armor_DREmp=30
+Armor_DRAcid=20
+Armor_DTNormal=0
+Armor_Perk=8
+Weapon_MinStrength=3
+Armor_DRElectr=55
+Armor_DTLaser=0
+Armor_DTFire=1
+Armor_DTElectr=2
+Armor_DTExplode=0
+Armor_DTPlasma=0
+Armor_DTAcid=0
