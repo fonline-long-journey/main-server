@@ -343,6 +343,7 @@ void CritterGenerate( int[]& params ) // Export to client_main@player_data_gener
     _param_[ ST_RADIATION_RESISTANCE ]	= _param_[ ST_TOUGHNESS ] * RADIATION_RESIST_PER_END;
     _param_[ ST_SEQUENCE ]				= _param_[ ST_PERCEPTION ] * SEQUENCE_PER_PE;
     _param_[ ST_HEALING_RATE ]			= HEALINGRATE_BASE + _param_[ ST_TOUGHNESS ];
+	_param_[ ST_APREGEN ]		        = APREGEN_BASE + _param_[ ST_AGILITY ] * APREGEN_PER_AGI;
     _param_[ ST_CRITICAL_CHANCE ]		= 0; //2 * _param_[ ST_LUCK ];
     #endif
 
@@ -542,8 +543,8 @@ int getParam_MoveAp( Critter& cr, uint )
 
 int getParam_RegenAp( Critter& cr, uint )
 {
-	float val = floor (cr.ParamBase[ST_APREGEN] + (cr.Stat[ST_AGILITY] * APREGEN_PER_AGI) + APREGEN_BASE) / 100;
-    return CLAMP( val, 0, 9999 );
+	float val = (cr.ParamBase[ST_APREGEN] + (cr.Stat[ST_AGILITY] * APREGEN_PER_AGI) + APREGEN_BASE) / AP_DIVIDER;
+    return val;
 }
 
 int getParam_MaxWeight( Critter& cr, uint )
