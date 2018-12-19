@@ -20625,140 +20625,140 @@ ProtoId=16331
 Type=11
 PicMap=art\scenery\signs\sign01.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16332
 Type=11
 PicMap=art\scenery\signs\sign02.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16333
 Type=11
 PicMap=art\scenery\signs\sign03.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16334
 Type=11
 PicMap=art\scenery\signs\sign04.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16335
 Type=11
 PicMap=art\scenery\signs\sign05.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16336
 Type=11
 PicMap=art\scenery\signs\sign06.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16337
 Type=11
 PicMap=art\scenery\signs\sign07.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16338
 Type=11
 PicMap=art\scenery\signs\sign08.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16339
 Type=11
 PicMap=art\scenery\signs\sign09.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16340
 Type=11
 PicMap=art\scenery\signs\sign10.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16341
 Type=11
 PicMap=art\scenery\signs\sign11.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16342
 Type=11
 PicMap=art\scenery\signs\sign12.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16343
 Type=11
 PicMap=art\scenery\signs\sign13.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16344
 Type=11
 PicMap=art\scenery\signs\sign14.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16345
 Type=11
 PicMap=art\scenery\signs\sign15.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16346
 Type=11
 PicMap=art\scenery\signs\sign16.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16347
 Type=11
 PicMap=art\scenery\signs\sign17.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16348
 Type=11
 PicMap=art\scenery\signs\sign18.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16349
 Type=11
 PicMap=art\scenery\signs\sign19.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16350
 Type=11
 PicMap=art\scenery\signs\sign20.fofrm
 PicInv=art\inven\reserved.frm
-Flags=34
+Flags=33554492
 
 [Proto]
 ProtoId=16351
@@ -21816,28 +21816,28 @@ ProtoId=16505
 Type=11
 PicMap=art\scenery\Decor\ARCANM01.FRM
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16506
 Type=11
 PicMap=art\scenery\Decor\ARCANM02.FRM
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16507
 Type=11
 PicMap=art\scenery\Decor\ARCANM07.FRM
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16508
 Type=11
 PicMap=art\scenery\Decor\ARCANM08.FRM
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16509
@@ -23863,20 +23863,6 @@ PicInv=art\inven\reserved.frm
 Flags=16
 
 [Proto]
-ProtoId=16797
-Type=11
-PicMap=art\scenery\Stones\stone1.fofrm
-PicInv=art\inven\reserved.frm
-Flags=16
-
-[Proto]
-ProtoId=16798
-Type=11
-PicMap=art\scenery\Stones\stone1a.fofrm
-PicInv=art\inven\reserved.frm
-Flags=16
-
-[Proto]
 ProtoId=16799
 Type=11
 PicMap=art\scenery\Stones\stone1b.fofrm
@@ -24560,148 +24546,201 @@ ProtoId=16896
 Type=11
 PicMap=art\scenery\Decor\skeletnew1.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16897
 Type=11
 PicMap=art\scenery\Decor\skeletnew2.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16898
 Type=11
 PicMap=art\scenery\Decor\skeletnew3.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16899
 Type=11
 PicMap=art\scenery\Decor\skeletnew4.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16900
 Type=11
 PicMap=art\scenery\Decor\skeletnew5.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16901
 Type=11
 PicMap=art\scenery\Decor\skeletnew6.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16902
 Type=11
 PicMap=art\scenery\Decor\skeletnew7.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16903
 Type=11
 PicMap=art\scenery\Decor\skeletnew8.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16904
 Type=11
 PicMap=art\scenery\Decor\skeletnew9.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16905
 Type=11
 PicMap=art\scenery\Decor\skeletnew10.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16906
 Type=11
 PicMap=art\scenery\Decor\skeletnew11.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16907
 Type=11
 PicMap=art\scenery\Decor\skeletnew12.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16908
 Type=11
 PicMap=art\scenery\Decor\skeletnew13.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16910
 Type=11
 PicMap=art\scenery\Decor\skeletnew14.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16911
 Type=11
 PicMap=art\scenery\Decor\skeletnew15.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16912
 Type=11
 PicMap=art\scenery\Decor\skeletnew16.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16913
 Type=11
 PicMap=art\scenery\Decor\skeletnew17.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16914
 Type=11
 PicMap=art\scenery\Decor\skeletnew18.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16915
 Type=11
 PicMap=art\scenery\Decor\skeletnew19.png
 PicInv=art\inven\reserved.frm
-Flags=24
+Flags=33554462
 
 [Proto]
 ProtoId=16916
 Type=11
-PicMap=art\ontainers\bkshlf4.frm
+PicMap=art\scenery\Decor\labtbl41.frm
 PicInv=art\inven\reserved.frm
-Corner=5
-Flags=33554460
-Material=1
+Flags=33554456
 
 [Proto]
 ProtoId=16917
 Type=11
-PicMap=art\ontainers\bkshlf6.frm
+PicMap=art\scenery\Decor\labtbl51.frm
 PicInv=art\inven\reserved.frm
-Corner=5
-Flags=33554460
+Flags=33554456
+
+[Proto]
+ProtoId=16918
+Type=11
+PicMap=art\scenery\Decor\labtbl61.frm
+PicInv=art\inven\reserved.frm
+Flags=33554456
+
+[Proto]
+ProtoId=16919
+Type=11
+PicMap=art\scenery\Decor\chr9000.frm
+PicInv=art\inven\reserved.frm
+Flags=33554456
+DisableEgg=1
+SoundId=48
 Material=1
+
+[Proto]
+ProtoId=16920
+Type=11
+PicMap=art\scenery\Decor\chr10000.frm
+PicInv=art\inven\Decor\reserved.frm
+Flags=33554456
+DisableEgg=1
+SoundId=48
+Material=1
+
+[Proto]
+ProtoId=16921
+Type=11
+PicMap=art\scenery\Decor\chr11000.frm
+PicInv=art\inven\reserved.frm
+Flags=33554456
+DisableEgg=1
+SoundId=48
+Material=1
+
+[Proto]
+ProtoId=16922
+Type=11
+PicMap=art\scenery\Decor\chr12000.frm
+PicInv=art\inven\reserved.frm
+Flags=33554456
+DisableEgg=1
+SoundId=48
+Material=1
+
+[Proto]
+ProtoId=16923
+Type=11
+PicMap=art\scenery\Decor\LargeDisplay1.frm
+PicInv=art\inven\reserved.frm
+Flags=33562640
+DisableEgg=1
+SoundId=48
+
