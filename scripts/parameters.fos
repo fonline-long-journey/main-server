@@ -494,6 +494,50 @@ int getParam_Luck( Critter& cr, uint )
     return CLAMP( val, 0, 10 );
 }
 
+// ASPECT Perk Credits
+    // SetParameterGetBehaviour( ST_AGILITY_CREDIT, 	dllName + "getParam_AgilityCredit"	 );
+    // SetParameterGetBehaviour( ST_STRENGTH_CREDIT, 	dllName + "getParam_StrengthCredit"	 );
+    // SetParameterGetBehaviour( ST_PERCEPTION_CREDIT, dllName + "getParam_PerceptionCredit");
+	// SetParameterGetBehaviour( ST_EDUCATION_CREDIT,  dllName + "getParam_EducationCredit" );
+	// SetParameterGetBehaviour( ST_CHARISMA_CREDIT 	dllName + "getParam_CharismaCredit"	 );
+    // SetParameterGetBehaviour( ST_TOUGHNESS_CREDIT, 	dllName + "getParam_ToughnessCredit" );
+	
+int getParam_AgilityCredit( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_AGILITY_CREDIT ];
+    return CLAMP( val, 0, 14 );
+}
+
+int getParam_StrengthCredit( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_STRENGTH_CREDIT ];
+    return CLAMP( val, 0, 14 );
+}
+
+int getParam_PerceptionCredit( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_PERCEPTION_CREDIT ];
+    return CLAMP( val, 0, 14 );
+}
+
+int getParam_EducationCredit( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_EDUCATION_CREDIT ];
+    return CLAMP( val, 0, 14 );
+}
+
+int getParam_CharismaCredit( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_CHARISMA_CREDIT ];
+    return CLAMP( val, 0, 14 );
+}
+
+int getParam_ToughnessCredit( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_TOUGHNESS_CREDIT ];
+    return CLAMP( val, 0, 14 );
+}
+
 // Skills
 int getParam_BigGuns( Critter& cr, uint ){ return cr.ParamBase[SK_FIREARMS]; }
 int getParam_MeleeWeapons( Critter& cr, uint ){ return cr.ParamBase[SK_MELEE_COMBAT]; }
@@ -543,7 +587,7 @@ int getParam_MoveAp( Critter& cr, uint )
 
 int getParam_RegenAp( Critter& cr, uint )
 {
-	float val = (cr.ParamBase[ST_APREGEN] + (cr.Stat[ST_AGILITY] * APREGEN_PER_AGI) + APREGEN_BASE) / AP_DIVIDER;
+	float val = cr.ParamBase[ST_APREGEN] + (cr.Stat[ST_AGILITY] * APREGEN_PER_AGI) + APREGEN_BASE;
     return val;
 }
 
@@ -563,7 +607,7 @@ int getParam_Sequence( Critter& cr, uint )
 int getParam_MeleeDmg( Critter& cr, uint )
 {
     int strength = getParam_Strength( cr, 0 );
-    int val = cr.ParamBase[ ST_MELEE_DAMAGE ] + cr.ParamBase[ ST_MELEE_DAMAGE_EXT ] + cr.ParamBase[ ST_STRENGTH ];
+    int val = cr.ParamBase[ ST_MELEE_DAMAGE ] + cr.ParamBase[ ST_MELEE_DAMAGE_EXT ] + cr.ParamBase[ ST_STRENGTH ] * MELEE_DAMAGE_PER_STR;
     return CLAMP( val, 1, 9999 );
 }
 

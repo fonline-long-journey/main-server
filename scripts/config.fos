@@ -148,7 +148,7 @@ void InitializeGame()                    // Export
     // Other is Vilified
 
     // Registation values
-    __StartSpecialPoints  = 15;
+    __StartSpecialPoints  = 18;
     __StartTagSkillPoints = 3;
 
     // Skill modifiers
@@ -206,48 +206,48 @@ void InitializeGame()                    // Export
      #  endif*/
     string dllName = "parameters@";
 	// SPECIAL aka ASPECT points
-    SetParameterGetBehaviour( ST_STRENGTH,			dllName + "getParam_Strength"    	);
-    SetParameterGetBehaviour( ST_PERCEPTION,		dllName + "getParam_Perception"  	);
-    SetParameterGetBehaviour( ST_TOUGHNESS,			dllName + "getParam_Endurance"   	);
-    SetParameterGetBehaviour( ST_CHARISMA,			dllName + "getParam_Charisma"    	);
-    SetParameterGetBehaviour( ST_EDUCATION,			dllName + "getParam_Intellegence"	);
-    SetParameterGetBehaviour( ST_AGILITY,			dllName + "getParam_Agility"     	);
- // SetParameterGetBehaviour( ST_LUCK, 				dllName + "getParam_Luck"        	);
+    SetParameterGetBehaviour( ST_AGILITY,			dllName + "getParam_Agility"     	 );
+    SetParameterGetBehaviour( ST_STRENGTH,			dllName + "getParam_Strength"    	 );
+    SetParameterGetBehaviour( ST_PERCEPTION,		dllName + "getParam_Perception"  	 );
+	SetParameterGetBehaviour( ST_EDUCATION,			dllName + "getParam_Intellegence"	 );
+    SetParameterGetBehaviour( ST_CHARISMA,			dllName + "getParam_Charisma"    	 );
+    SetParameterGetBehaviour( ST_TOUGHNESS,			dllName + "getParam_Endurance"   	 );
+ // SetParameterGetBehaviour( ST_LUCK, 				dllName + "getParam_Luck"        	 );
  
-	// ASPECT Credits
-	// SetParameterGetBehaviour( ST_AGILITY_CREDIT, 	dllName + "getCredit_Agility"		);
-	// SetParameterGetBehaviour( ST_STRENGTH_CREDIT, 	dllName + "getCredit_Strength"		);
-	// SetParameterGetBehaviour( ST_PERCEPTION_CREDIT, dllName + "getCredit_Perception"	);
-	// SetParameterGetBehaviour( ST_TOUGHNESS_CREDIT, 	dllName + "getCredit_Endurance"		);
-	// SetParameterGetBehaviour( ST_CHARISMA_CREDIT 	dllName + "getCredit_Charisma"		);
-	// SetParameterGetBehaviour( ST_TECHNOLOGY_CREDIT, dllName + "getCredit_Technology"	);
+	// ASPECT Perk Credits
+    SetParameterGetBehaviour( ST_AGILITY_CREDIT, 	dllName + "getParam_AgilityCredit"	 );
+    SetParameterGetBehaviour( ST_STRENGTH_CREDIT, 	dllName + "getParam_StrengthCredit"	 );
+    SetParameterGetBehaviour( ST_PERCEPTION_CREDIT, dllName + "getParam_PerceptionCredit");
+	SetParameterGetBehaviour( ST_EDUCATION_CREDIT,  dllName + "getParam_EducationCredit" );
+	SetParameterGetBehaviour( ST_CHARISMA_CREDIT, 	dllName + "getParam_CharismaCredit"	 );
+    SetParameterGetBehaviour( ST_TOUGHNESS_CREDIT, 	dllName + "getParam_ToughnessCredit" );
 
     // Custom skills
-    SetParameterGetBehaviour( SK_BIG_GUNS, 	 		dllName + "getParam_BigGuns" 		);
-    SetParameterGetBehaviour( SK_MELEE_WEAPONS, 	dllName + "getParam_MeleeWeapons" 	);
-    SetParameterGetBehaviour( SK_TRAPS, 			dllName + "getParam_Traps" 			);
-    SetParameterGetBehaviour( SK_DOCTOR, 			dllName + "getParam_Doctor" 		);
-    SetParameterGetBehaviour( SK_LOCKPICK,			dllName + "getParam_Lockpick" 		);
-    SetParameterGetBehaviour( SK_STEAL, 			dllName + "getParam_Steal" 			);
-    SetParameterGetBehaviour( SK_TRAPS,				dllName + "getParam_Traps" 			);
-    SetParameterGetBehaviour( SK_SPEECH,			dllName + "getParam_Speech" 		);
-	
-	// Base parameters
-	SetParameterGetBehaviour( ST_MAX_LIFE, 			dllName + "getParam_MaxLife"    	);
-    SetParameterGetBehaviour( ST_CURRENT_HP,		dllName + "getParam_Hp"         	);
-	SetParameterGetBehaviour( ST_ARMOR_CLASS,		dllName + "getParam_Ac"         	);
-	SetParameterGetBehaviour( ST_CURRENT_AC,		dllName + "getParam_Shield"     	);
-    SetParameterGetBehaviour( ST_ACTION_POINTS,		dllName + "getParam_MaxAp"      	);
-    SetParameterGetBehaviour( ST_CURRENT_AP,		dllName + "getParam_Ap"         	);
-    SetParameterGetBehaviour( ST_MAX_MOVE_AP,		dllName + "getParam_MaxMoveAp"  	);
-    SetParameterGetBehaviour( ST_MOVE_AP,			dllName + "getParam_MoveAp"     	);
-	SetParameterGetBehaviour( ST_APREGEN,			dllName + "getParam_RegenAp"    	);
-    SetParameterGetBehaviour( ST_CARRY_WEIGHT,		dllName + "getParam_MaxWeight"  	);
-    SetParameterGetBehaviour( ST_MELEE_DAMAGE,		dllName + "getParam_MeleeDmg"   	);
-    SetParameterGetBehaviour( ST_SEQUENCE,			dllName + "getParam_Sequence"   	);
-    SetParameterGetBehaviour( ST_HEALING_RATE,		dllName + "getParam_HealingRate"	);
-    SetParameterGetBehaviour( ST_CRITICAL_CHANCE,	dllName + "getParam_CriticalChance"	);
-    SetParameterGetBehaviour( ST_MAX_CRITICAL,		dllName + "getParam_MaxCritical"    );
+    SetParameterGetBehaviour( SK_BIG_GUNS, 	 		dllName + "getParam_BigGuns" 		 );
+    SetParameterGetBehaviour( SK_MELEE_WEAPONS, 	dllName + "getParam_MeleeWeapons" 	 );
+    SetParameterGetBehaviour( SK_TRAPS, 			dllName + "getParam_Traps" 			 );
+    SetParameterGetBehaviour( SK_DOCTOR, 			dllName + "getParam_Doctor" 		 );
+    SetParameterGetBehaviour( SK_LOCKPICK,			dllName + "getParam_Lockpick" 		 );
+    SetParameterGetBehaviour( SK_STEAL, 			dllName + "getParam_Steal" 			 );
+    SetParameterGetBehaviour( SK_TRAPS,				dllName + "getParam_Traps" 			 );
+    SetParameterGetBehaviour( SK_SPEECH,			dllName + "getParam_Speech" 		 );
+
+	// Base parameters                                                                   
+	SetParameterGetBehaviour( ST_MAX_LIFE, 			dllName + "getParam_MaxLife"    	 );
+    SetParameterGetBehaviour( ST_CURRENT_HP,		dllName + "getParam_Hp"         	 );
+	SetParameterGetBehaviour( ST_ARMOR_CLASS,		dllName + "getParam_Ac"         	 );
+	SetParameterGetBehaviour( ST_CURRENT_AC,		dllName + "getParam_Shield"     	 );
+    SetParameterGetBehaviour( ST_ACTION_POINTS,		dllName + "getParam_MaxAp"      	 );
+    SetParameterGetBehaviour( ST_CURRENT_AP,		dllName + "getParam_Ap"         	 );
+    SetParameterGetBehaviour( ST_MAX_MOVE_AP,		dllName + "getParam_MaxMoveAp"  	 );
+    SetParameterGetBehaviour( ST_MOVE_AP,			dllName + "getParam_MoveAp"     	 );
+	SetParameterGetBehaviour( ST_APREGEN,			dllName + "getParam_RegenAp"    	 );
+    SetParameterGetBehaviour( ST_CARRY_WEIGHT,		dllName + "getParam_MaxWeight"  	 );
+    SetParameterGetBehaviour( ST_MELEE_DAMAGE,		dllName + "getParam_MeleeDmg"   	 );
+    SetParameterGetBehaviour( ST_SEQUENCE,			dllName + "getParam_Sequence"   	 );
+    SetParameterGetBehaviour( ST_HEALING_RATE,		dllName + "getParam_HealingRate"	 );
+    SetParameterGetBehaviour( ST_CRITICAL_CHANCE,	dllName + "getParam_CriticalChance"	 );
+    SetParameterGetBehaviour( ST_MAX_CRITICAL,		dllName + "getParam_MaxCritical"     );
     SetParameterGetBehaviour( ST_RADIATION_RESISTANCE, dllName + "getParam_RadiationResist" );
     SetParameterGetBehaviour( ST_POISON_RESISTANCE, dllName + "getParam_PoisonResist"   );
 	SetParameterGetBehaviour( ST_BONUS_LOOK,		dllName + "getParam_BonusLook" 		);

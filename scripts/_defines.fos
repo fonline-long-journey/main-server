@@ -159,7 +159,8 @@
 #define ITEM_SUBTYPE_WEAPON_GRENADE_MOLOTOV		 	 ( 51 )
 #define ITEM_SUBTYPE_WEAPON_GRENADE_INCENDIARY		 ( 52 )
 #define ITEM_SUBTYPE_WEAPON_GRENADE_GAS				 ( 53 )
-#define ITEM_SUBTYPE_WEAPON_GRENADE_END			 	 ( 53 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_ACID		     ( 54 )
+#define ITEM_SUBTYPE_WEAPON_GRENADE_END			 	 ( 54 )
 // -----
 // Melee 55 <-> 69
 #define ITEM_SUBTYPE_WEAPON_MELEE_BEGIN			 	 ( 55 )
@@ -670,7 +671,7 @@
 #define ST_POSTMORTEM							 ( 146 )
 #define ST_FEELSBAD								 ( 147 )
 #define ST_EXECUTE								 ( 148 )
-#define ST_CURRENT_AC							 ( 149 )
+#define ST_CURRENT_AC                            ( 149 )
 
 // 133..149
 #ifdef PLAYERS_3D
@@ -690,6 +691,14 @@
 // 192..199 
 // Additional critter stats
 #define ST_APREGEN							    ( 192 )
+
+// ASPECT Perk Credits 194 <-> 199
+#define ST_AGILITY_CREDIT                       ( 194 )
+#define ST_STRENGTH_CREDIT                      ( 195 )
+#define ST_PERCEPTION_CREDIT                    ( 196 )
+#define ST_EDUCATION_CREDIT                     ( 197 )
+#define ST_CHARISMA_CREDIT                      ( 198 )
+#define ST_TOUGHNESS_CREDIT                     ( 199 )
 
 // / Skills
 #define SKILL_BEGIN                              ( __SkillBegin )
@@ -1874,7 +1883,7 @@
 #define REG_STAT_MAXIMUM						 ( 5 )
 #define REG_STAT_COUNT							 ( 6 )
 // Formulas.fos + Parameters.fos
-// ASPECT-independent stats
+// SPECIAL-independent stats
 #define APPOINTS_BASE							 ( 100 )
 #define ARMOR_CLASS_BASE						 ( 0 )
 #define NORMAL_RESIST_BASE						 ( 0 )
@@ -2035,6 +2044,7 @@
 # pragma bindfield "const int    ProtoItem::Ammo_DrMod   -> 304"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgMult -> 308"
 # pragma bindfield "const uint   ProtoItem::Ammo_DmgDiv  -> 312"
+// # pragma bindfield "const uint   ProtoItem::Ammo_
 // Item subtype proto macros
 # pragma bindfield "const uint8  ProtoItem::Item_SubType -> 352"
 // Time is running...

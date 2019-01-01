@@ -464,7 +464,7 @@ void critter_in( CritterCl& cr )
     {
         cr.Name = getName( cr );
     }else if( valid( cr ) && cr.Id != ch.Id && cr.IsPlayer() && ch.ParamBase[ ST_MODER ] > 0 && AccessLevel >= ACCESS_MODER )
-		cr.Name = "|0xFFAA0000 " + cr.Name + "|0xFFFF0000  " + cr.Id;
+		cr.Name = "|0xFFAA0000 " + cr.Name + "|0xFFFF0000  " + cr.Id + ".";
 	
 	if(cr.IsNpc() && ch.ParamBase[ ST_MODER ] == 0 )
 		cr.NameOnHead = "|0x00000000 ";
@@ -479,7 +479,7 @@ void critter_in( CritterCl& cr )
     }
 	
 	if(ch.ParamBase[ ST_MODER ] > 0 && cr.IsNpc() && AccessLevel >= ACCESS_MODER )
-		cr.NameOnHead = "|C0C0C0 " + cr.Name + " " + cr.Id;	
+		cr.NameOnHead = "|C0C0C0 " + cr.Name + " " + cr.Id + ".";	
 }
 
 void critter_out( CritterCl& cr )
@@ -1318,9 +1318,9 @@ string generic_description( int descType, int& offsX, int& offsY )
 		result += chosen.Stat[ ST_AGILITY ]    + "\n";
         result += chosen.Stat[ ST_STRENGTH ]   + "\n";
         result += chosen.Stat[ ST_PERCEPTION ] + "\n";
-        result += chosen.Stat[ ST_TOUGHNESS ]  + "\n";
-        result += chosen.Stat[ ST_CHARISMA ]   + "\n";
         result += chosen.Stat[ ST_EDUCATION ]  + "\n";
+        result += chosen.Stat[ ST_CHARISMA ]   + "\n";
+        result += chosen.Stat[ ST_TOUGHNESS ]  + "\n";
         // result += chosen.Stat[ ST_LUCK ];
     }
     else if( descType == DESC_INVENTORY_STATS )

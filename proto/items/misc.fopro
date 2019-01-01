@@ -3035,7 +3035,7 @@ Material=7
 [Proto] # PID_KOTW_BEER {Пиво "Гамма-глоток"}
 ProtoId=588
 Type=5
-PicMap=art\items\beer.frm
+PicMap=art\items\Drugs\gamabeer.png
 PicInv=art\inven\gamabeer.frm
 Flags=134250526
 Weight=20000
@@ -3047,7 +3047,7 @@ LightColor=-16777216
 [Proto] # PID_KOTW_GRAIL {Пиво "Гамма-глоток"}
 ProtoId=589
 Type=5
-PicMap=art\items\beer.frm
+PicMap=art\items\\Drugs\gamabeer.png
 PicInv=art\inven\gamabeer.frm
 Flags=406880286
 Stackable=1
@@ -3086,7 +3086,7 @@ Material=3
 [Proto] # PID_FAKE_LETTER {Подложные документы}
 ProtoId=600
 Type=5
-PicMap=art\items\smalbox2.frm
+PicMap=art\items\Misc\slagmess.png
 PicInv=art\inven\paper1.frm
 Flags=402653214
 DisableEgg=1

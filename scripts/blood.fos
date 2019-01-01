@@ -11,12 +11,17 @@
 
 
 // Functions section
-int BloodCreate(CritterMutual@ cr)
+Item@ BloodCreate(Critter& creature)
 {
-	// int bloodCreate = map.AddItem;
-	// return bloodCreate;
-	// else
-	return 0;
+	Map@ creatureMap = creature.GetMap();
+	if (valid(creatureMap))
+	{
+		Item@ blood = creatureMap.AddItem(creature.HexX, creature.HexY, PID_, 1);
+		// creatureMap.AddItem(blood);
+		return blood;
+	}
+	
+	return null;
 }
 
 

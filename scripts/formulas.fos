@@ -9,14 +9,17 @@ string FormatFormulas(string@ text, bool updateList = true){
 
 		// Server + Client replacements setup
 		// formulas.set(<string:Tag>,<string:Replacement>) ...
+		
+		// AP Regeneration pre-calculations
 		float apRegenTime = __ApRegeneration / 1000;
-		float apPerSec  = floor((APPOINTS_BASE / apRegenTime) * 10) / 10;
+		float apRegenPerSec  = floor((APPOINTS_BASE / apRegenTime) * 10) / 10;
 		float passiveApRegen = floor(APREGEN_BASE * 10) / 1000;
 		float passiveApRegenPerSec = floor(APREGEN_PER_AGI * 10) / 1000;
+
 		// int fov = getParam_BonusLook;
 		formulas.set ("baseap", APPOINTS_BASE );
 		formulas.set ("apregentime", apRegenTime );
-		formulas.set ("appersec", apPerSec );
+		formulas.set ("appersec", apRegenPerSec );
 		formulas.set ("apcombatruncost", (__RtApCostCritterRun / AP_DIVIDER) );
 		formulas.set ("meleedamagebase", MELEE_DAMAGE_BASE);
 		// Agility
@@ -40,10 +43,14 @@ string FormatFormulas(string@ text, bool updateList = true){
 		formulas.set ("radiationresist", RADIATION_RESIST_PER_END );
 		// Charisma
 		// Technology
-		
 		// Skills
 		
-		
+		// 2DO
+		// Armor Class full formula
+		// formulas.set ("currentmaxac", maxAc);
+		// formulas.set ("finalmaxac", finalMaxAc); // Текущий Запас Брони: |0xF2E519| @currentmaxac@% |0x3CF800| + |0xF2E519| @acprocent@% |0x3CF800| = |0xF2E519| @finalmaxac@% |0x3CF800|.}
+
+	
 		#ifdef __CLIENT
 		// Client-only replacements setup
 		// formulas.set(<string:Tag>,<float|int|uint|string:Replacement>) ...

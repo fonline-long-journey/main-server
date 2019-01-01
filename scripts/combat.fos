@@ -2389,25 +2389,25 @@ void CommenceExplosionEx( Critter@ attacker, Map@ map, uint16 tx, uint16 ty, Cri
     attack.DmgMin = _WeaponDmgMin( proto, 0 );
     attack.DmgMax = _WeaponDmgMax( proto, 0 );
 	attack.DmgType = _WeaponDmgType( proto, 0 );
-	// ProtoItem@ ammo = GetProtoItem( ammoPid );
-     // if(valid(ammo))
-     // {
-         // ammoPid = ammo.ProtoId;
+	ProtoItem@ ammo = GetProtoItem( ammoPid );
+     if(valid(ammo))
+     {
+         ammoPid = ammo.ProtoId;
         
-         // int ammoDmgType = _GetAmmoProtoDmgType(ammo);
-         // if(ammoDmgType!=0)
-           // dmgType = ammoDmgType;
+         int ammoDmgType = _GetAmmoProtoDmgType(ammo);
+         if(ammoDmgType!=0)
+           attack.DmgType = ammoDmgType;
 		
-		 // #ifdef __DEBUG
-		 // target.Say
-		 // (SAY_NETMSG, 
-		 // "----------------------------" + "\n" + 
-		 // "Тип урона, расчет второй: "  + ammoDmgType + "." + "\n" + 
-		 // "-----------------------------"
-		 // );
-		 // #endif
+		 #ifdef __DEBUG
+		 target.Say
+		 (SAY_NETMSG, 
+		 "----------------------------" + "\n" + 
+		 "Тип урона, расчет второй: "  + ammoDmgType + "." + "\n" + 
+		 "-----------------------------"
+		 );
+		 #endif
 		
-     // }
+     }
     attack.WeaponPerk = proto.Weapon_Perk;
     CommenceExplosion( attack, map, tx, ty, target, weapPid, isCritical, intentionallyId, isRocket, results );
     FlushResults( results );

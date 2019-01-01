@@ -6549,6 +6549,7 @@ Item_SubType=11
 [Proto] # PID_ERROR!!! {"Desert Heat" EBR}
 ProtoId=10101
 Type=3
+Item_SubType=5
 PicMap=art\items\weapons\small\rifle.frm
 PicInv=art\inven\m14ebr-.png
 Flags=134217886
@@ -6580,7 +6581,6 @@ Weapon_Round_0=1
 Weapon_ApCost_0=4
 Weapon_Aim_0=1
 Weapon_SoundId_0=82
-Item_SubType=5
 Weapon_HearRadius=55
 
 [Proto] # PID_ERROR!!! {Спаренная гаусс-пушка}
@@ -6618,3 +6618,37 @@ Weapon_SoundId_0=87
 #---------------------------------------------------------------------------------------------
 # The Long Journey - Weapons <14000 - 14999>
 #---------------------------------------------------------------------------------------------
+
+[Proto] # PID_ACID_GRENADE {Кислотная граната}
+ProtoId=14000
+Type=3
+Item_SubType=54
+PicMap=art\items\weapons\throwing\grenadea.png
+PicInv=art\inven\weapons\throwing\grenadea.frm
+Flags=134217758
+DisableEgg=1
+Stackable=1
+Weight=500
+Volume=1
+SoundId=48
+Cost=900
+Material=1
+Weapon_Anim1=1
+Weapon_MinStrength=1
+Weapon_ActiveUses=1
+Weapon_CriticalFailture=4
+Weapon_Skill_0=205
+Weapon_Skill_1=200
+Weapon_Skill_2=200
+Weapon_DmgType_0=8
+Weapon_Anim2_0=Anim2Throw
+Weapon_Remove_0=1
+Weapon_PicUse_0=art\intrface\throw.frm
+Weapon_PicUse_1=art\intrface\blank.frm
+Weapon_PicUse_2=art\intrface\blank.frm
+Weapon_DmgMin_0=50
+Weapon_DmgMax_0=60
+Weapon_Effect_0=4025
+Weapon_MaxDist_0=20
+Weapon_ApCost_0=60
+Weapon_SoundId_0=80

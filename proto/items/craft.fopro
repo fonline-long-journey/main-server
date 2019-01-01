@@ -526,8 +526,8 @@ Material=7
 [Proto] # PID_WELDING {Сварка}
 ProtoId=565
 Type=5
-PicMap=art\items\box2.frm
-PicInv=art\inven\oxygncan.frm
+PicMap=art\items\Misc\welding.png
+PicInv=art\inven\craft\welding.png
 Flags=134217758
 DisableEgg=1
 Stackable=1

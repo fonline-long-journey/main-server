@@ -743,6 +743,8 @@ namespace Register_TLJ
                 text = "" + ( GetParam( param ) / 1000 );
             else if( param == ST_NORMAL_RESIST || param == ST_NORMAL_RESIST )
                 text = "" + GetParam( param ) + "%";
+            else if ( param == ST_APREGEN )
+                text = "" + float( GetParam ( param ) / 100 );
             else
                 text = "" + GetParam( param );
             return text;
@@ -5635,6 +5637,8 @@ namespace Character_TLJ
                 text = "" + ( GetParam( param ) / 1000 );
             else if( param == ST_NORMAL_RESIST || param == ST_NORMAL_RESIST )
                 text = "" + GetParam( param ) + "%";
+            else if ( param == ST_APREGEN )
+                text = "" + float( GetParam ( param ) / 100.0f);
             else
                 text = "" + GetParam( param );
             return text;
