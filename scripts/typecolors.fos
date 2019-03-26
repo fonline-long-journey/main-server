@@ -13,8 +13,11 @@
 // Installation: include typecolors_h into client_main, then add following lines.
 // Установка: включить хедер-файл typecolors_h в client_main, затем добавить линии ниже.
 
-// В инициализацию:
-/* start()
+// Put inside initialization part of client_main, inside start() function:
+// В инициализацию внутри client_main:
+/*
+
+ start()
 {
 	InitTypeColors();
 }
@@ -26,7 +29,7 @@ result += item_info_color; */
  
 
 // ARA AYE COLORS
-// could be dictionary, but strToInt
+// could be dictionary, but strToInt because laziness.
 array<uint> typesColor;
 bool Init = false;
 

@@ -7,7 +7,7 @@
 // #define _GetApRegen                   			# (cr)            ( (cr.Stat[ST_AGILITY] * 70)) //test
 
 // Add the line below inside "defines.fos":
-// #define CTE_AP_REGEN							 	( 154 )
+// #define CTE_AP_REGEN							 	( 154 ) - 154 is a number of the even, can be any that is free in same section.
 
 // Add the line below inside "client_defines.fos":
 // #define AP_REGEN_TIME							( 1000 )
