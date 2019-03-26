@@ -560,17 +560,17 @@ int getParam_MaxLife( Critter& cr, uint )
     return CLAMP( val, 1, 9999 );
 }
 
-int getParam_MaxAp( Critter& cr, uint )
-{
-    int val = cr.ParamBase[ ST_ACTION_POINTS ] + cr.ParamBase[ ST_ACTION_POINTS_EXT ] + APPOINTS_BASE;
-    return CLAMP( val, 1, 9999 );
-}
-
 int getParam_Ap( Critter& cr, uint )
 {
     int val = cr.ParamBase[ ST_CURRENT_AP ];
     val /= AP_DIVIDER;
     return CLAMP( val, -9999, 9999 );
+}
+
+int getParam_MaxAp( Critter& cr, uint )
+{
+    int val = cr.ParamBase[ ST_ACTION_POINTS ] + cr.ParamBase[ ST_ACTION_POINTS_EXT ] + APPOINTS_BASE;
+    return CLAMP( val, 1, 9999 );
 }
 
 int getParam_MaxMoveAp( Critter& cr, uint )

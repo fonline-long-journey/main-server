@@ -135,6 +135,7 @@ Ammo_Caliber=5
 Ammo_DrMod=-10
 Ammo_DmgMult=6
 Ammo_DmgDiv=5
+Ammo_DTDiv=2
 
 [Proto] # PID_5MM_JHP {5mm JHP}
 ProtoId=35

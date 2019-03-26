@@ -14,7 +14,7 @@
 ProtoId=4
 Type=3
 PicMap=art\items\weapons\melee\knife.frm
-PicInv=art\inven\oknife.frm
+PicInv=art\inven\weapons\oknife.frm
 Flags=134217758
 DisableEgg=1
 Deteriorable=1
